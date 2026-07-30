@@ -23,6 +23,17 @@ return [
             'index',
         ],
     ],
+
+    [
+        'method' => 'GET',
+        'path' => '/produtos/categoria/{id}',
+        'action' => [
+            ProdutoController::class,
+            'categoria',
+        ],
+    ],
+
+
     [
         'method' => 'GET',
         'path' => '/contato',
