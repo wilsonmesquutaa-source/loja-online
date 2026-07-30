@@ -10,12 +10,32 @@ final class DashboardController extends Controller
 {
     public function index(): void
     {
+        require APP_ROOT . '/conexao/conexao.php';
+
+
         $indicadores = [
-            'produtos' => 18,
-            'clientes' => 12,
-            'pedidos' => 7,
-            'categorias' => 4,
+
+            'produtos' => (int) $pdo->query(
+                "SELECT COUNT(*) FROM produtos"
+            )->fetchColumn(),
+
+
+            'clientes' => (int) $pdo->query(
+                "SELECT COUNT(*) FROM clientes"
+            )->fetchColumn(),
+
+
+            'pedidos' => (int) $pdo->query(
+                "SELECT COUNT(*) FROM pedidos"
+            )->fetchColumn(),
+
+
+            'categorias' => (int) $pdo->query(
+                "SELECT COUNT(*) FROM categorias"
+            )->fetchColumn(),
+
         ];
+
 
         $this->view(
             'admin/dashboard',

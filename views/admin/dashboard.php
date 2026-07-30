@@ -1,8 +1,6 @@
 <?php
 
 declare(strict_types=1);
-
-require APP_ROOT . '/views/layouts/header.php';
 require APP_ROOT . '/views/layouts/admin-header.php';
 ?>
 
@@ -11,7 +9,7 @@ require APP_ROOT . '/views/layouts/admin-header.php';
     <div class="admin-top">
 
         <h1 class="dashboard-title">
-            Dashboard administrativo
+           
         </h1>
 
         <span class="admin-user">
@@ -54,4 +52,4 @@ require APP_ROOT . '/views/layouts/admin-header.php';
 
 <?php
 
-require APP_ROOT . '/views/layouts/footer.php';
+require APP_ROOT . '/views/layouts/admin-footer.php';

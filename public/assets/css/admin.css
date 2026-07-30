@@ -50,48 +50,34 @@ body.admin-body{
 
 
 
-.sidebar-header{
+.sidebar-header {
 
-    height:90px;
+    height:100px;
 
     display:flex;
 
+    justify-content:center;
+
     align-items:center;
 
-    gap:15px;
-
-    padding:15px;
-
-    border-bottom:
-    1px solid rgba(255,255,255,.1);
+    padding:10px;
 
 }
 
 
 
-.logo-admin{
+.logo-admin {
 
-    width:55px;
+    width:250px;
 
-    height:55px;
+    height:75px;
 
-    border-radius:50%;
-
-    object-fit:cover;
+    object-fit:contain;
 
 }
 
 
 
-.sidebar-title{
-
-    font-size:20px;
-
-    font-weight:bold;
-
-    white-space:nowrap;
-
-}
 
 
 
