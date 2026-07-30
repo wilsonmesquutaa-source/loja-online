@@ -37,8 +37,8 @@ $caminho = parse_url(
 
 $caminho = is_string($caminho)
     && $caminho !== ''
-        ? $caminho
-        : '/';
+    ? $caminho
+    : '/';
 
 /*
 |---------------------------------------------------------------------------
@@ -83,8 +83,19 @@ foreach ($rotas as $rota) {
     $mesmoMetodo =
         ($rota['method'] ?? '') === $metodoHttp;
 
-    $mesmoCaminho =
-        ($rota['path'] ?? '') === $caminho;
+    $padraoRota = $rota['path'] ?? '';
+
+    $parametros = [];
+
+    $mesmoCaminho = preg_match(
+        '#^' . preg_replace(
+            '#\{[^}]+\}#',
+            '([^/]+)',
+            $padraoRota
+        ) . '$#',
+        $caminho,
+        $parametros
+    );
 
     if (!$mesmoMetodo || !$mesmoCaminho) {
         continue;
@@ -107,13 +118,20 @@ foreach ($rotas as $rota) {
             );
         }
 
-        $objetoController->{$acao}();
+        if (isset($parametros[1])) {
 
+            $objetoController->{$acao}(
+                (int) $parametros[1]
+            );
+        } else {
+
+            $objetoController->{$acao}();
+        }
         exit;
     } catch (Throwable $erro) {
         error_log(
             '[ROTEADOR] '
-            . $erro->getMessage()
+                . $erro->getMessage()
         );
 
         http_response_code(500);

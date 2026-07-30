@@ -12,40 +12,30 @@ require APP_ROOT . '/views/layouts/header.php';
 
     <div class="row g-4">
 
-        <?php foreach ($produtos as $produto): ?>
+        <?php foreach ($categorias as $categoria): ?>
 
-            <div class="col-md-6 col-lg-4">
-                <article class="card h-100 shadow-sm border-0">
-                    <div class="card-body d-flex flex-column">
+            <div class="col-md-6 col-lg-3">
 
-                        <h2 class="h5">
-                            <?=
-                                htmlspecialchars(
-                                    $produto['nome'],
-                                    ENT_QUOTES,
-                                    'UTF-8'
-                                )
-                            ?>
-                        </h2>
+                <div
+                    class="card h-100 shadow-sm border-0 categoria-card"
+                    data-id="<?= $categoria['id']; ?>"
+                    data-nome="<?= htmlspecialchars($categoria['nome']); ?>"
+                    style="cursor:pointer;">
 
-                        <p class="text-primary fs-4 fw-bold mt-auto">
-                            R$
-                            <?=
-                                number_format(
-                                    (float) $produto['preco'],
-                                    2,
-                                    ',',
-                                    '.'
-                                )
-                            ?>
+                    <div class="card-body text-center">
+
+                        <h5 class="card-title">
+                            <?= htmlspecialchars($categoria['nome']); ?>
+                        </h5>
+
+                        <p>
+                            <?= htmlspecialchars($categoria['descricao']); ?>
                         </p>
 
-                        <a class="btn btn-primary" href="#">
-                            Ver produto
-                        </a>
-
                     </div>
-                </article>
+
+                </div>
+
             </div>
 
         <?php endforeach; ?>
@@ -53,6 +43,44 @@ require APP_ROOT . '/views/layouts/header.php';
     </div>
 
 </main>
+
+
+<div class="offcanvas offcanvas-top offcanvas-categoria"
+    tabindex="-1"
+    id="offcanvasCategoria">
+
+
+    <div class="offcanvas-header">
+
+        <h5 id="tituloCategoria">
+            Produtos
+        </h5>
+
+        <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="offcanvas">
+        </button>
+
+    </div>
+
+    <div class="offcanvas-body">
+
+        <div id="conteudoCategoria">
+
+            <div class="text-center py-5">
+                Carregando...
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
 
 <?php
 
