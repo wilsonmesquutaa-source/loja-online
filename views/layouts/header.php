@@ -22,15 +22,11 @@ $baseUrl = defined('BASE_URL')
 
 
 <title>
-
 <?= htmlspecialchars(
     $tituloPagina,
     ENT_QUOTES,
     'UTF-8'
-) ?>
-
-— Loja Online
-
+) ?> - Cantim do Lanche
 </title>
 
 
@@ -57,13 +53,15 @@ href="<?= $baseUrl ?>/assets/css/app.css"
 <div class="container">
 
 
-<a 
-class="navbar-brand"
-href="<?= $baseUrl ?>/"
+<a
+    class="navbar-brand"
+    href="<?= $baseUrl ?>/"
 >
-
-Loja Online
-
+    <img
+        src="<?= $baseUrl ?>/assets/images/logo.png"
+        alt="Cantim do Lanche"
+        height="50"
+    >
 </a>
 
 
