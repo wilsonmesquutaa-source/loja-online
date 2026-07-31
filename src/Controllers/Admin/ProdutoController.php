@@ -40,11 +40,10 @@ final class ProdutoController extends Controller
         $this->view(
             'admin/produtos',
             [
-                'tituloPagina'=>'Produtos',
-                'produtos'=>$produtos
+                'tituloPagina' => 'Produtos',
+                'produtos' => $produtos
             ]
         );
-
     }
 
 
@@ -70,11 +69,10 @@ final class ProdutoController extends Controller
         $this->view(
             'admin/produto-form',
             [
-                'tituloPagina'=>'Novo Produto',
-                'categorias'=>$categorias
+                'tituloPagina' => 'Novo Produto',
+                'categorias' => $categorias
             ]
         );
-
     }
 
 
@@ -114,11 +112,11 @@ final class ProdutoController extends Controller
 
         $stmt->execute([
 
-            ':categoria'=>$_POST['categoria_id'],
-            ':nome'=>$_POST['nome'],
-            ':slug'=>$_POST['slug'],
-            ':descricao'=>$_POST['descricao'],
-            ':estoque'=>$_POST['estoque']
+            ':categoria' => $_POST['categoria_id'],
+            ':nome' => $_POST['nome'],
+            ':slug' => $_POST['slug'],
+            ':descricao' => $_POST['descricao'],
+            ':estoque' => $_POST['estoque']
 
         ]);
 
@@ -129,10 +127,91 @@ final class ProdutoController extends Controller
         );
 
         exit;
+    }
+    public function editar(int $id): void
+    {
+        require APP_ROOT . '/conexao/conexao.php';
 
+
+        $stmt = $pdo->prepare("
+        SELECT *
+        FROM produtos
+        WHERE id = ?
+    ");
+
+        $stmt->execute([$id]);
+
+        $produto = $stmt->fetch();
+
+
+        if (!$produto) {
+
+            header(
+                'Location: ' . BASE_URL . '/admin/produtos'
+            );
+
+            exit;
+        }
+
+
+        $categorias = $pdo
+            ->query("
+            SELECT *
+            FROM categorias
+            WHERE ativo = 1
+        ")
+            ->fetchAll();
+
+
+        $this->view(
+            'admin/produto-form',
+            [
+                'tituloPagina' => 'Editar Produto',
+                'produto' => $produto,
+                'categorias' => $categorias
+            ]
+        );
     }
 
+    public function atualizar(int $id): void
+    {
+        require APP_ROOT . '/conexao/conexao.php';
 
+
+        $sql = "
+        UPDATE produtos
+        SET
+            categoria_id = :categoria,
+            nome = :nome,
+            slug = :slug,
+            descricao = :descricao,
+            estoque = :estoque
+
+        WHERE id = :id
+    ";
+
+
+        $stmt = $pdo->prepare($sql);
+
+
+        $stmt->execute([
+
+            ':categoria' => $_POST['categoria_id'],
+            ':nome' => $_POST['nome'],
+            ':slug' => $_POST['slug'],
+            ':descricao' => $_POST['descricao'],
+            ':estoque' => $_POST['estoque'],
+            ':id' => $id
+
+        ]);
+
+
+        header(
+            'Location: ' . BASE_URL . '/admin/produtos'
+        );
+
+        exit;
+    }
 
 
 
@@ -157,11 +236,5 @@ final class ProdutoController extends Controller
         );
 
         exit;
-
     }
-
-
-
-
-
 }

@@ -164,7 +164,7 @@ $produto = $produto ?? null;
                     class="form-control"
 
                     value="<?= htmlspecialchars(
-                                $produto['estoque'] ?? 0
+                                (string)($produto['estoque'] ?? 0)
                             ) ?>">
 
             </div>
@@ -176,7 +176,7 @@ $produto = $produto ?? null;
             <button
                 class="btn btn-success">
 
-                Salvar
+                Atualizar
 
             </button>
 

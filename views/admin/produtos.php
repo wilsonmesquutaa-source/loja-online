@@ -10,106 +10,103 @@ require APP_ROOT . '/views/layouts/admin-header.php';
 <main class="admin-container">
 
 
-<h1>
-Produtos
-</h1>
+    <h1>
+        Produtos
+    </h1>
 
 
-<a 
-href="<?= $baseUrl ?>/admin/produtos/novo"
-class="btn btn-primary"
->
-Adicionar produto
-</a>
-
-
-
-<table class="table">
-
-
-<thead>
-
-<tr>
-
-<th>ID</th>
-<th>Produto</th>
-<th>Categoria</th>
-<th>Estoque</th>
-<th>Status</th>
-<th>Ações</th>
-
-</tr>
-
-</thead>
+    <a
+        href="<?= $baseUrl ?>/admin/produtos/novo"
+        class="btn btn-primary mb-4">
+        Adicionar produto
+    </a>
 
 
 
-<tbody>
+    <table class="table">
 
 
-<?php foreach ($produtos as $produto): ?>
+        <thead>
+
+            <tr>
+
+                <th>ID</th>
+                <th>Produto</th>
+                <th>Categoria</th>
+                <th>Estoque</th>
+                <th>Status</th>
+                <th>Ações</th>
+
+            </tr>
+
+        </thead>
 
 
-<tr>
+
+        <tbody>
 
 
-<td>
-<?= $produto['id'] ?>
-</td>
+            <?php foreach ($produtos as $produto): ?>
 
 
-<td>
-<?= htmlspecialchars($produto['nome']) ?>
-</td>
+                <tr>
 
 
-<td>
-<?= htmlspecialchars($produto['categoria']) ?>
-</td>
+                    <td>
+                        <?= $produto['id'] ?>
+                    </td>
 
 
-<td>
-<?= $produto['estoque'] ?>
-</td>
+                    <td>
+                        <?= htmlspecialchars($produto['nome']) ?>
+                    </td>
 
 
-<td>
-<?= $produto['status'] ?>
-</td>
+                    <td>
+                        <?= htmlspecialchars($produto['categoria']) ?>
+                    </td>
 
 
-<td>
+                    <td>
+                        <?= $produto['estoque'] ?>
+                    </td>
 
 
-<a 
-href="<?= $baseUrl ?>/admin/produtos/editar/<?= $produto['id'] ?>"
-class="btn btn-warning btn-sm"
->
-Editar
-</a>
+                    <td>
+                        <?= $produto['status'] ?>
+                    </td>
 
 
-<a 
-href="<?= $baseUrl ?>/admin/produtos/excluir/<?= $produto['id'] ?>"
-class="btn btn-danger btn-sm"
->
-Excluir
-</a>
+                    <td>
 
 
-</td>
+                        <a
+                            href="<?= $baseUrl ?>/admin/produtos/editar/<?= $produto['id'] ?>"
+                            class="btn btn-warning btn-sm">
+                            Editar
+                        </a>
 
 
-</tr>
+                        <a
+                            href="<?= BASE_URL ?>/admin/produtos/excluir/<?= $produto['id'] ?>"
+                            class="btn btn-danger"
+                            onclick="return confirm('Deseja realmente excluir este produto?');">
+                            Excluir
+                        </a>
+
+                    </td>
 
 
-<?php endforeach; ?>
+                </tr>
 
 
-</tbody>
+            <?php endforeach; ?>
 
 
-</table>
+        </tbody>
+
+
+    </table>
 
 
 </main>
