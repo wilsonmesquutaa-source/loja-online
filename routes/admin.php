@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Controllers\site\LoginAdminController;
 use App\Controllers\Admin\DashboardController;
 use App\Controllers\Admin\ProdutoController;
 
@@ -13,6 +14,15 @@ return [
         'path' => '/admin',
         'action' => [
             DashboardController::class,
+            'index',
+        ],
+    ],
+    
+    [
+        'method' => 'GET',
+        'path' => '/loginadm',
+        'action' => [
+            LoginAdminController::class,
             'index',
         ],
     ],

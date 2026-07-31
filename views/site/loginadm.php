@@ -4,11 +4,12 @@ session_start();
 
 // Redireciona se já estiver logado
 if (isset($_SESSION['admin_id'])) {
-    header("Location: views/admin/index.php");
+    header("Location: " . BASE_URL . "/admin");
+exit;
     exit;
 }
 
-require_once 'conexao/conexao.php';
+require_once __DIR__ . '/../../conexao/conexao.php';
 
 $erro = '';
 
