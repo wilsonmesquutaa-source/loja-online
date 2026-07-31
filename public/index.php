@@ -129,14 +129,13 @@ foreach ($rotas as $rota) {
         }
         exit;
     } catch (Throwable $erro) {
-        error_log(
-            '[ROTEADOR] '
-                . $erro->getMessage()
-        );
-
-        http_response_code(500);
-
-        require APP_ROOT . '/views/erros/500.php';
+        echo '<pre>';
+        echo $erro->getMessage();
+        echo "\n\n";
+        echo $erro->getFile();
+        echo "\n";
+        echo $erro->getLine();
+        echo '</pre>';
 
         exit;
     }

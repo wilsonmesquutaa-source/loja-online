@@ -26,8 +26,7 @@ require APP_ROOT . '/views/layouts/header.php';
 
         <a
             class="btn btn-primary"
-            href="<?= BASE_URL ?>/"
-        >
+            href="<?= BASE_URL ?>/">
             Voltar ao início
         </a>
 
