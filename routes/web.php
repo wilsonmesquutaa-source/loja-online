@@ -5,6 +5,8 @@ declare(strict_types=1);
 use App\Controllers\Site\ContatoController;
 use App\Controllers\Site\HomeController;
 use App\Controllers\Site\ProdutoController;
+use App\Controllers\site\QuemSomosController;
+use App\Controllers\Site\TermosController;
 
 return [
     [
@@ -42,6 +44,49 @@ return [
             'index',
         ],
     ],
+    
+    [
+        'method' => 'GET',
+        'path' => '/termos',
+        'action' => [
+            TermosController::class,
+            'index',
+        ],
+    
+    ],
+
+     [
+        'method' => 'GET',
+        'path' => '/termos',
+        'action' => [
+            TermosController::class,
+            'index',
+        ],
+    
+    ],
+
+    [
+        'method' => 'GET',
+        'path' => '/termos',
+        'action' => [
+            TermosController::class,
+            'index',
+        ],
+    
+    ],
+
+
+    [
+        'method' => 'GET',
+        'path' => '/quemsomos',
+        'action' => [
+            QuemSomosController::class,
+            'index',
+        ],
+    
+    ],
+    
+
     [
         'method' => 'POST',
         'path' => '/contato',
