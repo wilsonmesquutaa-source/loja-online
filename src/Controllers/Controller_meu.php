@@ -14,10 +14,7 @@ abstract class Controller
     ): void {
         $view = trim($view, '/');
 
-        if (
-            $view === ''
-            || str_contains($view, '..')
-        ) {
+        if ($view === '' || str_contains($view, '..')) {
             throw new RuntimeException(
                 'Nome de view inválido.'
             );
@@ -34,24 +31,19 @@ abstract class Controller
             );
         }
 
-        extract(
-            $dados,
-            EXTR_SKIP
-        );
+        extract($dados, EXTR_SKIP);
 
         require $arquivo;
     }
 
     protected function redirecionar(
         string $caminho
-    ): never {
+    ): void {
         $destino = BASE_URL
             . '/'
             . ltrim($caminho, '/');
 
-        header(
-            'Location: ' . $destino
-        );
+        header('Location: ' . $destino);
 
         exit;
     }
