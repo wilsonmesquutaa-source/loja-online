@@ -1,0 +1,22 @@
+# Impede a listagem automática de pastas
+Options -Indexes
+
+# Bloqueia arquivos ocultos:
+# .env, .env.example, .gitignore, .htaccess etc.
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+
+# Bloqueia arquivos internos conhecidos
+<FilesMatch "(?i)^(composer\.(json|lock)|README\.md)$">
+    Require all denied
+</FilesMatch>
+
+# Ativa o mecanismo de reescrita
+RewriteEngine On
+
+# Bloqueia diretórios ocultos internos
+RewriteRule ^(?:\.git|\.idea|\.vscode)(?:/|$) - [F,L,NC]
+
+# Bloqueia pastas internas do projeto
+RewriteRule ^(?:config|database|documentacao|routes|src|storage|vendor|views)(?:/|$) - [F,L,NC]

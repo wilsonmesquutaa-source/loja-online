@@ -5,43 +5,45 @@ declare(strict_types=1);
 namespace App\Controllers\Admin;
 
 use App\Controllers\Controller;
+use App\Helpers\Csrf;
 
-final class DashboardController extends Controller
+final class DashboardController
+    extends Controller
 {
     public function index(): void
     {
-        require APP_ROOT . '/conexao/conexao.php';
-
-
-        $indicadores = [
-
-            'produtos' => (int) $pdo->query(
-                "SELECT COUNT(*) FROM produtos"
-            )->fetchColumn(),
-
-
-            'clientes' => (int) $pdo->query(
-                "SELECT COUNT(*) FROM clientes"
-            )->fetchColumn(),
-
-
-            'pedidos' => (int) $pdo->query(
-                "SELECT COUNT(*) FROM pedidos"
-            )->fetchColumn(),
-
-
-            'categorias' => (int) $pdo->query(
-                "SELECT COUNT(*) FROM categorias"
-            )->fetchColumn(),
-
-        ];
-
+        if (
+            empty(
+                $_SESSION[
+                    'usuario_admin'
+                ]['id']
+            )
+        ) {
+            $this->redirecionar(
+                '/login-admin'
+            );
+        }
 
         $this->view(
             'admin/dashboard',
             [
-                'tituloPagina' => 'Dashboard administrativo',
-                'indicadores' => $indicadores
+                'tituloPagina' =>
+                    'Dashboard administrativo',
+
+                'usuarioAdmin' =>
+                    $_SESSION[
+                        'usuario_admin'
+                    ],
+
+                'csrfToken' =>
+                    Csrf::gerar(),
+
+                'indicadores' => [
+                    'produtos' => 0,
+                    'clientes' => 0,
+                    'pedidos' => 0,
+                    'categorias' => 0,
+                ],
             ]
         );
     }
