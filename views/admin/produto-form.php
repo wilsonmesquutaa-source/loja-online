@@ -10,31 +10,31 @@ $produto = $produto ?? null;
 
 <main class="admin-container">
 
-
-    <div class="admin-top">
-
-        <h1 class="dashboard-title">
-
-            <?= $produto
-                ? 'Editar Produto'
-                : 'Novo Produto'
-            ?>
-
-        </h1>
-
-    </div>
-
-
-
     <section class="card-admin p-4">
 
 
         <form method="POST"
 
-            action="<?= $baseUrl ?><?= $produto
-                                        ? '/admin/produtos/atualizar/' . $produto['id']
-                                        : '/admin/produtos/salvar'
-                                    ?>">
+            action="<?= BASE_URL ?><?= $produto
+                ? '/admin/produtos/atualizar/' . $produto['id']
+                : '/admin/produtos/salvar'
+            ?>">
+
+
+
+            <?php if (isset($csrfToken)): ?>
+
+                <input
+                    type="hidden"
+                    name="_token"
+                    value="<?= htmlspecialchars(
+                        $csrfToken,
+                        ENT_QUOTES,
+                        'UTF-8'
+                    ) ?>"
+                >
+
+            <?php endif; ?>
 
 
 
@@ -64,7 +64,9 @@ $produto = $produto ?? null;
                             ?>>
 
                             <?= htmlspecialchars(
-                                $categoria['nome']
+                                $categoria['nome'],
+                                ENT_QUOTES,
+                                'UTF-8'
                             ) ?>
 
                         </option>
@@ -95,8 +97,10 @@ $produto = $produto ?? null;
                     required
 
                     value="<?= htmlspecialchars(
-                                $produto['nome'] ?? ''
-                            ) ?>">
+                        $produto['nome'] ?? '',
+                        ENT_QUOTES,
+                        'UTF-8'
+                    ) ?>">
 
             </div>
 
@@ -117,8 +121,10 @@ $produto = $produto ?? null;
                     class="form-control"
 
                     value="<?= htmlspecialchars(
-                                $produto['slug'] ?? ''
-                            ) ?>">
+                        $produto['slug'] ?? '',
+                        ENT_QUOTES,
+                        'UTF-8'
+                    ) ?>">
 
             </div>
 
@@ -136,13 +142,11 @@ $produto = $produto ?? null;
                 <textarea
                     name="descricao"
                     class="form-control"
-                    rows="4">
-
-                        <?= htmlspecialchars(
-                            $produto['descricao'] ?? ''
-                        ) ?>
-
-                </textarea>
+                    rows="4"><?= htmlspecialchars(
+                        $produto['descricao'] ?? '',
+                        ENT_QUOTES,
+                        'UTF-8'
+                    ) ?></textarea>
 
 
             </div>
@@ -164,8 +168,10 @@ $produto = $produto ?? null;
                     class="form-control"
 
                     value="<?= htmlspecialchars(
-                                (string)($produto['estoque'] ?? 0)
-                            ) ?>">
+                        (string)($produto['estoque'] ?? 0),
+                        ENT_QUOTES,
+                        'UTF-8'
+                    ) ?>">
 
             </div>
 
@@ -174,16 +180,20 @@ $produto = $produto ?? null;
 
 
             <button
-                class="btn btn-success">
+                class="btn btn-success"
+                type="submit">
 
-                Atualizar
+                <?= $produto
+                    ? 'Atualizar'
+                    : 'Salvar'
+                ?>
 
             </button>
 
 
 
             <a
-                href="<?= $baseUrl ?>/admin/produtos"
+                href="<?= BASE_URL ?>/admin/produtos"
                 class="btn btn-secondary">
 
                 Cancelar

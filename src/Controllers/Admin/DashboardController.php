@@ -7,43 +7,48 @@ namespace App\Controllers\Admin;
 use App\Controllers\Controller;
 use App\Helpers\Csrf;
 
-final class DashboardController
-    extends Controller
+final class DashboardController extends Controller
 {
     public function index(): void
     {
-        if (
-            empty(
-                $_SESSION[
-                    'usuario_admin'
-                ]['id']
-            )
-        ) {
-            $this->redirecionar(
-                '/login-admin'
-            );
+        // Verifica se o administrador está logado
+        if (empty($_SESSION['usuario_admin']['id'])) {
+            $this->redirecionar('/login-admin');
         }
 
+             // Conexão com o banco
+            $pdo = require APP_ROOT . '/database/conexao.php';
+
+        // Busca os indicadores
+        $indicadores = [
+            'produtos' => (int) $pdo->query(
+                "SELECT COUNT(*) FROM produtos"
+            )->fetchColumn(),
+
+            'clientes' => (int) $pdo->query(
+                "SELECT COUNT(*) FROM clientes"
+            )->fetchColumn(),
+
+            'pedidos' => (int) $pdo->query(
+                "SELECT COUNT(*) FROM pedidos"
+            )->fetchColumn(),
+
+            'categorias' => (int) $pdo->query(
+                "SELECT COUNT(*) FROM categorias"
+            )->fetchColumn(),
+        ];
+
+        // Carrega a view
         $this->view(
             'admin/dashboard',
             [
-                'tituloPagina' =>
-                    'Dashboard administrativo',
+                'tituloPagina' => 'Dashboard administrativo',
 
-                'usuarioAdmin' =>
-                    $_SESSION[
-                        'usuario_admin'
-                    ],
+                'usuarioAdmin' => $_SESSION['usuario_admin'],
 
-                'csrfToken' =>
-                    Csrf::gerar(),
+                'csrfToken' => Csrf::gerar(),
 
-                'indicadores' => [
-                    'produtos' => 0,
-                    'clientes' => 0,
-                    'pedidos' => 0,
-                    'categorias' => 0,
-                ],
+                'indicadores' => $indicadores,
             ]
         );
     }
