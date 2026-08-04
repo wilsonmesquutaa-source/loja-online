@@ -6,18 +6,10 @@ require APP_ROOT . '/views/layouts/admin-header.php';
 
 ?>
 
-
-<main class="admin-container">
-
-
-    <h1>
-        Produtos
-    </h1>
-
-
+<main class="admin-container pt-5">
     <a
-        href="<?= $baseUrl ?>/admin/produtos/novo"
-        class="btn btn-primary mb-4">
+        href="<?= BASE_URL ?>/admin/produtos/novo"
+        class="btn btn-primary mb-4 ms-3">
         Adicionar produto
     </a>
 
@@ -53,27 +45,39 @@ require APP_ROOT . '/views/layouts/admin-header.php';
 
 
                     <td>
-                        <?= $produto['id'] ?>
+                        <?= (int) $produto['id'] ?>
                     </td>
 
 
                     <td>
-                        <?= htmlspecialchars($produto['nome']) ?>
+                        <?= htmlspecialchars(
+                            $produto['nome'],
+                            ENT_QUOTES,
+                            'UTF-8'
+                        ) ?>
                     </td>
 
 
                     <td>
-                        <?= htmlspecialchars($produto['categoria']) ?>
+                        <?= htmlspecialchars(
+                            $produto['categoria'],
+                            ENT_QUOTES,
+                            'UTF-8'
+                        ) ?>
                     </td>
 
 
                     <td>
-                        <?= $produto['estoque'] ?>
+                        <?= (int) $produto['estoque'] ?>
                     </td>
 
 
                     <td>
-                        <?= $produto['status'] ?>
+                        <?= htmlspecialchars(
+                            $produto['status'],
+                            ENT_QUOTES,
+                            'UTF-8'
+                        ) ?>
                     </td>
 
 
@@ -81,18 +85,26 @@ require APP_ROOT . '/views/layouts/admin-header.php';
 
 
                         <a
-                            href="<?= $baseUrl ?>/admin/produtos/editar/<?= $produto['id'] ?>"
+                            href="<?= BASE_URL ?>/admin/produtos/editar/<?= (int) $produto['id'] ?>"
                             class="btn btn-warning btn-sm">
                             Editar
                         </a>
 
 
-                        <a
-                            href="<?= BASE_URL ?>/admin/produtos/excluir/<?= $produto['id'] ?>"
-                            class="btn btn-danger"
-                            onclick="return confirm('Deseja realmente excluir este produto?');">
-                            Excluir
-                        </a>
+                        <form
+                            action="<?= BASE_URL ?>/admin/produtos/excluir/<?= (int) $produto['id'] ?>"
+                            method="POST"
+                            style="display:inline;">
+
+                            <button
+                                type="submit"
+                                class="btn btn-danger btn-sm"
+                                onclick="return confirm('Deseja realmente excluir este produto? Esta ação não poderá ser recuperada');">
+                                Excluir
+                            </button>
+
+                        </form>
+
 
                     </td>
 

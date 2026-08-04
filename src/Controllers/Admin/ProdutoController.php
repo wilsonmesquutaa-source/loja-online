@@ -14,7 +14,7 @@ final class ProdutoController extends Controller
     public function index(): void
     {
 
-        require APP_ROOT . '/conexao/conexao.php';
+        $pdo = require APP_ROOT . '/database/conexao.php';
 
 
         $sql = "
@@ -53,7 +53,7 @@ final class ProdutoController extends Controller
     public function novo(): void
     {
 
-        require APP_ROOT . '/conexao/conexao.php';
+        $pdo = require APP_ROOT . '/database/conexao.php';
 
 
         $categorias = $pdo
@@ -80,10 +80,11 @@ final class ProdutoController extends Controller
 
 
 
+
     public function salvar(): void
     {
 
-        require APP_ROOT . '/conexao/conexao.php';
+        $pdo = require APP_ROOT . '/database/conexao.php';
 
 
         $sql = "
@@ -128,20 +129,29 @@ final class ProdutoController extends Controller
 
         exit;
     }
+
+
+
+
+
     public function editar(int $id): void
     {
-        require APP_ROOT . '/conexao/conexao.php';
+        
+        $pdo = require APP_ROOT . '/database/conexao.php';
 
 
         $stmt = $pdo->prepare("
-        SELECT *
-        FROM produtos
-        WHERE id = ?
-    ");
+            SELECT *
+            FROM produtos
+            WHERE id = ?
+        ");
+
 
         $stmt->execute([$id]);
 
+
         $produto = $stmt->fetch();
+
 
 
         if (!$produto) {
@@ -154,13 +164,15 @@ final class ProdutoController extends Controller
         }
 
 
+
         $categorias = $pdo
             ->query("
-            SELECT *
-            FROM categorias
-            WHERE ativo = 1
-        ")
+                SELECT *
+                FROM categorias
+                WHERE ativo = 1
+            ")
             ->fetchAll();
+
 
 
         $this->view(
@@ -173,9 +185,16 @@ final class ProdutoController extends Controller
         );
     }
 
+
+
+
+
+
     public function atualizar(int $id): void
     {
-        require APP_ROOT . '/conexao/conexao.php';
+
+        $pdo = require APP_ROOT . '/database/conexao.php';
+
 
 
         $sql = "
@@ -188,10 +207,12 @@ final class ProdutoController extends Controller
             estoque = :estoque
 
         WHERE id = :id
-    ";
+        ";
+
 
 
         $stmt = $pdo->prepare($sql);
+
 
 
         $stmt->execute([
@@ -206,6 +227,7 @@ final class ProdutoController extends Controller
         ]);
 
 
+
         header(
             'Location: ' . BASE_URL . '/admin/produtos'
         );
@@ -216,15 +238,20 @@ final class ProdutoController extends Controller
 
 
 
+
+
+
     public function excluir(int $id): void
     {
 
-        require APP_ROOT . '/conexao/conexao.php';
+        $pdo = require APP_ROOT . '/database/conexao.php';
+
 
 
         $stmt = $pdo->prepare(
             "DELETE FROM produtos WHERE id = ?"
         );
+
 
 
         $stmt->execute([$id]);
@@ -237,4 +264,5 @@ final class ProdutoController extends Controller
 
         exit;
     }
+
 }

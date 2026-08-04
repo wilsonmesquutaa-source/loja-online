@@ -204,16 +204,25 @@ onclick="toggleMenu()">
 
 <header class="admin-topbar">
 
+    <h4>
+        <?= htmlspecialchars(
+            $tituloPagina,
+            ENT_QUOTES,
+            'UTF-8'
+        ) ?>
+    </h4>
 
-<h4>
 
-<?= htmlspecialchars(
-    $tituloPagina,
-    ENT_QUOTES,
-    'UTF-8'
-) ?>
+    <div class="admin-user">
 
-</h4>
+        Olá,
 
+        <?= htmlspecialchars(
+            $_SESSION['usuario_admin']['nome'] ?? 'Administrador',
+            ENT_QUOTES,
+            'UTF-8'
+        ) ?>
+
+    </div>
 
 </header>

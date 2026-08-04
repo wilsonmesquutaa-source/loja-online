@@ -91,27 +91,84 @@ $caminho = '/' . trim($caminho, '/');
 | Localização da rota
 |--------------------------------------------------------------------------
 */
+/*
+|--------------------------------------------------------------------------
+| Localização da rota
+|--------------------------------------------------------------------------
+*/
+
 foreach ($rotas as $rota) {
+
     $mesmoMetodo =
         ($rota['method'] ?? '') === $metodoHttp;
-    $mesmoCaminho =
-        ($rota['path'] ?? '') === $caminho;
-    if (!$mesmoMetodo || !$mesmoCaminho) {
+
+    if (!$mesmoMetodo) {
         continue;
     }
+
+
+    $parametros = [];
+
+
+    $padrao = preg_replace(
+        '/\{([a-zA-Z_][a-zA-Z0-9_]*)\}/',
+        '([^/]+)',
+        $rota['path']
+    );
+
+
+    $padrao = '#^' . $padrao . '$#';
+
+
+    if (
+        !preg_match(
+            $padrao,
+            $caminho,
+            $matches
+        )
+    ) {
+        continue;
+    }
+
+
+    array_shift($matches);
+
+
+    $parametros = $matches;
+
+
     [$controller, $acao] = $rota['action'];
+
+
     if (!class_exists($controller)) {
+
         throw new RuntimeException(
             "Controller não encontrado: {$controller}"
         );
+
     }
+
+
     $objetoController = new $controller();
+
+
     if (!method_exists($objetoController, $acao)) {
+
         throw new RuntimeException(
             "Método não encontrado: {$controller}::{$acao}"
         );
+
     }
-    $objetoController->{$acao}();
+
+
+    $objetoController->{$acao}(
+        ...array_map(
+            'intval',
+            $parametros
+        )
+    );
+
+
     exit;
 }
 /*
