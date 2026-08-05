@@ -5,59 +5,69 @@ declare(strict_types=1);
 ?>
 <!doctype html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="utf-8">
 
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1"
-    >
+        content="width=device-width, initial-scale=1">
 
-    <title>
-        Login administrativo — Loja Online
-    </title>
+    <title>Login administrativo — Cantim do Lanche</title>
 
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
+        rel="stylesheet">
 
     <link
         rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
-    >
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+
+    <style>
+        .text-laranja {
+            color: #ff6600 !important;
+        }
+
+        .btn-laranja {
+            background-color: #ff6600;
+            border-color: #ff6600;
+            color: white;
+        }
+
+        .btn-laranja:hover {
+            background-color: #cc5200;
+            border-color: #cc5200;
+            color: white;
+        }
+
+        .shadow-laranja {
+            box-shadow: 0 0.5rem 1rem rgba(255, 102, 0, 0.35) !important;
+        }
+    </style>
+
+
 </head>
 
 <body class="bg-body-tertiary">
 
-    <main
-        class="container min-vh-100
-               d-flex align-items-center
-               justify-content-center py-5"
-    >
+    <main class="container min-vh-100 d-flex align-items-center justify-content-center py-5">
 
-        <div
-            class="col-12 col-sm-10
-                   col-md-7 col-lg-5"
-        >
+        <div class="col-12 col-sm-10 col-md-7 col-lg-5 ">
 
-            <div class="card border-0 shadow">
+            <div class="card border-0 shadow-laranja">
 
-                <div class="card-body p-4 p-lg-5">
+                <div class="card-body p-4 p-lg-5 text-laranja">
 
-                    <div class="text-center mb-4">
+                    <div class="text-center mb-4 text-laranja">
 
-                        <i
-                            class="bi bi-shield-lock
-                                   display-4 text-primary"
-                            aria-hidden="true"
-                        ></i>
+                       <i class="bi bi-shield-lock display-4 text-laranja"></i>
 
                         <h1 class="h3 mt-3">
                             Área administrativa
                         </h1>
 
-                        <p class="text-secondary">
+                        <p class="text-danger">
                             Informe seu e-mail e sua senha.
                         </p>
 
@@ -67,44 +77,34 @@ declare(strict_types=1);
 
                         <div
                             class="alert alert-danger"
-                            role="alert"
-                        >
-                            <?=
-                                htmlspecialchars(
-                                    (string) $erro,
-                                    ENT_QUOTES,
-                                    'UTF-8'
-                                )
-                            ?>
+                            role="alert">
+                            <?= htmlspecialchars(
+                                (string) $erro,
+                                ENT_QUOTES,
+                                'UTF-8'
+                            ) ?>
                         </div>
 
                     <?php endif; ?>
 
                     <form
-                        action="<?=
-                            BASE_URL
-                        ?>/login-admin"
-                        method="post"
-                    >
+                        action="<?= BASE_URL ?>/login-admin"
+                        method="post">
 
                         <input
                             type="hidden"
                             name="_token"
-                            value="<?=
-                                htmlspecialchars(
-                                    $csrfToken,
-                                    ENT_QUOTES,
-                                    'UTF-8'
-                                )
-                            ?>"
-                        >
+                            value="<?= htmlspecialchars(
+                                $csrfToken,
+                                ENT_QUOTES,
+                                'UTF-8'
+                            ) ?>">
 
                         <div class="mb-3">
 
                             <label
                                 class="form-label"
-                                for="email"
-                            >
+                                for="email">
                                 E-mail
                             </label>
 
@@ -113,17 +113,14 @@ declare(strict_types=1);
                                 type="email"
                                 id="email"
                                 name="email"
-                                value="<?=
-                                    htmlspecialchars(
-                                        (string) $email,
-                                        ENT_QUOTES,
-                                        'UTF-8'
-                                    )
-                                ?>"
+                                value="<?= htmlspecialchars(
+                                    (string) $email,
+                                    ENT_QUOTES,
+                                    'UTF-8'
+                                ) ?>"
                                 autocomplete="username"
                                 required
-                                autofocus
-                            >
+                                autofocus>
 
                         </div>
 
@@ -131,8 +128,7 @@ declare(strict_types=1);
 
                             <label
                                 class="form-label"
-                                for="senha"
-                            >
+                                for="senha">
                                 Senha
                             </label>
 
@@ -142,25 +138,19 @@ declare(strict_types=1);
                                 id="senha"
                                 name="senha"
                                 autocomplete="current-password"
-                                required
-                            >
+                                required>
 
                         </div>
 
                         <div class="d-grid">
 
-                            <button
-                                class="btn btn-primary btn-lg"
-                                type="submit"
-                            >
+                            <button class="btn btn-laranja btn-lg" type="submit">
                                 <i
                                     class="bi bi-box-arrow-in-right me-1"
-                                    aria-hidden="true"
-                                ></i>
+                                    aria-hidden="true"></i>
 
                                 Entrar
                             </button>
-
                         </div>
 
                     </form>
@@ -168,15 +158,15 @@ declare(strict_types=1);
                     <div class="text-center mt-4">
 
                         <a
-                            class="text-decoration-none"
-                            href="<?= BASE_URL ?>/"
-                        >
+                            class="text-decoration-none text-laranja"
+                            href="<?= BASE_URL ?>/">
                             Voltar para a loja
                         </a>
 
                     </div>
 
                 </div>
+
             </div>
 
         </div>
@@ -184,8 +174,8 @@ declare(strict_types=1);
     </main>
 
     <script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-    ></script>
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
+
 </html>
