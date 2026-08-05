@@ -1,0 +1,132 @@
+:root {
+    --cor-primaria: #2563eb;
+    --cor-secundaria: #0f172a;
+    --cor-destaque: #f59e0b;
+    --cor-clara: #f8fafc;
+    --cor-texto: #334155;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    color: var(--cor-texto);
+}
+
+.navbar-brand {
+    letter-spacing: 0.3px;
+}
+
+.hero-loja {
+    min-height: 560px;
+    display: flex;
+    align-items: center;
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(37, 99, 235, 0.20),
+            transparent 40%
+        ),
+        linear-gradient(
+            135deg,
+            #ffffff,
+            #eff6ff
+        );
+}
+
+.hero-etiqueta,
+.section-etiqueta {
+    color: var(--cor-primaria);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.12rem;
+    text-transform: uppercase;
+}
+
+.hero-card {
+    padding: 2.5rem;
+    color: #ffffff;
+    background: var(--cor-secundaria);
+    border-radius: 1.5rem;
+}
+
+.hero-card i {
+    color: var(--cor-destaque);
+    font-size: 3rem;
+}
+
+.beneficio-card {
+    padding: 2rem;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 1rem;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.beneficio-card:hover {
+    transform: translateY(-5px);
+    box-shadow:
+        0 1rem 2rem
+        rgba(15, 23, 42, 0.08);
+}
+
+.beneficio-icone {
+    width: 54px;
+    height: 54px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 1.25rem;
+    color: #ffffff;
+    background: var(--cor-primaria);
+    border-radius: 1rem;
+    font-size: 1.5rem;
+}
+
+.produto-card {
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.produto-card:hover {
+    transform: translateY(-5px);
+    box-shadow:
+        0 1rem 2rem
+        rgba(15, 23, 42, 0.10)
+        !important;
+}
+
+.contato-section {
+    color: #ffffff;
+    background:
+        linear-gradient(
+            135deg,
+            #1d4ed8,
+            #0f172a
+        );
+}
+
+.contato-card {
+    padding: 2rem;
+    color: var(--cor-secundaria);
+    background: #ffffff;
+    border-radius: 1rem;
+}
+
+.footer-site {
+    background: #ffffff;
+    border-top: 1px solid #e2e8f0;
+}
+
+@media (max-width: 767.98px) {
+    .hero-loja {
+        min-height: auto;
+    }
+
+    .hero-card {
+        padding: 2rem;
+    }
+}

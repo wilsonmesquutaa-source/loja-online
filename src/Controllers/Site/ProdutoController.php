@@ -11,7 +11,7 @@ final class ProdutoController extends Controller
 {
     public function index(): void
     {
-        require_once __DIR__ . '/../../../conexao/conexao.php';
+        require_once __DIR__ . '/../../../database/conexao.php';
 
         $sql = "
             SELECT
