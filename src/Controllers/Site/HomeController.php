@@ -4,119 +4,102 @@ declare(strict_types=1);
 
 namespace App\Controllers\Site;
 
+use App\Repositories\ProdutoRepository;
 use App\Controllers\Controller;
+use PDO;
 
-final class HomeController
-    extends Controller
+final class HomeController extends Controller
 {
     public function index(): void
     {
+
         $beneficios = [
+
             [
-                'icone' =>
-                    'bi bi-truck',
-
-                'titulo' =>
-                    'Entrega organizada',
-
+                'icone' => 'bi bi-hand-thumbs-up',
+                'titulo' => 'Feito à mão',
                 'texto' =>
-                    'Acompanhe o andamento dos seus pedidos.',
+                'Salgados artesanais preparados com carinho e qualidade.',
             ],
+
             [
-                'icone' =>
-                    'bi bi-shield-check',
-
-                'titulo' =>
-                    'Compra segura',
-
+                'icone' => 'bi bi-clock',
+                'titulo' => 'Pedidos organizados',
                 'texto' =>
-                    'Seus dados são processados com segurança.',
+                'Receba seus pedidos de forma simples e rápida.',
             ],
+
             [
-                'icone' =>
-                    'bi bi-credit-card',
-
-                'titulo' =>
-                    'Pagamento facilitado',
-
+                'icone' => 'bi bi-truck',
+                'titulo' => 'Entrega rápida',
                 'texto' =>
-                    'Escolha entre diferentes formas de pagamento.',
+                'Levamos sabor até você com segurança.',
             ],
+
             [
-                'icone' =>
-                    'bi bi-headset',
-
-                'titulo' =>
-                    'Suporte ao cliente',
-
+                'icone' => 'bi bi-heart',
+                'titulo' => 'Muito amor',
                 'texto' =>
-                    'Nossa equipe está pronta para ajudar.',
+                'Receitas especiais para deixar seus momentos melhores.',
             ],
+
         ];
 
-        $produtos = [
-            [
-                'nome' =>
-                    'Mouse sem fio',
 
-                'descricao' =>
-                    'Mouse confortável para trabalho e estudo.',
+        $produtoRepository = new ProdutoRepository($this->pdo);
 
-                'preco' =>
-                    89.90,
-            ],
-            [
-                'nome' =>
-                    'Teclado mecânico',
+        $produtos = $produtoRepository->buscarCategoriasDestaque();
 
-                'descricao' =>
-                    'Teclado resistente com ótima resposta.',
 
-                'preco' =>
-                    279.90,
-            ],
-            [
-                'nome' =>
-                    'Monitor LED 24 polegadas',
-
-                'descricao' =>
-                    'Imagem nítida para produtividade e lazer.',
-
-                'preco' =>
-                    899.90,
-            ],
-        ];
 
         $this->view(
             'site/home',
             [
+
                 'tituloPagina' =>
-                    'Página inicial',
+                'Cantim do Lanche',
+
 
                 'descricaoPagina' =>
-                    'Conheça os produtos da nossa Loja Online.',
+                'Salgados artesanais feitos com amor.',
+
 
                 'rotaAtual' =>
-                    'home',
+                'home',
+
 
                 'tituloHero' =>
-                    'Tecnologia para o seu dia a dia',
+                'Salgados artesanais feitos com muito amor',
+
 
                 'textoHero' =>
-                    'Encontre produtos selecionados '
-                    . 'para trabalho, estudo e lazer.',
+                'Encomende salgados deliciosos para festas,
+                eventos ou aquele lanche especial.',
+
 
                 'beneficios' =>
-                    $beneficios,
+                $beneficios,
+
 
                 'produtos' =>
-                    $produtos,
+                $produtos,
+
 
                 'emailContato' =>
-                    'contato@lojaonline.com',
+                'contato@cantimdolanche.com',
 
                 'telefoneContato' =>
-                    '(85) 99999-9999',
+                '(85) 99236-7866',
+
+                'whatsappContato' =>
+                '5585992367866',
+
+                'instagramContato' =>
+                '@cantimdolanche',
+
+                'facebookContato' =>
+                'Cantim do Lanche',
+
             ]
         );
     }

@@ -39,6 +39,15 @@ session_set_cookie_params([
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
+
+/*
+|--------------------------------------------------------------------------
+| Conexão com banco
+|--------------------------------------------------------------------------
+*/
+
+$pdo = require $raizProjeto . '/database/conexao.php';
+
 /*
 |--------------------------------------------------------------------------
 | Carregamento dos arquivos de rotas
@@ -149,8 +158,7 @@ foreach ($rotas as $rota) {
     }
 
 
-    $objetoController = new $controller();
-
+$objetoController = new $controller($pdo);
 
     if (!method_exists($objetoController, $acao)) {
 
