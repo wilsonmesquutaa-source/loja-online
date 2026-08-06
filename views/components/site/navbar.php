@@ -7,23 +7,34 @@ $rotaAtual = $rotaAtual ?? '';
 ?>
 
 <nav
-    class="navbar navbar-expand-lg
-           navbar-dark bg-dark sticky-top"
+    class="navbar navbar-expand-lg bg-white shadow-sm sticky-top"
     aria-label="Navegação principal"
 >
+
     <div class="container">
 
+
+        <!-- LOGO -->
+
         <a
-            class="navbar-brand fw-bold"
+            class="navbar-brand d-flex align-items-center gap-2"
             href="<?= BASE_URL ?>/"
         >
-            <i
-                class="bi bi-bag-check me-2"
-                aria-hidden="true"
-            ></i>
 
-            Loja Online
+            <img
+                src="<?= BASE_URL ?>/assets/images/logo.png"
+                alt="Cantim do Lanche"
+                height="55"
+            >
+
+
+           
+
         </a>
+
+
+
+        <!-- BOTÃO MOBILE -->
 
         <button
             class="navbar-toggler"
@@ -34,69 +45,245 @@ $rotaAtual = $rotaAtual ?? '';
             aria-expanded="false"
             aria-label="Abrir menu"
         >
-            <span class="navbar-toggler-icon"></span>
+
+            <span
+                class="navbar-toggler-icon"
+            ></span>
+
         </button>
+
+
+
 
         <div
             class="collapse navbar-collapse"
             id="menuPrincipal"
         >
 
-            <ul class="navbar-nav ms-auto align-items-lg-center">
+
+            <!-- MENU CENTRAL -->
+
+            <ul
+                class="navbar-nav mx-auto align-items-lg-center"
+            >
+
 
                 <li class="nav-item">
+
                     <a
-                        class="nav-link
-                            <?=
-                                $rotaAtual === 'home'
-                                    ? 'active'
-                                    : ''
-                            ?>"
+                        class="nav-link fw-semibold
+                        <?= $rotaAtual === 'home'
+                            ? 'active'
+                            : ''
+                        ?>"
                         href="<?= BASE_URL ?>/"
                     >
                         Início
                     </a>
+
                 </li>
 
+
+
                 <li class="nav-item">
+
                     <a
-                        class="nav-link"
+                        class="nav-link fw-semibold"
                         href="<?= BASE_URL ?>/produtos"
                     >
-                        Produtos
+                        Cardápio
                     </a>
+
                 </li>
 
+
+
                 <li class="nav-item">
+
                     <a
-                        class="nav-link"
-                        href="<?= BASE_URL ?>/#beneficios"
+                        class="nav-link fw-semibold"
+                        href="<?= BASE_URL ?>/quem-somos"
                     >
-                        Benefícios
+                        Sobre
                     </a>
+
                 </li>
 
+
+
                 <li class="nav-item">
+
                     <a
-                        class="nav-link"
-                        href="<?= BASE_URL ?>/#contato"
+                        class="nav-link fw-semibold"
+                        href="<?= BASE_URL ?>/contato"
                     >
                         Contato
                     </a>
+
                 </li>
 
-                <li class="nav-item ms-lg-3">
-                    <a
-                        class="btn btn-outline-light"
-                        href="<?= BASE_URL ?>/login-admin"
-                    >
-                        Área administrativa
-                    </a>
-                </li>
 
             </ul>
 
+
+
+
+
+
+            <!-- ÁREA DIREITA -->
+
+            <div
+                class="
+                d-flex
+                flex-column
+                flex-lg-row
+                align-items-lg-center
+                gap-2
+                "
+            >
+
+
+
+
+                <!-- BUSCA -->
+
+                <form
+                    class="d-flex"
+                    action="<?= BASE_URL ?>/produtos"
+                    method="GET"
+                >
+
+                    <div
+                        class="input-group"
+                    >
+
+                        <input
+                            type="search"
+                            name="busca"
+                            class="form-control"
+                            placeholder="Buscar salgados..."
+                        >
+
+
+                        <button
+                            class="btn btn-warning"
+                            type="submit"
+                        >
+
+                            <i
+                                class="bi bi-search"
+                            ></i>
+
+                        </button>
+
+
+                    </div>
+
+
+                </form>
+
+
+
+
+
+                <!-- CARRINHO -->
+
+                <a
+                    href="<?= BASE_URL ?>/carrinho"
+                    class="btn btn-outline-warning position-relative"
+                    title="Carrinho"
+                >
+
+                    <i
+                        class="bi bi-cart3"
+                    ></i>
+
+
+                    <span
+                        class="
+                        position-absolute
+                        top-0
+                        start-100
+                        translate-middle
+                        badge
+                        rounded-pill
+                        bg-danger
+                        "
+                    >
+
+                        0
+
+                    </span>
+
+
+                </a>
+
+
+
+
+
+
+                <!-- LOGIN CLIENTE -->
+
+                <a
+                    href="<?= BASE_URL ?>/login"
+                    class="btn btn-outline-secondary"
+                >
+
+                    <i
+                        class="bi bi-person"
+                    ></i>
+
+                    Entrar
+
+                </a>
+
+
+
+
+
+
+                <!-- CADASTRO -->
+
+                <a
+                    href="<?= BASE_URL ?>/cadastro"
+                    class="btn btn-warning text-white"
+                >
+
+                    Cadastrar
+
+                </a>
+
+
+
+
+
+
+                <!-- ADMIN -->
+
+                <a
+                    href="<?= BASE_URL ?>/login-admin"
+                    class="btn btn-dark"
+                >
+
+                    <i
+                        class="bi bi-shield-lock"
+                    ></i>
+
+                    Admin
+
+                </a>
+
+
+
+
+            </div>
+
+
         </div>
 
+
     </div>
+
+
 </nav>

@@ -1,60 +1,95 @@
-    <footer class="footer-site py-5">
+<div class="container">
 
-        <div class="container">
+    <div class="row g-4">
 
-            <div
-                class="d-flex flex-column flex-md-row
-                       justify-content-between
-                       align-items-md-center gap-3"
-            >
+        <div class="col-md-4">
 
-                <div>
+            <h5 class="fw-bold text-warning">
+                Cantim do Lanche
+            </h5>
 
-                    <p class="fw-bold mb-1">
-                        Loja Online
-                    </p>
+            <p class="text-secondary">
+                Salgados artesanais feitos com amor,
+                qualidade e aquele sabor de casa.
+            </p>
 
-                    <p class="text-secondary mb-0">
-                        &copy;
-                        <?= date('Y') ?>
-                        — Projeto desenvolvido na UC12.
-                    </p>
+        </div>
 
-                </div>
 
-                <button
-                    type="button"
-                    class="btn btn-outline-secondary"
-                    data-voltar-topo
-                >
-                    <i
-                        class="bi bi-arrow-up"
-                        aria-hidden="true"
-                    ></i>
+        <div class="col-md-4">
 
-                    Voltar ao topo
-                </button>
+            <h5 class="fw-bold">
+                Links rápidos
+            </h5>
+
+            <ul class="list-unstyled">
+
+                <li>
+                    <a href="<?= BASE_URL ?>/"
+                        class="text-decoration-none text-secondary">
+                        Início
+                    </a>
+                </li>
+
+                <li>
+                    <a href="<?= BASE_URL ?>/produtos"
+                        class="text-decoration-none text-secondary">
+                        Cardápio
+                    </a>
+                </li>
+
+                <li>
+                    <a href="<?= BASE_URL ?>/contato"
+                        class="text-decoration-none text-secondary">
+                        Contato
+                    </a>
+                </li>
+
+            </ul>
+
+        </div>
+
+
+        <div class="col-md-4">
+
+            <h5 class="fw-bold">
+                Redes sociais
+            </h5>
+
+
+            <div class="d-flex gap-3">
+
+                <a href="https://wa.me/5585992367866"
+                    target="_blank"
+                    class="text-success fs-4">
+
+                    <i class="bi bi-whatsapp"></i>
+
+                </a>
+
+
+                <a href="https://instagram.com/cantimdolanche"
+                    target="_blank"
+                    class="text-danger fs-4">
+
+                    <i class="bi bi-instagram"></i>
+
+                </a>
+
+
+                <a href="#"
+                    target="_blank"
+                    class="text-primary fs-4">
+
+                    <i class="bi bi-facebook"></i>
+
+                </a>
+
 
             </div>
 
         </div>
 
-    </footer>
+    </div>
 
-    <script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-    ></script>
-
-    <script
-        src="<?=
-            htmlspecialchars(
-                BASE_URL
-                    . '/assets/js/site.js',
-                ENT_QUOTES,
-                'UTF-8'
-            )
-        ?>"
-    ></script>
-
-</body>
-</html>
+</div>

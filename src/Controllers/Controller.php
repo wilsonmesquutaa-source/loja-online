@@ -4,10 +4,20 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
+use PDO;
 use RuntimeException;
 
 abstract class Controller
 {
+    protected PDO $pdo;
+
+
+    public function __construct(PDO $pdo)
+    {
+        $this->pdo = $pdo;
+    }
+
+    
     protected function view(
         string $view,
         array $dados = []

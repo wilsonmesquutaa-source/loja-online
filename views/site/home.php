@@ -11,7 +11,7 @@ View::componente(
     'site/navbar',
     [
         'rotaAtual' =>
-            $rotaAtual,
+        $rotaAtual,
     ]
 );
 
@@ -25,18 +25,10 @@ View::componente(
         'site/sections/hero',
         [
             'tituloHero' =>
-                $tituloHero,
+            $tituloHero,
 
             'textoHero' =>
-                $textoHero,
-        ]
-    );
-
-    View::componente(
-        'site/sections/beneficios',
-        [
-            'beneficios' =>
-                $beneficios,
+            $textoHero,
         ]
     );
 
@@ -44,18 +36,35 @@ View::componente(
         'site/sections/produtos',
         [
             'produtos' =>
-                $produtos,
+            $produtos,
         ]
     );
+    View::componente(
+        'site/sections/beneficios',
+        [
+            'beneficios' =>
+            $beneficios,
+        ]
+    );
+
 
     View::componente(
         'site/sections/contato',
         [
             'emailContato' =>
-                $emailContato,
+            $emailContato,
 
             'telefoneContato' =>
-                $telefoneContato,
+            $telefoneContato,
+
+            'whatsappContato' =>
+            $whatsappContato,
+
+            'instagramContato' =>
+            $instagramContato,
+
+            'facebookContato' =>
+            $facebookContato,
         ]
     );
 
