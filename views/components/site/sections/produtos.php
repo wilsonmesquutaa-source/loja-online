@@ -1,21 +1,11 @@
-<?php
-
-declare(strict_types=1);
-
-$produtos = $produtos ?? [];
-
-?>
-
-<section class="py-5">
-
+<section class="produtos-section py-5">
     <div class="container">
 
 
         <div
             class="d-flex flex-column flex-md-row
-                   justify-content-between
-                   align-items-md-end gap-3 mb-5"
-        >
+               justify-content-between
+               align-items-md-end gap-3 mb-5">
 
             <div>
 
@@ -28,14 +18,12 @@ $produtos = $produtos ?? [];
                     Salgados artesanais
                 </h2>
 
-
             </div>
 
 
             <a
                 class="btn btn-outline-warning"
-                href="<?= BASE_URL ?>/produtos"
-            >
+                href="<?= BASE_URL ?>/produtos">
                 Ver cardápio completo
             </a>
 
@@ -49,18 +37,16 @@ $produtos = $produtos ?? [];
         <div class="row g-4">
 
 
-            <?php if ($produtos === []): ?>
+            <?php if ($categorias === []): ?>
 
 
                 <div class="col-12">
 
-
                     <div class="alert alert-info">
 
-                        Nenhum produto encontrado.
+                        Nenhuma categoria encontrada.
 
                     </div>
-
 
                 </div>
 
@@ -71,65 +57,57 @@ $produtos = $produtos ?? [];
 
 
 
-            <?php foreach ($produtos as $produto): ?>
+            <?php foreach ($categorias as $categoria): ?>
 
 
-                <div class="col-md-6 col-lg-4">
+                <div class="col-md-6 col-lg-3">
 
 
                     <article
                         class="produto-card card
-                               border-0 shadow-sm h-100"
-                    >
-
+                           border-0 shadow-sm h-100">
 
 
                         <div
-                            class="card-body d-flex flex-column"
-                        >
-
+                            class="card-body d-flex flex-column">
 
 
                             <span
                                 class="badge bg-warning text-dark
-                                       align-self-start mb-3"
-                            >
+                                align-self-start mb-3">
 
-                                Destaque
+                                <?= htmlspecialchars(
+                                    $etiquetaProdutos ?? 'Cardápio',
+                                    ENT_QUOTES,
+                                    'UTF-8'
+                                ) ?>
 
                             </span>
-
-
 
 
 
                             <h3 class="h5 fw-bold">
 
                                 <?= htmlspecialchars(
-                                    $produto['nome'],
+                                    $categoria['nome'],
                                     ENT_QUOTES,
                                     'UTF-8'
                                 ) ?>
-
 
                             </h3>
 
 
 
 
-
                             <p class="text-secondary">
 
-
                                 <?= htmlspecialchars(
-                                    $produto['descricao'],
+                                    $categoria['descricao'] ?? '',
                                     ENT_QUOTES,
                                     'UTF-8'
                                 ) ?>
 
-
                             </p>
-
 
 
 
@@ -137,17 +115,15 @@ $produtos = $produtos ?? [];
                             <div class="mt-auto">
 
 
-
                                 <p
                                     class="fs-4 fw-bold
-                                           text-warning mb-2"
-                                >
+                                       text-warning mb-3">
 
                                     R$
 
                                     <?= number_format(
                                         (float)
-                                        $produto['preco'],
+                                        $categoria['preco'],
                                         2,
                                         ',',
                                         '.'
@@ -159,79 +135,13 @@ $produtos = $produtos ?? [];
 
 
 
-
-                                <?php if (
-                                    isset($produto['preco_revenda'])
-                                ): ?>
-
-
-                                    <div
-                                        class="alert alert-light
-                                               border"
-                                    >
-
-
-                                        <strong>
-                                            Revenda:
-                                        </strong>
-
-
-                                        R$
-
-                                        <?= number_format(
-                                            (float)
-                                            $produto['preco_revenda'],
-                                            2,
-                                            ',',
-                                            '.'
-                                        ) ?>
-
-
-                                        por unidade
-
-
-                                        <?php if (
-                                            isset(
-                                                $produto['quantidade_minima']
-                                            )
-                                        ): ?>
-
-
-                                            <br>
-
-
-                                            <small>
-
-                                                A partir de
-
-                                                <?= $produto['quantidade_minima'] ?>
-
-                                                unidades
-
-                                            </small>
-
-
-                                        <?php endif; ?>
-
-
-                                    </div>
-
-
-                                <?php endif; ?>
-
-
-
-
-
                                 <a
                                     class="btn btn-warning text-white w-100"
-                                    href="<?= BASE_URL ?>/produtos"
-                                >
+                                    href="<?= BASE_URL ?>/produtos/categoria/<?= $categoria['id'] ?>">
 
-                                    Ver detalhes
+                                    Ver sabores
 
                                 </a>
-
 
 
                             </div>
@@ -253,6 +163,4 @@ $produtos = $produtos ?? [];
 
 
     </div>
-
-
 </section>

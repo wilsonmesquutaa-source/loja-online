@@ -48,7 +48,7 @@ final class HomeController extends Controller
 
         $produtoRepository = new ProdutoRepository($this->pdo);
 
-        $produtos = $produtoRepository->buscarCategoriasDestaque();
+        $categorias = $produtoRepository->buscarCategoriasDestaque();
 
 
 
@@ -81,10 +81,12 @@ final class HomeController extends Controller
                 $beneficios,
 
 
-                'produtos' =>
-                $produtos,
+               'categorias' =>
+                $categorias,
 
-
+                'etiquetaProdutos' =>
+                'Destaque',
+                
                 'emailContato' =>
                 'contato@cantimdolanche.com',
 

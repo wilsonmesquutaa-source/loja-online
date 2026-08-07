@@ -14,6 +14,20 @@ body {
     color: var(--cor-texto);
 }
 
+/* ============================
+   Carrinho
+============================ */
+.btn-carrinho {
+    color: #d99000;
+    border: 2px solid #d99000;
+    background: transparent;
+}
+
+.btn-carrinho:hover {
+    background: #d99000;
+    color: #ffffff;
+}
+
 .navbar-brand {
     letter-spacing: 0.3px;
 }
@@ -116,9 +130,20 @@ body {
     border-radius: 1rem;
 }
 
+/* ============================
+FOOTER
+============================ */
+
 .footer-site {
+
     background: #ffffff;
-    border-top: 1px solid #e2e8f0;
+
+    margin-top: 80px;
+
+    padding: 50px 0;
+
+    border-top: 1px solid #eee;
+
 }
 
 @media (max-width: 767.98px) {
