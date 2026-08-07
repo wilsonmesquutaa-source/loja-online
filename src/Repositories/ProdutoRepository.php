@@ -17,6 +17,7 @@ final class ProdutoRepository
     }
 
 
+
     public function buscarCategoriasDestaque(): array
     {
         $sql = '
@@ -35,9 +36,53 @@ final class ProdutoRepository
 
         $consulta = $this->pdo->prepare($sql);
 
+
         $consulta->execute();
 
 
         return $consulta->fetchAll();
     }
+
+
+
+
+    public function buscarProdutosPorCategoria(
+        int $categoriaId
+    ): array
+    {
+
+        $sql = '
+            SELECT
+                id,
+                nome,
+                descricao,
+                estoque
+            FROM produtos
+            WHERE categoria_id = :categoria_id
+            AND status = "ativo"
+            ORDER BY nome
+        ';
+
+
+        $consulta = $this->pdo->prepare($sql);
+
+
+
+        $consulta->bindValue(
+            ':categoria_id',
+            $categoriaId,
+            PDO::PARAM_INT
+        );
+
+
+
+        $consulta->execute();
+
+
+
+        return $consulta->fetchAll();
+
+    }
+
+
 }

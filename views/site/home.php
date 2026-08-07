@@ -35,10 +35,12 @@ View::componente(
     View::componente(
         'site/sections/produtos',
         [
-            'produtos' =>
-            $produtos,
+            'categorias' =>
+            $categorias,
         ]
     );
+
+
     View::componente(
         'site/sections/beneficios',
         [

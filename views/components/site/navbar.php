@@ -8,8 +8,7 @@ $rotaAtual = $rotaAtual ?? '';
 
 <nav
     class="navbar navbar-expand-lg bg-white shadow-sm sticky-top"
-    aria-label="Navegação principal"
->
+    aria-label="Navegação principal">
 
     <div class="container">
 
@@ -18,17 +17,15 @@ $rotaAtual = $rotaAtual ?? '';
 
         <a
             class="navbar-brand d-flex align-items-center gap-2"
-            href="<?= BASE_URL ?>/"
-        >
+            href="<?= BASE_URL ?>/">
 
             <img
                 src="<?= BASE_URL ?>/assets/images/logo.png"
                 alt="Cantim do Lanche"
-                height="55"
-            >
+                height="55">
 
 
-           
+
 
         </a>
 
@@ -43,12 +40,10 @@ $rotaAtual = $rotaAtual ?? '';
             data-bs-target="#menuPrincipal"
             aria-controls="menuPrincipal"
             aria-expanded="false"
-            aria-label="Abrir menu"
-        >
+            aria-label="Abrir menu">
 
             <span
-                class="navbar-toggler-icon"
-            ></span>
+                class="navbar-toggler-icon"></span>
 
         </button>
 
@@ -57,15 +52,13 @@ $rotaAtual = $rotaAtual ?? '';
 
         <div
             class="collapse navbar-collapse"
-            id="menuPrincipal"
-        >
+            id="menuPrincipal">
 
 
             <!-- MENU CENTRAL -->
 
             <ul
-                class="navbar-nav mx-auto align-items-lg-center"
-            >
+                class="navbar-nav mx-auto align-items-lg-center">
 
 
                 <li class="nav-item">
@@ -76,8 +69,7 @@ $rotaAtual = $rotaAtual ?? '';
                             ? 'active'
                             : ''
                         ?>"
-                        href="<?= BASE_URL ?>/"
-                    >
+                        href="<?= BASE_URL ?>/">
                         Início
                     </a>
 
@@ -89,8 +81,7 @@ $rotaAtual = $rotaAtual ?? '';
 
                     <a
                         class="nav-link fw-semibold"
-                        href="<?= BASE_URL ?>/produtos"
-                    >
+                        href="<?= BASE_URL ?>/produtos">
                         Cardápio
                     </a>
 
@@ -102,8 +93,7 @@ $rotaAtual = $rotaAtual ?? '';
 
                     <a
                         class="nav-link fw-semibold"
-                        href="<?= BASE_URL ?>/quem-somos"
-                    >
+                        href="<?= BASE_URL ?>/quem-somos">
                         Sobre
                     </a>
 
@@ -115,8 +105,7 @@ $rotaAtual = $rotaAtual ?? '';
 
                     <a
                         class="nav-link fw-semibold"
-                        href="<?= BASE_URL ?>/contato"
-                    >
+                        href="<?= BASE_URL ?>/contato">
                         Contato
                     </a>
 
@@ -139,8 +128,7 @@ $rotaAtual = $rotaAtual ?? '';
                 flex-lg-row
                 align-items-lg-center
                 gap-2
-                "
-            >
+                ">
 
 
 
@@ -150,29 +138,24 @@ $rotaAtual = $rotaAtual ?? '';
                 <form
                     class="d-flex"
                     action="<?= BASE_URL ?>/produtos"
-                    method="GET"
-                >
+                    method="GET">
 
                     <div
-                        class="input-group"
-                    >
+                        class="input-group">
 
                         <input
                             type="search"
                             name="busca"
                             class="form-control"
-                            placeholder="Buscar salgados..."
-                        >
+                            placeholder="Buscar salgados...">
 
 
                         <button
                             class="btn btn-warning"
-                            type="submit"
-                        >
+                            type="submit">
 
                             <i
-                                class="bi bi-search"
-                            ></i>
+                                class="bi bi-search"></i>
 
                         </button>
 
@@ -190,14 +173,10 @@ $rotaAtual = $rotaAtual ?? '';
 
                 <a
                     href="<?= BASE_URL ?>/carrinho"
-                    class="btn btn-outline-warning position-relative"
-                    title="Carrinho"
-                >
+                    class="btn btn-carrinho position-relative"
+                    title="Carrinho">
 
-                    <i
-                        class="bi bi-cart3"
-                    ></i>
-
+                    <i class="bi bi-cart3"></i>
 
                     <span
                         class="
@@ -208,13 +187,9 @@ $rotaAtual = $rotaAtual ?? '';
                         badge
                         rounded-pill
                         bg-danger
-                        "
-                    >
-
+                        ">
                         0
-
                     </span>
-
 
                 </a>
 
@@ -227,12 +202,10 @@ $rotaAtual = $rotaAtual ?? '';
 
                 <a
                     href="<?= BASE_URL ?>/login"
-                    class="btn btn-outline-secondary"
-                >
+                    class="btn btn-outline-secondary">
 
                     <i
-                        class="bi bi-person"
-                    ></i>
+                        class="bi bi-person"></i>
 
                     Entrar
 
@@ -247,8 +220,7 @@ $rotaAtual = $rotaAtual ?? '';
 
                 <a
                     href="<?= BASE_URL ?>/cadastro"
-                    class="btn btn-warning text-white"
-                >
+                    class="btn btn-warning text-white">
 
                     Cadastrar
 
@@ -263,12 +235,10 @@ $rotaAtual = $rotaAtual ?? '';
 
                 <a
                     href="<?= BASE_URL ?>/login-admin"
-                    class="btn btn-dark"
-                >
+                    class="btn btn-dark">
 
                     <i
-                        class="bi bi-shield-lock"
-                    ></i>
+                        class="bi bi-shield-lock"></i>
 
                     Admin
 
