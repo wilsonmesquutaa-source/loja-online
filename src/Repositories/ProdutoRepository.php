@@ -43,30 +43,60 @@ final class ProdutoRepository
         return $consulta->fetchAll();
     }
 
+    public function buscarCategoriaPorId(
+        int $categoriaId
+    ): ?array {
+        $sql = '
+        SELECT
+            id,
+            nome,
+            descricao,
+            preco,
+            preco_revenda,
+            quantidade_minima_revenda
+        FROM categorias
+        WHERE id = :id
+        AND ativo = 1
+        LIMIT 1
+    ';
+
+        $consulta = $this->pdo->prepare($sql);
+
+        $consulta->bindValue(
+            ':id',
+            $categoriaId,
+            PDO::PARAM_INT
+        );
+
+        $consulta->execute();
+
+        $categoria = $consulta->fetch();
+
+        return $categoria !== false
+            ? $categoria
+            : null;
+    }
+
 
 
 
     public function buscarProdutosPorCategoria(
         int $categoriaId
-    ): array
-    {
-
+    ): array {
         $sql = '
-            SELECT
-                id,
-                nome,
-                descricao,
-                estoque
-            FROM produtos
-            WHERE categoria_id = :categoria_id
-            AND status = "ativo"
-            ORDER BY nome
-        ';
-
+        SELECT
+        id,
+        categoria_id,
+        nome,
+        descricao,
+        estoque
+        FROM produtos
+        WHERE categoria_id = :categoria_id
+        AND status = :status
+        ORDER BY nome
+    ';
 
         $consulta = $this->pdo->prepare($sql);
-
-
 
         $consulta->bindValue(
             ':categoria_id',
@@ -74,15 +104,14 @@ final class ProdutoRepository
             PDO::PARAM_INT
         );
 
-
+        $consulta->bindValue(
+            ':status',
+            'ativo',
+            PDO::PARAM_STR
+        );
 
         $consulta->execute();
 
-
-
         return $consulta->fetchAll();
-
     }
-
-
 }
