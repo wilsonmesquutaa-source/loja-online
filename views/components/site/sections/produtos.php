@@ -1,3 +1,10 @@
+<?php
+
+declare(strict_types=1);
+
+$categorias = $categorias ?? [];
+$etiquetaProdutos = $etiquetaProdutos ?? 'Cardápio';
+?>
 <section class="produtos-section py-5">
     <div class="container">
 
