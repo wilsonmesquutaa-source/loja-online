@@ -1,400 +1,423 @@
-document.addEventListener(
-    'DOMContentLoaded',
-    function () {
+document.addEventListener('DOMContentLoaded', function () {
 
-        /*
-        =================================
-        VOLTAR AO TOPO
-        =================================
-        */
+    console.log('SITE.JS CARREGADO');
 
-        const botaoTopo = document.querySelector(
-            '[data-voltar-topo]'
+
+    /*
+    =================================
+    SELEÇÃO DE PRODUTOS
+    =================================
+    */
+
+    const categoria =
+        document.querySelector('.categoria-selecao');
+
+
+    if (!categoria) {
+
+        console.log(
+            'Nenhuma seleção de categoria encontrada.'
         );
 
-        if (botaoTopo) {
+        return;
+    }
 
-            botaoTopo.addEventListener(
-                'click',
-                function () {
 
-                    window.scrollTo({
-                        top: 0,
-                        behavior: 'smooth'
-                    });
+    console.log(
+        'Página de categoria encontrada.'
+    );
 
+
+    /*
+    =================================
+    ELEMENTOS
+    =================================
+    */
+
+    const contador =
+        categoria.querySelector(
+            '[data-contador-opcoes]'
+        );
+
+
+    const elementoLimite =
+        categoria.querySelector(
+            '[data-limite-opcoes]'
+        );
+
+
+    if (!contador) {
+
+        console.error(
+            'Contador de opções não encontrado.'
+        );
+
+        return;
+    }
+
+
+    if (!elementoLimite) {
+
+        console.error(
+            'Limite de opções não encontrado.'
+        );
+
+        return;
+    }
+
+
+    /*
+    =================================
+    LIMITE
+    =================================
+    */
+
+    const limite =
+        Number(
+            elementoLimite.dataset.limiteOpcoes
+        );
+
+
+    console.log(
+        'Limite da categoria:',
+        limite
+    );
+
+
+    if (
+        !Number.isInteger(limite)
+        ||
+        limite < 1
+    ) {
+
+        console.error(
+            'Limite de opções inválido:',
+            elementoLimite.dataset.limiteOpcoes
+        );
+
+        return;
+    }
+
+
+    /*
+    =================================
+    ESTADO
+    =================================
+    */
+
+    let totalSelecionado = 0;
+
+
+    /*
+    =================================
+    ATUALIZA INTERFACE
+    =================================
+    */
+
+    function atualizarInterface() {
+
+        contador.textContent =
+            totalSelecionado;
+
+
+        const produtos =
+            categoria.querySelectorAll(
+                '[data-produto-wrapper]'
+            );
+
+
+        produtos.forEach(
+            function (produto) {
+
+                const quantidade =
+                    produto.querySelector(
+                        '[data-quantidade]'
+                    );
+
+
+                const botaoAumentar =
+                    produto.querySelector(
+                        '[data-aumentar]'
+                    );
+
+
+                const botaoDiminuir =
+                    produto.querySelector(
+                        '[data-diminuir]'
+                    );
+
+
+                if (
+                    !quantidade
+                    ||
+                    !botaoAumentar
+                    ||
+                    !botaoDiminuir
+                ) {
+                    return;
                 }
-            );
-
-        }
 
 
-        /*
-        =================================
-        SCROLL SUAVE LINKS INTERNOS
-        =================================
-        */
+                const valor =
+                    Number(
+                        quantidade.textContent
+                    ) || 0;
 
-        const linksInternos =
-            document.querySelectorAll(
-                'a[href^="#"]'
-            );
 
-        linksInternos.forEach(
-            function (link) {
+                /*
+                =================================
+                BOTÃO +
+                =================================
 
-                link.addEventListener(
-                    'click',
-                    function (evento) {
+                O botão só fica bloqueado quando
+                o limite geral foi atingido.
 
-                        const href =
-                            link.getAttribute('href');
+                Portanto:
 
-                        if (
-                            !href ||
-                            href === '#'
-                        ) {
-                            return;
-                        }
+                Coxinha 1 → pode +
+                Coxinha 2 → pode +
+                Coxinha 3 → pode +
+                Coxinha 4 → pode +
 
-                        const destino =
-                            document.querySelector(href);
+                desde que o total geral ainda
+                esteja abaixo do limite.
+                */
 
-                        if (!destino) {
-                            return;
-                        }
+                botaoAumentar.disabled =
+                    totalSelecionado >= limite;
 
-                        evento.preventDefault();
 
-                        destino.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
+                /*
+                =================================
+                BOTÃO -
+                =================================
+                */
 
-                    }
-                );
+                botaoDiminuir.disabled =
+                    valor <= 0;
 
             }
         );
 
-
-        /*
-        =================================
-        CATEGORIAS
-        =================================
-        */
-
-        const categorias =
-            document.querySelectorAll(
-                '.categoria-card'
-            );
+    }
 
 
-        categorias.forEach(
-            function (card) {
+    /*
+    =================================
+    CLIQUE
+    =================================
+    */
 
-                card.addEventListener(
-                    'click',
-                    function () {
+    categoria.addEventListener(
+        'click',
+        function (evento) {
 
-                        const id =
-                            card.dataset.id;
+            /*
+            =================================
+            BOTÃO +
+            =================================
+            */
 
-                        const nome =
-                            card.dataset.nome;
-
-                        const titulo =
-                            document.getElementById(
-                                'tituloCategoria'
-                            );
-
-                        const conteudo =
-                            document.getElementById(
-                                'conteudoCategoria'
-                            );
-
-                        const elementoOffcanvas =
-                            document.getElementById(
-                                'offcanvasCategoria'
-                            );
-
-
-                        if (!elementoOffcanvas) {
-
-                            console.error(
-                                'Offcanvas #offcanvasCategoria não encontrado.'
-                            );
-
-                            return;
-
-                        }
-
-
-                        if (titulo) {
-
-                            titulo.innerText = nome;
-
-                        }
-
-
-                        if (conteudo) {
-
-                            conteudo.innerHTML = `
-                                <div class="text-center py-5">
-                                    Carregando produtos...
-                                </div>
-                            `;
-
-                        }
-
-
-                        const painel =
-                            bootstrap.Offcanvas.getOrCreateInstance(
-                                elementoOffcanvas
-                            );
-
-
-                        painel.show();
-
-
-                        fetch(
-                            `${BASE_URL}/produtos/categoria/${id}?_=${Date.now()}`,
-                            {
-                                cache: 'no-store'
-                            }
-                        )
-
-                            .then(
-                                function (response) {
-
-                                    if (!response.ok) {
-
-                                        throw new Error(
-                                            'Erro na requisição'
-                                        );
-
-                                    }
-
-                                    return response.text();
-
-                                }
-                            )
-
-                            .then(
-                                function (html) {
-
-                                    if (conteudo) {
-
-                                        conteudo.innerHTML =
-                                            html;
-
-                                        inicializarSelecaoProdutos(
-                                            conteudo
-                                        );
-
-                                    }
-
-                                }
-                            )
-
-                            .catch(
-                                function (erro) {
-
-                                    if (conteudo) {
-
-                                        conteudo.innerHTML = `
-                                        <div class="alert alert-danger">
-                                            Erro ao carregar produtos.
-                                        </div>
-                                    `;
-
-                                    }
-
-                                    console.error(erro);
-
-                                }
-                            );
-
-                    }
-                );
-
-            }
-        );
-
-
-        /*
-        =================================
-        SELEÇÃO DE PRODUTOS
-        =================================
-        */
-
-        function inicializarSelecaoProdutos(
-            container
-        ) {
-
-            const contador =
-                container.querySelector(
-                    '[data-contador-opcoes]'
-                );
-
-
-            const primeiroBotao =
-                container.querySelector(
+            const botaoAumentar =
+                evento.target.closest(
                     '[data-aumentar]'
                 );
 
 
-            if (!contador || !primeiroBotao) {
-                return;
-            }
+            if (botaoAumentar) {
+
+                evento.preventDefault();
 
 
-            const elementoLimite =
-                container.querySelector(
-                    '[data-limite-opcoes]'
-                );
+                /*
+                Não permite ultrapassar
+                o limite da categoria.
+                */
 
-            if (!elementoLimite) {
-                return;
-            }
+                if (
+                    totalSelecionado >= limite
+                ) {
 
-            const limite =
-                parseInt(
-                    elementoLimite.dataset.limiteOpcoes,
-                    10
-                );
-
-
-            const wrappers =
-                container.querySelectorAll(
-                    '[data-produto-wrapper]'
-                );
-
-
-            wrappers.forEach(
-                function (wrapper) {
-
-                    const botaoAumentar =
-                        wrapper.querySelector(
-                            '[data-aumentar]'
-                        );
-
-                    const botaoDiminuir =
-                        wrapper.querySelector(
-                            '[data-diminuir]'
-                        );
-
-                    const quantidade =
-                        wrapper.querySelector(
-                            '[data-quantidade]'
-                        );
-
-
-                    let valor = 0;
-
-
-                    botaoAumentar.addEventListener(
-                        'click',
-                        function () {
-
-                            if (
-                                totalSelecionado >=
-                                limite
-                            ) {
-                                return;
-                            }
-
-
-                            valor++;
-
-                            totalSelecionado++;
-
-
-                            quantidade.innerText =
-                                valor;
-
-
-                            botaoDiminuir.disabled =
-                                false;
-
-
-                            if (
-                                totalSelecionado >=
-                                limite
-                            ) {
-
-                                container
-                                    .querySelectorAll(
-                                        '[data-aumentar]'
-                                    )
-                                    .forEach(
-                                        function (botao) {
-
-                                            botao.disabled =
-                                                true;
-
-                                        }
-                                    );
-
-                            }
-
-                            contador.innerText =
-                                totalSelecionado;
-
-                        }
-                    );
-
-
-                    botaoDiminuir.addEventListener(
-                        'click',
-                        function () {
-
-                            if (valor <= 0) {
-                                return;
-                            }
-
-
-                            valor--;
-
-                            totalSelecionado--;
-
-
-                            quantidade.innerText =
-                                valor;
-
-
-                            if (valor === 0) {
-
-                                botaoDiminuir.disabled =
-                                    true;
-
-                            }
-
-
-                            container
-                                .querySelectorAll(
-                                    '[data-aumentar]'
-                                )
-                                .forEach(
-                                    function (botao) {
-
-                                        botao.disabled =
-                                            false;
-
-                                    }
-                                );
-
-
-                            contador.innerText =
-                                totalSelecionado;
-
-                        }
-                    );
-
+                    return;
                 }
-            );
+
+
+                const produto =
+                    botaoAumentar.closest(
+                        '[data-produto-wrapper]'
+                    );
+
+
+                if (!produto) {
+
+                    console.error(
+                        'Produto não encontrado.'
+                    );
+
+                    return;
+                }
+
+
+                const quantidade =
+                    produto.querySelector(
+                        '[data-quantidade]'
+                    );
+
+
+                if (!quantidade) {
+
+                    console.error(
+                        'Quantidade do produto não encontrada.'
+                    );
+
+                    return;
+                }
+
+
+                /*
+                =================================
+                AUMENTA A QUANTIDADE
+                =================================
+                */
+
+                let valorAtual =
+                    Number(
+                        quantidade.textContent
+                    ) || 0;
+
+
+                valorAtual++;
+
+
+                quantidade.textContent =
+                    valorAtual;
+
+
+                totalSelecionado++;
+
+
+                atualizarInterface();
+
+
+                console.log(
+                    'Produto adicionado:',
+                    produto.dataset.produtoId,
+                    'Quantidade:',
+                    valorAtual,
+                    'Total:',
+                    totalSelecionado
+                );
+
+
+                return;
+            }
+
+
+            /*
+            =================================
+            BOTÃO -
+            =================================
+            */
+
+            const botaoDiminuir =
+                evento.target.closest(
+                    '[data-diminuir]'
+                );
+
+
+            if (botaoDiminuir) {
+
+                evento.preventDefault();
+
+
+                const produto =
+                    botaoDiminuir.closest(
+                        '[data-produto-wrapper]'
+                    );
+
+
+                if (!produto) {
+
+                    console.error(
+                        'Produto não encontrado.'
+                    );
+
+                    return;
+                }
+
+
+                const quantidade =
+                    produto.querySelector(
+                        '[data-quantidade]'
+                    );
+
+
+                if (!quantidade) {
+
+                    console.error(
+                        'Quantidade do produto não encontrada.'
+                    );
+
+                    return;
+                }
+
+
+                let valorAtual =
+                    Number(
+                        quantidade.textContent
+                    ) || 0;
+
+
+                /*
+                Não permite quantidade negativa.
+                */
+
+                if (valorAtual <= 0) {
+
+                    return;
+                }
+
+
+                valorAtual--;
+
+
+                quantidade.textContent =
+                    valorAtual;
+
+
+                totalSelecionado =
+                    Math.max(
+                        0,
+                        totalSelecionado - 1
+                    );
+
+
+                atualizarInterface();
+
+
+                console.log(
+                    'Produto removido:',
+                    produto.dataset.produtoId,
+                    'Quantidade:',
+                    valorAtual,
+                    'Total:',
+                    totalSelecionado
+                );
+
+
+                return;
+            }
 
         }
+    );
 
-    }
-);
+
+    /*
+    =================================
+    ESTADO INICIAL
+    =================================
+    */
+
+    atualizarInterface();
+
+});

@@ -35,7 +35,4 @@ View::componente(
 
 </main>
 
-<?php
-
-require APP_ROOT
-    . '/views/layouts/site/footer.php';
+<?php require APP_ROOT . '/views/layouts/site/footer.php'; ?>
