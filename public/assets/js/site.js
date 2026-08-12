@@ -5,677 +5,560 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /*
     =================================
-    SELEÇÃO DE PRODUTOS
+    SELEÇÃO DE CATEGORIA
     =================================
     */
 
     const categoria =
-        document.querySelector('.categoria-selecao');
-
-
-    if (!categoria) {
-
-        console.log(
-            'Nenhuma seleção de categoria encontrada.'
-        );
-
-        return;
-    }
-
-
-    console.log(
-        'Página de categoria encontrada.'
-    );
-
-
-    /*
-    =================================
-    TIPO DA CATEGORIA
-    =================================
-    */
-
-    const tipoCategoria =
-        categoria.dataset.tipoCategoria || 'unica';
-
-
-    console.log(
-        'Tipo da categoria:',
-        tipoCategoria
-    );
-
-
-    /*
-    =================================
-    CATEGORIAS SEM LIMITE GERAL
-    =================================
-
-    Salgados grandes e empadão trabalham
-    somente com a quantidade individual
-    de cada produto.
-    */
-
-    const quantidadeLivre =
-        tipoCategoria === 'salgados_grandes'
-        ||
-        tipoCategoria === 'empadao';
-
-
-    if (quantidadeLivre) {
-
-        console.log(
-            'Categoria com quantidade livre.'
+        document.querySelector(
+            '.categoria-selecao'
         );
 
 
-        const produtos =
-            categoria.querySelectorAll(
-                '[data-produto-wrapper]'
-            );
+    if (categoria) {
 
+        const tipoCategoria =
+            categoria.dataset.tipoCategoria
+            || 'unica';
 
-        produtos.forEach(
-            function (produto) {
 
-                const quantidade =
-                    produto.querySelector(
-                        '[data-quantidade]'
-                    );
+        function atualizarInputQuantidade(
+            produto,
+            valor
+        ) {
 
-
-                const botaoAumentar =
-                    produto.querySelector(
-                        '[data-aumentar]'
-                    );
-
-
-                const botaoDiminuir =
-                    produto.querySelector(
-                        '[data-diminuir]'
-                    );
-
-
-                const inputQuantidade =
-                    produto.querySelector(
-                        '[data-input-quantidade]'
-                    );
-
-
-                if (
-                    !quantidade
-                    ||
-                    !botaoAumentar
-                    ||
-                    !botaoDiminuir
-                ) {
-
-                    return;
-
-                }
-
-
-                /*
-                =================================
-                ESTADO INICIAL
-                =================================
-                */
-
-                const valorInicial =
-                    Number(
-                        quantidade.textContent
-                    ) || 0;
-
-
-                botaoDiminuir.disabled =
-                    valorInicial <= 0;
-
-
-                if (inputQuantidade) {
-
-                    inputQuantidade.value =
-                        valorInicial;
-
-                }
-
-
-                /*
-                =================================
-                BOTÕES
-                =================================
-                */
-
-                produto.addEventListener(
-                    'click',
-                    function (evento) {
-
-                        /*
-                        =============================
-                        BOTÃO +
-                        =============================
-                        */
-
-                        const botaoMais =
-                            evento.target.closest(
-                                '[data-aumentar]'
-                            );
-
-
-                        if (botaoMais) {
-
-                            evento.preventDefault();
-
-
-                            let valor =
-                                Number(
-                                    quantidade.textContent
-                                ) || 0;
-
-
-                            valor++;
-
-
-                            quantidade.textContent =
-                                valor;
-
-
-                            if (inputQuantidade) {
-
-                                inputQuantidade.value =
-                                    valor;
-
-                            }
-
-
-                            botaoDiminuir.disabled =
-                                valor <= 0;
-
-
-                            console.log(
-                                'Produto adicionado:',
-                                produto.dataset.produtoId,
-                                'Quantidade:',
-                                valor
-                            );
-
-
-                            return;
-
-                        }
-
-
-                        /*
-                        =============================
-                        BOTÃO -
-                        =============================
-                        */
-
-                        const botaoMenos =
-                            evento.target.closest(
-                                '[data-diminuir]'
-                            );
-
-
-                        if (botaoMenos) {
-
-                            evento.preventDefault();
-
-
-                            let valor =
-                                Number(
-                                    quantidade.textContent
-                                ) || 0;
-
-
-                            if (valor <= 0) {
-
-                                return;
-
-                            }
-
-
-                            valor--;
-
-
-                            quantidade.textContent =
-                                valor;
-
-
-                            if (inputQuantidade) {
-
-                                inputQuantidade.value =
-                                    valor;
-
-                            }
-
-
-                            botaoDiminuir.disabled =
-                                valor <= 0;
-
-
-                            console.log(
-                                'Produto removido:',
-                                produto.dataset.produtoId,
-                                'Quantidade:',
-                                valor
-                            );
-
-
-                            return;
-
-                        }
-
-                    }
+            const inputQuantidade =
+                produto.querySelector(
+                    '[data-input-quantidade]'
                 );
 
+            if (inputQuantidade) {
+                inputQuantidade.value = valor;
             }
-        );
+        }
 
 
         /*
         =================================
-        IMPORTANTE
+        PREVIEW DO CENTO
         =================================
-
-        Não continua para a lógica dos
-        tradicionais e folhados.
         */
 
-        return;
+        function atualizarPreviewCento() {
 
+            if (
+                tipoCategoria !== 'cento_tradicionais'
+                &&
+                tipoCategoria !== 'cento_folhados'
+            ) {
+                return;
+            }
+
+            const setores =
+                categoria.querySelectorAll(
+                    '[data-cento-setor]'
+                );
+
+            const status =
+                categoria.querySelector(
+                    '[data-cento-status]'
+                );
+
+            if (!setores.length) {
+                return;
+            }
+
+            let totalSelecionado = 0;
+
+            const produtos =
+                categoria.querySelectorAll(
+                    '[data-produto-wrapper]'
+                );
+
+            produtos.forEach(
+                function (produto) {
+
+                    const quantidade =
+                        produto.querySelector(
+                            '[data-quantidade]'
+                        );
+
+                    if (!quantidade) {
+                        return;
+                    }
+
+                    totalSelecionado +=
+                        Number(
+                            quantidade.textContent
+                        ) || 0;
+                }
+            );
+
+            setores.forEach(
+                function (setor, indice) {
+
+                    if (
+                        indice + 1 <=
+                        totalSelecionado
+                    ) {
+                        setor.classList.add(
+                            'ativo'
+                        );
+                    } else {
+                        setor.classList.remove(
+                            'ativo'
+                        );
+                    }
+                }
+            );
+
+            if (status) {
+
+                const partes =
+                    setores.length;
+
+                status.innerHTML =
+                    totalSelecionado >= partes
+                        ? '<small>Cento completo.</small>'
+                        : '<small>Monte seu cento.</small>';
+            }
+        }
+
+
+        /*
+        =================================
+        GRANDES / EMPADÃO
+        =================================
+        */
+
+        const quantidadeLivre =
+            tipoCategoria === 'salgados_grandes'
+            ||
+            tipoCategoria === 'empadao';
+
+
+        if (quantidadeLivre) {
+
+            const produtos =
+                categoria.querySelectorAll(
+                    '[data-produto-wrapper]'
+                );
+
+
+            produtos.forEach(
+                function (produto) {
+
+                    const quantidade =
+                        produto.querySelector(
+                            '[data-quantidade]'
+                        );
+
+                    const botaoAumentar =
+                        produto.querySelector(
+                            '[data-aumentar]'
+                        );
+
+                    const botaoDiminuir =
+                        produto.querySelector(
+                            '[data-diminuir]'
+                        );
+
+                    if (
+                        !quantidade
+                        ||
+                        !botaoAumentar
+                        ||
+                        !botaoDiminuir
+                    ) {
+                        return;
+                    }
+
+                    const valorInicial =
+                        Number(
+                            quantidade.textContent
+                        ) || 0;
+
+                    botaoDiminuir.disabled =
+                        valorInicial <= 0;
+
+                    atualizarInputQuantidade(
+                        produto,
+                        valorInicial
+                    );
+
+                    produto.addEventListener(
+                        'click',
+                        function (evento) {
+
+                            const botaoMais =
+                                evento.target.closest(
+                                    '[data-aumentar]'
+                                );
+
+                            if (botaoMais) {
+
+                                evento.preventDefault();
+
+                                let valor =
+                                    Number(
+                                        quantidade.textContent
+                                    ) || 0;
+
+                                valor++;
+
+                                quantidade.textContent =
+                                    valor;
+
+                                atualizarInputQuantidade(
+                                    produto,
+                                    valor
+                                );
+
+                                botaoDiminuir.disabled =
+                                    valor <= 0;
+
+                                return;
+                            }
+
+                            const botaoMenos =
+                                evento.target.closest(
+                                    '[data-diminuir]'
+                                );
+
+                            if (botaoMenos) {
+
+                                evento.preventDefault();
+
+                                let valor =
+                                    Number(
+                                        quantidade.textContent
+                                    ) || 0;
+
+                                if (valor <= 0) {
+                                    return;
+                                }
+
+                                valor--;
+
+                                quantidade.textContent =
+                                    valor;
+
+                                atualizarInputQuantidade(
+                                    produto,
+                                    valor
+                                );
+
+                                botaoDiminuir.disabled =
+                                    valor <= 0;
+                            }
+                        }
+                    );
+                }
+            );
+
+        } else {
+
+            /*
+            =================================
+            TRADICIONAIS / FOLHADOS
+            =================================
+            */
+
+            const contador =
+                categoria.querySelector(
+                    '[data-contador-opcoes]'
+                );
+
+            const elementoLimite =
+                categoria.querySelector(
+                    '[data-limite-opcoes]'
+                );
+
+            if (
+                contador
+                &&
+                elementoLimite
+            ) {
+
+                const limite =
+                    Number(
+                        elementoLimite.dataset.limiteOpcoes
+                    );
+
+                if (
+                    Number.isInteger(limite)
+                    &&
+                    limite >= 1
+                ) {
+
+                    let totalSelecionado = 0;
+
+                    const produtos =
+                        categoria.querySelectorAll(
+                            '[data-produto-wrapper]'
+                        );
+
+                    produtos.forEach(
+                        function (produto) {
+
+                            const quantidade =
+                                produto.querySelector(
+                                    '[data-quantidade]'
+                                );
+
+                            if (!quantidade) {
+                                return;
+                            }
+
+                            const valor =
+                                Number(
+                                    quantidade.textContent
+                                ) || 0;
+
+                            totalSelecionado +=
+                                valor;
+
+                            atualizarInputQuantidade(
+                                produto,
+                                valor
+                            );
+                        }
+                    );
+
+
+                    function atualizarInterface() {
+
+                        contador.textContent =
+                            totalSelecionado;
+
+                        const itens =
+                            categoria.querySelectorAll(
+                                '[data-produto-wrapper]'
+                            );
+
+                        itens.forEach(
+                            function (produto) {
+
+                                const quantidade =
+                                    produto.querySelector(
+                                        '[data-quantidade]'
+                                    );
+
+                                const botaoAumentar =
+                                    produto.querySelector(
+                                        '[data-aumentar]'
+                                    );
+
+                                const botaoDiminuir =
+                                    produto.querySelector(
+                                        '[data-diminuir]'
+                                    );
+
+                                if (
+                                    !quantidade
+                                    ||
+                                    !botaoAumentar
+                                    ||
+                                    !botaoDiminuir
+                                ) {
+                                    return;
+                                }
+
+                                const valor =
+                                    Number(
+                                        quantidade.textContent
+                                    ) || 0;
+
+                                botaoAumentar.disabled =
+                                    totalSelecionado >=
+                                    limite;
+
+                                botaoDiminuir.disabled =
+                                    valor <= 0;
+                            }
+                        );
+
+                        atualizarPreviewCento();
+                    }
+
+
+                    categoria.addEventListener(
+                        'click',
+                        function (evento) {
+
+                            const botaoAumentar =
+                                evento.target.closest(
+                                    '[data-aumentar]'
+                                );
+
+                            if (botaoAumentar) {
+
+                                evento.preventDefault();
+
+                                if (
+                                    totalSelecionado >=
+                                    limite
+                                ) {
+                                    return;
+                                }
+
+                                const produto =
+                                    botaoAumentar.closest(
+                                        '[data-produto-wrapper]'
+                                    );
+
+                                if (!produto) {
+                                    return;
+                                }
+
+                                const quantidade =
+                                    produto.querySelector(
+                                        '[data-quantidade]'
+                                    );
+
+                                if (!quantidade) {
+                                    return;
+                                }
+
+                                let valorAtual =
+                                    Number(
+                                        quantidade.textContent
+                                    ) || 0;
+
+                                valorAtual++;
+
+                                quantidade.textContent =
+                                    valorAtual;
+
+                                atualizarInputQuantidade(
+                                    produto,
+                                    valorAtual
+                                );
+
+                                totalSelecionado++;
+
+                                atualizarInterface();
+
+                                return;
+                            }
+
+
+                            const botaoDiminuir =
+                                evento.target.closest(
+                                    '[data-diminuir]'
+                                );
+
+                            if (botaoDiminuir) {
+
+                                evento.preventDefault();
+
+                                const produto =
+                                    botaoDiminuir.closest(
+                                        '[data-produto-wrapper]'
+                                    );
+
+                                if (!produto) {
+                                    return;
+                                }
+
+                                const quantidade =
+                                    produto.querySelector(
+                                        '[data-quantidade]'
+                                    );
+
+                                if (!quantidade) {
+                                    return;
+                                }
+
+                                let valorAtual =
+                                    Number(
+                                        quantidade.textContent
+                                    ) || 0;
+
+                                if (valorAtual <= 0) {
+                                    return;
+                                }
+
+                                valorAtual--;
+
+                                quantidade.textContent =
+                                    valorAtual;
+
+                                atualizarInputQuantidade(
+                                    produto,
+                                    valorAtual
+                                );
+
+                                totalSelecionado =
+                                    Math.max(
+                                        0,
+                                        totalSelecionado - 1
+                                    );
+
+                                atualizarInterface();
+                            }
+
+                        }
+                    );
+
+
+                    atualizarInterface();
+                }
+            }
+        }
     }
 
 
     /*
     =================================
-    DAQUI PARA BAIXO
-    =================================
-
-    LÓGICA ORIGINAL
-    TRADICIONAIS / FOLHADOS
+    MODAL DE REMOÇÃO
     =================================
     */
 
-    const contador =
-        categoria.querySelector(
-            '[data-contador-opcoes]'
+    const botoesRemover =
+        document.querySelectorAll(
+            '[data-remover-carrinho]'
         );
 
-
-    const elementoLimite =
-        categoria.querySelector(
-            '[data-limite-opcoes]'
+    const indiceRemover =
+        document.getElementById(
+            'indiceRemoverCarrinho'
         );
 
-
-    if (!contador) {
-
-        console.error(
-            'Contador de opções não encontrado.'
+    const nomeItemRemover =
+        document.querySelector(
+            '[data-nome-item-remover]'
         );
-
-        return;
-    }
-
-
-    if (!elementoLimite) {
-
-        console.error(
-            'Limite de opções não encontrado.'
-        );
-
-        return;
-    }
-
-
-    /*
-    =================================
-    LIMITE
-    =================================
-    */
-
-    const limite =
-        Number(
-            elementoLimite.dataset.limiteOpcoes
-        );
-
-
-    console.log(
-        'Limite da categoria:',
-        limite
-    );
 
 
     if (
-        !Number.isInteger(limite)
-        ||
-        limite < 1
+        indiceRemover
+        &&
+        botoesRemover.length
     ) {
 
-        console.error(
-            'Limite de opções inválido:',
-            elementoLimite.dataset.limiteOpcoes
-        );
+        botoesRemover.forEach(
+            function (botao) {
 
-        return;
-    }
+                botao.addEventListener(
+                    'click',
+                    function () {
 
+                        indiceRemover.value =
+                            botao.dataset.indice
+                            || '';
 
-    /*
-    =================================
-    ESTADO
-    =================================
-    */
+                        if (nomeItemRemover) {
 
-    let totalSelecionado = 0;
+                            nomeItemRemover.textContent =
+                                botao.dataset.nome
+                                || 'este item';
+                        }
 
-
-    /*
-    =================================
-    ATUALIZA INTERFACE
-    =================================
-    */
-
-    function atualizarInterface() {
-
-        contador.textContent =
-            totalSelecionado;
-
-
-        const produtos =
-            categoria.querySelectorAll(
-                '[data-produto-wrapper]'
-            );
-
-
-        produtos.forEach(
-            function (produto) {
-
-                const quantidade =
-                    produto.querySelector(
-                        '[data-quantidade]'
-                    );
-
-
-                const botaoAumentar =
-                    produto.querySelector(
-                        '[data-aumentar]'
-                    );
-
-
-                const botaoDiminuir =
-                    produto.querySelector(
-                        '[data-diminuir]'
-                    );
-
-
-                if (
-                    !quantidade
-                    ||
-                    !botaoAumentar
-                    ||
-                    !botaoDiminuir
-                ) {
-
-                    return;
-
-                }
-
-
-                const valor =
-                    Number(
-                        quantidade.textContent
-                    ) || 0;
-
-
-                botaoAumentar.disabled =
-                    totalSelecionado >= limite;
-
-
-                botaoDiminuir.disabled =
-                    valor <= 0;
-
+                    }
+                );
             }
         );
-
     }
-
-
-    /*
-    =================================
-    CLIQUE
-    =================================
-    */
-
-    categoria.addEventListener(
-        'click',
-        function (evento) {
-
-            /*
-            =================================
-            BOTÃO +
-            =================================
-            */
-
-            const botaoAumentar =
-                evento.target.closest(
-                    '[data-aumentar]'
-                );
-
-
-            if (botaoAumentar) {
-
-                evento.preventDefault();
-
-
-                if (
-                    totalSelecionado >= limite
-                ) {
-
-                    return;
-
-                }
-
-
-                const produto =
-                    botaoAumentar.closest(
-                        '[data-produto-wrapper]'
-                    );
-
-
-                if (!produto) {
-
-                    console.error(
-                        'Produto não encontrado.'
-                    );
-
-                    return;
-
-                }
-
-
-                const quantidade =
-                    produto.querySelector(
-                        '[data-quantidade]'
-                    );
-
-
-                if (!quantidade) {
-
-                    console.error(
-                        'Quantidade do produto não encontrada.'
-                    );
-
-                    return;
-
-                }
-
-
-                let valorAtual =
-                    Number(
-                        quantidade.textContent
-                    ) || 0;
-
-
-                valorAtual++;
-
-
-                quantidade.textContent =
-                    valorAtual;
-
-
-                const inputQuantidade =
-                    produto.querySelector(
-                        '[data-input-quantidade]'
-                    );
-
-
-                if (inputQuantidade) {
-
-                    inputQuantidade.value =
-                        valorAtual;
-
-                }
-
-
-                totalSelecionado++;
-
-
-                atualizarInterface();
-
-
-                console.log(
-                    'Produto adicionado:',
-                    produto.dataset.produtoId,
-                    'Quantidade:',
-                    valorAtual,
-                    'Total:',
-                    totalSelecionado
-                );
-
-
-                return;
-
-            }
-
-
-            /*
-            =================================
-            BOTÃO -
-            =================================
-            */
-
-            const botaoDiminuir =
-                evento.target.closest(
-                    '[data-diminuir]'
-                );
-
-
-            if (botaoDiminuir) {
-
-                evento.preventDefault();
-
-
-                const produto =
-                    botaoDiminuir.closest(
-                        '[data-produto-wrapper]'
-                    );
-
-
-                if (!produto) {
-
-                    console.error(
-                        'Produto não encontrado.'
-                    );
-
-                    return;
-
-                }
-
-
-                const quantidade =
-                    produto.querySelector(
-                        '[data-quantidade]'
-                    );
-
-
-                if (!quantidade) {
-
-                    console.error(
-                        'Quantidade do produto não encontrada.'
-                    );
-
-                    return;
-
-                }
-
-
-                let valorAtual =
-                    Number(
-                        quantidade.textContent
-                    ) || 0;
-
-
-                if (valorAtual <= 0) {
-
-                    return;
-
-                }
-
-
-                valorAtual--;
-
-
-                quantidade.textContent =
-                    valorAtual;
-
-
-                const inputQuantidade =
-                    produto.querySelector(
-                        '[data-input-quantidade]'
-                    );
-
-
-                if (inputQuantidade) {
-
-                    inputQuantidade.value =
-                        valorAtual;
-
-                }
-
-
-                totalSelecionado =
-                    Math.max(
-                        0,
-                        totalSelecionado - 1
-                    );
-
-
-                atualizarInterface();
-
-
-                console.log(
-                    'Produto removido:',
-                    produto.dataset.produtoId,
-                    'Quantidade:',
-                    valorAtual,
-                    'Total:',
-                    totalSelecionado
-                );
-
-
-                return;
-
-            }
-
-        }
-    );
-
-
-    /*
-    =================================
-    ESTADO INICIAL
-    =================================
-    */
-
-    atualizarInterface();
 
 });

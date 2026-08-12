@@ -14,6 +14,32 @@ View::componente(
     ]
 );
 
+$carrinho = $carrinho ?? [];
+
+$totalCarrinho = 0.0;
+
+foreach ($carrinho as $item) {
+    $totalCarrinho +=
+        (float) ($item['subtotal'] ?? 0);
+}
+
+$nomesCategorias = [
+    'cento_tradicionais' =>
+    'Salgados Tradicionais',
+
+    'cento_folhados' =>
+    'Salgados Folhados',
+
+    'salgados_grandes' =>
+    'Salgados Grandes',
+
+    'empadao' =>
+    'Empadão de Frango',
+
+    'unica' =>
+    'Produto',
+];
+
 ?>
 
 <main>
@@ -23,6 +49,7 @@ View::componente(
         <h1 class="fw-bold mb-4">
             Seu carrinho
         </h1>
+
 
         <?php if ($carrinho === []): ?>
 
@@ -40,104 +67,304 @@ View::componente(
 
             </a>
 
+
         <?php else: ?>
 
-            <?php foreach ($carrinho as $indice => $item): ?>
+            <?php foreach (
+                $carrinho as $indice => $item
+            ): ?>
 
-                <div class="card shadow-sm border-0 mb-3">
+                <?php
+
+                $tipoCategoria =
+                    $item['tipo_categoria']
+                    ?? 'unica';
+
+                $nomeCategoria =
+                    $nomesCategorias[$tipoCategoria]
+                    ?? 'Produto';
+
+                ?>
+
+                <div
+                    class="card
+                           shadow-sm
+                           border-0
+                           mb-4">
 
                     <div class="card-body">
 
-                        <h2 class="h5 fw-bold mb-3">
-                            <?= htmlspecialchars(
-                                $item['categoria_nome'],
-                                ENT_QUOTES,
-                                'UTF-8'
-                            ) ?>
-                        </h2>
+                        <div
+                            class="d-flex
+                                   justify-content-between
+                                   align-items-start
+                                   gap-3
+                                   mb-4">
 
-                        <p class="small text-secondary mb-3">
-                            <?= htmlspecialchars(
-                                $item['tipo_categoria'],
-                                ENT_QUOTES,
-                                'UTF-8'
-                            ) ?>
-                        </p>
+                            <div>
 
-                        <?php foreach (
-                            $item['produtos']
-                            as $produto
-                        ): ?>
-
-                            <div
-                                class="d-flex justify-content-between
-                                       align-items-center mb-2">
-
-                                <span>
+                                <h2
+                                    class="h5
+                                           fw-bold
+                                           mb-1">
 
                                     <?= htmlspecialchars(
-                                        $produto['nome'],
+                                        $nomeCategoria,
                                         ENT_QUOTES,
                                         'UTF-8'
                                     ) ?>
 
-                                    ×
+                                </h2>
 
-                                    <?= (int) $produto['quantidade'] ?>
+                                <small
+                                    class="text-secondary">
 
-                                </span>
+                                    <?= htmlspecialchars(
+                                        $item['categoria_nome'],
+                                        ENT_QUOTES,
+                                        'UTF-8'
+                                    ) ?>
+
+                                </small>
 
                             </div>
 
-                        <?php endforeach; ?>
 
-                        <hr>
+                            <div
+                                class="d-flex
+                                       gap-2">
 
-                        <div
-                            class="d-flex justify-content-between">
+                                <a
+                                    href="<?= BASE_URL ?>/carrinho/editar/<?= (int) $indice ?>"
+                                    class="btn btn-outline-secondary btn-sm">
 
-                            <span>
-                                Quantidade total
-                            </span>
+                                    <i
+                                        class="bi bi-pencil me-1">
+                                    </i>
 
-                            <strong>
-                                <?= (int) $item['quantidade_total'] ?>
-                            </strong>
+                                    Editar
+
+                                </a>
+
+
+                                <button
+                                    type="button"
+                                    class="btn btn-outline-danger btn-sm"
+                                    data-remover-carrinho
+                                    data-indice="<?= (int) $indice ?>"
+                                    data-nome="<?= htmlspecialchars(
+                                                    $nomeCategoria,
+                                                    ENT_QUOTES,
+                                                    'UTF-8'
+                                                ) ?>"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalRemoverCarrinho">
+
+                                    <i
+                                        class="bi bi-trash me-1">
+                                    </i>
+
+                                    Remover
+
+                                </button>
+
+                            </div>
 
                         </div>
 
-                        <div
-                            class="d-flex justify-content-between
-                                   mt-2">
 
-                            <span>
-                                Preço
-                            </span>
+                        <div class="mb-4">
 
-                            <strong>
+                            <?php foreach (
+                                $item['produtos'] ?? []
+                                as $produto
+                            ): ?>
 
-                                R$
+                                <div
+                                    class="d-flex
+                                           justify-content-between
+                                           py-2
+                                           border-bottom">
 
-                                <?= number_format(
-                                    (float) $item['preco_unitario'],
-                                    2,
-                                    ',',
-                                    '.'
-                                ) ?>
+                                    <span>
 
-                            </strong>
+                                        <?= htmlspecialchars(
+                                            $produto['nome'],
+                                            ENT_QUOTES,
+                                            'UTF-8'
+                                        ) ?>
+
+                                        ×
+
+                                        <?= (int) $produto['quantidade'] ?>
+
+                                    </span>
+
+                                </div>
+
+                            <?php endforeach; ?>
 
                         </div>
 
-                        <div
-                            class="d-flex justify-content-between
-                                   mt-2">
 
-                            <span>
+                        <?php if (
+                            $tipoCategoria ===
+                            'salgados_grandes'
+                        ): ?>
+
+                            <div
+                                class="d-flex
+                                       justify-content-between
+                                       mb-2">
+
+                                <span>
+                                    Quantidade total
+                                </span>
+
+                                <strong>
+
+                                    <?= (int) $item['quantidade_total'] ?>
+
+                                    unidades
+
+                                </strong>
+
+                            </div>
+
+
+                            <div
+                                class="d-flex
+                                       justify-content-between
+                                       mb-2">
+
+                                <span>
+                                    Preço por unidade
+                                </span>
+
+                                <strong>
+
+                                    R$
+
+                                    <?= number_format(
+                                        (float) $item['preco_unitario'],
+                                        2,
+                                        ',',
+                                        '.'
+                                    ) ?>
+
+                                </strong>
+
+                            </div>
+
+
+                        <?php elseif (
+                            $tipoCategoria ===
+                            'empadao'
+                        ): ?>
+
+                            <div
+                                class="d-flex
+                                       justify-content-between
+                                       mb-2">
+
+                                <span>
+                                    Quantidade
+                                </span>
+
+                                <strong>
+
+                                    <?= (int) $item['quantidade_total'] ?>
+
+                                    unidade(s)
+
+                                </strong>
+
+                            </div>
+
+
+                            <div
+                                class="d-flex
+                                       justify-content-between
+                                       mb-2">
+
+                                <span>
+                                    Preço por unidade
+                                </span>
+
+                                <strong>
+
+                                    R$
+
+                                    <?= number_format(
+                                        (float) $item['preco_unitario'],
+                                        2,
+                                        ',',
+                                        '.'
+                                    ) ?>
+
+                                </strong>
+
+                            </div>
+
+
+                        <?php else: ?>
+
+                            <div
+                                class="d-flex
+                                       justify-content-between
+                                       mb-2">
+
+                                <span>
+                                    Produto
+                                </span>
+
+                                <strong>
+                                    1 cento
+                                </strong>
+
+                            </div>
+
+
+                            <div
+                                class="d-flex
+                                       justify-content-between
+                                       mb-2">
+
+                                <span>
+                                    Valor do cento
+                                </span>
+
+                                <strong>
+
+                                    R$
+
+                                    <?= number_format(
+                                        (float) $item['preco_unitario'],
+                                        2,
+                                        ',',
+                                        '.'
+                                    ) ?>
+
+                                </strong>
+
+                            </div>
+
+                        <?php endif; ?>
+
+
+                        <div
+                            class="d-flex
+                                   justify-content-between
+                                   mt-3
+                                   pt-3
+                                   border-top">
+
+                            <strong>
                                 Subtotal
-                            </span>
+                            </strong>
 
-                            <strong>
+                            <strong
+                                class="fs-5">
 
                                 R$
 
@@ -158,11 +385,168 @@ View::componente(
 
             <?php endforeach; ?>
 
+
+            <div
+                class="card
+                       shadow-sm
+                       border-0">
+
+                <div class="card-body">
+
+                    <div
+                        class="d-flex
+                               justify-content-between
+                               align-items-center">
+
+                        <span
+                            class="fs-5
+                                   fw-bold">
+
+                            Total do carrinho
+
+                        </span>
+
+                        <strong
+                            class="fs-4
+                                   text-warning">
+
+                            R$
+
+                            <?= number_format(
+                                $totalCarrinho,
+                                2,
+                                ',',
+                                '.'
+                            ) ?>
+
+                        </strong>
+
+                    </div>
+
+
+                    <div
+                        class="d-flex
+                               justify-content-between
+                               align-items-center
+                               mt-4">
+
+                        <a
+                            href="<?= BASE_URL ?>/produtos"
+                            class="btn btn-outline-secondary">
+
+                            <i
+                                class="bi bi-arrow-left me-1">
+                            </i>
+
+                            Continuar comprando
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
         <?php endif; ?>
 
     </div>
 
 </main>
+
+
+<div
+    class="modal fade"
+    id="modalRemoverCarrinho"
+    tabindex="-1"
+    aria-labelledby="tituloModalRemoverCarrinho"
+    aria-hidden="true">
+
+    <div
+        class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h2
+                    class="modal-title fs-5"
+                    id="tituloModalRemoverCarrinho">
+
+                    Remover item
+
+                </h2>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Fechar">
+                </button>
+
+            </div>
+
+
+            <div class="modal-body">
+
+                <p class="mb-0">
+
+                    Tem certeza de que deseja remover
+                    <strong data-nome-item-remover>
+                        este item
+                    </strong>
+                    do carrinho?
+
+                </p>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-outline-secondary"
+                    data-bs-dismiss="modal">
+
+                    Cancelar
+
+                </button>
+
+
+                <form
+                    id="formRemoverCarrinho"
+                    action="<?= BASE_URL ?>/carrinho/remover"
+                    method="POST">
+
+                    <input
+                        type="hidden"
+                        name="indice"
+                        value=""
+                        id="indiceRemoverCarrinho">
+
+                    <button
+                        type="submit"
+                        class="btn btn-danger">
+
+                        <i
+                            class="bi bi-trash me-1">
+                        </i>
+
+                        Remover
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
 
 <?php
 

@@ -14,6 +14,41 @@ View::componente(
     ]
 );
 
+
+$editarIndice = filter_input(
+    INPUT_GET,
+    'editar',
+    FILTER_VALIDATE_INT
+);
+
+$editarIndice =
+    $editarIndice === false
+    ? null
+    : $editarIndice;
+
+
+$quantidadesIniciais = [];
+
+
+if (
+    $editarIndice !== null
+    &&
+    isset(
+        $_SESSION['carrinho'][$editarIndice]
+    )
+) {
+    $item =
+        $_SESSION['carrinho'][$editarIndice];
+
+    foreach (
+        $item['produtos'] ?? []
+        as $produto
+    ) {
+        $quantidadesIniciais[(int) $produto['produto_id']] =
+            (int) $produto['quantidade'];
+    }
+}
+
 ?>
 
 <main>
@@ -23,29 +58,46 @@ View::componente(
         <div class="mb-5">
 
             <a
-                href="<?= BASE_URL ?>/produtos"
-                class="btn btn-voltar-cardapio"
+                href="<?= BASE_URL ?>/carrinho"
+                class="btn btn-voltar-cardapio">
 
                 <i class="bi bi-arrow-left me-1"></i>
 
-                Voltar ao cardápio
+                Voltar ao carrinho
 
             </a>
 
         </div>
+
+
         <?php
 
         View::componente(
             'site/sections/categoria',
             [
-                'categoria' => $categoria,
-                'produtos' => $produtos,
-                'limiteOpcoes' => $limiteOpcoes,
-                'tipoCategoria' => $tipoCategoria,
+                'categoria' =>
+                $categoria,
+
+                'produtos' =>
+                $produtos,
+
+                'limiteOpcoes' =>
+                $limiteOpcoes,
+
+                'tipoCategoria' =>
+                $tipoCategoria,
+
+                'quantidadesIniciais' =>
+                $quantidadesIniciais,
+
+                'editarIndice' =>
+                $editarIndice,
             ]
         );
 
         ?>
+
+    </div>
 
 </main>
 

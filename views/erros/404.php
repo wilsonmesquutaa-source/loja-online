@@ -2,33 +2,36 @@
 
 declare(strict_types=1);
 
-$tituloPagina = 'Página não encontrada';
-
-require APP_ROOT . '/views/layouts/header.php';
+require APP_ROOT
+    . '/views/layouts/site/header.php';
 
 ?>
 
-<main class="container py-5">
+<main>
 
-    <div class="text-center py-5">
+    <div class="container py-5 text-center">
 
-        <p class="display-1 fw-bold text-primary mb-0">
+        <h1 class="display-4 fw-bold">
             404
-        </p>
-
-        <h1 class="h2">
-            Página não encontrada
         </h1>
 
-        <p class="text-secondary">
-            O caminho solicitado não está cadastrado no sistema.
+        <h2 class="h4 mb-3">
+            Página não encontrada
+        </h2>
+
+        <p class="text-secondary mb-4">
+            A página que você tentou acessar
+            não existe ou não está disponível.
         </p>
 
         <a
-            class="btn btn-primary"
             href="<?= BASE_URL ?>/"
-        >
+            class="btn btn-voltar-cardapio">
+
+            <i class="bi bi-house me-1"></i>
+
             Voltar ao início
+
         </a>
 
     </div>
@@ -37,4 +40,5 @@ require APP_ROOT . '/views/layouts/header.php';
 
 <?php
 
-require APP_ROOT . '/views/layouts/footer.php';
+require APP_ROOT
+    . '/views/layouts/site/footer.php';
