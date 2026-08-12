@@ -12,21 +12,27 @@ $tipoCategoria =
     $tipoCategoria ?? 'unica';
 
 $ehSalgadosGrandes =
-    $tipoCategoria === 'salgados_grandes';
+    $tipoCategoria ===
+    'salgados_grandes';
 
 $ehEmpadao =
-    $tipoCategoria === 'empadao';
+    $tipoCategoria ===
+    'empadao';
 
 $ehCento =
-    $tipoCategoria === 'cento_tradicionais'
+    $tipoCategoria ===
+        'cento_tradicionais'
     ||
-    $tipoCategoria === 'cento_folhados';
+    $tipoCategoria ===
+        'cento_folhados';
 
 $ehTradicionais =
-    $tipoCategoria === 'cento_tradicionais';
+    $tipoCategoria ===
+    'cento_tradicionais';
 
 $ehFolhados =
-    $tipoCategoria === 'cento_folhados';
+    $tipoCategoria ===
+    'cento_folhados';
 
 $limiteOpcoes =
     $limiteOpcoes ?? 1;
@@ -34,8 +40,13 @@ $limiteOpcoes =
 $quantidadesIniciais =
     $quantidadesIniciais ?? [];
 
-$editarIndice =
-    $editarIndice ?? null;
+$editarCategoriaId =
+    $editarCategoriaId ?? null;
+
+$estaEditando =
+    isset($_GET['editar'])
+    &&
+    $_GET['editar'] === '1';
 
 $nomeCategoria =
     $categoria['nome']
@@ -43,332 +54,81 @@ $nomeCategoria =
 
 $partesCento =
     $ehTradicionais
-    ? 4
-    : (
-        $ehFolhados
-        ? 2
-        : 0
-    );
+        ? 4
+        : (
+            $ehFolhados
+                ? 2
+                : 0
+        );
 
 $unidadesPorParte =
     $ehTradicionais
-    ? 25
-    : (
-        $ehFolhados
-        ? 50
-        : 0
-    );
+        ? 25
+        : (
+            $ehFolhados
+                ? 50
+                : 0
+        );
+
+$totalInicialUnidades = 0;
+
+if (
+    $ehSalgadosGrandes
+    ||
+    $ehEmpadao
+) {
+    foreach (
+        $quantidadesIniciais
+        as $quantidadeInicial
+    ) {
+        $totalInicialUnidades +=
+            (int) $quantidadeInicial;
+    }
+}
 
 ?>
 
-<style>
-    .categoria-cento-layout {
-        align-items: flex-start;
-    }
-
-    /*
-    =================================
-    PAINEL FIXO DO CENTO
-    =================================
-    */
-
-    .cento-preview-sticky {
-        position: fixed;
-        top: 90px;
-        right: 30px;
-        width: 350px;
-        z-index: 100;
-    }
-
-    .cento-preview {
-        background: #ffffff;
-        border: 1px solid rgba(93, 64, 55, 0.12);
-        border-radius: 1rem;
-        padding: 1.25rem;
-        box-shadow:
-            0 0.5rem 1.5rem rgba(0, 0, 0, 0.12);
-    }
-
-    .cento-preview-titulo {
-        color: var(--marrom, #5D4037);
-    }
-
-    /*
-    =================================
-    CÍRCULO
-    =================================
-    */
-
-    .cento-circulo {
-        position: relative;
-        width: 300px;
-        height: 300px;
-        margin: 1.5rem auto;
-        border-radius: 50%;
-        overflow: hidden;
-        background: var(--creme, #FFF7E8);
-        border: 5px solid var(--marrom, #5D4037);
-    }
-
-
-    /*
-    =================================
-    SETORES
-    =================================
-    */
-
-    .cento-setor {
-        position: absolute;
-        inset: 0;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        text-align: center;
-
-        background: transparent;
-        color: var(--marrom, #5D4037);
-
-        transition:
-            background-color 0.2s ease,
-            color 0.2s ease;
-
-        z-index: 2;
-    }
-
-    .cento-setor.ativo {
-        background: var(--laranja, #F57C00);
-        color: #ffffff;
-    }
-
-
-    /*
-    =================================
-    4 PARTES
-    =================================
-    */
-
-    .cento-circulo[data-partes="4"] .cento-setor[data-parte="1"] {
-
-        clip-path:
-            polygon(0 0,
-                50% 0,
-                50% 50%,
-                0 50%);
-    }
-
-    .cento-circulo[data-partes="4"] .cento-setor[data-parte="2"] {
-
-        clip-path:
-            polygon(50% 0,
-                100% 0,
-                100% 50%,
-                50% 50%);
-    }
-
-    .cento-circulo[data-partes="4"] .cento-setor[data-parte="3"] {
-
-        clip-path:
-            polygon(50% 50%,
-                100% 50%,
-                100% 100%,
-                50% 100%);
-    }
-
-    .cento-circulo[data-partes="4"] .cento-setor[data-parte="4"] {
-
-        clip-path:
-            polygon(0 50%,
-                50% 50%,
-                50% 100%,
-                0 100%);
-    }
-
-
-    /*
-    =================================
-    2 PARTES
-    =================================
-    */
-
-    .cento-circulo[data-partes="2"] .cento-setor[data-parte="1"] {
-
-        clip-path:
-            polygon(0 0,
-                50% 0,
-                50% 100%,
-                0 100%);
-    }
-
-    .cento-circulo[data-partes="2"] .cento-setor[data-parte="2"] {
-
-        clip-path:
-            polygon(50% 0,
-                100% 0,
-                100% 100%,
-                50% 100%);
-    }
-
-
-    /*
-    =================================
-    DIVISÕES
-    =================================
-    */
-
-    .cento-divisao {
-        position: absolute;
-        z-index: 10;
-        background: rgba(93, 64, 55, 0.35);
-        pointer-events: none;
-    }
-
-    .cento-divisao-vertical {
-
-        width: 3px;
-        height: 100%;
-
-        top: 0;
-        left: 50%;
-
-        transform:
-            translateX(-50%);
-    }
-
-    .cento-divisao-horizontal {
-
-        width: 100%;
-        height: 3px;
-
-        top: 50%;
-        left: 0;
-
-        transform:
-            translateY(-50%);
-    }
-
-
-    /*
-    =================================
-    CENTRO
-    =================================
-    */
-
-    .cento-centro {
-
-        position: absolute;
-        z-index: 40;
-
-        top: 50%;
-        left: 50%;
-
-        transform:
-            translate(-50%,
-                -50%);
-
-        width: 76px;
-        height: 76px;
-
-        border-radius: 50%;
-
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-
-        background: #ffffff;
-        color: var(--marrom, #5D4037);
-
-        border:
-            4px solid var(--marrom, #5D4037);
-
-        text-align: center;
-        line-height: 1;
-
-        box-shadow:
-            0 0.25rem 0.75rem rgba(0, 0, 0, 0.14);
-
-        pointer-events: none;
-    }
-
-    .cento-centro strong {
-        font-size: 1rem;
-    }
-
-    .cento-centro span {
-        font-size: 0.7rem;
-        margin-top: 0.2rem;
-    }
-
-
-    /*
-    =================================
-    BOTÃO FIXO DO CENTO
-    =================================
-    */
-
-    .cento-botao-carrinho {
-        width: 100%;
-        margin-top: 1rem;
-    }
-
-
-    /*
-    =================================
-    MOBILE
-    =================================
-    */
-
-    @media (max-width: 1199.98px) {
-
-        .cento-preview-sticky {
-
-            position: static;
-
-            width: auto;
-
-        }
-
-        .cento-circulo {
-
-            width:
-                min(100%,
-                    280px);
-
-            height: auto;
-
-            aspect-ratio: 1;
-
-        }
-
-    }
-</style>
-
-
 <div
-    class="categoria-selecao"
+    class="
+        categoria-selecao
+        <?= (
+            !$ehCento
+            &&
+            (
+                $ehSalgadosGrandes
+                ||
+                $ehEmpadao
+            )
+        )
+            ? 'categoria-com-acao-lateral'
+            : ''
+        ?>
+    "
     data-tipo-categoria="<?= htmlspecialchars(
-                                $tipoCategoria,
-                                ENT_QUOTES,
-                                'UTF-8'
-                            ) ?>"
-    data-limite="<?= $limiteOpcoes !== null
-                        ? (int) $limiteOpcoes
-                        : ''
-                    ?>">
+        $tipoCategoria,
+        ENT_QUOTES,
+        'UTF-8'
+    ) ?>"
+    data-limite="<?= (int) $limiteOpcoes ?>"
+    data-tipo-contador="
+        <?= (
+            $ehSalgadosGrandes
+            ||
+            $ehEmpadao
+        )
+            ? 'quantidade'
+            : 'opcoes'
+        ?>
+    ">
+
 
     <div
         class="mb-4"
-        data-limite-opcoes="<?= $limiteOpcoes !== null
-                                ? (int) $limiteOpcoes
-                                : ''
-                            ?>">
+        data-limite-opcoes="<?= (int) $limiteOpcoes ?>">
 
         <p class="text-secondary mb-1">
             Escolha os sabores
         </p>
-
 
         <h3 class="fw-bold mb-2">
 
@@ -381,9 +141,17 @@ $unidadesPorParte =
         </h3>
 
 
-        <?php if (!empty($categoria['descricao'])): ?>
+        <?php if (
+            !empty(
+                $categoria['descricao']
+            )
+        ): ?>
 
-            <p class="text-secondary small mb-3">
+            <p
+                class="
+                text-secondary
+                small
+                mb-3">
 
                 <?= htmlspecialchars(
                     $categoria['descricao'],
@@ -396,26 +164,37 @@ $unidadesPorParte =
         <?php endif; ?>
 
 
-        <div class="alert alert-warning">
+        <div
+            class="alert alert-warning">
 
-            <div class="d-flex align-items-center gap-2">
+            <div
+                class="
+                d-flex
+                align-items-center
+                gap-2">
 
-                <i class="bi bi-info-circle"></i>
+                <i
+                    class="bi bi-info-circle">
+                </i>
+
 
                 <div>
 
-                    <?php if ($ehSalgadosGrandes): ?>
+                    <?php if (
+                        $ehSalgadosGrandes
+                    ): ?>
 
                         <strong>
-                            Escolha a quantidade desejada
-                            de cada salgado.
+                            Escolha a quantidade
+                            desejada de cada salgado.
                         </strong>
 
                         <br>
 
                         <span class="small">
 
-                            Cada unidade custa R$ 5,00.
+                            Cada unidade custa
+                            R$ 5,00.
 
                             Para revenda, a unidade
                             custa R$ 3,00,
@@ -424,7 +203,9 @@ $unidadesPorParte =
                         </span>
 
 
-                    <?php elseif ($ehEmpadao): ?>
+                    <?php elseif (
+                        $ehEmpadao
+                    ): ?>
 
                         <strong>
                             Escolha a quantidade desejada.
@@ -433,21 +214,17 @@ $unidadesPorParte =
                         <br>
 
                         <span class="small">
-
                             Cada unidade custa R$ 100,00.
-
                         </span>
 
 
                     <?php else: ?>
 
                         <strong>
-
                             Monte seu cento
                             escolhendo até
                             <?= (int) $limiteOpcoes ?>
                             sabores.
-
                         </strong>
 
                         <br>
@@ -482,242 +259,388 @@ $unidadesPorParte =
     <?php if ($ehCento): ?>
 
         <div
-            class="row
-                   g-4
-                   categoria-cento-layout">
+            class="
+            row
+            g-4
+            categoria-cento-layout">
+
+    <?php endif; ?>
+
+
+    <form
+        action="<?= BASE_URL ?>/carrinho/adicionar"
+        method="POST"
+        data-form-carrinho>
+
+
+        <input
+            type="hidden"
+            name="categoria_id"
+            value="<?= (int) $categoria['id'] ?>">
+
+
+        <?php if (
+            $editarCategoriaId !== null
+        ): ?>
+
+            <input
+                type="hidden"
+                name="editar_categoria_id"
+                value="<?= (int) $editarCategoriaId ?>">
 
         <?php endif; ?>
 
 
-        <!--
-    =================================
-    FORMULÁRIO
-    =================================
+        <?php if ($ehCento): ?>
 
-    O formulário envolve tanto a lista
-    quanto o painel do cento.
+            <div
+                class="col-lg-8">
 
-    Assim o botão fixo continua sendo
-    o mesmo botão de envio do formulário.
-    -->
-
-        <form
-            action="<?= BASE_URL ?>/carrinho/adicionar"
-            method="POST"
-            data-form-carrinho>
+        <?php endif; ?>
 
 
-            <input
-                type="hidden"
-                name="categoria_id"
-                value="<?= (int) $categoria['id'] ?>">
+        <div
+            class="categoria-produtos-area">
 
 
-            <?php if ($editarIndice !== null): ?>
+            <?php if (
+                $produtos === []
+            ): ?>
 
-                <input
-                    type="hidden"
-                    name="editar_indice"
-                    value="<?= (int) $editarIndice ?>">
+                <div
+                    class="alert alert-info">
 
-            <?php endif; ?>
+                    Nenhum sabor disponível
+                    nesta categoria.
 
-
-            <?php if ($ehCento): ?>
-
-                <div class="col-lg-8">
-
-                <?php endif; ?>
+                </div>
 
 
-                <?php if ($produtos === []): ?>
+            <?php else: ?>
 
-                    <div class="alert alert-info">
-
-                        Nenhum sabor disponível
-                        nesta categoria.
-
-                    </div>
+                <div
+                    class="row g-3">
 
 
-                <?php else: ?>
+                    <?php foreach (
+                        $produtos
+                        as $produto
+                    ): ?>
 
-                    <div class="row g-3">
+                        <?php
 
-                        <?php foreach ($produtos as $produto): ?>
+                        $produtoId =
+                            (int)
+                            $produto['id'];
 
-                            <?php
+                        $quantidadeInicial =
+                            (int) (
+                                $quantidadesIniciais[
+                                    $produtoId
+                                ] ?? 0
+                            );
 
-                            $produtoId =
-                                (int) $produto['id'];
+                        ?>
 
-                            $quantidadeInicial =
-                                (int) (
-                                    $quantidadesIniciais[$produtoId] ?? 0
-                                );
 
-                            ?>
+                        <div
+                            class="
+                            col-6
+                            col-md-4"
+                            data-produto-wrapper>
 
 
                             <div
-                                class="col-6 col-md-4"
-                                data-produto-wrapper>
+                                class="
+                                card
+                                h-100
+                                border-0
+                                shadow-sm
+                                produto-selecao-card"
+                                data-produto-id="<?= $produtoId ?>">
 
 
                                 <div
-                                    class="card
-                                   h-100
-                                   border-0
-                                   shadow-sm
-                                   produto-selecao-card"
-                                    data-produto-id="<?= $produtoId ?>">
+                                    class="
+                                    card-body
+                                    text-center">
 
 
                                     <div
-                                        class="card-body
-                                       text-center">
+                                        class="
+                                        produto-imagem-placeholder
+                                        mb-3">
+
+                                        <i
+                                            class="
+                                            bi
+                                            bi-image
+                                            fs-1
+                                            text-secondary">
+                                        </i>
+
+                                    </div>
 
 
-                                        <div
-                                            class="produto-imagem-placeholder
-                                           mb-3">
+                                    <h4
+                                        class="
+                                        h6
+                                        fw-bold">
 
-                                            <i
-                                                class="bi
-                                               bi-image
-                                               fs-1
-                                               text-secondary">
-                                            </i>
+                                        <?= htmlspecialchars(
+                                            $produto['nome'],
+                                            ENT_QUOTES,
+                                            'UTF-8'
+                                        ) ?>
 
-                                        </div>
+                                    </h4>
 
 
-                                        <h4
-                                            class="h6 fw-bold"
-                                            data-produto-nome>
+                                    <?php if (
+                                        !empty(
+                                            $produto['descricao']
+                                        )
+                                    ): ?>
+
+                                        <p
+                                            class="
+                                            small
+                                            text-secondary">
 
                                             <?= htmlspecialchars(
-                                                $produto['nome'],
+                                                $produto['descricao'],
                                                 ENT_QUOTES,
                                                 'UTF-8'
                                             ) ?>
 
-                                        </h4>
+                                        </p>
+
+                                    <?php endif; ?>
 
 
-                                        <?php if (
-                                            !empty($produto['descricao'])
-                                        ): ?>
-
-                                            <p
-                                                class="small
-                                               text-secondary">
-
-                                                <?= htmlspecialchars(
-                                                    $produto['descricao'],
-                                                    ENT_QUOTES,
-                                                    'UTF-8'
-                                                ) ?>
-
-                                            </p>
-
-                                        <?php endif; ?>
+                                    <div
+                                        class="
+                                        contador-produto
+                                        d-flex
+                                        justify-content-center
+                                        align-items-center
+                                        gap-2
+                                        mt-3">
 
 
-                                        <div
-                                            class="contador-produto
-                                           d-flex
-                                           justify-content-center
-                                           align-items-center
-                                           gap-2
-                                           mt-3">
+                                        <button
+                                            type="button"
+                                            class="
+                                            btn
+                                            btn-outline-secondary
+                                            btn-sm"
+                                            data-diminuir
+                                            <?= (
+                                                $quantidadeInicial <= 0
+                                            )
+                                                ? 'disabled'
+                                                : ''
+                                            ?>>
+
+                                            <i
+                                                class="
+                                                bi
+                                                bi-dash">
+                                            </i>
+
+                                        </button>
 
 
-                                            <button
-                                                type="button"
-                                                class="btn
-                                               btn-outline-secondary
-                                               btn-sm"
-                                                data-diminuir
-                                                <?= $quantidadeInicial <= 0
-                                                    ? 'disabled'
-                                                    : ''
-                                                ?>>
+                                        <span
+                                            class="
+                                            fw-bold
+                                            px-2"
+                                            data-quantidade>
 
-                                                <i
-                                                    class="bi bi-dash">
-                                                </i>
+                                            <?= $quantidadeInicial ?>
 
-                                            </button>
+                                        </span>
 
 
-                                            <span
-                                                class="fw-bold px-2"
-                                                data-quantidade>
+                                        <button
+                                            type="button"
+                                            class="
+                                            btn
+                                            btn-warning
+                                            btn-sm"
+                                            data-aumentar>
 
-                                                <?= $quantidadeInicial ?>
+                                            <i
+                                                class="
+                                                bi
+                                                bi-plus">
+                                            </i>
 
-                                            </span>
-
-
-                                            <button
-                                                type="button"
-                                                class="btn
-                                               btn-warning
-                                               btn-sm"
-                                                data-aumentar>
-
-                                                <i
-                                                    class="bi bi-plus">
-                                                </i>
-
-                                            </button>
-
-
-                                        </div>
-
-
-                                        <input
-                                            type="hidden"
-                                            name="quantidades[<?= $produtoId ?>]"
-                                            value="<?= $quantidadeInicial ?>"
-                                            data-input-quantidade>
+                                        </button>
 
                                     </div>
+
+
+                                    <input
+                                        type="hidden"
+                                        name="quantidades[<?= $produtoId ?>]"
+                                        value="<?= $quantidadeInicial ?>"
+                                        data-input-quantidade>
 
                                 </div>
 
                             </div>
 
-                        <?php endforeach; ?>
+                        </div>
 
-                    </div>
+                    <?php endforeach; ?>
 
-                <?php endif; ?>
+                </div>
+
+            <?php endif; ?>
+
+        </div>
 
 
-                <?php if (!$ehCento): ?>
+        <?php if ($ehCento): ?>
+
+            </div>
+
+
+            <div
+                class="col-lg-4">
+
+
+                <div
+                    class="
+                    cento-preview-sticky">
+
 
                     <div
-                        class="mt-5
-                       d-flex
-                       justify-content-end">
+                        class="
+                        cento-preview">
+
+
+                        <div
+                            class="text-center">
+
+                            <h4
+                                class="
+                                cento-preview-titulo
+                                fw-bold">
+
+                                <?= $ehTradicionais
+                                    ? 'Cento Tradicional'
+                                    : 'Cento Folhado'
+                                ?>
+
+                            </h4>
+
+                        </div>
+
+
+                        <div
+                            class="cento-circulo"
+                            data-partes="<?= $partesCento ?>">
+
+
+                            <?php for (
+                                $parte = 1;
+                                $parte <= $partesCento;
+                                $parte++
+                            ): ?>
+
+                                <div
+                                    class="cento-setor"
+                                    data-cento-setor="<?= $parte ?>"
+                                    data-parte="<?= $parte ?>">
+
+                                    <span
+                                        class="cento-setor-texto">
+
+                                        <?= $unidadesPorParte ?>
+                                        und.
+
+                                    </span>
+
+                                </div>
+
+                            <?php endfor; ?>
+
+
+                            <?php if (
+                                $ehTradicionais
+                            ): ?>
+
+                                <div
+                                    class="
+                                    cento-divisao
+                                    cento-divisao-vertical">
+                                </div>
+
+                                <div
+                                    class="
+                                    cento-divisao
+                                    cento-divisao-horizontal">
+                                </div>
+
+                            <?php else: ?>
+
+                                <div
+                                    class="
+                                    cento-divisao
+                                    cento-divisao-vertical">
+                                </div>
+
+                            <?php endif; ?>
+
+
+                            <div
+                                class="cento-centro">
+
+                                <strong>
+                                    100
+                                </strong>
+
+                                <span>
+                                    unidades
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            class="
+                            cento-preview-status"
+                            data-cento-status>
+
+                            <small>
+                                Monte seu cento.
+                            </small>
+
+                        </div>
+
 
                         <button
                             type="submit"
-                            class="btn
-                           btn-warning
-                           text-white
-                           btn-lg"
+                            class="
+                            btn
+                            btn-warning
+                            text-white
+                            btn-lg
+                            cento-botao-carrinho"
                             data-adicionar-carrinho>
 
                             <i
-                                class="bi
-                               bi-cart-plus
-                               me-2">
+                                class="
+                                bi
+                                bi-cart-plus
+                                me-2">
                             </i>
 
-                            <?= $editarIndice !== null
+                            <?= $estaEditando
                                 ? 'Atualizar carrinho'
                                 : 'Adicionar ao carrinho'
                             ?>
@@ -726,165 +649,127 @@ $unidadesPorParte =
 
                     </div>
 
-                <?php endif; ?>
-
-
-                <?php if ($ehCento): ?>
-
                 </div>
+
+            </div>
+
+        <?php endif; ?>
+
+
+        <?php if (
+            !$ehCento
+        ): ?>
+
+
+            <div
+                class="
+                categoria-acao-sticky">
 
 
                 <div
-                    class="col-lg-4">
+                    class="
+                    categoria-acao-card">
+
+
+                    <h4
+                        class="
+                        categoria-acao-titulo
+                        fw-bold">
+
+                        <?= $ehSalgadosGrandes
+                            ? 'Salgados Grandes'
+                            : 'Empadão de Frango'
+                        ?>
+
+                    </h4>
+
+
+                    <p
+                        class="
+                        categoria-acao-texto">
+
+                        <?= $ehSalgadosGrandes
+                            ? 'Escolha as quantidades desejadas.'
+                            : 'Escolha a quantidade desejada.'
+                        ?>
+
+                    </p>
 
 
                     <div
-                        class="cento-preview-sticky">
+                        class="
+                        categoria-acao-contador">
+
+                        <span
+                            class="
+                            categoria-acao-contador-label">
+
+                            Quantidade selecionada
+
+                        </span>
 
 
-                        <div
-                            class="cento-preview">
+                        <strong
+                            class="
+                            categoria-acao-contador-valor"
+                            data-contador-quantidade>
+
+                            <?= $totalInicialUnidades ?>
+
+                        </strong>
 
 
-                            <div
-                                class="text-center">
+                        <span
+                            class="
+                            categoria-acao-contador-unidade">
 
-                                <h4
-                                    class="cento-preview-titulo
-                                       fw-bold">
+                            <?= (
+                                $totalInicialUnidades === 1
+                            )
+                                ? 'unidade'
+                                : 'unidades'
+                            ?>
 
-                                    <?= $ehTradicionais
-                                        ? 'Cento Tradicional'
-                                        : 'Cento Folhado'
-                                    ?>
-
-                                </h4>
-
-                            </div>
-
-
-                            <div
-                                class="cento-circulo"
-                                data-partes="<?= $partesCento ?>">
-
-
-                                <?php for (
-                                    $parte = 1;
-                                    $parte <= $partesCento;
-                                    $parte++
-                                ): ?>
-
-                                    <div
-                                        class="cento-setor"
-                                        data-cento-setor="<?= $parte ?>"
-                                        data-parte="<?= $parte ?>">
-
-                                        <span
-                                            class="cento-setor-texto">
-
-                                            <?= $unidadesPorParte ?>
-                                            und.
-
-                                        </span>
-
-                                    </div>
-
-                                <?php endfor; ?>
-
-
-                                <?php if ($ehTradicionais): ?>
-
-                                    <div
-                                        class="cento-divisao
-                                           cento-divisao-vertical">
-                                    </div>
-
-
-                                    <div
-                                        class="cento-divisao
-                                           cento-divisao-horizontal">
-                                    </div>
-
-                                <?php else: ?>
-
-                                    <div
-                                        class="cento-divisao
-                                           cento-divisao-vertical">
-                                    </div>
-
-                                <?php endif; ?>
-
-
-                                <div
-                                    class="cento-centro">
-
-                                    <strong>
-                                        100
-                                    </strong>
-
-                                    <span>
-                                        unidades
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-
-                            <div
-                                class="cento-preview-status"
-                                data-cento-status>
-
-                                <small>
-                                    Monte seu cento.
-                                </small>
-
-                            </div>
-
-
-                            <!--
-                        =================================
-                        BOTÃO FIXO
-                        =================================
-                        -->
-
-                            <button
-                                type="submit"
-                                class="btn
-                                   btn-warning
-                                   text-white
-                                   btn-lg
-                                   cento-botao-carrinho"
-                                data-adicionar-carrinho>
-
-                                <i
-                                    class="bi
-                                       bi-cart-plus
-                                       me-2">
-                                </i>
-
-                                <?= $editarIndice !== null
-                                    ? 'Atualizar carrinho'
-                                    : 'Adicionar ao carrinho'
-                                ?>
-
-                            </button>
-
-
-                        </div>
+                        </span>
 
                     </div>
 
+
+                    <button
+                        type="submit"
+                        class="
+                        btn
+                        btn-warning
+                        text-white
+                        btn-lg
+                        categoria-acao-botao"
+                        data-adicionar-carrinho>
+
+                        <i
+                            class="
+                            bi
+                            bi-cart-plus
+                            me-2">
+                        </i>
+
+                        <?= $estaEditando
+                            ? 'Atualizar carrinho'
+                            : 'Adicionar ao carrinho'
+                        ?>
+
+                    </button>
+
                 </div>
 
+            </div>
 
-            <?php endif; ?>
-
-
-        </form>
+        <?php endif; ?>
 
 
-        <?php if ($ehCento): ?>
+    </form>
+
+
+    <?php if ($ehCento): ?>
 
         </div>
 

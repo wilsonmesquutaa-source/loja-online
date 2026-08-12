@@ -1,0 +1,407 @@
+:root {
+    --cor-primaria: #2563eb;
+    --cor-secundaria: #0f172a;
+    --cor-destaque: #f59e0b;
+    --cor-clara: #f8fafc;
+    --cor-texto: #334155;
+}
+
+
+/*
+=================================
+LAYOUT DO CENTO
+=================================
+*/
+
+.categoria-cento-layout {
+    align-items: flex-start;
+}
+
+
+/*
+=================================
+PAINEL FIXO DO CENTO
+=================================
+*/
+
+.cento-preview-sticky {
+    position: fixed;
+    top: 90px;
+    right: 30px;
+    width: 350px;
+    z-index: 100;
+}
+
+
+.cento-preview {
+    background: #ffffff;
+    border: 1px solid rgba(93, 64, 55, 0.12);
+    border-radius: 1rem;
+    padding: 1.25rem;
+    box-shadow:
+        0 0.5rem 1.5rem
+        rgba(0, 0, 0, 0.12);
+}
+
+
+.cento-preview-titulo {
+    color: var(--marrom, #5D4037);
+}
+
+
+/*
+=================================
+CÍRCULO
+=================================
+*/
+
+.cento-circulo {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin: 1.5rem auto;
+    border-radius: 50%;
+    overflow: hidden;
+    background: var(--creme, #FFF7E8);
+    border: 5px solid var(--marrom, #5D4037);
+}
+
+
+.cento-setor {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: transparent;
+    color: var(--marrom, #5D4037);
+    transition:
+        background-color 0.2s ease;
+    z-index: 2;
+}
+
+
+.cento-setor.ativo {
+    background: var(--laranja, #F57C00);
+    color: #ffffff;
+}
+
+
+/*
+=================================
+4 PARTES
+=================================
+*/
+
+.cento-circulo[data-partes="4"]
+.cento-setor[data-parte="1"] {
+    clip-path:
+        polygon(
+            0 0,
+            50% 0,
+            50% 50%,
+            0 50%
+        );
+}
+
+
+.cento-circulo[data-partes="4"]
+.cento-setor[data-parte="2"] {
+    clip-path:
+        polygon(
+            50% 0,
+            100% 0,
+            100% 50%,
+            50% 50%
+        );
+}
+
+
+.cento-circulo[data-partes="4"]
+.cento-setor[data-parte="3"] {
+    clip-path:
+        polygon(
+            50% 50%,
+            100% 50%,
+            100% 100%,
+            50% 100%
+        );
+}
+
+
+.cento-circulo[data-partes="4"]
+.cento-setor[data-parte="4"] {
+    clip-path:
+        polygon(
+            0 50%,
+            50% 50%,
+            50% 100%,
+            0 100%
+        );
+}
+
+
+/*
+=================================
+2 PARTES
+=================================
+*/
+
+.cento-circulo[data-partes="2"]
+.cento-setor[data-parte="1"] {
+    clip-path:
+        polygon(
+            0 0,
+            50% 0,
+            50% 100%,
+            0 100%
+        );
+}
+
+
+.cento-circulo[data-partes="2"]
+.cento-setor[data-parte="2"] {
+    clip-path:
+        polygon(
+            50% 0,
+            100% 0,
+            100% 100%,
+            50% 100%
+        );
+}
+
+
+/*
+=================================
+DIVISÕES
+=================================
+*/
+
+.cento-divisao {
+    position: absolute;
+    z-index: 10;
+    background: rgba(93, 64, 55, 0.35);
+    pointer-events: none;
+}
+
+
+.cento-divisao-vertical {
+    width: 3px;
+    height: 100%;
+    top: 0;
+    left: 50%;
+    transform:
+        translateX(-50%);
+}
+
+
+.cento-divisao-horizontal {
+    width: 100%;
+    height: 3px;
+    top: 50%;
+    left: 0;
+    transform:
+        translateY(-50%);
+}
+
+
+/*
+=================================
+CENTRO DO CÍRCULO
+=================================
+*/
+
+.cento-centro {
+    position: absolute;
+    z-index: 40;
+    top: 50%;
+    left: 50%;
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    color: var(--marrom, #5D4037);
+    border:
+        4px solid
+        var(--marrom, #5D4037);
+    text-align: center;
+    line-height: 1;
+    box-shadow:
+        0 0.25rem 0.75rem
+        rgba(0, 0, 0, 0.14);
+    pointer-events: none;
+}
+
+
+.cento-centro strong {
+    font-size: 1rem;
+}
+
+
+.cento-centro span {
+    font-size: 0.7rem;
+    margin-top: 0.2rem;
+}
+
+
+/*
+=================================
+BOTÃO DO CENTO
+=================================
+*/
+
+.cento-botao-carrinho {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+
+/*
+=================================
+PAINEL FIXO
+SALGADOS GRANDES / EMPADÃO
+=================================
+*/
+
+.categoria-acao-sticky {
+    position: fixed !important;
+    top: 90px !important;
+    right: 30px !important;
+    width: 350px !important;
+    z-index: 1000 !important;
+}
+
+
+.categoria-acao-card {
+    background: #ffffff;
+    border:
+        1px solid
+        rgba(93, 64, 55, 0.12);
+    border-radius: 1rem;
+    padding: 1.25rem;
+    box-shadow:
+        0 0.5rem 1.5rem
+        rgba(0, 0, 0, 0.12);
+}
+
+
+.categoria-acao-titulo {
+    color: var(--marrom, #5D4037);
+    margin-bottom: 0.35rem;
+}
+
+
+.categoria-acao-texto {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+
+.categoria-acao-contador {
+    text-align: center;
+    padding:
+        0.75rem 0 1rem;
+}
+
+
+.categoria-acao-contador-label {
+    display: block;
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-bottom: 0.2rem;
+}
+
+
+.categoria-acao-contador-valor {
+    display: block;
+    color: var(--marrom, #5D4037);
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+
+.categoria-acao-contador-unidade {
+    display: block;
+    color: #6c757d;
+    font-size: 0.85rem;
+    margin-top: 0.2rem;
+}
+
+
+.categoria-acao-botao {
+    width: 100%;
+}
+
+
+/*
+=================================
+ÁREA DOS PRODUTOS
+=================================
+*/
+
+.categoria-produtos-area {
+    width: 100%;
+}
+
+
+.categoria-com-acao-lateral {
+    padding-right: 390px;
+}
+
+
+/*
+=================================
+DESKTOP
+=================================
+*/
+
+@media (min-width: 1200px) {
+
+    .categoria-com-acao-lateral {
+        padding-right: 390px;
+    }
+
+}
+
+
+/*
+=================================
+TABLET / MOBILE
+=================================
+*/
+
+@media (max-width: 1199.98px) {
+
+    .cento-preview-sticky,
+    .categoria-acao-sticky {
+        position: static !important;
+        width: auto !important;
+        margin-top: 1.5rem;
+    }
+
+
+    .cento-circulo {
+        width:
+            min(
+                100%,
+                280px
+            );
+
+        height: auto;
+
+        aspect-ratio: 1;
+    }
+
+}

@@ -5,61 +5,75 @@ declare(strict_types=1);
 namespace App\Controllers\Site;
 
 use App\Controllers\Controller;
+use App\Repositories\CarrinhoRepository;
 use App\Repositories\ProdutoRepository;
 
 final class ProdutoController extends Controller
 {
     public function index(): void
     {
-        $produtoRepository = new ProdutoRepository(
-            $this->pdo
-        );
+        $produtoRepository =
+            new ProdutoRepository(
+                $this->pdo
+            );
 
-        $categorias = $produtoRepository
-            ->buscarCategoriasDestaque();
+        $categorias =
+            $produtoRepository
+                ->buscarCategoriasDestaque();
 
         $this->view(
             'site/produtos',
             [
                 'tituloPagina' =>
-                'Produtos',
+                    'Produtos',
 
                 'rotaAtual' =>
-                'produtos',
+                    'produtos',
 
                 'categorias' =>
-                $categorias,
+                    $categorias,
 
                 'etiquetaProdutos' =>
-                'Cardápio',
+                    'Cardápio',
             ]
         );
     }
 
 
-    public function categoria(int $id): void
-    {
-        $produtoRepository = new ProdutoRepository(
-            $this->pdo
-        );
+    public function categoria(
+        int $id
+    ): void {
+        $produtoRepository =
+            new ProdutoRepository(
+                $this->pdo
+            );
 
 
-        $categoria = $produtoRepository
-            ->buscarCategoriaPorId($id);
+        $categoria =
+            $produtoRepository
+                ->buscarCategoriaPorId(
+                    $id
+                );
 
 
-        if ($categoria === null) {
-
+        if (
+            $categoria === null
+        ) {
             http_response_code(404);
 
-            require APP_ROOT . '/views/erros/404.php';
+            require
+                APP_ROOT
+                . '/views/erros/404.php';
 
             return;
         }
 
 
-        $produtos = $produtoRepository
-            ->buscarProdutosPorCategoria($id);
+        $produtos =
+            $produtoRepository
+                ->buscarProdutosPorCategoria(
+                    $id
+                );
 
 
         /*
@@ -68,10 +82,13 @@ final class ProdutoController extends Controller
         =================================
         */
 
-        $nomeCategoria = mb_strtolower(
-            trim($categoria['nome']),
-            'UTF-8'
-        );
+        $nomeCategoria =
+            mb_strtolower(
+                trim(
+                    $categoria['nome']
+                ),
+                'UTF-8'
+            );
 
 
         /*
@@ -80,27 +97,17 @@ final class ProdutoController extends Controller
         =================================
         */
 
-        $tipoCategoria = 'unica';
+        $tipoCategoria =
+            'unica';
 
-        $limiteOpcoes = 1;
+        $limiteOpcoes =
+            1;
 
 
         /*
         =================================
-        SALGADOS TRADICIONAIS
+        TRADICIONAIS
         =================================
-
-        Pode escolher até 4 sabores.
-
-        Cada sabor pode ser repetido.
-
-        Exemplo:
-
-        Coxinha 2
-        Risoles 1
-        Bolinha de queijo 1
-
-        Total = 4
         */
 
         if (
@@ -109,101 +116,238 @@ final class ProdutoController extends Controller
                 'tradicionais'
             )
         ) {
-
             $tipoCategoria =
                 'cento_tradicionais';
 
-            $limiteOpcoes = 4;
-        }
+            $limiteOpcoes =
+                4;
 
 
         /*
         =================================
-        SALGADOS FOLHADOS
+        FOLHADOS
         =================================
+        */
 
-        Pode escolher até 2 sabores.
-
-        Cada sabor pode ser repetido.
-
-        Exemplo:
-
-        Frango 2
-
-        Total = 2
-        */ elseif (
+        } elseif (
             str_contains(
                 $nomeCategoria,
                 'folhados'
             )
         ) {
-
             $tipoCategoria =
                 'cento_folhados';
 
-            $limiteOpcoes = 2;
-        }
+            $limiteOpcoes =
+                2;
 
 
         /*
         =================================
         SALGADOS GRANDES
         =================================
+        */
 
-        Quantidade livre.
-
-        Não existe limite geral
-        de quantidade.
-
-        O cliente pode escolher:
-
-        Coxinha grande = 5
-        Pastel grande = 10
-        Risoles grande = 3
-
-        etc.
-        */ elseif (
+        } elseif (
             str_contains(
                 $nomeCategoria,
                 'grandes'
             )
         ) {
-
             $tipoCategoria =
                 'salgados_grandes';
 
-            $limiteOpcoes = null;
-        }
+            $limiteOpcoes =
+                null;
 
 
         /*
         =================================
         EMPADÃO
         =================================
-        Quantidade livre.
-        
-        Atualmente existe apenas
-        um sabor, mas futuramente
-        poderão existir vários.
-        */ elseif (
-            str_contains($nomeCategoria, 'empadão')
+        */
+
+        } elseif (
+            str_contains(
+                $nomeCategoria,
+                'empadão'
+            )
             ||
-            str_contains($nomeCategoria, 'empadões')
+            str_contains(
+                $nomeCategoria,
+                'empadões'
+            )
             ||
-            str_contains($nomeCategoria, 'empadao')
+            str_contains(
+                $nomeCategoria,
+                'empadao'
+            )
             ||
-            str_contains($nomeCategoria, 'empadoes')
+            str_contains(
+                $nomeCategoria,
+                'empadoes'
+            )
         ) {
+            $tipoCategoria =
+                'empadao';
 
-            $tipoCategoria = 'empadao';
-
-            $limiteOpcoes = null;
+            $limiteOpcoes =
+                null;
         }
 
 
         /*
         =================================
-        CARREGA A VIEW
+        ESTADO PADRÃO
+        =================================
+        */
+
+        $editarCategoriaId =
+            null;
+
+        $quantidadesIniciais =
+            [];
+
+
+        /*
+        =================================
+        VERIFICA MODO DE EDIÇÃO
+        =================================
+        */
+
+        $estaEditando =
+            isset($_GET['editar'])
+            &&
+            $_GET['editar'] === '1';
+
+
+        if ($estaEditando) {
+
+            /*
+            ==============================
+            TOKEN DA SESSÃO
+            ==============================
+            */
+
+            $tokenSessao =
+                $this->obterTokenSessao();
+
+
+            /*
+            ==============================
+            CARRINHO
+            ==============================
+            */
+
+            $carrinhoRepository =
+                new CarrinhoRepository(
+                    $this->pdo
+                );
+
+
+            $carrinho =
+                $carrinhoRepository
+                    ->buscarAbertoPorToken(
+                        $tokenSessao
+                    );
+
+
+            /*
+            ==============================
+            SEM CARRINHO
+            ==============================
+            */
+
+            if (
+                $carrinho === null
+            ) {
+                $this->redirecionar(
+                    'produtos/categoria/'
+                    . $id
+                );
+            }
+
+
+            /*
+            ==============================
+            ITENS DO CARRINHO
+            ==============================
+            */
+
+            $itens =
+                $carrinhoRepository
+                    ->buscarItens(
+                        (int)
+                        $carrinho['id']
+                    );
+
+
+            /*
+            ==============================
+            LOCALIZA A CATEGORIA
+            ==============================
+            */
+
+            $encontrouCategoria =
+                false;
+
+
+            foreach (
+                $itens as $item
+            ) {
+
+                if (
+                    (int)
+                    $item['categoria_id']
+                    !== $id
+                ) {
+                    continue;
+                }
+
+
+                /*
+                ------------------------------
+                ENCONTROU ITEM
+                ------------------------------
+                */
+
+                $encontrouCategoria =
+                    true;
+
+
+                $editarCategoriaId =
+                    $id;
+
+
+                $quantidadesIniciais[
+                    (int)
+                    $item['produto_id']
+                ] =
+                    (int)
+                    $item['quantidade'];
+            }
+
+
+            /*
+            ==============================
+            CATEGORIA NÃO ESTÁ NO CARRINHO
+            ==============================
+            */
+
+            if (
+                !$encontrouCategoria
+            ) {
+                $this->redirecionar(
+                    'produtos/categoria/'
+                    . $id
+                );
+            }
+        }
+
+
+        /*
+        =================================
+        CARREGA VIEW
         =================================
         */
 
@@ -211,26 +355,71 @@ final class ProdutoController extends Controller
             'site/categoria',
             [
                 'tituloPagina' =>
-                $categoria['nome'],
+                    $categoria['nome'],
 
                 'rotaAtual' =>
-                'produtos',
+                    'produtos',
+
+                'cssPagina' =>
+                    'categoria',
 
                 'categoria' =>
-                $categoria,
+                    $categoria,
 
                 'nomeCategoria' =>
-                $categoria['nome'],
+                    $categoria['nome'],
 
                 'produtos' =>
-                $produtos,
+                    $produtos,
 
                 'limiteOpcoes' =>
-                $limiteOpcoes,
+                    $limiteOpcoes,
 
                 'tipoCategoria' =>
-                $tipoCategoria,
+                    $tipoCategoria,
+
+                'quantidadesIniciais' =>
+                    $quantidadesIniciais,
+
+                'editarCategoriaId' =>
+                    $editarCategoriaId,
             ]
         );
+    }
+
+
+    /*
+    =================================
+    TOKEN DA SESSÃO
+    =================================
+    */
+
+    private function obterTokenSessao(): string
+    {
+        if (
+            session_status() !==
+            PHP_SESSION_ACTIVE
+        ) {
+            session_start();
+        }
+
+
+        if (
+            empty(
+                $_SESSION['carrinho_token']
+            )
+        ) {
+            $_SESSION['carrinho_token'] =
+                bin2hex(
+                    random_bytes(32)
+                );
+        }
+
+
+        return
+            (string)
+            $_SESSION[
+                'carrinho_token'
+            ];
     }
 }

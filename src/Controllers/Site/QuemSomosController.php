@@ -2,12 +2,20 @@
 
 declare(strict_types=1);
 
-namespace App\Controllers\site;
+namespace App\Controllers\Site;
 
-class QuemSomosController
+use App\Controllers\Controller;
+
+final class QuemSomosController extends Controller
 {
     public function index(): void
     {
-        require APP_ROOT . '/views/site/quemsomos.php';
+        $this->view(
+            'site/quemsomos',
+            [
+                'tituloPagina' => 'Quem Somos',
+                'rotaAtual' => 'quemsomos',
+            ]
+        );
     }
 }

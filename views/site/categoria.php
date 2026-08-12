@@ -10,44 +10,22 @@ require APP_ROOT
 View::componente(
     'site/navbar',
     [
-        'rotaAtual' => $rotaAtual,
+        'rotaAtual' =>
+            $rotaAtual,
     ]
 );
 
+$editar =
+    filter_input(
+        INPUT_GET,
+        'editar',
+        FILTER_VALIDATE_INT
+    );
 
-$editarIndice = filter_input(
-    INPUT_GET,
-    'editar',
-    FILTER_VALIDATE_INT
-);
-
-$editarIndice =
-    $editarIndice === false
-    ? null
-    : $editarIndice;
-
-
-$quantidadesIniciais = [];
-
-
-if (
-    $editarIndice !== null
-    &&
-    isset(
-        $_SESSION['carrinho'][$editarIndice]
-    )
-) {
-    $item =
-        $_SESSION['carrinho'][$editarIndice];
-
-    foreach (
-        $item['produtos'] ?? []
-        as $produto
-    ) {
-        $quantidadesIniciais[(int) $produto['produto_id']] =
-            (int) $produto['quantidade'];
-    }
-}
+$editarCategoriaId =
+    $editar !== false
+    ? (int) $categoria['id']
+    : null;
 
 ?>
 
@@ -61,7 +39,9 @@ if (
                 href="<?= BASE_URL ?>/carrinho"
                 class="btn btn-voltar-cardapio">
 
-                <i class="bi bi-arrow-left me-1"></i>
+                <i
+                    class="bi bi-arrow-left me-1">
+                </i>
 
                 Voltar ao carrinho
 
@@ -76,22 +56,22 @@ if (
             'site/sections/categoria',
             [
                 'categoria' =>
-                $categoria,
+                    $categoria,
 
                 'produtos' =>
-                $produtos,
+                    $produtos,
 
                 'limiteOpcoes' =>
-                $limiteOpcoes,
+                    $limiteOpcoes,
 
                 'tipoCategoria' =>
-                $tipoCategoria,
+                    $tipoCategoria,
 
                 'quantidadesIniciais' =>
-                $quantidadesIniciais,
+                    $quantidadesIniciais,
 
-                'editarIndice' =>
-                $editarIndice,
+                'editarCategoriaId' =>
+                    $editarCategoriaId,
             ]
         );
 
