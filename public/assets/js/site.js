@@ -30,7 +30,267 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /*
     =================================
-    ELEMENTOS
+    TIPO DA CATEGORIA
+    =================================
+    */
+
+    const tipoCategoria =
+        categoria.dataset.tipoCategoria || 'unica';
+
+
+    console.log(
+        'Tipo da categoria:',
+        tipoCategoria
+    );
+
+
+    /*
+    =================================
+    CATEGORIAS SEM LIMITE GERAL
+    =================================
+
+    Salgados grandes e empadão trabalham
+    somente com a quantidade individual
+    de cada produto.
+    */
+
+    const quantidadeLivre =
+        tipoCategoria === 'salgados_grandes'
+        ||
+        tipoCategoria === 'empadao';
+
+
+    if (quantidadeLivre) {
+
+        console.log(
+            'Categoria com quantidade livre.'
+        );
+
+
+        const produtos =
+            categoria.querySelectorAll(
+                '[data-produto-wrapper]'
+            );
+
+
+        produtos.forEach(
+            function (produto) {
+
+                const quantidade =
+                    produto.querySelector(
+                        '[data-quantidade]'
+                    );
+
+
+                const botaoAumentar =
+                    produto.querySelector(
+                        '[data-aumentar]'
+                    );
+
+
+                const botaoDiminuir =
+                    produto.querySelector(
+                        '[data-diminuir]'
+                    );
+
+
+                const inputQuantidade =
+                    produto.querySelector(
+                        '[data-input-quantidade]'
+                    );
+
+
+                if (
+                    !quantidade
+                    ||
+                    !botaoAumentar
+                    ||
+                    !botaoDiminuir
+                ) {
+
+                    return;
+
+                }
+
+
+                /*
+                =================================
+                ESTADO INICIAL
+                =================================
+                */
+
+                const valorInicial =
+                    Number(
+                        quantidade.textContent
+                    ) || 0;
+
+
+                botaoDiminuir.disabled =
+                    valorInicial <= 0;
+
+
+                if (inputQuantidade) {
+
+                    inputQuantidade.value =
+                        valorInicial;
+
+                }
+
+
+                /*
+                =================================
+                BOTÕES
+                =================================
+                */
+
+                produto.addEventListener(
+                    'click',
+                    function (evento) {
+
+                        /*
+                        =============================
+                        BOTÃO +
+                        =============================
+                        */
+
+                        const botaoMais =
+                            evento.target.closest(
+                                '[data-aumentar]'
+                            );
+
+
+                        if (botaoMais) {
+
+                            evento.preventDefault();
+
+
+                            let valor =
+                                Number(
+                                    quantidade.textContent
+                                ) || 0;
+
+
+                            valor++;
+
+
+                            quantidade.textContent =
+                                valor;
+
+
+                            if (inputQuantidade) {
+
+                                inputQuantidade.value =
+                                    valor;
+
+                            }
+
+
+                            botaoDiminuir.disabled =
+                                valor <= 0;
+
+
+                            console.log(
+                                'Produto adicionado:',
+                                produto.dataset.produtoId,
+                                'Quantidade:',
+                                valor
+                            );
+
+
+                            return;
+
+                        }
+
+
+                        /*
+                        =============================
+                        BOTÃO -
+                        =============================
+                        */
+
+                        const botaoMenos =
+                            evento.target.closest(
+                                '[data-diminuir]'
+                            );
+
+
+                        if (botaoMenos) {
+
+                            evento.preventDefault();
+
+
+                            let valor =
+                                Number(
+                                    quantidade.textContent
+                                ) || 0;
+
+
+                            if (valor <= 0) {
+
+                                return;
+
+                            }
+
+
+                            valor--;
+
+
+                            quantidade.textContent =
+                                valor;
+
+
+                            if (inputQuantidade) {
+
+                                inputQuantidade.value =
+                                    valor;
+
+                            }
+
+
+                            botaoDiminuir.disabled =
+                                valor <= 0;
+
+
+                            console.log(
+                                'Produto removido:',
+                                produto.dataset.produtoId,
+                                'Quantidade:',
+                                valor
+                            );
+
+
+                            return;
+
+                        }
+
+                    }
+                );
+
+            }
+        );
+
+
+        /*
+        =================================
+        IMPORTANTE
+        =================================
+
+        Não continua para a lógica dos
+        tradicionais e folhados.
+        */
+
+        return;
+
+    }
+
+
+    /*
+    =================================
+    DAQUI PARA BAIXO
+    =================================
+
+    LÓGICA ORIGINAL
+    TRADICIONAIS / FOLHADOS
     =================================
     */
 
@@ -154,7 +414,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     ||
                     !botaoDiminuir
                 ) {
+
                     return;
+
                 }
 
 
@@ -164,34 +426,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     ) || 0;
 
 
-                /*
-                =================================
-                BOTÃO +
-                =================================
-
-                O botão só fica bloqueado quando
-                o limite geral foi atingido.
-
-                Portanto:
-
-                Coxinha 1 → pode +
-                Coxinha 2 → pode +
-                Coxinha 3 → pode +
-                Coxinha 4 → pode +
-
-                desde que o total geral ainda
-                esteja abaixo do limite.
-                */
-
                 botaoAumentar.disabled =
                     totalSelecionado >= limite;
 
-
-                /*
-                =================================
-                BOTÃO -
-                =================================
-                */
 
                 botaoDiminuir.disabled =
                     valor <= 0;
@@ -229,16 +466,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 evento.preventDefault();
 
 
-                /*
-                Não permite ultrapassar
-                o limite da categoria.
-                */
-
                 if (
                     totalSelecionado >= limite
                 ) {
 
                     return;
+
                 }
 
 
@@ -255,6 +488,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     );
 
                     return;
+
                 }
 
 
@@ -271,14 +505,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     );
 
                     return;
+
                 }
 
-
-                /*
-                =================================
-                AUMENTA A QUANTIDADE
-                =================================
-                */
 
                 let valorAtual =
                     Number(
@@ -291,6 +520,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 quantidade.textContent =
                     valorAtual;
+
+
+                const inputQuantidade =
+                    produto.querySelector(
+                        '[data-input-quantidade]'
+                    );
+
+
+                if (inputQuantidade) {
+
+                    inputQuantidade.value =
+                        valorAtual;
+
+                }
 
 
                 totalSelecionado++;
@@ -310,6 +553,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
                 return;
+
             }
 
 
@@ -343,6 +587,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     );
 
                     return;
+
                 }
 
 
@@ -359,6 +604,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     );
 
                     return;
+
                 }
 
 
@@ -368,13 +614,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     ) || 0;
 
 
-                /*
-                Não permite quantidade negativa.
-                */
-
                 if (valorAtual <= 0) {
 
                     return;
+
                 }
 
 
@@ -383,6 +626,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 quantidade.textContent =
                     valorAtual;
+
+
+                const inputQuantidade =
+                    produto.querySelector(
+                        '[data-input-quantidade]'
+                    );
+
+
+                if (inputQuantidade) {
+
+                    inputQuantidade.value =
+                        valorAtual;
+
+                }
 
 
                 totalSelecionado =
@@ -406,6 +663,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
                 return;
+
             }
 
         }

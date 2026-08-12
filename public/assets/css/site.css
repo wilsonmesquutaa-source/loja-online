@@ -155,3 +155,15 @@ FOOTER
         padding: 2rem;
     }
 }
+
+.btn-voltar-cardapio {
+    background-color: var(--creme);
+    border: 1px solid var(--laranja);
+    color: var(--marrom);
+}
+
+.btn-voltar-cardapio:hover {
+    background-color: var(--laranja);
+    border-color: var(--laranja);
+    color: var(--branco);
+}

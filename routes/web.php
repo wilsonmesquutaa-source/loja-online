@@ -44,7 +44,7 @@ return [
             'index',
         ],
     ],
-    
+
     [
         'method' => 'GET',
         'path' => '/termos',
@@ -52,7 +52,7 @@ return [
             TermosController::class,
             'index',
         ],
-    
+
     ],
 
 
@@ -63,9 +63,9 @@ return [
             QuemSomosController::class,
             'index',
         ],
-    
+
     ],
-    
+
 
     [
         'method' => 'POST',
@@ -75,9 +75,21 @@ return [
             'enviar',
         ],
     ],
+    [
+        'method' => 'GET',
+        'path' => '/carrinho',
+        'action' => [
+            \App\Controllers\Site\CarrinhoController::class,
+            'index',
+        ],
+    ],
+
+    [
+        'method' => 'POST',
+        'path' => '/carrinho/adicionar',
+        'action' => [
+            \App\Controllers\Site\CarrinhoController::class,
+            'adicionar',
+        ],
+    ],
 ];
-
-   
-
-   
-
