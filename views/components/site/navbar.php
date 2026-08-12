@@ -2,7 +2,194 @@
 
 declare(strict_types=1);
 
-$rotaAtual = $rotaAtual ?? '';
+use App\Repositories\CarrinhoRepository;
+
+$rotaAtual =
+    $rotaAtual ?? '';
+
+
+if (
+    session_status() !==
+    PHP_SESSION_ACTIVE
+) {
+    session_start();
+}
+
+
+if (
+    !isset($pdo)
+    ||
+    !($pdo instanceof PDO)
+) {
+    $quantidadeCarrinho = 999;
+} else {
+
+    $tokenSessao =
+        $_SESSION['carrinho_token']
+        ?? null;
+
+    $quantidadeCarrinho = 0;
+
+
+    if ($tokenSessao !== null) {
+
+        $repository =
+            new CarrinhoRepository(
+                $pdo
+            );
+
+        $carrinho =
+            $repository
+                ->buscarAbertoPorToken(
+                    $tokenSessao
+                );
+
+        if ($carrinho !== null) {
+
+            $itens =
+                $repository
+                    ->buscarItens(
+                        (int) $carrinho['id']
+                    );
+
+            $grupos = [];
+
+
+            foreach ($itens as $item) {
+
+                $categoriaId =
+                    (int)
+                    $item['categoria_id'];
+
+                if (
+                    !isset(
+                        $grupos[$categoriaId]
+                    )
+                ) {
+
+                    $grupos[$categoriaId] = [
+                        'tipo' => 'unica',
+                        'quantidade' => 0,
+                    ];
+                }
+
+
+                $nomeCategoria =
+                    mb_strtolower(
+                        trim(
+                            $item[
+                                'categoria_nome'
+                            ]
+                        ),
+                        'UTF-8'
+                    );
+
+
+                $tipo =
+                    'unica';
+
+
+                if (
+                    str_contains(
+                        $nomeCategoria,
+                        'tradicionais'
+                    )
+                ) {
+                    $tipo =
+                        'cento_tradicionais';
+
+                } elseif (
+                    str_contains(
+                        $nomeCategoria,
+                        'folhados'
+                    )
+                ) {
+                    $tipo =
+                        'cento_folhados';
+
+                } elseif (
+                    str_contains(
+                        $nomeCategoria,
+                        'grandes'
+                    )
+                ) {
+                    $tipo =
+                        'salgados_grandes';
+
+                } elseif (
+                    str_contains(
+                        $nomeCategoria,
+                        'empadão'
+                    )
+                    ||
+                    str_contains(
+                        $nomeCategoria,
+                        'empadões'
+                    )
+                    ||
+                    str_contains(
+                        $nomeCategoria,
+                        'empadao'
+                    )
+                    ||
+                    str_contains(
+                        $nomeCategoria,
+                        'empadoes'
+                    )
+                ) {
+                    $tipo =
+                        'empadao';
+                }
+
+
+                $grupos[
+                    $categoriaId
+                ]['tipo'] = $tipo;
+
+
+                $grupos[
+                    $categoriaId
+                ]['quantidade'] +=
+                    (int)
+                    $item['quantidade'];
+            }
+
+
+            foreach (
+                $grupos as $grupo
+            ) {
+
+                if (
+                    $grupo['tipo'] ===
+                        'cento_tradicionais'
+                ) {
+
+                    $quantidadeCarrinho +=
+                        (int) ceil(
+                            $grupo['quantidade']
+                            / 4
+                        );
+
+                } elseif (
+                    $grupo['tipo'] ===
+                    'cento_folhados'
+                ) {
+
+                    $quantidadeCarrinho +=
+                        (int) ceil(
+                            $grupo['quantidade']
+                            / 2
+                        );
+
+                } else {
+
+                    $quantidadeCarrinho +=
+                        $grupo['quantidade'];
+                }
+            }
+        }
+    }
+}
 
 ?>
 
@@ -11,9 +198,6 @@ $rotaAtual = $rotaAtual ?? '';
     aria-label="Navegação principal">
 
     <div class="container">
-
-
-        <!-- LOGO -->
 
         <a
             class="navbar-brand d-flex align-items-center gap-2"
@@ -24,14 +208,8 @@ $rotaAtual = $rotaAtual ?? '';
                 alt="Cantim do Lanche"
                 height="55">
 
-
-
-
         </a>
 
-
-
-        <!-- BOTÃO MOBILE -->
 
         <button
             class="navbar-toggler"
@@ -43,11 +221,10 @@ $rotaAtual = $rotaAtual ?? '';
             aria-label="Abrir menu">
 
             <span
-                class="navbar-toggler-icon"></span>
+                class="navbar-toggler-icon">
+            </span>
 
         </button>
-
-
 
 
         <div
@@ -55,11 +232,8 @@ $rotaAtual = $rotaAtual ?? '';
             id="menuPrincipal">
 
 
-            <!-- MENU CENTRAL -->
-
             <ul
                 class="navbar-nav mx-auto align-items-lg-center">
-
 
                 <li class="nav-item">
 
@@ -70,11 +244,12 @@ $rotaAtual = $rotaAtual ?? '';
                             : ''
                         ?>"
                         href="<?= BASE_URL ?>/">
+
                         Início
+
                     </a>
 
                 </li>
-
 
 
                 <li class="nav-item">
@@ -82,23 +257,25 @@ $rotaAtual = $rotaAtual ?? '';
                     <a
                         class="nav-link fw-semibold"
                         href="<?= BASE_URL ?>/produtos">
+
                         Cardápio
+
                     </a>
 
                 </li>
-
 
 
                 <li class="nav-item">
 
                     <a
                         class="nav-link fw-semibold"
-                        href="<?= BASE_URL ?>/quem-somos">
-                        Sobre
+                        href="<?= BASE_URL ?>/quemsomos">
+
+                        Quem Somos
+
                     </a>
 
                 </li>
-
 
 
                 <li class="nav-item">
@@ -106,20 +283,15 @@ $rotaAtual = $rotaAtual ?? '';
                     <a
                         class="nav-link fw-semibold"
                         href="<?= BASE_URL ?>/contato">
+
                         Contato
+
                     </a>
 
                 </li>
 
-
             </ul>
 
-
-
-
-
-
-            <!-- ÁREA DIREITA -->
 
             <div
                 class="
@@ -130,10 +302,6 @@ $rotaAtual = $rotaAtual ?? '';
                 gap-2
                 ">
 
-
-
-
-                <!-- BUSCA -->
 
                 <form
                     class="d-flex"
@@ -155,21 +323,15 @@ $rotaAtual = $rotaAtual ?? '';
                             type="submit">
 
                             <i
-                                class="bi bi-search"></i>
+                                class="bi bi-search">
+                            </i>
 
                         </button>
 
-
                     </div>
-
 
                 </form>
 
-
-
-
-
-                <!-- CARRINHO -->
 
                 <a
                     href="<?= BASE_URL ?>/carrinho"
@@ -188,35 +350,26 @@ $rotaAtual = $rotaAtual ?? '';
                         rounded-pill
                         bg-danger
                         ">
-                        0
+
+                        <?= $quantidadeCarrinho ?>
+
                     </span>
 
                 </a>
 
-
-
-
-
-
-                <!-- LOGIN CLIENTE -->
 
                 <a
                     href="<?= BASE_URL ?>/login"
                     class="btn btn-outline-secondary">
 
                     <i
-                        class="bi bi-person"></i>
+                        class="bi bi-person">
+                    </i>
 
                     Entrar
 
                 </a>
 
-
-
-
-
-
-                <!-- CADASTRO -->
 
                 <a
                     href="<?= BASE_URL ?>/cadastro"
@@ -227,33 +380,22 @@ $rotaAtual = $rotaAtual ?? '';
                 </a>
 
 
-
-
-
-
-                <!-- ADMIN -->
-
                 <a
                     href="<?= BASE_URL ?>/login-admin"
                     class="btn btn-dark">
 
                     <i
-                        class="bi bi-shield-lock"></i>
+                        class="bi bi-shield-lock">
+                    </i>
 
                     Admin
 
                 </a>
 
-
-
-
             </div>
-
 
         </div>
 
-
     </div>
-
 
 </nav>

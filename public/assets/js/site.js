@@ -3,126 +3,242 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('SITE.JS CARREGADO');
 
 
-    /*
-    =================================
-    SELEÇÃO DE CATEGORIA
-    =================================
-    */
-
     const categoria =
         document.querySelector(
             '.categoria-selecao'
         );
 
 
-    if (categoria) {
+    function atualizarInputQuantidade(
+        produto,
+        valor
+    ) {
+        const input =
+            produto.querySelector(
+                '[data-input-quantidade]'
+            );
+
+        if (input) {
+            input.value = valor;
+        }
+    }
+
+
+    /*
+    =================================
+    CONTADOR DE QUANTIDADE
+    GRANDES / EMPADÃO
+    =================================
+    */
+
+    function atualizarContadorQuantidade() {
+
+        if (!categoria) {
+            return;
+        }
+
 
         const tipoCategoria =
             categoria.dataset.tipoCategoria
             || 'unica';
 
 
-        function atualizarInputQuantidade(
-            produto,
-            valor
+        if (
+            tipoCategoria !==
+                'salgados_grandes'
+            &&
+            tipoCategoria !==
+                'empadao'
         ) {
-
-            const inputQuantidade =
-                produto.querySelector(
-                    '[data-input-quantidade]'
-                );
-
-            if (inputQuantidade) {
-                inputQuantidade.value = valor;
-            }
+            return;
         }
 
 
-        /*
-        =================================
-        PREVIEW DO CENTO
-        =================================
-        */
-
-        function atualizarPreviewCento() {
-
-            if (
-                tipoCategoria !== 'cento_tradicionais'
-                &&
-                tipoCategoria !== 'cento_folhados'
-            ) {
-                return;
-            }
-
-            const setores =
-                categoria.querySelectorAll(
-                    '[data-cento-setor]'
-                );
-
-            const status =
-                categoria.querySelector(
-                    '[data-cento-status]'
-                );
-
-            if (!setores.length) {
-                return;
-            }
-
-            let totalSelecionado = 0;
-
-            const produtos =
-                categoria.querySelectorAll(
-                    '[data-produto-wrapper]'
-                );
-
-            produtos.forEach(
-                function (produto) {
-
-                    const quantidade =
-                        produto.querySelector(
-                            '[data-quantidade]'
-                        );
-
-                    if (!quantidade) {
-                        return;
-                    }
-
-                    totalSelecionado +=
-                        Number(
-                            quantidade.textContent
-                        ) || 0;
-                }
+        const contador =
+            categoria.querySelector(
+                '[data-contador-quantidade]'
             );
 
-            setores.forEach(
-                function (setor, indice) {
 
-                    if (
-                        indice + 1 <=
+        if (!contador) {
+            return;
+        }
+
+
+        let total = 0;
+
+
+        const produtos =
+            categoria.querySelectorAll(
+                '[data-produto-wrapper]'
+            );
+
+
+        produtos.forEach(
+            function (produto) {
+
+                const quantidade =
+                    produto.querySelector(
+                        '[data-quantidade]'
+                    );
+
+
+                if (!quantidade) {
+                    return;
+                }
+
+
+                total +=
+                    Number(
+                        quantidade.textContent
+                    ) || 0;
+            }
+        );
+
+
+        contador.textContent =
+            total;
+
+
+        const unidade =
+            contador.nextElementSibling;
+
+
+        if (unidade) {
+
+            unidade.textContent =
+                total === 1
+                    ? 'unidade'
+                    : 'unidades';
+        }
+    }
+
+
+    /*
+    =================================
+    PREVIEW DO CENTO
+    =================================
+    */
+
+    function atualizarPreviewCento() {
+
+        if (!categoria) {
+            return;
+        }
+
+
+        const tipo =
+            categoria.dataset.tipoCategoria
+            || 'unica';
+
+
+        if (
+            tipo !==
+                'cento_tradicionais'
+            &&
+            tipo !==
+                'cento_folhados'
+        ) {
+            return;
+        }
+
+
+        const setores =
+            categoria.querySelectorAll(
+                '[data-cento-setor]'
+            );
+
+
+        if (!setores.length) {
+            return;
+        }
+
+
+        let totalSelecionado = 0;
+
+
+        const produtos =
+            categoria.querySelectorAll(
+                '[data-produto-wrapper]'
+            );
+
+
+        produtos.forEach(
+            function (produto) {
+
+                const quantidade =
+                    produto.querySelector(
+                        '[data-quantidade]'
+                    );
+
+
+                if (!quantidade) {
+                    return;
+                }
+
+
+                totalSelecionado +=
+                    Number(
+                        quantidade.textContent
+                    ) || 0;
+            }
+        );
+
+
+        setores.forEach(
+            function (setor, indice) {
+
+                setor.classList.toggle(
+                    'ativo',
+                    indice + 1 <=
                         totalSelecionado
-                    ) {
-                        setor.classList.add(
-                            'ativo'
-                        );
-                    } else {
-                        setor.classList.remove(
-                            'ativo'
-                        );
-                    }
-                }
+                );
+            }
+        );
+
+
+        const status =
+            categoria.querySelector(
+                '[data-cento-status]'
             );
 
-            if (status) {
 
-                const partes =
-                    setores.length;
+        if (status) {
 
-                status.innerHTML =
-                    totalSelecionado >= partes
-                        ? '<small>Cento completo.</small>'
-                        : '<small>Monte seu cento.</small>';
-            }
+            status.innerHTML =
+                totalSelecionado >=
+                    setores.length
+                    ? '<small>Cento completo.</small>'
+                    : '<small>Monte seu cento.</small>';
         }
+    }
+
+
+    /*
+    =================================
+    SEM CATEGORIA
+    =================================
+    */
+
+    if (!categoria) {
+
+        console.log(
+            'Nenhuma seleção de categoria encontrada.'
+        );
+
+    } else {
+
+        const tipoCategoria =
+            categoria.dataset.tipoCategoria
+            || 'unica';
+
+
+        const quantidadeLivre =
+            tipoCategoria ===
+                'salgados_grandes'
+            ||
+            tipoCategoria ===
+                'empadao';
 
 
         /*
@@ -130,12 +246,6 @@ document.addEventListener('DOMContentLoaded', function () {
         GRANDES / EMPADÃO
         =================================
         */
-
-        const quantidadeLivre =
-            tipoCategoria === 'salgados_grandes'
-            ||
-            tipoCategoria === 'empadao';
-
 
         if (quantidadeLivre) {
 
@@ -153,108 +263,126 @@ document.addEventListener('DOMContentLoaded', function () {
                             '[data-quantidade]'
                         );
 
-                    const botaoAumentar =
+
+                    const mais =
                         produto.querySelector(
                             '[data-aumentar]'
                         );
 
-                    const botaoDiminuir =
+
+                    const menos =
                         produto.querySelector(
                             '[data-diminuir]'
                         );
 
+
                     if (
                         !quantidade
                         ||
-                        !botaoAumentar
+                        !mais
                         ||
-                        !botaoDiminuir
+                        !menos
                     ) {
                         return;
                     }
+
 
                     const valorInicial =
                         Number(
                             quantidade.textContent
                         ) || 0;
 
-                    botaoDiminuir.disabled =
+
+                    menos.disabled =
                         valorInicial <= 0;
+
 
                     atualizarInputQuantidade(
                         produto,
                         valorInicial
                     );
 
-                    produto.addEventListener(
+
+                    mais.addEventListener(
                         'click',
                         function (evento) {
 
-                            const botaoMais =
-                                evento.target.closest(
-                                    '[data-aumentar]'
-                                );
+                            evento.preventDefault();
 
-                            if (botaoMais) {
 
-                                evento.preventDefault();
+                            let valor =
+                                Number(
+                                    quantidade.textContent
+                                ) || 0;
 
-                                let valor =
-                                    Number(
-                                        quantidade.textContent
-                                    ) || 0;
 
-                                valor++;
+                            valor++;
 
-                                quantidade.textContent =
-                                    valor;
 
-                                atualizarInputQuantidade(
-                                    produto,
-                                    valor
-                                );
+                            quantidade.textContent =
+                                valor;
 
-                                botaoDiminuir.disabled =
-                                    valor <= 0;
 
+                            atualizarInputQuantidade(
+                                produto,
+                                valor
+                            );
+
+
+                            menos.disabled =
+                                valor <= 0;
+
+
+                            atualizarContadorQuantidade();
+                        }
+                    );
+
+
+                    menos.addEventListener(
+                        'click',
+                        function (evento) {
+
+                            evento.preventDefault();
+
+
+                            let valor =
+                                Number(
+                                    quantidade.textContent
+                                ) || 0;
+
+
+                            if (
+                                valor <= 0
+                            ) {
                                 return;
                             }
 
-                            const botaoMenos =
-                                evento.target.closest(
-                                    '[data-diminuir]'
-                                );
 
-                            if (botaoMenos) {
+                            valor--;
 
-                                evento.preventDefault();
 
-                                let valor =
-                                    Number(
-                                        quantidade.textContent
-                                    ) || 0;
+                            quantidade.textContent =
+                                valor;
 
-                                if (valor <= 0) {
-                                    return;
-                                }
 
-                                valor--;
+                            atualizarInputQuantidade(
+                                produto,
+                                valor
+                            );
 
-                                quantidade.textContent =
-                                    valor;
 
-                                atualizarInputQuantidade(
-                                    produto,
-                                    valor
-                                );
+                            menos.disabled =
+                                valor <= 0;
 
-                                botaoDiminuir.disabled =
-                                    valor <= 0;
-                            }
+
+                            atualizarContadorQuantidade();
                         }
                     );
                 }
             );
+
+
+            atualizarContadorQuantidade();
 
         } else {
 
@@ -269,10 +397,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     '[data-contador-opcoes]'
                 );
 
+
             const elementoLimite =
                 categoria.querySelector(
                     '[data-limite-opcoes]'
                 );
+
 
             if (
                 contador
@@ -282,21 +412,59 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 const limite =
                     Number(
-                        elementoLimite.dataset.limiteOpcoes
+                        elementoLimite
+                            .dataset
+                            .limiteOpcoes
                     );
 
-                if (
-                    Number.isInteger(limite)
-                    &&
-                    limite >= 1
-                ) {
 
-                    let totalSelecionado = 0;
+                let totalSelecionado =
+                    0;
 
-                    const produtos =
-                        categoria.querySelectorAll(
-                            '[data-produto-wrapper]'
+
+                const produtos =
+                    categoria.querySelectorAll(
+                        '[data-produto-wrapper]'
+                    );
+
+
+                produtos.forEach(
+                    function (produto) {
+
+                        const quantidade =
+                            produto.querySelector(
+                                '[data-quantidade]'
+                            );
+
+
+                        if (!quantidade) {
+                            return;
+                        }
+
+
+                        const valor =
+                            Number(
+                                quantidade.textContent
+                            ) || 0;
+
+
+                        totalSelecionado +=
+                            valor;
+
+
+                        atualizarInputQuantidade(
+                            produto,
+                            valor
                         );
+                    }
+                );
+
+
+                function atualizarInterface() {
+
+                    contador.textContent =
+                        totalSelecionado;
+
 
                     produtos.forEach(
                         function (produto) {
@@ -306,204 +474,198 @@ document.addEventListener('DOMContentLoaded', function () {
                                     '[data-quantidade]'
                                 );
 
-                            if (!quantidade) {
+
+                            const mais =
+                                produto.querySelector(
+                                    '[data-aumentar]'
+                                );
+
+
+                            const menos =
+                                produto.querySelector(
+                                    '[data-diminuir]'
+                                );
+
+
+                            if (
+                                !quantidade
+                                ||
+                                !mais
+                                ||
+                                !menos
+                            ) {
                                 return;
                             }
+
 
                             const valor =
                                 Number(
                                     quantidade.textContent
                                 ) || 0;
 
-                            totalSelecionado +=
+
+                            mais.disabled =
+                                totalSelecionado >=
+                                limite;
+
+
+                            menos.disabled =
+                                valor <= 0;
+                        }
+                    );
+
+
+                    atualizarPreviewCento();
+                }
+
+
+                categoria.addEventListener(
+                    'click',
+                    function (evento) {
+
+                        const mais =
+                            evento.target.closest(
+                                '[data-aumentar]'
+                            );
+
+
+                        if (mais) {
+
+                            evento.preventDefault();
+
+
+                            if (
+                                totalSelecionado >=
+                                limite
+                            ) {
+                                return;
+                            }
+
+
+                            const produto =
+                                mais.closest(
+                                    '[data-produto-wrapper]'
+                                );
+
+
+                            if (!produto) {
+                                return;
+                            }
+
+
+                            const quantidade =
+                                produto.querySelector(
+                                    '[data-quantidade]'
+                                );
+
+
+                            if (!quantidade) {
+                                return;
+                            }
+
+
+                            let valor =
+                                Number(
+                                    quantidade.textContent
+                                ) || 0;
+
+
+                            valor++;
+
+
+                            quantidade.textContent =
                                 valor;
+
 
                             atualizarInputQuantidade(
                                 produto,
                                 valor
                             );
+
+
+                            totalSelecionado++;
+
+
+                            atualizarInterface();
+
+
+                            return;
                         }
-                    );
 
 
-                    function atualizarInterface() {
-
-                        contador.textContent =
-                            totalSelecionado;
-
-                        const itens =
-                            categoria.querySelectorAll(
-                                '[data-produto-wrapper]'
+                        const menos =
+                            evento.target.closest(
+                                '[data-diminuir]'
                             );
 
-                        itens.forEach(
-                            function (produto) {
 
-                                const quantidade =
-                                    produto.querySelector(
-                                        '[data-quantidade]'
-                                    );
+                        if (menos) {
 
-                                const botaoAumentar =
-                                    produto.querySelector(
-                                        '[data-aumentar]'
-                                    );
-
-                                const botaoDiminuir =
-                                    produto.querySelector(
-                                        '[data-diminuir]'
-                                    );
-
-                                if (
-                                    !quantidade
-                                    ||
-                                    !botaoAumentar
-                                    ||
-                                    !botaoDiminuir
-                                ) {
-                                    return;
-                                }
-
-                                const valor =
-                                    Number(
-                                        quantidade.textContent
-                                    ) || 0;
-
-                                botaoAumentar.disabled =
-                                    totalSelecionado >=
-                                    limite;
-
-                                botaoDiminuir.disabled =
-                                    valor <= 0;
-                            }
-                        );
-
-                        atualizarPreviewCento();
-                    }
+                            evento.preventDefault();
 
 
-                    categoria.addEventListener(
-                        'click',
-                        function (evento) {
-
-                            const botaoAumentar =
-                                evento.target.closest(
-                                    '[data-aumentar]'
+                            const produto =
+                                menos.closest(
+                                    '[data-produto-wrapper]'
                                 );
 
-                            if (botaoAumentar) {
 
-                                evento.preventDefault();
-
-                                if (
-                                    totalSelecionado >=
-                                    limite
-                                ) {
-                                    return;
-                                }
-
-                                const produto =
-                                    botaoAumentar.closest(
-                                        '[data-produto-wrapper]'
-                                    );
-
-                                if (!produto) {
-                                    return;
-                                }
-
-                                const quantidade =
-                                    produto.querySelector(
-                                        '[data-quantidade]'
-                                    );
-
-                                if (!quantidade) {
-                                    return;
-                                }
-
-                                let valorAtual =
-                                    Number(
-                                        quantidade.textContent
-                                    ) || 0;
-
-                                valorAtual++;
-
-                                quantidade.textContent =
-                                    valorAtual;
-
-                                atualizarInputQuantidade(
-                                    produto,
-                                    valorAtual
-                                );
-
-                                totalSelecionado++;
-
-                                atualizarInterface();
-
+                            if (!produto) {
                                 return;
                             }
 
 
-                            const botaoDiminuir =
-                                evento.target.closest(
-                                    '[data-diminuir]'
+                            const quantidade =
+                                produto.querySelector(
+                                    '[data-quantidade]'
                                 );
 
-                            if (botaoDiminuir) {
 
-                                evento.preventDefault();
-
-                                const produto =
-                                    botaoDiminuir.closest(
-                                        '[data-produto-wrapper]'
-                                    );
-
-                                if (!produto) {
-                                    return;
-                                }
-
-                                const quantidade =
-                                    produto.querySelector(
-                                        '[data-quantidade]'
-                                    );
-
-                                if (!quantidade) {
-                                    return;
-                                }
-
-                                let valorAtual =
-                                    Number(
-                                        quantidade.textContent
-                                    ) || 0;
-
-                                if (valorAtual <= 0) {
-                                    return;
-                                }
-
-                                valorAtual--;
-
-                                quantidade.textContent =
-                                    valorAtual;
-
-                                atualizarInputQuantidade(
-                                    produto,
-                                    valorAtual
-                                );
-
-                                totalSelecionado =
-                                    Math.max(
-                                        0,
-                                        totalSelecionado - 1
-                                    );
-
-                                atualizarInterface();
+                            if (!quantidade) {
+                                return;
                             }
 
+
+                            let valor =
+                                Number(
+                                    quantidade.textContent
+                                ) || 0;
+
+
+                            if (
+                                valor <= 0
+                            ) {
+                                return;
+                            }
+
+
+                            valor--;
+
+
+                            quantidade.textContent =
+                                valor;
+
+
+                            atualizarInputQuantidade(
+                                produto,
+                                valor
+                            );
+
+
+                            totalSelecionado =
+                                Math.max(
+                                    0,
+                                    totalSelecionado - 1
+                                );
+
+
+                            atualizarInterface();
                         }
-                    );
+                    }
+                );
 
 
-                    atualizarInterface();
-                }
+                atualizarInterface();
             }
         }
     }
@@ -520,45 +682,47 @@ document.addEventListener('DOMContentLoaded', function () {
             '[data-remover-carrinho]'
         );
 
-    const indiceRemover =
+
+    const inputCategoria =
         document.getElementById(
-            'indiceRemoverCarrinho'
+            'categoriaRemoverCarrinho'
         );
 
-    const nomeItemRemover =
+
+    const nomeItem =
         document.querySelector(
             '[data-nome-item-remover]'
         );
 
 
-    if (
-        indiceRemover
-        &&
-        botoesRemover.length
-    ) {
+    botoesRemover.forEach(
+        function (botao) {
 
-        botoesRemover.forEach(
-            function (botao) {
+            botao.addEventListener(
+                'click',
+                function () {
 
-                botao.addEventListener(
-                    'click',
-                    function () {
+                    if (
+                        inputCategoria
+                    ) {
 
-                        indiceRemover.value =
-                            botao.dataset.indice
+                        inputCategoria.value =
+                            botao.dataset.categoriaId
                             || '';
-
-                        if (nomeItemRemover) {
-
-                            nomeItemRemover.textContent =
-                                botao.dataset.nome
-                                || 'este item';
-                        }
-
                     }
-                );
-            }
-        );
-    }
+
+
+                    if (
+                        nomeItem
+                    ) {
+
+                        nomeItem.textContent =
+                            botao.dataset.nome
+                            || 'este item';
+                    }
+                }
+            );
+        }
+    );
 
 });
