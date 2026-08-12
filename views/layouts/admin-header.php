@@ -15,29 +15,29 @@ $baseUrl = defined('BASE_URL')
 
 <head>
 
-<meta charset="utf-8">
+    <meta charset="utf-8">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1">
-
-
-<title>
-<?= htmlspecialchars(
-    $tituloPagina,
-    ENT_QUOTES,
-    'UTF-8'
-) ?>
-</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1">
 
 
-<link
-href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-rel="stylesheet">
+    <title>
+        <?= htmlspecialchars(
+            $tituloPagina,
+            ENT_QUOTES,
+            'UTF-8'
+        ) ?>
+    </title>
 
 
-<link
-rel="stylesheet"
-href="<?= $baseUrl ?>/assets/css/admin.css">
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+
+    <link
+        rel="stylesheet"
+        href="<?= $baseUrl ?>/assets/css/admin.css">
 
 
 </head>
@@ -47,146 +47,146 @@ href="<?= $baseUrl ?>/assets/css/admin.css">
 
 
 
-<!-- MENU LATERAL -->
+    <!-- MENU LATERAL -->
 
-<aside id="sidebar" class="sidebar">
+    <aside id="sidebar" class="sidebar">
 
 
 
-<div class="sidebar-header">
+        <div class="sidebar-header">
 
 
-    <img
-    src="<?= $baseUrl ?>/assets/images/logo.png"
-    class="logo-admin"
-    alt="Logo">
+            <img
+                src="<?= $baseUrl ?>/assets/images/logo.png"
+                class="logo-admin"
+                alt="Logo">
 
 
-</div>
+        </div>
 
 
 
 
 
-<nav class="sidebar-menu">
+        <nav class="sidebar-menu">
 
 
 
-<a href="<?= $baseUrl ?>/admin">
+            <a href="<?= $baseUrl ?>/admin">
 
-    <span>
-        🏠
-    </span>
+                <span>
+                    🏠
+                </span>
 
-    <span class="menu-text">
-        Dashboard
-    </span>
+                <span class="menu-text">
+                    Dashboard
+                </span>
 
-</a>
+            </a>
 
 
 
 
 
-<a href="<?= $baseUrl ?>/admin/produtos">
+            <a href="<?= $baseUrl ?>/admin/produtos">
 
-    <span>
-        📦
-    </span>
+                <span>
+                    📦
+                </span>
 
-    <span class="menu-text">
-        Produtos
-    </span>
+                <span class="menu-text">
+                    Produtos
+                </span>
 
-</a>
+            </a>
 
 
 
 
 
-<a href="<?= $baseUrl ?>/admin/clientes">
+            <a href="<?= $baseUrl ?>/admin/clientes">
 
-    <span>
-        👤
-    </span>
+                <span>
+                    👤
+                </span>
 
-    <span class="menu-text">
-        Clientes
-    </span>
+                <span class="menu-text">
+                    Clientes
+                </span>
 
-</a>
+            </a>
 
 
 
 
 
-<a href="<?= $baseUrl ?>/admin/pedidos">
+            <a href="<?= $baseUrl ?>/admin/pedidos">
 
-    <span>
-        🛒
-    </span>
+                <span>
+                    🛒
+                </span>
 
-    <span class="menu-text">
-        Pedidos
-    </span>
+                <span class="menu-text">
+                    Pedidos
+                </span>
 
-</a>
+            </a>
 
 
 
 
 
-<a href="<?= $baseUrl ?>/admin/categorias">
+            <a href="<?= $baseUrl ?>/admin/categorias">
 
-    <span>
-        📂
-    </span>
+                <span>
+                    📂
+                </span>
 
-    <span class="menu-text">
-        Categorias
-    </span>
+                <span class="menu-text">
+                    Categorias
+                </span>
 
-</a>
+            </a>
 
 
 
 
 
-<a href="<?= $baseUrl ?>/">
+            <a href="<?= $baseUrl ?>/">
 
-    <span>
-        🌎
-    </span>
+                <span>
+                    🌎
+                </span>
 
-    <span class="menu-text">
-        Loja
-    </span>
+                <span class="menu-text">
+                    Loja
+                </span>
 
-</a>
+            </a>
 
 
 
 
 
-</nav>
+        </nav>
 
 
 
 
 
-<button
-class="btn-toggle"
-onclick="toggleMenu()">
+        <button
+            class="btn-toggle"
+            onclick="toggleMenu()">
 
-☰
+            ☰
 
-</button>
+        </button>
 
 
 
 
 
-</aside>
+    </aside>
 
 
 
@@ -194,35 +194,40 @@ onclick="toggleMenu()">
 
 
 
-<!-- CONTEÚDO -->
+    <!-- CONTEÚDO -->
 
-<div id="content" class="content">
+    <div id="content" class="content">
 
 
 
 
 
-<header class="admin-topbar">
+        <header class="admin-topbar">
 
-    <h4>
-        <?= htmlspecialchars(
-            $tituloPagina,
-            ENT_QUOTES,
-            'UTF-8'
-        ) ?>
-    </h4>
+            <h4>
+                <?= htmlspecialchars(
+                    $tituloPagina,
+                    ENT_QUOTES,
+                    'UTF-8'
+                ) ?>
+            </h4>
+            <pre>
+                <?php
+                var_dump($_SESSION['usuario_admin'] ?? null);
+                ?>
+            </pre>
 
 
-    <div class="admin-user">
+            <div class="admin-user">
 
-        Olá,
+                Olá,
 
-        <?= htmlspecialchars(
-            $_SESSION['usuario_admin']['nome'] ?? 'Administrador',
-            ENT_QUOTES,
-            'UTF-8'
-        ) ?>
+                <?= htmlspecialchars(
+                    $_SESSION['usuario_admin']['nome'] ?? 'Administrador',
+                    ENT_QUOTES,
+                    'UTF-8'
+                ) ?>
 
-    </div>
+            </div>
 
-</header>
+        </header>

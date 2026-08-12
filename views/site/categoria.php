@@ -18,18 +18,34 @@ View::componente(
 
 <main>
 
-    <?php
+    <div class="container py-5">
 
-    View::componente(
-        'site/sections/categoria',
-        [
-            'categoria' => $categoria,
-            'produtos' => $produtos,
-            'limiteOpcoes' => $limiteOpcoes,
-        ]
-    );
+        <div class="mb-5">
 
-    ?>
+            <a
+                href="<?= BASE_URL ?>/produtos"
+                class="btn btn-voltar-cardapio"
+
+                <i class="bi bi-arrow-left me-1"></i>
+
+                Voltar ao cardápio
+
+            </a>
+
+        </div>
+        <?php
+
+        View::componente(
+            'site/sections/categoria',
+            [
+                'categoria' => $categoria,
+                'produtos' => $produtos,
+                'limiteOpcoes' => $limiteOpcoes,
+                'tipoCategoria' => $tipoCategoria,
+            ]
+        );
+
+        ?>
 
 </main>
 

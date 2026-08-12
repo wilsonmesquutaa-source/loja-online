@@ -4,8 +4,16 @@ declare(strict_types=1);
 
 $categoria = $categoria ?? [];
 $produtos = $produtos ?? [];
+$tipoCategoria = $tipoCategoria ?? 'unica';
 
-$limiteOpcoes = (int) ($limiteOpcoes ?? 1);
+$ehSalgadosGrandes =
+    $tipoCategoria === 'salgados_grandes';
+
+$ehEmpadao =
+    $tipoCategoria === 'empadao';
+
+$limiteOpcoes =
+    $limiteOpcoes ?? 1;
 
 $nomeCategoria =
     $categoria['nome']
@@ -15,11 +23,22 @@ $nomeCategoria =
 
 <div
     class="categoria-selecao"
-    data-limite="<?= $limiteOpcoes ?>">
+    data-tipo-categoria="<?= htmlspecialchars(
+                                $tipoCategoria,
+                                ENT_QUOTES,
+                                'UTF-8'
+                            ) ?>"
+    data-limite="<?= $limiteOpcoes !== null
+                        ? (int) $limiteOpcoes
+                        : ''
+                    ?>">
 
     <div
         class="mb-4"
-        data-limite-opcoes="<?= $limiteOpcoes ?>">
+        data-limite-opcoes="<?= $limiteOpcoes !== null
+                                ? (int) $limiteOpcoes
+                                : ''
+                            ?>">
 
         <p class="text-secondary mb-1">
             Escolha os sabores
@@ -49,6 +68,7 @@ $nomeCategoria =
 
         <?php endif; ?>
 
+
         <div class="alert alert-warning">
 
             <div class="d-flex align-items-center gap-2">
@@ -57,26 +77,59 @@ $nomeCategoria =
 
                 <div>
 
-                    <strong>
-                        Escolha até
-                        <?= $limiteOpcoes ?>
-                        sabores.
-                    </strong>
+                    <?php if ($ehSalgadosGrandes): ?>
 
-                    <br>
-
-                    <span class="small">
-
-                        Opções escolhidas:
-
-                        <strong data-contador-opcoes>
-                            0
+                        <strong>
+                            Escolha a quantidade desejada
+                            de cada salgado.
                         </strong>
 
-                        /
-                        <?= $limiteOpcoes ?>
+                        <br>
 
-                    </span>
+                        <span class="small">
+                            Cada unidade custa R$ 5,00.
+                            Para revenda, a unidade custa
+                            R$ 3,00, com mínimo de 10 unidades.
+                        </span>
+
+
+                    <?php elseif ($ehEmpadao): ?>
+
+                        <strong>
+                            Escolha a quantidade desejada.
+                        </strong>
+
+                        <br>
+
+                        <span class="small">
+                            Cada unidade custa R$ 100,00.
+                        </span>
+
+
+                    <?php else: ?>
+
+                        <strong>
+                            Escolha até
+                            <?= (int) $limiteOpcoes ?>
+                            sabores.
+                        </strong>
+
+                        <br>
+
+                        <span class="small">
+
+                            Opções escolhidas:
+
+                            <strong data-contador-opcoes>
+                                0
+                            </strong>
+
+                            /
+                            <?= (int) $limiteOpcoes ?>
+
+                        </span>
+
+                    <?php endif; ?>
 
                 </div>
 
@@ -86,90 +139,125 @@ $nomeCategoria =
 
     </div>
 
-    <?php if ($produtos === []): ?>
 
-        <div class="alert alert-info">
+    <form
+        action="<?= BASE_URL ?>/carrinho/adicionar"
+        method="POST"
+        data-form-carrinho>
 
-            Nenhum sabor disponível nesta categoria.
+        <input
+            type="hidden"
+            name="categoria_id"
+            value="<?= (int) $categoria['id'] ?>">
 
-        </div>
 
-    <?php else: ?>
+        <?php if ($produtos === []): ?>
 
-        <div class="row g-3">
+            <div class="alert alert-info">
 
-            <?php foreach ($produtos as $produto): ?>
+                Nenhum sabor disponível nesta categoria.
 
-                <div
-                    class="col-6 col-md-4"
-                    data-produto-wrapper>
+            </div>
+
+
+        <?php else: ?>
+
+            <div class="row g-3">
+
+                <?php foreach ($produtos as $produto): ?>
 
                     <div
-                        class="card h-100 border-0 shadow-sm produto-selecao-card"
-                        data-produto-id="<?= (int) $produto['id'] ?>">
+                        class="col-6 col-md-4"
+                        data-produto-wrapper>
 
-                        <div class="card-body text-center">
+                        <div
+                            class="card h-100 border-0 shadow-sm produto-selecao-card"
+                            data-produto-id="<?= (int) $produto['id'] ?>">
 
-                            <div
-                                class="produto-imagem-placeholder mb-3">
+                            <div class="card-body text-center">
 
-                                <i
-                                    class="bi bi-image fs-1 text-secondary">
-                                </i>
+                                <div
+                                    class="produto-imagem-placeholder mb-3">
 
-                            </div>
+                                    <i
+                                        class="bi bi-image fs-1 text-secondary">
+                                    </i>
 
-                            <h4 class="h6 fw-bold">
+                                </div>
 
-                                <?= htmlspecialchars(
-                                    $produto['nome'],
-                                    ENT_QUOTES,
-                                    'UTF-8'
-                                ) ?>
 
-                            </h4>
-
-                            <?php if (!empty($produto['descricao'])): ?>
-
-                                <p class="small text-secondary">
+                                <h4 class="h6 fw-bold">
 
                                     <?= htmlspecialchars(
-                                        $produto['descricao'],
+                                        $produto['nome'],
                                         ENT_QUOTES,
                                         'UTF-8'
                                     ) ?>
 
-                                </p>
+                                </h4>
 
-                            <?php endif; ?>
 
-                            <div
-                                class="contador-produto d-flex justify-content-center align-items-center gap-2 mt-3">
+                                <?php if (!empty($produto['descricao'])): ?>
 
-                                <button
-                                    type="button"
-                                    class="btn btn-outline-secondary btn-sm"
-                                    data-diminuir
-                                    disabled>
+                                    <p class="small text-secondary">
 
-                                    <i class="bi bi-dash"></i>
+                                        <?= htmlspecialchars(
+                                            $produto['descricao'],
+                                            ENT_QUOTES,
+                                            'UTF-8'
+                                        ) ?>
 
-                                </button>
+                                    </p>
 
-                                <span
-                                    class="fw-bold px-2"
-                                    data-quantidade>
-                                    0
-                                </span>
+                                <?php endif; ?>
 
-                                <button
-                                    type="button"
-                                    class="btn btn-warning btn-sm"
-                                    data-aumentar>
 
-                                    <i class="bi bi-plus"></i>
+                                <div
+                                    class="contador-produto d-flex justify-content-center align-items-center gap-2 mt-3">
 
-                                </button>
+                                    <button
+                                        type="button"
+                                        class="btn btn-outline-secondary btn-sm"
+                                        data-diminuir
+                                        disabled>
+
+                                        <i class="bi bi-dash"></i>
+
+                                    </button>
+
+
+                                    <span
+                                        class="fw-bold px-2"
+                                        data-quantidade>
+                                        0
+                                    </span>
+
+
+                                    <button
+                                        type="button"
+                                        class="btn btn-warning btn-sm"
+                                        data-aumentar>
+
+                                        <i class="bi bi-plus"></i>
+
+                                    </button>
+
+
+                                </div>
+
+
+                                <!--
+                                Campo enviado ao PHP.
+
+                                O JavaScript mantém este campo
+                                sincronizado com o contador visual.
+                                -->
+
+                                <input
+                                    type="hidden"
+                                    name="quantidades[<?= (int) $produto['id'] ?>]"
+                                    value="0"
+                                    data-input-quantidade>
 
                             </div>
 
@@ -177,12 +265,28 @@ $nomeCategoria =
 
                     </div>
 
-                </div>
+                <?php endforeach; ?>
 
-            <?php endforeach; ?>
+            </div>
+
+        <?php endif; ?>
+
+
+        <div class="mt-5 d-flex justify-content-end">
+
+            <button
+                type="submit"
+                class="btn btn-warning text-white btn-lg"
+                data-adicionar-carrinho>
+
+                <i class="bi bi-cart-plus me-2"></i>
+
+                Adicionar ao carrinho
+
+            </button>
 
         </div>
 
-    <?php endif; ?>
+    </form>
 
 </div>

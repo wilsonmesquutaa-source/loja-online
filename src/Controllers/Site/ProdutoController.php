@@ -36,18 +36,20 @@ final class ProdutoController extends Controller
         );
     }
 
+
     public function categoria(int $id): void
     {
-      
-
         $produtoRepository = new ProdutoRepository(
             $this->pdo
         );
 
+
         $categoria = $produtoRepository
             ->buscarCategoriaPorId($id);
 
+
         if ($categoria === null) {
+
             http_response_code(404);
 
             require APP_ROOT . '/views/erros/404.php';
@@ -55,33 +57,155 @@ final class ProdutoController extends Controller
             return;
         }
 
+
         $produtos = $produtoRepository
             ->buscarProdutosPorCategoria($id);
 
+
         /*
-     * Define quantos sabores podem ser escolhidos.
-     *
-     * Tradicionais: até 4
-     * Folhados: até 2
-     * Demais categorias: 1
-     */
+        =================================
+        IDENTIFICA A CATEGORIA
+        =================================
+        */
 
         $nomeCategoria = mb_strtolower(
             trim($categoria['nome']),
             'UTF-8'
         );
 
-        if (str_contains($nomeCategoria, 'tradicionais')) {
+
+        /*
+        =================================
+        VALORES PADRÃO
+        =================================
+        */
+
+        $tipoCategoria = 'unica';
+
+        $limiteOpcoes = 1;
+
+
+        /*
+        =================================
+        SALGADOS TRADICIONAIS
+        =================================
+
+        Pode escolher até 4 sabores.
+
+        Cada sabor pode ser repetido.
+
+        Exemplo:
+
+        Coxinha 2
+        Risoles 1
+        Bolinha de queijo 1
+
+        Total = 4
+        */
+
+        if (
+            str_contains(
+                $nomeCategoria,
+                'tradicionais'
+            )
+        ) {
+
+            $tipoCategoria =
+                'cento_tradicionais';
 
             $limiteOpcoes = 4;
-        } elseif (str_contains($nomeCategoria, 'folhados')) {
-
-            $limiteOpcoes = 2;
-        } else {
-
-            $limiteOpcoes = 1;
         }
 
+
+        /*
+        =================================
+        SALGADOS FOLHADOS
+        =================================
+
+        Pode escolher até 2 sabores.
+
+        Cada sabor pode ser repetido.
+
+        Exemplo:
+
+        Frango 2
+
+        Total = 2
+        */ elseif (
+            str_contains(
+                $nomeCategoria,
+                'folhados'
+            )
+        ) {
+
+            $tipoCategoria =
+                'cento_folhados';
+
+            $limiteOpcoes = 2;
+        }
+
+
+        /*
+        =================================
+        SALGADOS GRANDES
+        =================================
+
+        Quantidade livre.
+
+        Não existe limite geral
+        de quantidade.
+
+        O cliente pode escolher:
+
+        Coxinha grande = 5
+        Pastel grande = 10
+        Risoles grande = 3
+
+        etc.
+        */ elseif (
+            str_contains(
+                $nomeCategoria,
+                'grandes'
+            )
+        ) {
+
+            $tipoCategoria =
+                'salgados_grandes';
+
+            $limiteOpcoes = null;
+        }
+
+
+        /*
+        =================================
+        EMPADÃO
+        =================================
+        Quantidade livre.
+        
+        Atualmente existe apenas
+        um sabor, mas futuramente
+        poderão existir vários.
+        */ elseif (
+            str_contains($nomeCategoria, 'empadão')
+            ||
+            str_contains($nomeCategoria, 'empadões')
+            ||
+            str_contains($nomeCategoria, 'empadao')
+            ||
+            str_contains($nomeCategoria, 'empadoes')
+        ) {
+
+            $tipoCategoria = 'empadao';
+
+            $limiteOpcoes = null;
+        }
+
+
+        /*
+        =================================
+        CARREGA A VIEW
+        =================================
+        */
 
         $this->view(
             'site/categoria',
@@ -103,6 +227,9 @@ final class ProdutoController extends Controller
 
                 'limiteOpcoes' =>
                 $limiteOpcoes,
+
+                'tipoCategoria' =>
+                $tipoCategoria,
             ]
         );
     }
