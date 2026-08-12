@@ -10,6 +10,29 @@ use RuntimeException;
 
 final class CarrinhoController extends Controller
 {
+    public function index(): void
+    {
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
+
+        $carrinho = $_SESSION['carrinho'] ?? [];
+
+        if (!is_array($carrinho)) {
+            $carrinho = [];
+        }
+
+        $this->view(
+            'site/carrinho',
+            [
+                'tituloPagina' => 'Carrinho',
+                'rotaAtual' => 'carrinho',
+                'carrinho' => $carrinho,
+            ]
+        );
+    }
+
+
     public function adicionar(): void
     {
         if (session_status() !== PHP_SESSION_ACTIVE) {
@@ -24,6 +47,12 @@ final class CarrinhoController extends Controller
 
         $quantidades = $_POST['quantidades'] ?? [];
 
+        $editarIndice = filter_input(
+            INPUT_POST,
+            'editar_indice',
+            FILTER_VALIDATE_INT
+        );
+
         if (!$categoriaId) {
             $this->redirecionar('produtos');
         }
@@ -36,9 +65,8 @@ final class CarrinhoController extends Controller
             $this->pdo
         );
 
-        $categoria = $repository->buscarCategoriaPorId(
-            $categoriaId
-        );
+        $categoria = $repository
+            ->buscarCategoriaPorId($categoriaId);
 
         if ($categoria === null) {
             throw new RuntimeException(
@@ -46,8 +74,8 @@ final class CarrinhoController extends Controller
             );
         }
 
-        $produtos =
-            $repository->buscarProdutosPorCategoria(
+        $produtos = $repository
+            ->buscarProdutosPorCategoria(
                 $categoriaId
             );
 
@@ -60,7 +88,6 @@ final class CarrinhoController extends Controller
         $selecionados = [];
 
         foreach ($quantidades as $produtoId => $quantidade) {
-
             $produtoId = (int) $produtoId;
 
             $quantidade = filter_var(
@@ -69,8 +96,7 @@ final class CarrinhoController extends Controller
             );
 
             if (
-                $quantidade === false
-                ||
+                $quantidade === false ||
                 $quantidade <= 0
             ) {
                 continue;
@@ -129,18 +155,15 @@ final class CarrinhoController extends Controller
             str_contains(
                 $nomeCategoria,
                 'empadão'
-            )
-            ||
+            ) ||
             str_contains(
                 $nomeCategoria,
                 'empadões'
-            )
-            ||
+            ) ||
             str_contains(
                 $nomeCategoria,
                 'empadao'
-            )
-            ||
+            ) ||
             str_contains(
                 $nomeCategoria,
                 'empadoes'
@@ -150,12 +173,6 @@ final class CarrinhoController extends Controller
                 'empadao';
         }
 
-        /*
-        =================================
-        CALCULA O ITEM
-        =================================
-        */
-
         $quantidadeTotal = 0;
 
         foreach ($selecionados as $selecionado) {
@@ -163,14 +180,53 @@ final class CarrinhoController extends Controller
                 $selecionado['quantidade'];
         }
 
-        $precoUnitario = 0.0;
-        $subtotal = 0.0;
+
+        /*
+        =================================
+        VALIDA TRADICIONAIS
+        =================================
+        */
+
+        if (
+            $tipoCategoria ===
+            'cento_tradicionais'
+            &&
+            $quantidadeTotal > 4
+        ) {
+            $this->redirecionar(
+                'produtos/categoria/' . $categoriaId
+            );
+        }
+
+
+        /*
+        =================================
+        VALIDA FOLHADOS
+        =================================
+        */
+
+        if (
+            $tipoCategoria ===
+            'cento_folhados'
+            &&
+            $quantidadeTotal > 2
+        ) {
+            $this->redirecionar(
+                'produtos/categoria/' . $categoriaId
+            );
+        }
+
+
+        /*
+        =================================
+        PREÇO
+        =================================
+        */
 
         if (
             $tipoCategoria ===
             'salgados_grandes'
         ) {
-
             $precoNormal =
                 (float) $categoria['preco'];
 
@@ -180,16 +236,11 @@ final class CarrinhoController extends Controller
             $quantidadeMinima =
                 (int) $categoria['quantidade_minima_revenda'];
 
-            if (
+            $precoUnitario =
                 $quantidadeTotal >=
                 $quantidadeMinima
-            ) {
-                $precoUnitario =
-                    $precoRevenda;
-            } else {
-                $precoUnitario =
-                    $precoNormal;
-            }
+                ? $precoRevenda
+                : $precoNormal;
 
             $subtotal =
                 $quantidadeTotal *
@@ -198,7 +249,6 @@ final class CarrinhoController extends Controller
             $tipoCategoria ===
             'empadao'
         ) {
-
             $precoUnitario =
                 (float) $categoria['preco'];
 
@@ -206,18 +256,6 @@ final class CarrinhoController extends Controller
                 $quantidadeTotal *
                 $precoUnitario;
         } else {
-
-            /*
-            Tradicionais e Folhados:
-
-            A categoria representa um cento.
-            O preço não é multiplicado pelas
-            quantidades dos sabores.
-
-            As quantidades representam apenas
-            a composição do cento.
-            */
-
             $precoUnitario =
                 (float) $categoria['preco'];
 
@@ -225,9 +263,10 @@ final class CarrinhoController extends Controller
                 $precoUnitario;
         }
 
+
         /*
         =================================
-        ITEM DO CARRINHO
+        ITEM
         =================================
         */
 
@@ -254,16 +293,15 @@ final class CarrinhoController extends Controller
             $selecionados,
         ];
 
+
         /*
         =================================
-        INICIALIZA CARRINHO
+        CARRINHO
         =================================
         */
 
         if (
-            !isset(
-                $_SESSION['carrinho']
-            )
+            !isset($_SESSION['carrinho'])
             ||
             !is_array(
                 $_SESSION['carrinho']
@@ -272,48 +310,98 @@ final class CarrinhoController extends Controller
             $_SESSION['carrinho'] = [];
         }
 
-        /*
-        =================================
-        ADICIONA ITEM
-        =================================
-        */
-
-        $_SESSION['carrinho'][] = $item;
 
         /*
         =================================
-        VOLTA PARA O CARRINHO
+        EDITANDO
         =================================
         */
+
+        if (
+            $editarIndice !== false
+            &&
+            $editarIndice !== null
+            &&
+            isset(
+                $_SESSION['carrinho'][$editarIndice]
+            )
+        ) {
+            $_SESSION['carrinho'][$editarIndice] =
+                $item;
+        } else {
+            $_SESSION['carrinho'][] =
+                $item;
+        }
+
 
         $this->redirecionar('carrinho');
     }
 
 
-    public function index(): void
+    public function editar(int $indice): void
     {
-        if (
-            session_status()
-            !== PHP_SESSION_ACTIVE
-        ) {
+        if (session_status() !== PHP_SESSION_ACTIVE) {
             session_start();
         }
 
-        $carrinho =
-            $_SESSION['carrinho'] ?? [];
+        if (
+            !isset(
+                $_SESSION['carrinho'][$indice]
+            )
+        ) {
+            $this->redirecionar('carrinho');
+        }
 
-        $this->view(
-            'site/carrinho',
-            [
-                'tituloPagina' =>
-                'Carrinho',
+        $item =
+            $_SESSION['carrinho'][$indice];
 
-                'rotaAtual' =>
-                'carrinho',
+        $categoriaId =
+            (int) $item['categoria_id'];
 
-                'carrinho' =>
-                $carrinho,
-            ]
+        header(
+            'Location: '
+                . BASE_URL
+                . '/produtos/categoria/'
+                . $categoriaId
+                . '?editar='
+                . $indice
         );
+
+        exit;
+    }
+
+
+    public function remover(): void
+    {
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
+
+        $indice = filter_input(
+            INPUT_POST,
+            'indice',
+            FILTER_VALIDATE_INT
+        );
+
+        if (
+            $indice !== false
+            &&
+            $indice !== null
+            &&
+            isset(
+                $_SESSION['carrinho'][$indice]
+            )
+        ) {
+            unset(
+                $_SESSION['carrinho'][$indice]
+            );
+
+            $_SESSION['carrinho'] =
+                array_values(
+                    $_SESSION['carrinho']
+                );
+        }
+
+        $this->redirecionar('carrinho');
     }
 }

@@ -9,6 +9,7 @@ use App\Controllers\Site\QuemSomosController;
 use App\Controllers\Site\TermosController;
 
 return [
+
     [
         'method' => 'GET',
         'path' => '/',
@@ -17,6 +18,7 @@ return [
             'index',
         ],
     ],
+
     [
         'method' => 'GET',
         'path' => '/produtos',
@@ -35,13 +37,21 @@ return [
         ],
     ],
 
-
     [
         'method' => 'GET',
         'path' => '/contato',
         'action' => [
             ContatoController::class,
             'index',
+        ],
+    ],
+
+    [
+        'method' => 'POST',
+        'path' => '/contato',
+        'action' => [
+            ContatoController::class,
+            'enviar',
         ],
     ],
 
@@ -52,9 +62,7 @@ return [
             TermosController::class,
             'index',
         ],
-
     ],
-
 
     [
         'method' => 'GET',
@@ -63,18 +71,8 @@ return [
             QuemSomosController::class,
             'index',
         ],
-
     ],
 
-
-    [
-        'method' => 'POST',
-        'path' => '/contato',
-        'action' => [
-            ContatoController::class,
-            'enviar',
-        ],
-    ],
     [
         'method' => 'GET',
         'path' => '/carrinho',
@@ -90,6 +88,24 @@ return [
         'action' => [
             \App\Controllers\Site\CarrinhoController::class,
             'adicionar',
+        ],
+    ],
+
+    [
+        'method' => 'GET',
+        'path' => '/carrinho/editar/{id}',
+        'action' => [
+            \App\Controllers\Site\CarrinhoController::class,
+            'editar',
+        ],
+    ],
+
+    [
+        'method' => 'POST',
+        'path' => '/carrinho/remover',
+        'action' => [
+            \App\Controllers\Site\CarrinhoController::class,
+            'remover',
         ],
     ],
 ];
