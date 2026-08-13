@@ -15,9 +15,6 @@ $baseUrl =
     ? BASE_URL
     : '';
 
-$cssPagina =
-    $cssPagina ?? '';
-
 ?>
 
 <!DOCTYPE html>
@@ -30,17 +27,15 @@ $cssPagina =
 
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+        content="width=device-width, initial-scale=1.0">
 
     <meta
         name="description"
         content="<?= htmlspecialchars(
-            $descricaoPagina,
-            ENT_QUOTES,
-            'UTF-8'
-        ); ?>"
-    >
+                        $descricaoPagina,
+                        ENT_QUOTES,
+                        'UTF-8'
+                    ); ?>">
 
     <title>
 
@@ -59,16 +54,14 @@ $cssPagina =
 
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
+        rel="stylesheet">
 
 
     <!-- Bootstrap Icons -->
 
     <link
         rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
-    >
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
 
     <!-- CSS Geral -->
@@ -76,11 +69,10 @@ $cssPagina =
     <link
         rel="stylesheet"
         href="<?= htmlspecialchars(
-            $baseUrl . '/assets/css/site.css',
-            ENT_QUOTES,
-            'UTF-8'
-        ); ?>"
-    >
+                    $baseUrl . '/assets/css/site.css',
+                    ENT_QUOTES,
+                    'UTF-8'
+                ); ?>">
 
 
     <!-- CSS Home -->
@@ -88,27 +80,13 @@ $cssPagina =
     <link
         rel="stylesheet"
         href="<?= htmlspecialchars(
-            $baseUrl . '/assets/css/home.css',
-            ENT_QUOTES,
-            'UTF-8'
-        ); ?>"
-    >
+                    $baseUrl . '/assets/css/home.css',
+                    ENT_QUOTES,
+                    'UTF-8'
+                ); ?>">
 
 
-    <?php if ($cssPagina === 'categoria'): ?>
 
-        <!-- CSS Categoria -->
-
-        <link
-            rel="stylesheet"
-            href="<?= htmlspecialchars(
-                $baseUrl . '/assets/css/categoria.css',
-                ENT_QUOTES,
-                'UTF-8'
-            ); ?>"
-        >
-
-    <?php endif; ?>
 
 
 </head>

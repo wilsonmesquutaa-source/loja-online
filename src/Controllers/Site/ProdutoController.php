@@ -19,22 +19,22 @@ final class ProdutoController extends Controller
 
         $categorias =
             $produtoRepository
-                ->buscarCategoriasDestaque();
+            ->buscarCategoriasDestaque();
 
         $this->view(
             'site/produtos',
             [
                 'tituloPagina' =>
-                    'Produtos',
+                'Produtos',
 
                 'rotaAtual' =>
-                    'produtos',
+                'produtos',
 
                 'categorias' =>
-                    $categorias,
+                $categorias,
 
                 'etiquetaProdutos' =>
-                    'Cardápio',
+                'Cardápio',
             ]
         );
     }
@@ -51,9 +51,9 @@ final class ProdutoController extends Controller
 
         $categoria =
             $produtoRepository
-                ->buscarCategoriaPorId(
-                    $id
-                );
+            ->buscarCategoriaPorId(
+                $id
+            );
 
 
         if (
@@ -71,9 +71,9 @@ final class ProdutoController extends Controller
 
         $produtos =
             $produtoRepository
-                ->buscarProdutosPorCategoria(
-                    $id
-                );
+            ->buscarProdutosPorCategoria(
+                $id
+            );
 
 
         /*
@@ -123,12 +123,11 @@ final class ProdutoController extends Controller
                 4;
 
 
-        /*
+            /*
         =================================
         FOLHADOS
         =================================
         */
-
         } elseif (
             str_contains(
                 $nomeCategoria,
@@ -142,12 +141,11 @@ final class ProdutoController extends Controller
                 2;
 
 
-        /*
+            /*
         =================================
         SALGADOS GRANDES
         =================================
         */
-
         } elseif (
             str_contains(
                 $nomeCategoria,
@@ -161,12 +159,11 @@ final class ProdutoController extends Controller
                 null;
 
 
-        /*
+            /*
         =================================
         EMPADÃO
         =================================
         */
-
         } elseif (
             str_contains(
                 $nomeCategoria,
@@ -247,9 +244,9 @@ final class ProdutoController extends Controller
 
             $carrinho =
                 $carrinhoRepository
-                    ->buscarAbertoPorToken(
-                        $tokenSessao
-                    );
+                ->buscarAbertoPorToken(
+                    $tokenSessao
+                );
 
 
             /*
@@ -263,7 +260,7 @@ final class ProdutoController extends Controller
             ) {
                 $this->redirecionar(
                     'produtos/categoria/'
-                    . $id
+                        . $id
                 );
             }
 
@@ -276,10 +273,10 @@ final class ProdutoController extends Controller
 
             $itens =
                 $carrinhoRepository
-                    ->buscarItens(
-                        (int)
-                        $carrinho['id']
-                    );
+                ->buscarItens(
+                    (int)
+                    $carrinho['id']
+                );
 
 
             /*
@@ -319,10 +316,8 @@ final class ProdutoController extends Controller
                     $id;
 
 
-                $quantidadesIniciais[
-                    (int)
-                    $item['produto_id']
-                ] =
+                $quantidadesIniciais[(int)
+                $item['produto_id']] =
                     (int)
                     $item['quantidade'];
             }
@@ -339,7 +334,7 @@ final class ProdutoController extends Controller
             ) {
                 $this->redirecionar(
                     'produtos/categoria/'
-                    . $id
+                        . $id
                 );
             }
         }
@@ -355,34 +350,32 @@ final class ProdutoController extends Controller
             'site/categoria',
             [
                 'tituloPagina' =>
-                    $categoria['nome'],
+                $categoria['nome'],
 
                 'rotaAtual' =>
-                    'produtos',
+                'produtos',
 
-                'cssPagina' =>
-                    'categoria',
 
                 'categoria' =>
-                    $categoria,
+                $categoria,
 
                 'nomeCategoria' =>
-                    $categoria['nome'],
+                $categoria['nome'],
 
                 'produtos' =>
-                    $produtos,
+                $produtos,
 
                 'limiteOpcoes' =>
-                    $limiteOpcoes,
+                $limiteOpcoes,
 
                 'tipoCategoria' =>
-                    $tipoCategoria,
+                $tipoCategoria,
 
                 'quantidadesIniciais' =>
-                    $quantidadesIniciais,
+                $quantidadesIniciais,
 
                 'editarCategoriaId' =>
-                    $editarCategoriaId,
+                $editarCategoriaId,
             ]
         );
     }
@@ -405,9 +398,7 @@ final class ProdutoController extends Controller
 
 
         if (
-            empty(
-                $_SESSION['carrinho_token']
-            )
+            empty($_SESSION['carrinho_token'])
         ) {
             $_SESSION['carrinho_token'] =
                 bin2hex(
@@ -418,8 +409,6 @@ final class ProdutoController extends Controller
 
         return
             (string)
-            $_SESSION[
-                'carrinho_token'
-            ];
+            $_SESSION['carrinho_token'];
     }
 }

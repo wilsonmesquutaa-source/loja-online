@@ -1,12 +1,3 @@
-:root {
-    --cor-primaria: #2563eb;
-    --cor-secundaria: #0f172a;
-    --cor-destaque: #f59e0b;
-    --cor-clara: #f8fafc;
-    --cor-texto: #334155;
-}
-
-
 /*
 =================================
 LAYOUT DO CENTO
@@ -34,7 +25,7 @@ PAINEL FIXO DO CENTO
 
 
 .cento-preview {
-    background: #ffffff;
+    background: var(--branco);
     border: 1px solid rgba(93, 64, 55, 0.12);
     border-radius: 1rem;
     padding: 1.25rem;
@@ -45,7 +36,7 @@ PAINEL FIXO DO CENTO
 
 
 .cento-preview-titulo {
-    color: var(--marrom, #5D4037);
+    color: var(--marrom);
 }
 
 
@@ -62,8 +53,8 @@ CÍRCULO
     margin: 1.5rem auto;
     border-radius: 50%;
     overflow: hidden;
-    background: var(--creme, #FFF7E8);
-    border: 5px solid var(--marrom, #5D4037);
+    background: var(--creme);
+    border: 5px solid var(--marrom);
 }
 
 
@@ -75,7 +66,7 @@ CÍRCULO
     justify-content: center;
     text-align: center;
     background: transparent;
-    color: var(--marrom, #5D4037);
+    color: var(--marrom);
     transition:
         background-color 0.2s ease;
     z-index: 2;
@@ -83,8 +74,8 @@ CÍRCULO
 
 
 .cento-setor.ativo {
-    background: var(--laranja, #F57C00);
-    color: #ffffff;
+    background: var(--cor-destaque);
+    color: var(--branco);
 }
 
 
@@ -229,11 +220,11 @@ CENTRO DO CÍRCULO
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: #ffffff;
-    color: var(--marrom, #5D4037);
+    background: var(--branco);
+    color: var(--marrom);
     border:
         4px solid
-        var(--marrom, #5D4037);
+        var(--marrom);
     text-align: center;
     line-height: 1;
     box-shadow:
@@ -283,7 +274,7 @@ SALGADOS GRANDES / EMPADÃO
 
 
 .categoria-acao-card {
-    background: #ffffff;
+    background: var(--branco);
     border:
         1px solid
         rgba(93, 64, 55, 0.12);
@@ -296,7 +287,7 @@ SALGADOS GRANDES / EMPADÃO
 
 
 .categoria-acao-titulo {
-    color: var(--marrom, #5D4037);
+    color: var(--marrom);
     margin-bottom: 0.35rem;
 }
 
@@ -325,7 +316,7 @@ SALGADOS GRANDES / EMPADÃO
 
 .categoria-acao-contador-valor {
     display: block;
-    color: var(--marrom, #5D4037);
+    color: var(--marrom);
     font-size: 2rem;
     font-weight: 700;
     line-height: 1.1;

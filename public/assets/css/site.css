@@ -5,59 +5,119 @@
     --cor-clara: #f8fafc;
     --cor-texto: #334155;
 
-    --laranja: #F57C00;
     --laranja-hover: #EF6C00;
     --creme: #FFF7E8;
     --marrom: #5D4037;
-    --texto: #444;
     --branco: #FFFFFF;
 }
+
 
 html {
     scroll-behavior: smooth;
 }
 
+
 body {
     background: var(--creme);
-    color: var(--texto);
+    color: var(--cor-texto);
 }
+
 
 .navbar-brand {
     letter-spacing: 0.3px;
 }
+.navbar-brand-logo img {
+    filter:
+        drop-shadow(2px 0 0 var(--branco))
+        drop-shadow(-2px 0 0 var(--branco))
+        drop-shadow(0 2px 0 var(--branco))
+        drop-shadow(0 -2px 0 var(--branco));
+}
 
-/* CARRINHO DA NAVBAR */
+/* ============================
+   CARRINHO DA NAVBAR
+============================ */
 
 .btn-carrinho {
-    color: #d99000;
-    border: 2px solid #d99000;
+    color: var(--cor-destaque);
+    border: 2px solid var(--cor-destaque);
     background: transparent;
 }
 
+
 .btn-carrinho:hover {
-    background: #d99000;
-    color: #ffffff;
+    background: var(--cor-destaque);
+    color: var(--branco);
 }
 
-/* FOOTER */
+
+/* ============================
+   FOOTER
+============================ */
 
 .footer-site {
-    background: #ffffff;
+    background: var(--branco);
     margin-top: 80px;
     padding: 50px 0;
     border-top: 1px solid #eee;
 }
 
-/* BOTÃO VOLTAR */
+
+/* ============================
+   BOTÃO VOLTAR
+============================ */
 
 .btn-voltar-cardapio {
     background-color: var(--creme);
-    border: 1px solid var(--laranja);
+    border: 1px solid var(--cor-destaque);
     color: var(--marrom);
 }
 
+
 .btn-voltar-cardapio:hover {
-    background-color: var(--laranja);
-    border-color: var(--laranja);
+    background-color: var(--cor-destaque);
+    border-color: var(--cor-destaque);
     color: var(--branco);
+}
+
+
+/* ============================
+   BOTÕES MENORES DA NAVBAR
+============================ */
+
+.btn-navbar-menor {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.7rem;
+}
+
+/* ============================
+   Menu
+============================ */
+
+.nav-link-marca {
+    color: var(--branco);
+    font-weight: 600;
+
+    padding: 0.55rem 0.9rem;
+    margin: 0 0.6rem;
+
+    border-radius: 0.6rem;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.nav-link-marca:hover {
+    color: var(--branco);
+    background-color: var(--cor-destaque);
+}
+
+.nav-link-marca.active {
+    color: var(--branco);
+    background-color: var(--cor-destaque);
+}
+
+.navbar-site {
+    background-color: var(--cor-secundaria) !important;
 }

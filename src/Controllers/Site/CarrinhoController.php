@@ -21,9 +21,7 @@ final class CarrinhoController extends Controller
         }
 
         if (
-            empty(
-                $_SESSION['carrinho_token']
-            )
+            empty($_SESSION['carrinho_token'])
         ) {
             $_SESSION['carrinho_token'] =
                 bin2hex(
@@ -32,9 +30,7 @@ final class CarrinhoController extends Controller
         }
 
         return
-            (string) $_SESSION[
-                'carrinho_token'
-            ];
+            (string) $_SESSION['carrinho_token'];
     }
 
 
@@ -131,17 +127,12 @@ final class CarrinhoController extends Controller
         foreach ($itens as $item) {
 
             $categoriaId =
-                (int) $item[
-                    'categoria_id'
-                ];
+                (int) $item['categoria_id'];
 
             $tipoCategoria =
                 $this->identificarTipoCategoria(
-                    $item[
-                        'categoria_nome'
-                    ]
+                    $item['categoria_nome']
                 );
-
 
             if (
                 !isset(
@@ -150,76 +141,55 @@ final class CarrinhoController extends Controller
             ) {
                 $grupos[$categoriaId] = array(
                     'categoria_id' =>
-                        $categoriaId,
+                    $categoriaId,
 
                     'categoria_nome' =>
-                        $item[
-                            'categoria_nome'
-                        ],
+                    $item['categoria_nome'],
 
                     'tipo_categoria' =>
-                        $tipoCategoria,
+                    $tipoCategoria,
 
                     'produtos' =>
-                        array(),
+                    array(),
 
                     'quantidade_total' =>
-                        0,
+                    0,
 
                     'subtotal' =>
-                        0.0,
+                    0.0,
 
                     'preco_unitario' =>
-                        0.0,
+                    0.0,
 
                     'quantidade_centos' =>
-                        0,
+                    0,
                 );
             }
 
-
-            $grupos[$categoriaId][
-                'produtos'
-            ][] = array(
+            $grupos[$categoriaId]['produtos'][] = array(
                 'produto_id' =>
-                    (int) $item[
-                        'produto_id'
-                    ],
+                (int) $item['produto_id'],
 
                 'nome' =>
-                    $item['nome'],
+                $item['nome'],
 
                 'quantidade' =>
-                    (int) $item[
-                        'quantidade'
-                    ],
+                (int) $item['quantidade'],
 
                 'preco_unitario' =>
-                    (float) $item[
-                        'preco_unitario'
-                    ],
+                (float) $item['preco_unitario'],
             );
 
-
-            $grupos[$categoriaId][
-                'quantidade_total'
-            ] +=
-                (int) $item[
-                    'quantidade'
-                ];
+            $grupos[$categoriaId]['quantidade_total'] +=
+                (int) $item['quantidade'];
         }
-
 
         foreach (
             $grupos as
             &$grupo
         ) {
-
             $tipoCategoria =
-                $grupo[
-                    'tipo_categoria'
-                ];
-
+                $grupo['tipo_categoria'];
 
             /*
             =================================
@@ -229,74 +199,42 @@ final class CarrinhoController extends Controller
 
             if (
                 $tipoCategoria ===
-                    'cento_tradicionais'
+                'cento_tradicionais'
                 ||
                 $tipoCategoria ===
-                    'cento_folhados'
+                'cento_folhados'
             ) {
-
                 $partes =
                     $this->partesPorCento(
                         $tipoCategoria
                     );
 
-
                 if ($partes > 0) {
-
-                    $grupo[
-                        'quantidade_centos'
-                    ] =
+                    $grupo['quantidade_centos'] =
                         (int) ceil(
-                            $grupo[
-                                'quantidade_total'
-                            ]
-                            / $partes
+                            $grupo['quantidade_total']
+                                / $partes
                         );
                 }
 
-
-                /*
-                O preco_unitario do primeiro
-                bloco representa o valor de
-                uma parte do cento.
-                */
-
                 if (
                     isset(
-                        $grupo[
-                            'produtos'
-                        ][0][
-                            'preco_unitario'
-                        ]
+                        $grupo['produtos'][0]['preco_unitario']
                     )
                 ) {
-
                     $precoPorParte =
                         (float)
-                        $grupo[
-                            'produtos'
-                        ][0][
-                            'preco_unitario'
-                        ];
+                        $grupo['produtos'][0]['preco_unitario'];
 
-
-                    $grupo[
-                        'preco_unitario'
-                    ] =
+                    $grupo['preco_unitario'] =
                         $precoPorParte *
                         $partes;
 
-
                     $grupo['subtotal'] =
-                        $grupo[
-                            'quantidade_centos'
-                        ]
+                        $grupo['quantidade_centos']
                         *
-                        $grupo[
-                            'preco_unitario'
-                        ];
+                        $grupo['preco_unitario'];
                 }
-
             } else {
 
                 /*
@@ -308,60 +246,37 @@ final class CarrinhoController extends Controller
                 $subtotal =
                     0.0;
 
-
                 foreach (
-                    $grupo[
-                        'produtos'
-                    ] as $produto
+                    $grupo['produtos'] as $produto
                 ) {
-
                     $subtotal +=
                         (
                             (int)
-                            $produto[
-                                'quantidade'
-                            ]
+                            $produto['quantidade']
                         )
                         *
                         (
                             (float)
-                            $produto[
-                                'preco_unitario'
-                            ]
+                            $produto['preco_unitario']
                         );
                 }
 
-
-                $grupo[
-                    'subtotal'
-                ] =
+                $grupo['subtotal'] =
                     $subtotal;
-
 
                 if (
                     isset(
-                        $grupo[
-                            'produtos'
-                        ][0][
-                            'preco_unitario'
-                        ]
+                        $grupo['produtos'][0]['preco_unitario']
                     )
                 ) {
-                    $grupo[
-                        'preco_unitario'
-                    ] =
+                    $grupo['preco_unitario'] =
                         (float)
-                        $grupo[
-                            'produtos'
-                        ][0][
-                            'preco_unitario'
-                        ];
+                        $grupo['produtos'][0]['preco_unitario'];
                 }
             }
         }
 
         unset($grupo);
-
 
         return array_values(
             $grupos
@@ -374,54 +289,47 @@ final class CarrinhoController extends Controller
         $tokenSessao =
             $this->obterTokenSessao();
 
-
         $repository =
             new CarrinhoRepository(
                 $this->pdo
             );
 
-
         $carrinho =
             $repository
-                ->buscarAbertoPorToken(
-                    $tokenSessao
-                );
-
+            ->buscarAbertoPorToken(
+                $tokenSessao
+            );
 
         $itens =
             array();
 
-
         if (
             $carrinho !== null
         ) {
-
             $itens =
                 $repository
-                    ->buscarItens(
-                        (int)
-                        $carrinho['id']
-                    );
+                ->buscarItens(
+                    (int)
+                    $carrinho['id']
+                );
         }
-
 
         $carrinhoVisual =
             $this->montarCarrinhoVisual(
                 $itens
             );
 
-
         $this->view(
             'site/carrinho',
             array(
                 'tituloPagina' =>
-                    'Carrinho',
+                'Carrinho',
 
                 'rotaAtual' =>
-                    'carrinho',
+                'carrinho',
 
                 'carrinho' =>
-                    $carrinhoVisual,
+                $carrinhoVisual,
             )
         );
     }
@@ -436,12 +344,10 @@ final class CarrinhoController extends Controller
                 FILTER_VALIDATE_INT
             );
 
-
         $quantidades =
             isset($_POST['quantidades'])
-                ? $_POST['quantidades']
-                : array();
-
+            ? $_POST['quantidades']
+            : array();
 
         $editarCategoriaId =
             filter_input(
@@ -450,38 +356,32 @@ final class CarrinhoController extends Controller
                 FILTER_VALIDATE_INT
             );
 
-
         if (!$categoriaId) {
             $this->redirecionar(
                 'produtos'
             );
         }
 
-
         if (!is_array($quantidades)) {
             $quantidades =
                 array();
         }
-
 
         $produtoRepository =
             new ProdutoRepository(
                 $this->pdo
             );
 
-
         $carrinhoRepository =
             new CarrinhoRepository(
                 $this->pdo
             );
 
-
         $categoria =
             $produtoRepository
-                ->buscarCategoriaPorId(
-                    $categoriaId
-                );
-
+            ->buscarCategoriaPorId(
+                $categoriaId
+            );
 
         if (
             $categoria === null
@@ -491,48 +391,37 @@ final class CarrinhoController extends Controller
             );
         }
 
-
         $produtos =
             $produtoRepository
-                ->buscarProdutosPorCategoria(
-                    $categoriaId
-                );
-
+            ->buscarProdutosPorCategoria(
+                $categoriaId
+            );
 
         $produtosPorId =
             array();
 
-
         foreach (
             $produtos as $produto
         ) {
-
-            $produtosPorId[
-                (int) $produto['id']
-            ] =
+            $produtosPorId[(int) $produto['id']] =
                 $produto;
         }
 
-
         $selecionados =
             array();
-
 
         foreach (
             $quantidades as
             $produtoId => $quantidade
         ) {
-
             $produtoId =
                 (int) $produtoId;
-
 
             $quantidade =
                 filter_var(
                     $quantidade,
                     FILTER_VALIDATE_INT
                 );
-
 
             if (
                 $quantidade === false
@@ -542,117 +431,101 @@ final class CarrinhoController extends Controller
                 continue;
             }
 
-
             if (
                 !isset(
-                    $produtosPorId[
-                        $produtoId
-                    ]
+                    $produtosPorId[$produtoId]
                 )
             ) {
                 continue;
             }
 
-
             $selecionados[] =
                 array(
                     'produto_id' =>
-                        $produtoId,
+                    $produtoId,
 
                     'quantidade' =>
-                        $quantidade,
+                    $quantidade,
                 );
         }
-
 
         if (
             $selecionados === array()
         ) {
-
             $this->redirecionar(
                 'produtos/categoria/'
-                . $categoriaId
+                    . $categoriaId
             );
         }
-
 
         $tipoCategoria =
             $this->identificarTipoCategoria(
                 $categoria['nome']
             );
 
-
         $totalSelecionado =
             0;
-
 
         foreach (
             $selecionados
             as $selecionado
         ) {
-
             $totalSelecionado +=
-                $selecionado[
-                    'quantidade'
-                ];
+                $selecionado['quantidade'];
         }
-
 
         /*
         =================================
-        VALIDA TRADICIONAIS
+        VALIDACAO DOS CENTOS
         =================================
         */
 
         if (
             $tipoCategoria ===
-                'cento_tradicionais'
-            &&
-            $totalSelecionado > 4
+            'cento_tradicionais'
         ) {
-            $this->redirecionar(
-                'produtos/categoria/'
-                . $categoriaId
-            );
+            if (
+                $totalSelecionado !== 4
+            ) {
+                $this->redirecionar(
+                    'produtos/categoria/'
+                        . $categoriaId
+                        . '?erro=cento_incompleto'
+                );
+            }
         }
 
 
-        /*
-        =================================
-        VALIDA FOLHADOS
-        =================================
-        */
-
         if (
             $tipoCategoria ===
-                'cento_folhados'
-            &&
-            $totalSelecionado > 2
+            'cento_folhados'
         ) {
-            $this->redirecionar(
-                'produtos/categoria/'
-                . $categoriaId
-            );
+            if (
+                $totalSelecionado !== 2
+            ) {
+                $this->redirecionar(
+                    'produtos/categoria/'
+                        . $categoriaId
+                        . '?erro=cento_incompleto'
+                );
+            }
         }
 
 
         $tokenSessao =
             $this->obterTokenSessao();
 
-
         $carrinho =
             $carrinhoRepository
-                ->obterOuCriar(
-                    $tokenSessao
-                );
-
+            ->obterOuCriar(
+                $tokenSessao
+            );
 
         $carrinhoId =
             (int) $carrinho['id'];
 
 
         $this->pdo->beginTransaction();
-
 
         try {
 
@@ -667,7 +540,6 @@ final class CarrinhoController extends Controller
                 &&
                 $editarCategoriaId !== null
             ) {
-
                 $carrinhoRepository
                     ->removerItensPorCategoria(
                         $carrinhoId,
@@ -687,59 +559,42 @@ final class CarrinhoController extends Controller
                 $tipoCategoria ===
                 'salgados_grandes'
             ) {
-
                 $precoNormal =
                     (float)
                     $categoria['preco'];
 
-
                 $precoRevenda =
                     (float)
-                    $categoria[
-                        'preco_revenda'
-                    ];
-
+                    $categoria['preco_revenda'];
 
                 $quantidadeMinima =
                     (int)
-                    $categoria[
-                        'quantidade_minima_revenda'
-                    ];
-
+                    $categoria['quantidade_minima_revenda'];
 
                 $itensExistentes =
                     $carrinhoRepository
-                        ->buscarItens(
-                            $carrinhoId
-                        );
-
+                    ->buscarItens(
+                        $carrinhoId
+                    );
 
                 $quantidadeExistente =
                     0;
-
 
                 foreach (
                     $itensExistentes
                     as $itemExistente
                 ) {
-
                     if (
                         (int)
-                        $itemExistente[
-                            'categoria_id'
-                        ]
+                        $itemExistente['categoria_id']
                         ===
                         $categoriaId
                     ) {
-
                         $quantidadeExistente +=
                             (int)
-                            $itemExistente[
-                                'quantidade'
-                            ];
+                            $itemExistente['quantidade'];
                     }
                 }
-
 
                 if (
                     $editarCategoriaId !== false
@@ -750,39 +605,29 @@ final class CarrinhoController extends Controller
                         0;
                 }
 
-
                 $quantidadeFinal =
                     $quantidadeExistente
                     +
                     $totalSelecionado;
 
-
                 $precoFinal =
-                    $quantidadeFinal
-                        >=
-                        $quantidadeMinima
+                    $quantidadeFinal >=
+                    $quantidadeMinima
                     ? $precoRevenda
                     : $precoNormal;
-
 
                 foreach (
                     $selecionados
                     as $selecionado
                 ) {
-
                     $carrinhoRepository
                         ->adicionarItem(
                             $carrinhoId,
-                            $selecionado[
-                                'produto_id'
-                            ],
-                            $selecionado[
-                                'quantidade'
-                            ],
+                            $selecionado['produto_id'],
+                            $selecionado['quantidade'],
                             $precoFinal
                         );
                 }
-
 
                 $carrinhoRepository
                     ->atualizarPrecoPorCategoria(
@@ -790,8 +635,6 @@ final class CarrinhoController extends Controller
                         $categoriaId,
                         $precoFinal
                     );
-
-
             } else {
 
                 /*
@@ -803,67 +646,47 @@ final class CarrinhoController extends Controller
                 $precoPorBloco =
                     0.0;
 
-
                 if (
                     $tipoCategoria ===
                     'cento_tradicionais'
                 ) {
-
                     $precoPorBloco =
                         (
                             (float)
-                            $categoria[
-                                'preco'
-                            ]
+                            $categoria['preco']
                         )
                         / 4;
-
                 } elseif (
                     $tipoCategoria ===
                     'cento_folhados'
                 ) {
-
                     $precoPorBloco =
                         (
                             (float)
-                            $categoria[
-                                'preco'
-                            ]
+                            $categoria['preco']
                         )
                         / 2;
-
                 } else {
-
                     $precoPorBloco =
                         (float)
-                        $categoria[
-                            'preco'
-                        ];
+                        $categoria['preco'];
                 }
-
 
                 foreach (
                     $selecionados
                     as $selecionado
                 ) {
-
                     $carrinhoRepository
                         ->adicionarItem(
                             $carrinhoId,
-                            $selecionado[
-                                'produto_id'
-                            ],
-                            $selecionado[
-                                'quantidade'
-                            ],
+                            $selecionado['produto_id'],
+                            $selecionado['quantidade'],
                             $precoPorBloco
                         );
                 }
             }
 
-
             $this->pdo->commit();
-
         } catch (\Throwable $erro) {
 
             if (
@@ -876,8 +699,26 @@ final class CarrinhoController extends Controller
         }
 
 
+        /*
+        =================================
+        REDIRECIONA PARA A CATEGORIA
+        =================================
+        */
+
+        $mensagem =
+            (
+                $editarCategoriaId !== false
+                &&
+                $editarCategoriaId !== null
+            )
+            ? 'atualizado'
+            : 'adicionado';
+
         $this->redirecionar(
-            'carrinho'
+            'produtos/categoria/'
+                . $categoriaId
+                . '?sucesso='
+                . $mensagem
         );
     }
 
@@ -888,19 +729,16 @@ final class CarrinhoController extends Controller
         $tokenSessao =
             $this->obterTokenSessao();
 
-
         $repository =
             new CarrinhoRepository(
                 $this->pdo
             );
 
-
         $carrinho =
             $repository
-                ->buscarAbertoPorToken(
-                    $tokenSessao
-                );
-
+            ->buscarAbertoPorToken(
+                $tokenSessao
+            );
 
         if (
             $carrinho === null
@@ -910,30 +748,25 @@ final class CarrinhoController extends Controller
             );
         }
 
-
         $itens =
             $repository
-                ->buscarItens(
-                    (int)
-                    $carrinho['id']
-                );
-
+            ->buscarItens(
+                (int)
+                $carrinho['id']
+            );
 
         $encontrou =
             false;
 
-
         foreach (
             $itens as $item
         ) {
-
             if (
                 (int)
                 $item['categoria_id']
                 ===
                 $categoriaId
             ) {
-
                 $encontrou =
                     true;
 
@@ -941,19 +774,16 @@ final class CarrinhoController extends Controller
             }
         }
 
-
         if (!$encontrou) {
-
             $this->redirecionar(
                 'carrinho'
             );
         }
 
-
         $this->redirecionar(
             'produtos/categoria/'
-            . $categoriaId
-            . '?editar=1'
+                . $categoriaId
+                . '?editar=1'
         );
     }
 
@@ -963,7 +793,6 @@ final class CarrinhoController extends Controller
         $tokenSessao =
             $this->obterTokenSessao();
 
-
         $categoriaId =
             filter_input(
                 INPUT_POST,
@@ -971,37 +800,30 @@ final class CarrinhoController extends Controller
                 FILTER_VALIDATE_INT
             );
 
-
         if (!$categoriaId) {
-
             $this->redirecionar(
                 'carrinho'
             );
         }
-
 
         $repository =
             new CarrinhoRepository(
                 $this->pdo
             );
 
-
         $carrinho =
             $repository
-                ->buscarAbertoPorToken(
-                    $tokenSessao
-                );
-
+            ->buscarAbertoPorToken(
+                $tokenSessao
+            );
 
         if (
             $carrinho === null
         ) {
-
             $this->redirecionar(
                 'carrinho'
             );
         }
-
 
         $repository
             ->removerItensPorCategoria(
@@ -1010,13 +832,11 @@ final class CarrinhoController extends Controller
                 $categoriaId
             );
 
-
         $repository
             ->removerSeVazio(
                 (int)
                 $carrinho['id']
             );
-
 
         $this->redirecionar(
             'carrinho'

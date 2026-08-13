@@ -4,19 +4,20 @@ GERAL HOME
 
 .hero-loja {
     min-height: 560px;
-
     display: flex;
-
     align-items: center;
 
     background:
-        radial-gradient(circle at top right,
+        radial-gradient(
+            circle at top right,
             rgba(245, 124, 0, 0.20),
-            transparent 40%),
-
-        linear-gradient(135deg,
+            transparent 40%
+        ),
+        linear-gradient(
+            135deg,
             #ffffff,
-            var(--creme));
+            var(--creme)
+        );
 }
 
 
@@ -24,28 +25,57 @@ GERAL HOME
 HERO
 ============================ */
 
+.hero-etiqueta,
+.section-etiqueta {
+    color: var(--cor-primaria);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.12rem;
+    text-transform: uppercase;
+}
+
+
+.hero-card {
+    padding: 2.5rem;
+    color: var(--branco);
+    background: var(--cor-secundaria);
+    border-radius: 1.5rem;
+}
+
+
+.hero-card i {
+    color: var(--cor-destaque);
+    font-size: 3rem;
+}
+
+
 .hero-texto h1 {
     font-size: 3rem;
     font-weight: 800;
     color: var(--marrom);
 }
 
+
 .hero-texto h1 span {
-    color: var(--laranja);
+    color: var(--cor-destaque);
 }
+
 
 .hero-texto p {
     font-size: 1.2rem;
-    color: #666;
+    color: var(--cor-texto);
     line-height: 1.6;
 }
+
 
 .hero-imagem img {
     max-width: 430px;
     width: 100%;
 
     filter:
-        drop-shadow(0 15px 20px rgba(0, 0, 0, 0.15));
+        drop-shadow(
+            0 15px 20px rgba(0, 0, 0, 0.15)
+        );
 }
 
 
@@ -54,17 +84,18 @@ BOTÕES
 ============================ */
 
 .btn-marca {
-    background: var(--laranja);
-    color: #ffffff;
+    background: var(--cor-destaque);
+    color: var(--branco);
     padding: 14px 35px;
     border-radius: 30px;
     font-weight: bold;
     border: none;
 }
 
+
 .btn-marca:hover {
     background: var(--laranja-hover);
-    color: #ffffff;
+    color: var(--branco);
 }
 
 
@@ -77,13 +108,15 @@ TÍTULOS
     margin: 60px 0 35px;
 }
 
+
 .titulo-secao h2 {
     font-size: 2.2rem;
     color: var(--marrom);
 }
 
+
 .titulo-secao span {
-    color: var(--laranja);
+    color: var(--cor-destaque);
 }
 
 
@@ -93,13 +126,14 @@ BENEFÍCIOS / CATEGORIAS
 
 .beneficio-card,
 .categoria-card {
-    background: #ffffff;
+    background: var(--branco);
     border-radius: 20px;
     padding: 30px;
     height: 100%;
     border: 1px solid #eee;
     transition: 0.3s;
 }
+
 
 .beneficio-card:hover,
 .categoria-card:hover {
@@ -109,6 +143,7 @@ BENEFÍCIOS / CATEGORIAS
         0 10px 25px rgba(0, 0, 0, 0.10);
 }
 
+
 .beneficio-icone {
     width: 55px;
     height: 55px;
@@ -117,8 +152,8 @@ BENEFÍCIOS / CATEGORIAS
     align-items: center;
     justify-content: center;
 
-    background: var(--laranja);
-    color: #ffffff;
+    background: var(--cor-destaque);
+    color: var(--branco);
 
     border-radius: 15px;
 
@@ -137,6 +172,7 @@ PRODUTOS
     transition: 0.3s;
 }
 
+
 .produto-card:hover {
     transform: translateY(-5px);
 
@@ -144,17 +180,20 @@ PRODUTOS
         0 10px 25px rgba(0, 0, 0, 0.12);
 }
 
+
 .produto-card img {
     height: 220px;
     object-fit: cover;
 }
 
+
 .produto-card h3 {
     color: var(--marrom);
 }
 
+
 .preco {
-    color: var(--laranja);
+    color: var(--cor-destaque);
     font-size: 1.3rem;
     font-weight: bold;
 }
@@ -165,25 +204,29 @@ SOBRE
 ============================ */
 
 .sobre-section {
-    background: #ffffff;
+    background: var(--branco);
     padding: 70px 0;
 }
+
 
 .sobre-section img {
     border-radius: 25px;
     max-width: 350px;
 }
 
+
 .sobre-section h2 {
     color: var(--marrom);
 }
 
+
 .sobre-section span {
-    color: var(--laranja);
+    color: var(--cor-destaque);
 }
 
+
 .sobre-section p {
-    color: #666;
+    color: var(--cor-texto);
     line-height: 1.7;
 }
 
@@ -194,16 +237,19 @@ CONTATO / WHATSAPP
 
 .contato-section {
     background:
-        linear-gradient(135deg,
-            var(--laranja),
-            var(--marrom));
+        linear-gradient(
+            135deg,
+            var(--cor-destaque),
+            var(--marrom)
+        );
 
-    color: #ffffff;
+    color: var(--branco);
     padding: 50px 0;
 }
 
+
 .contato-card {
-    background: #ffffff;
+    background: var(--branco);
     color: var(--marrom);
     border-radius: 25px;
     padding: 30px;
@@ -220,39 +266,26 @@ RESPONSIVO
         min-height: auto;
     }
 
+
+    .hero-card {
+        padding: 2rem;
+    }
+
+
     .hero-texto h1 {
         font-size: 2.2rem;
         text-align: center;
     }
 
+
     .hero-texto p {
         text-align: center;
     }
+
 
     .hero-imagem {
         margin-top: 30px;
         text-align: center;
     }
 
-}
-
-.hero-card {
-    padding: 2.5rem;
-    color: #ffffff;
-    background: var(--cor-secundaria);
-    border-radius: 1.5rem;
-}
-
-.hero-card i {
-    color: var(--cor-destaque);
-    font-size: 3rem;
-}
-
-.hero-etiqueta,
-.section-etiqueta {
-    color: var(--cor-primaria);
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 0.12rem;
-    text-transform: uppercase;
 }
