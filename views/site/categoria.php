@@ -91,9 +91,7 @@ View::componente(
                 href="<?= BASE_URL ?>/produtos"
                 class="btn btn-voltar-cardapio">
 
-                <i
-                    class="bi bi-arrow-left me-1">
-                </i>
+                <i class="bi bi-arrow-left me-1"></i>
 
                 Voltar
 
@@ -172,19 +170,25 @@ MODAL CENTO INCOMPLETO
             </div>
 
 
-            <div class="modal-body">
+            <div class="modal-body text-center">
+
+                <div class="modal-alerta-icone">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                </div>
+
+                <h3 class="modal-alerta-titulo">
+                    Alerta!
+                </h3>
 
                 <p
-                    class="mb-0"
+                    class="modal-alerta-mensagem"
                     data-mensagem-cento-incompleto>
 
-                    O Cantim do Lanche não trabalha
-                    com a venda de partes de cento.
+                    Falta completar o cento!
 
                 </p>
 
             </div>
-
 
             <div class="modal-footer">
 
