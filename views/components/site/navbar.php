@@ -40,17 +40,17 @@ if (
 
         $carrinho =
             $repository
-                ->buscarAbertoPorToken(
-                    $tokenSessao
-                );
+            ->buscarAbertoPorToken(
+                $tokenSessao
+            );
 
         if ($carrinho !== null) {
 
             $itens =
                 $repository
-                    ->buscarItens(
-                        (int) $carrinho['id']
-                    );
+                ->buscarItens(
+                    (int) $carrinho['id']
+                );
 
             $grupos = [];
 
@@ -77,9 +77,7 @@ if (
                 $nomeCategoria =
                     mb_strtolower(
                         trim(
-                            $item[
-                                'categoria_nome'
-                            ]
+                            $item['categoria_nome']
                         ),
                         'UTF-8'
                     );
@@ -97,7 +95,6 @@ if (
                 ) {
                     $tipo =
                         'cento_tradicionais';
-
                 } elseif (
                     str_contains(
                         $nomeCategoria,
@@ -106,7 +103,6 @@ if (
                 ) {
                     $tipo =
                         'cento_folhados';
-
                 } elseif (
                     str_contains(
                         $nomeCategoria,
@@ -115,7 +111,6 @@ if (
                 ) {
                     $tipo =
                         'salgados_grandes';
-
                 } elseif (
                     str_contains(
                         $nomeCategoria,
@@ -142,14 +137,10 @@ if (
                 }
 
 
-                $grupos[
-                    $categoriaId
-                ]['tipo'] = $tipo;
+                $grupos[$categoriaId]['tipo'] = $tipo;
 
 
-                $grupos[
-                    $categoriaId
-                ]['quantidade'] +=
+                $grupos[$categoriaId]['quantidade'] +=
                     (int)
                     $item['quantidade'];
             }
@@ -161,15 +152,14 @@ if (
 
                 if (
                     $grupo['tipo'] ===
-                        'cento_tradicionais'
+                    'cento_tradicionais'
                 ) {
 
                     $quantidadeCarrinho +=
                         (int) ceil(
                             $grupo['quantidade']
-                            / 4
+                                / 4
                         );
-
                 } elseif (
                     $grupo['tipo'] ===
                     'cento_folhados'
@@ -178,9 +168,8 @@ if (
                     $quantidadeCarrinho +=
                         (int) ceil(
                             $grupo['quantidade']
-                            / 2
+                                / 2
                         );
-
                 } else {
 
                     $quantidadeCarrinho +=
@@ -193,14 +182,12 @@ if (
 
 ?>
 
-<nav
-    class="navbar navbar-expand-lg bg-white shadow-sm sticky-top"
+<nav class="navbar navbar-expand-lg navbar-site shadow-sm sticky-top"
     aria-label="Navegação principal">
 
-    <div class="container">
-
+    <div class="container-fluid px-4">
         <a
-            class="navbar-brand d-flex align-items-center gap-2"
+            class="navbar-brand-logo d-flex align-items-center gap-2"
             href="<?= BASE_URL ?>/">
 
             <img
@@ -238,11 +225,10 @@ if (
                 <li class="nav-item">
 
                     <a
-                        class="nav-link fw-semibold
-                        <?= $rotaAtual === 'home'
-                            ? 'active'
-                            : ''
-                        ?>"
+                        class="
+                            nav-link
+                            nav-link-marca
+                            <?= $rotaAtual === 'home' ? 'active' : '' ?>"
                         href="<?= BASE_URL ?>/">
 
                         Início
@@ -252,10 +238,14 @@ if (
                 </li>
 
 
+
                 <li class="nav-item">
 
                     <a
-                        class="nav-link fw-semibold"
+                        class="
+                            nav-link
+                            nav-link-marca
+                            <?= $rotaAtual === 'produtos' ? 'active' : '' ?>"
                         href="<?= BASE_URL ?>/produtos">
 
                         Cardápio
@@ -268,7 +258,10 @@ if (
                 <li class="nav-item">
 
                     <a
-                        class="nav-link fw-semibold"
+                        class="
+                        nav-link
+                        nav-link-marca
+                        <?= $rotaAtual === 'quemsomos' ? 'active' : '' ?>"
                         href="<?= BASE_URL ?>/quemsomos">
 
                         Quem Somos
@@ -281,7 +274,10 @@ if (
                 <li class="nav-item">
 
                     <a
-                        class="nav-link fw-semibold"
+                        class="
+                        nav-link
+                        nav-link-marca
+                        <?= $rotaAtual === 'contato' ? 'active' : '' ?>"
                         href="<?= BASE_URL ?>/contato">
 
                         Contato
@@ -289,7 +285,6 @@ if (
                     </a>
 
                 </li>
-
             </ul>
 
 
@@ -360,7 +355,7 @@ if (
 
                 <a
                     href="<?= BASE_URL ?>/login"
-                    class="btn btn-outline-secondary">
+                    class="btn btn-outline-secondary btn-navbar-menor">
 
                     <i
                         class="bi bi-person">
@@ -382,7 +377,7 @@ if (
 
                 <a
                     href="<?= BASE_URL ?>/login-admin"
-                    class="btn btn-dark">
+                    class="btn btn-dark btn-navbar-menor">>
 
                     <i
                         class="bi bi-shield-lock">
