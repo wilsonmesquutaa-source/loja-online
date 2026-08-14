@@ -1,59 +1,604 @@
 /*
 =================================
+CATEGORIA - BASE
+=================================
+*/
+
+.categoria-selecao {
+    width: 100%;
+}
+
+.categoria-cabecalho {
+    margin-bottom: 1.5rem;
+}
+
+.categoria-subtitulo {
+    margin: 0 0 0.25rem;
+    color: var(--marrom);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.categoria-titulo {
+    margin: 0 0 0.5rem;
+    color: var(--marrom);
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.categoria-descricao {
+    margin: 0;
+    color: #6c757d;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+
+/*
+=================================
+ALERTA DA CATEGORIA
+=================================
+*/
+
+.categoria-alerta {
+    margin-bottom: 1.5rem;
+    border-radius: 0.7rem;
+}
+
+
+/*
+=================================
+ÁREA DOS PRODUTOS
+=================================
+*/
+
+.categoria-produtos-area {
+    width: 100%;
+    min-width: 0;
+}
+
+
+/*
+=================================
+GRADE DOS PRODUTOS
+=================================
+*/
+
+.categoria-produtos-grid {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 1rem;
+
+    align-items: stretch;
+}
+
+
+/*
+=================================
+WRAPPER DO PRODUTO
+=================================
+*/
+
+.produto-wrapper {
+    width: 100%;
+    min-width: 0;
+}
+
+
+/*
+=================================
+CARD DO PRODUTO
+=================================
+*/
+
+.produto-selecao-card {
+    width: 100%;
+    height: 330px;
+
+    margin: 0;
+    padding: 0;
+
+    background: var(--branco);
+
+    border:
+        1px solid rgba(93, 64, 55, 0.10);
+
+    border-radius: 0.8rem;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 0.25rem 0.7rem rgba(0, 0, 0, 0.08);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.produto-selecao-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 0.45rem 1rem rgba(0, 0, 0, 0.12);
+}
+
+
+/*
+=================================
+CONTEÚDO DO CARD
+=================================
+*/
+
+.produto-card-conteudo {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding: 1rem;
+}
+
+
+/*
+=================================
+IMAGEM
+=================================
+*/
+
+.produto-imagem-placeholder {
+    width: 100%;
+    height: 110px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 0.8rem;
+
+    background: var(--creme);
+
+    border-radius: 0.6rem;
+}
+
+.produto-imagem-placeholder i {
+    font-size: 2.5rem;
+    color: #8a8a8a;
+}
+
+
+/*
+=================================
+NOME DO PRODUTO
+=================================
+*/
+
+.produto-card-titulo {
+    width: 100%;
+
+    min-height: 38px;
+    max-height: 38px;
+
+    margin:
+        0 0 0.4rem;
+
+    color: var(--marrom);
+
+    text-align: center;
+
+    font-size: 0.95rem;
+    font-weight: 700;
+
+    line-height: 1.15;
+
+    overflow: hidden;
+
+    display: -webkit-box;
+
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+
+/*
+=================================
+DESCRIÇÃO
+=================================
+*/
+
+.produto-card-descricao {
+    width: 100%;
+
+    min-height: 50px;
+    max-height: 42px;
+
+    margin: 0;
+
+    color: #6c757d;
+
+    text-align: center;
+
+    font-size: 0.8rem;
+
+    line-height: 1.3;
+
+    overflow: hidden;
+
+    display: -webkit-box;
+
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+
+/*
+=================================
+CONTADOR
+=================================
+*/
+
+.contador-produto {
+    width: 100%;
+
+    min-height: 42px;
+
+    margin-top: auto;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.6rem;
+
+    flex-shrink: 0;
+}
+
+
+/*
+=================================
+BOTÃO -
+=================================
+*/
+
+.contador-produto .contador-botao-menos {
+    width: 34px;
+    height: 34px;
+
+    min-width: 34px;
+
+    padding: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border:
+        1px solid var(--marrom);
+
+    border-radius: 0.45rem;
+
+    background: var(--branco);
+
+    color: var(--marrom);
+
+    font-size: 1rem;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.contador-produto .contador-botao-menos:hover:not(:disabled) {
+    background: var(--marrom);
+    border-color: var(--marrom);
+    color: var(--branco);
+}
+
+.contador-produto .contador-botao-menos:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+
+/*
+=================================
+BOTÃO +
+=================================
+*/
+
+.contador-produto .contador-botao-mais {
+    width: 34px;
+    height: 34px;
+
+    min-width: 34px;
+
+    padding: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border:
+        1px solid var(--laranja);
+
+    border-radius: 0.45rem;
+
+    background:
+        var(--laranja);
+
+    color:
+        var(--branco);
+
+    font-size:
+        1rem;
+
+    font-weight:
+        700;
+
+    cursor:
+        pointer;
+
+    opacity:
+        1;
+
+    visibility:
+        visible;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        opacity 0.2s ease;
+}
+
+.contador-produto .contador-botao-mais,
+.contador-produto [data-aumentar] {
+
+    width: 34px !important;
+    height: 34px !important;
+
+    padding: 0 !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    border: 1px solid var(--cor-destaque) !important;
+    border-radius: 0.45rem !important;
+
+    background-color: var(--cor-destaque) !important;
+    color: var(--branco) !important;
+
+    opacity: 1 !important;
+    visibility: visible !important;
+
+    cursor: pointer;
+}
+
+.contador-produto .contador-botao-mais i,
+.contador-produto [data-aumentar] i {
+
+    color: var(--branco) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+
+.contador-produto .contador-botao-mais:hover:not(:disabled),
+.contador-produto [data-aumentar]:hover:not(:disabled) {
+
+    background-color: var(--cor-destaque) !important;
+    border-color: var(--cor-destaque) !important;
+    color: var(--branco) !important;
+}
+
+.contador-produto .contador-botao-mais:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+
+/*
+=================================
+ÍCONES DOS BOTÕES
+=================================
+*/
+
+.contador-produto .contador-botao i {
+    display: inline-block;
+
+    color: inherit;
+
+    font-size: 1.1rem;
+
+    line-height: 1;
+
+    pointer-events: none;
+}
+
+
+/*
+=================================
+NÚMERO
+=================================
+*/
+
+.contador-produto .contador-quantidade {
+    min-width: 30px;
+
+    padding: 0;
+
+    color: var(--marrom);
+
+    text-align: center;
+
+    font-size: 1rem;
+    font-weight: 700;
+
+    line-height: 1;
+}
+
+
+/*
+=================================
 LAYOUT DO CENTO
 =================================
 */
 
 .categoria-cento-layout {
-    align-items: flex-start;
+    width: 100%;
+}
+
+.categoria-cento-layout {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr) 300px;
+
+    gap: 1.5rem;
+
+    align-items: start;
 }
 
 
 /*
 =================================
-PAINEL FIXO DO CENTO
+ÁREA DO CENTO
 =================================
 */
 
-.cento-preview {
-    background: var(--branco);
-    border: 1px solid rgba(93, 64, 55, 0.12);
-    border-radius: 0.8rem;
-    padding: 0.6rem;
-    box-shadow:
-        0 0.3rem 0.8rem rgba(0, 0, 0, 0.10);
+.categoria-cento-layout .categoria-produtos-area {
+    min-width: 0;
+}
+
+
+/*
+=================================
+PAINEL DO CENTO
+=================================
+*/
+
+.cento-preview-area {
+    width: 300px;
 }
 
 .cento-preview-sticky {
     position: fixed;
+
     top: 90px;
     right: 30px;
-    width: 240px;
+
+    width: 300px;
+
     z-index: 100;
 }
 
-.cento-preview-status {
-    margin-bottom: 0.4rem;
-    text-align: center;
-    font-size: 0.8rem;
+.cento-preview {
+    width: 100%;
+
+    background:
+        var(--branco);
+
+    border:
+        1px solid rgba(93, 64, 55, 0.12);
+
+    border-radius:
+        0.8rem;
+
+    padding:
+        1.5rem 0.6rem;
+
+    box-shadow:
+        0 0.3rem 0.8rem rgba(0, 0, 0, 0.10);
 }
 
 
 /*
 =================================
-CÍRCULO
+TÍTULO DO CENTO
+=================================
+*/
+
+.cento-preview-titulo {
+    margin:
+        0 0 0.8rem;
+
+    color:
+        var(--marrom);
+
+    text-align:
+        center;
+
+    font-size:
+        1.05rem;
+
+    font-weight:
+        700;
+}
+
+
+/*
+=================================
+STATUS
+=================================
+*/
+
+.cento-preview-status {
+    margin-bottom:
+        0.4rem;
+
+    text-align:
+        center;
+
+    font-size:
+        0.8rem;
+}
+
+
+/*
+=================================
+CÍRCULO DO CENTO
 =================================
 */
 
 .cento-circulo {
-    position: relative;
-    width: 180px;
-    height: 180px;
-    margin: 0.8rem auto;
-    border-radius: 50%;
-    overflow: hidden;
-    background: var(--creme);
-    border: 4px solid var(--marrom);
+    position:
+        relative;
+
+    width:
+        280px;
+
+    height:
+        230px;
+
+    margin:
+        0.8rem auto;
+
+    border-radius:
+        10%;
+
+    overflow:
+        hidden;
+
+    background:
+        var(--creme);
+
+    border:
+        4px solid var(--marrom);
 }
 
 
@@ -64,27 +609,40 @@ SETORES
 */
 
 .cento-setor {
-    position: absolute;
-    inset: 0;
+    position:
+        absolute;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    inset:
+        0;
 
-    text-align: center;
+    display:
+        flex;
 
-    background: transparent;
-    color: var(--marrom);
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    background:
+        transparent;
+
+    color:
+        var(--marrom);
 
     transition:
         background-color 0.2s ease;
 
-    z-index: 2;
+    z-index:
+        2;
 }
 
 .cento-setor.ativo {
-    background: var(--cor-destaque);
-    color: var(--branco);
+    background:
+        var(--cor-destaque);
+
+    color:
+        var(--branco);
 }
 
 
@@ -157,101 +715,99 @@ TEXTOS DOS SETORES
 */
 
 .cento-setor-texto {
-    position: absolute;
+    position:
+        absolute;
 
-    top: 50%;
-    left: 50%;
+    top:
+        50%;
 
-    transform: translate(-50%, -50%);
+    left:
+        50%;
 
-    width: 50%;
-    max-width: 50%;
+    transform:
+        translate(-50%, -50%);
 
-    text-align: center;
+    width:
+        50%;
 
-    font-size: 0.42rem;
-    font-weight: 700;
-    line-height: 1.05;
+    max-width:
+        50%;
 
-    color: var(--marrom);
+    text-align:
+        center;
 
-    pointer-events: none;
-    z-index: 5;
+    font-size:
+        0.75rem;
 
-    overflow-wrap: anywhere;
-    word-break: break-word;
+    font-weight:
+        700;
+
+    line-height:
+        1.05;
+
+    color:
+        var(--marrom);
+
+    pointer-events:
+        none;
+
+    z-index:
+        5;
+
+    overflow-wrap:
+        anywhere;
+
+    word-break:
+        break-word;
 }
 
 .cento-setor.ativo .cento-setor-texto {
-    color: var(--branco);
+    color:
+        var(--branco);
 }
 
 
 /*
 =================================
-POSIÇÃO DOS TEXTOS - 4 PARTES
+TEXTOS - 4 PARTES
 =================================
 */
 
-/* Parte superior esquerda */
-.cento-circulo[data-partes="4"]
-.cento-setor[data-parte="1"]
-.cento-setor-texto {
-    top: 35%;
+.cento-circulo[data-partes="4"] .cento-setor[data-parte="1"] .cento-setor-texto {
+    top: 25%;
     left: 25%;
-    transform: translate(-50%, -50%);
 }
 
-/* Parte superior direita */
-.cento-circulo[data-partes="4"]
-.cento-setor[data-parte="2"]
-.cento-setor-texto {
-    top: 35%;
+.cento-circulo[data-partes="4"] .cento-setor[data-parte="2"] .cento-setor-texto {
+    top: 25%;
     left: 75%;
-    transform: translate(-50%, -50%);
 }
 
-/* Parte inferior direita */
-.cento-circulo[data-partes="4"]
-.cento-setor[data-parte="3"]
-.cento-setor-texto {
-    top: 65%;
+.cento-circulo[data-partes="4"] .cento-setor[data-parte="3"] .cento-setor-texto {
+    top: 75%;
     left: 75%;
-    transform: translate(-50%, -50%);
 }
 
-/* Parte inferior esquerda */
-.cento-circulo[data-partes="4"]
-.cento-setor[data-parte="4"]
-.cento-setor-texto {
-    top: 65%;
+.cento-circulo[data-partes="4"] .cento-setor[data-parte="4"] .cento-setor-texto {
+    top: 75%;
     left: 25%;
-    transform: translate(-50%, -50%);
 }
 
 
 /*
 =================================
-POSIÇÃO DOS TEXTOS - 2 PARTES
+TEXTOS - 2 PARTES
 =================================
 */
 
 .cento-circulo[data-partes="2"] .cento-setor[data-parte="1"] .cento-setor-texto {
     top: 50%;
     left: 25%;
-
-    transform:
-        translate(-50%,
-            -50%);
 }
 
 .cento-circulo[data-partes="2"] .cento-setor[data-parte="2"] .cento-setor-texto {
     top: 50%;
     left: 75%;
-
-    transform:
-        translate(-50%,
-            -50%);
 }
 
 
@@ -262,36 +818,48 @@ DIVISÕES
 */
 
 .cento-divisao {
-    position: absolute;
+    position:
+        absolute;
 
-    z-index: 10;
+    z-index:
+        10;
 
     background:
-        rgba(93,
-            64,
-            55,
-            0.35);
+        rgba(93, 64, 55, 0.35);
 
-    pointer-events: none;
+    pointer-events:
+        none;
 }
 
 .cento-divisao-vertical {
-    width: 3px;
-    height: 100%;
+    width:
+        3px;
 
-    top: 0;
-    left: 50%;
+    height:
+        100%;
+
+    top:
+        0;
+
+    left:
+        50%;
 
     transform:
         translateX(-50%);
 }
 
 .cento-divisao-horizontal {
-    width: 100%;
-    height: 3px;
+    width:
+        100%;
 
-    top: 50%;
-    left: 0;
+    height:
+        3px;
+
+    top:
+        50%;
+
+    left:
+        0;
 
     transform:
         translateY(-50%);
@@ -300,243 +868,536 @@ DIVISÕES
 
 /*
 =================================
-CENTRO DO CÍRCULO
+CENTRO
 =================================
 */
 
 .cento-centro {
-    position: absolute;
+    position:
+        absolute;
 
-    z-index: 40;
+    z-index:
+        40;
 
-    top: 50%;
-    left: 50%;
+    top:
+        50%;
+
+    left:
+        50%;
 
     transform:
-        translate(-50%,
-            -50%);
+        translate(-50%, -50%);
 
-    width: 42px;
-    height: 42px;
+    width:
+        42px;
 
-    border-radius: 50%;
+    height:
+        42px;
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    border-radius:
+        50%;
 
-    background: var(--branco);
-    color: var(--marrom);
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    background:
+        var(--branco);
+
+    color:
+        var(--marrom);
 
     border:
         2px solid var(--marrom);
 
-    text-align: center;
-    line-height: 1;
+    text-align:
+        center;
+
+    line-height:
+        1;
 
     box-shadow:
-        0 0.15rem 0.4rem rgba(0,
-            0,
-            0,
-            0.14);
+        0 0.15rem 0.4rem rgba(0, 0, 0, 0.14);
 
-    pointer-events: none;
+    pointer-events:
+        none;
 }
 
 .cento-centro strong {
-    font-size: 0.7rem;
+    font-size:
+        0.7rem;
 }
 
 .cento-centro span {
-    font-size: 0.45rem;
-    margin-top: 0.1rem;
+    font-size:
+        0.45rem;
+
+    margin-top:
+        0.1rem;
 }
 
 
 /*
 =================================
-BOTÃO DO CENTO
-=================================
-*/
-
-.cento-botao-carrinho {
-    width: 100%;
-
-    margin-top: 0.4rem;
-
-    padding:
-        0.4rem 0.5rem;
-
-    font-size: 0.85rem;
-}
-
-
-/*
-=================================
-BOTÃO LIMPAR
+BOTÃO LIMPAR CENTO
 =================================
 */
 
 .cento-preview [data-limpar-cento] {
-    width: 100%;
+    width:
+        100%;
 
     padding:
-        0.3rem 0.5rem;
+        0.45rem 0.5rem;
 
-    margin-bottom:
-        0.35rem !important;
+    margin:
+        0 0 0.35rem;
 
-    font-size: 0.8rem;
+    border:
+        1px solid var(--marrom);
+
+    border-radius:
+        0.45rem;
+
+    background:
+        var(--branco);
+
+    color:
+        var(--marrom);
+
+    font-size:
+        0.8rem;
+
+    cursor:
+        pointer;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.cento-preview [data-limpar-cento]:hover {
+    background:
+        var(--marrom);
+
+    color:
+        var(--branco);
 }
 
 
 /*
 =================================
-PAINEL FIXO
-SALGADOS GRANDES / EMPADÃO
+BOTÃO ADICIONAR
 =================================
 */
 
+.cento-botao-carrinho {
+    width:
+        100%;
+
+    margin-top:
+        0.4rem;
+
+    padding:
+        0.65rem 0.5rem;
+
+    border:
+        1px solid var(--laranja);
+
+    border-radius:
+        0.45rem;
+
+    background:
+        var(--cor-destaque);
+
+    color:
+        var(--branco);
+
+    font-size:
+        0.85rem;
+
+    font-weight:
+        600;
+
+    cursor:
+        pointer;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.cento-botao-carrinho:hover {
+    background:
+        var(--laranja-hover);
+
+    border-color:
+        var(--laranja-hover);
+
+    color:
+        var(--branco);
+}
+
+
+/*
+=================================
+PAINEL SALGADOS GRANDES / EMPADÃO
+=================================
+*/
+
+.categoria-com-acao-lateral {
+    padding-right:
+        390px;
+}
+
 .categoria-acao-sticky {
-    position: fixed !important;
+    position:
+        fixed !important;
 
-    top: 90px !important;
-    right: 30px !important;
+    top:
+        90px !important;
 
-    width: 350px !important;
+    right:
+        30px !important;
 
-    z-index: 1000 !important;
+    width:
+        350px !important;
+
+    z-index:
+        1000 !important;
 }
 
 .categoria-acao-card {
-    background: var(--branco);
+    background:
+        var(--branco);
 
     border:
-        1px solid rgba(93,
-            64,
-            55,
-            0.12);
+        1px solid rgba(93, 64, 55, 0.12);
 
-    border-radius: 1rem;
+    border-radius:
+        1rem;
 
-    padding: 1.25rem;
+    padding:
+        1.25rem;
 
     box-shadow:
-        0 0.5rem 1.5rem rgba(0,
-            0,
-            0,
-            0.12);
+        0 0.5rem 1.5rem rgba(0, 0, 0, 0.12);
 }
 
 .categoria-acao-titulo {
-    color: var(--marrom);
-    margin-bottom: 0.35rem;
+    color:
+        var(--marrom);
+
+    margin-bottom:
+        0.35rem;
 }
 
 .categoria-acao-texto {
-    color: #6c757d;
+    color:
+        #6c757d;
 
-    font-size: 0.9rem;
+    font-size:
+        0.9rem;
 
-    margin-bottom: 1rem;
+    margin-bottom:
+        1rem;
 }
 
 .categoria-acao-contador {
-    text-align: center;
+    text-align:
+        center;
 
     padding:
         0.75rem 0 1rem;
 }
 
 .categoria-acao-contador-label {
-    display: block;
+    display:
+        block;
 
-    color: #6c757d;
+    color:
+        #6c757d;
 
-    font-size: 0.9rem;
+    font-size:
+        0.9rem;
 
-    margin-bottom: 0.2rem;
+    margin-bottom:
+        0.2rem;
 }
 
 .categoria-acao-contador-valor {
-    display: block;
+    display:
+        block;
 
-    color: var(--marrom);
+    color:
+        var(--marrom);
 
-    font-size: 2rem;
-    font-weight: 700;
+    font-size:
+        2rem;
 
-    line-height: 1.1;
+    font-weight:
+        700;
+
+    line-height:
+        1.1;
 }
 
 .categoria-acao-contador-unidade {
-    display: block;
+    display:
+        block;
 
-    color: #6c757d;
+    color:
+        #6c757d;
 
-    font-size: 0.85rem;
+    font-size:
+        0.85rem;
 
-    margin-top: 0.2rem;
+    margin-top:
+        0.2rem;
 }
 
 .categoria-acao-botao {
-    width: 100%;
+    width:
+        100%;
+
+    padding:
+        0.65rem;
+
+    border:
+        1px solid var(--cor-destaque);
+
+    border-radius:
+        0.45rem;
+
+    background:
+        var(--cor-destaque);
+
+    color:
+        var(--branco);
+
+    font-weight:
+        600;
+
+    cursor:
+        pointer;
+}
+
+.categoria-acao-botao:hover {
+    background:
+        var(--laranja-hover);
+
+    border-color:
+        var(--laranja-hover);
+
+    color:
+        var(--branco);
 }
 
 
 /*
 =================================
-ÁREA DOS PRODUTOS
-=================================
-*/
-
-.categoria-produtos-area {
-    width: 100%;
-}
-
-.categoria-com-acao-lateral {
-    padding-right: 390px;
-}
-
-
-/*
-=================================
-DESKTOP
-=================================
-*/
-
-@media (min-width: 1200px) {
-
-    .categoria-com-acao-lateral {
-        padding-right: 390px;
-    }
-
-}
-
-
-/*
-=================================
-TABLET / MOBILE
+TABLET
 =================================
 */
 
 @media (max-width: 1199.98px) {
 
-    .cento-preview-sticky,
+    .categoria-cento-layout {
+        grid-template-columns:
+            1fr;
+    }
+
+    .cento-preview-area {
+        width:
+            100%;
+    }
+
+    .cento-preview-sticky {
+        position:
+            static;
+
+        width:
+            100%;
+
+        margin-top:
+            1.5rem;
+    }
+
+    .cento-preview {
+        max-width:
+            500px;
+
+        margin:
+            0 auto;
+    }
+
     .categoria-acao-sticky {
-        position: static !important;
+        position:
+            static !important;
 
-        width: auto !important;
+        width:
+            100% !important;
 
-        margin-top: 1.5rem;
+        margin-top:
+            1.5rem;
+    }
+
+    .categoria-com-acao-lateral {
+        padding-right:
+            0;
+    }
+}
+
+
+/*
+=================================
+TABLET MENOR
+=================================
+*/
+
+@media (max-width: 767.98px) {
+
+    .categoria-produtos-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap:
+            0.75rem;
+    }
+
+    .produto-selecao-card {
+        height:
+            310px;
+    }
+
+    .produto-imagem-placeholder {
+        height:
+            95px;
     }
 
     .cento-circulo {
-        width: 150px;
-        height: 150px;
+        width:
+            180px;
 
-        aspect-ratio: auto;
+        height:
+            180px;
+    }
+}
+
+
+/*
+=================================
+CELULAR
+=================================
+*/
+
+@media (max-width: 575.98px) {
+
+    .categoria-produtos-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap:
+            0.65rem;
     }
 
+    .produto-selecao-card {
+        height:
+            300px;
+
+        border-radius:
+            0.7rem;
+    }
+
+    .produto-card-conteudo {
+        padding:
+            0.7rem;
+    }
+
+    .produto-imagem-placeholder {
+        height:
+            85px;
+
+        margin-bottom:
+            0.6rem;
+    }
+
+    .produto-card-titulo {
+        font-size:
+            0.85rem;
+
+        min-height:
+            36px;
+
+        max-height:
+            36px;
+    }
+
+    .produto-card-descricao {
+        font-size:
+            0.75rem;
+
+        min-height:
+            40px;
+
+        max-height:
+            40px;
+    }
+
+    .contador-produto {
+        gap:
+            0.35rem;
+    }
+
+    .contador-produto .contador-botao-menos,
+    .contador-produto .contador-botao-mais {
+        width:
+            30px;
+
+        height:
+            30px;
+
+        min-width:
+            30px;
+    }
+
+    .contador-produto .contador-botao i {
+        font-size:
+            1rem;
+    }
+
+    .contador-produto .contador-quantidade {
+        min-width:
+            24px;
+
+        font-size:
+            0.9rem;
+    }
+
+    .cento-circulo {
+        width:
+            170px;
+
+        height:
+            170px;
+    }
+
+    .cento-preview {
+        padding:
+            1rem 0.6rem;
+    }
+
+    .categoria-acao-card {
+        padding:
+            1rem;
+    }
 }
+
