@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require APP_ROOT . '/views/layouts/header.php';
+require APP_ROOT . '/views/layouts/site/header.php';
 
 ?>
 
@@ -42,4 +42,4 @@ require APP_ROOT . '/views/layouts/header.php';
 
 <?php
 
-require APP_ROOT . '/views/layouts/footer.php';
+require APP_ROOT . '/views/layouts/site/footer.php';
