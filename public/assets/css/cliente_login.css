@@ -1,0 +1,537 @@
+/*
+=================================
+LOGIN DO CLIENTE
+=================================
+*/
+
+.cliente-login {
+    min-height: calc(100vh - 160px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 50px 20px;
+
+    background: var(--creme);
+}
+
+
+/*
+=================================
+CARD
+=================================
+*/
+
+.cliente-login-card {
+    width: 100%;
+    max-width: 500px;
+
+    padding: 35px;
+
+    background: var(--branco);
+
+    border:
+        1px solid
+        rgba(93, 64, 55, 0.12);
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 8px 30px
+        rgba(93, 64, 55, 0.10);
+}
+
+
+/*
+=================================
+CABEÇALHO
+=================================
+*/
+
+.cliente-login-cabecalho {
+    margin-bottom: 30px;
+
+    text-align: center;
+}
+
+
+.cliente-login-icone {
+    width: 64px;
+    height: 64px;
+
+    margin:
+        0 auto 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: var(--creme);
+
+    color: var(--cor-destaque);
+
+    font-size: 28px;
+}
+
+
+.cliente-login-cabecalho h1 {
+    margin: 0 0 8px;
+
+    color: var(--marrom);
+
+    font-size: 28px;
+    font-weight: 700;
+}
+
+
+.cliente-login-cabecalho p {
+    margin: 0;
+
+    color: var(--cor-texto);
+
+    font-size: 15px;
+
+    line-height: 1.5;
+}
+
+
+/*
+=================================
+ERRO
+=================================
+*/
+
+.cliente-login-erro {
+    margin-bottom: 20px;
+
+    padding: 12px 14px;
+
+    border:
+        1px solid
+        #f1b0b7;
+
+    border-radius: 8px;
+
+    background: #f8d7da;
+
+    color: #842029;
+
+    font-size: 14px;
+
+    line-height: 1.4;
+}
+
+
+/*
+=================================
+FORMULÁRIO
+=================================
+*/
+
+.cliente-login-formulario {
+    display: flex;
+    flex-direction: column;
+
+    gap: 18px;
+}
+
+
+/*
+=================================
+CAMPOS
+=================================
+*/
+
+.cliente-login-campo {
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+
+.cliente-login-campo label {
+    color: var(--marrom);
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+.cliente-login-campo input {
+    width: 100%;
+    height: 48px;
+
+    padding:
+        0 14px;
+
+    border:
+        1px solid
+        #d6d3d1;
+
+    border-radius: 9px;
+
+    background: var(--branco);
+
+    color: var(--cor-texto);
+
+    font-family: inherit;
+
+    font-size: 15px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.cliente-login-campo input::placeholder {
+    color: #9ca3af;
+}
+
+
+.cliente-login-campo input:focus {
+    border-color:
+        var(--cor-destaque);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(245, 158, 11, 0.15);
+}
+
+
+/*
+=================================
+OPÇÕES
+=================================
+*/
+
+.cliente-login-opcoes {
+    display: flex;
+
+    justify-content: flex-end;
+}
+
+
+.cliente-login-esqueci-senha {
+    color:
+        var(--laranja-hover);
+
+    font-size:
+        13px;
+
+    font-weight:
+        600;
+
+    text-decoration:
+        none;
+}
+
+
+.cliente-login-esqueci-senha:hover {
+    color:
+        var(--marrom);
+
+    text-decoration:
+        underline;
+}
+
+
+/*
+=================================
+BOTÃO ENTRAR
+=================================
+*/
+
+.cliente-login-botao {
+    width: 100%;
+
+    min-height: 48px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    padding:
+        10px 18px;
+
+    border:
+        1px solid
+        var(--cor-destaque);
+
+    border-radius:
+        9px;
+
+    background:
+        var(--cor-destaque);
+
+    color:
+        var(--branco);
+
+    font-family:
+        inherit;
+
+    font-size:
+        15px;
+
+    font-weight:
+        700;
+
+    cursor:
+        pointer;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.cliente-login-botao:hover {
+    background:
+        var(--laranja-hover);
+
+    border-color:
+        var(--laranja-hover);
+
+    color:
+        var(--branco);
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 4px 10px
+        rgba(239, 108, 0, 0.20);
+}
+
+
+.cliente-login-botao:active {
+    transform:
+        translateY(0);
+}
+
+
+/*
+=================================
+DIVISOR
+=================================
+*/
+
+.cliente-login-divisor {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        12px;
+
+    margin:
+        2px 0;
+}
+
+
+.cliente-login-divisor::before,
+.cliente-login-divisor::after {
+    content:
+        "";
+
+    flex:
+        1;
+
+    height:
+        1px;
+
+    background:
+        #e5e7eb;
+}
+
+
+.cliente-login-divisor span {
+    color:
+        #888;
+
+    font-size:
+        13px;
+
+    white-space:
+        nowrap;
+}
+
+
+/*
+=================================
+GOOGLE
+=================================
+*/
+
+.cliente-login-google {
+    width:
+        100%;
+
+    min-height:
+        48px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        10px;
+
+    padding:
+        10px 18px;
+
+    border:
+        1px solid
+        #d6d3d1;
+
+    border-radius:
+        9px;
+
+    background:
+        var(--branco);
+
+    color:
+        var(--cor-secundaria);
+
+    font-size:
+        15px;
+
+    font-weight:
+        600;
+
+    text-decoration:
+        none;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.cliente-login-google:hover {
+    background:
+        var(--cor-clara);
+
+    border-color:
+        #bdbdbd;
+
+    color:
+        var(--cor-secundaria);
+
+    box-shadow:
+        0 3px 10px
+        rgba(0, 0, 0, 0.06);
+}
+
+
+.cliente-login-google i {
+    font-size:
+        18px;
+}
+
+
+/*
+=================================
+LINK PARA CADASTRO
+=================================
+*/
+
+.cliente-login-cadastro {
+    margin:
+        24px 0 0;
+
+    text-align:
+        center;
+
+    color:
+        var(--cor-texto);
+
+    font-size:
+        14px;
+}
+
+
+.cliente-login-cadastro a {
+    color:
+        var(--laranja-hover);
+
+    font-weight:
+        700;
+
+    text-decoration:
+        none;
+}
+
+
+.cliente-login-cadastro a:hover {
+    color:
+        var(--marrom);
+
+    text-decoration:
+        underline;
+}
+
+
+/*
+=================================
+RESPONSIVO
+=================================
+*/
+
+@media (max-width: 576px) {
+
+    .cliente-login {
+        min-height:
+            calc(100vh - 120px);
+
+        padding:
+            30px 15px;
+    }
+
+
+    .cliente-login-card {
+        padding:
+            28px 22px;
+
+        border-radius:
+            15px;
+    }
+
+
+    .cliente-login-cabecalho {
+        margin-bottom:
+            25px;
+    }
+
+
+    .cliente-login-cabecalho h1 {
+        font-size:
+            24px;
+    }
+
+
+    .cliente-login-cabecalho p {
+        font-size:
+            14px;
+    }
+
+}

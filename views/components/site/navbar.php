@@ -297,6 +297,29 @@ if (
                 gap-2
                 ">
 
+                <a
+                    href="<?= BASE_URL ?>/carrinho"
+                    class="btn btn-carrinho position-relative"
+                    title="Carrinho">
+
+                    <i class="bi bi-cart3"></i>
+
+                    <span
+                        class="
+                        position-absolute
+                        top-0
+                        start-100
+                        translate-middle
+                        badge
+                        rounded-pill
+                        bg-danger
+                        ">
+
+                        <?= $quantidadeCarrinho ?>
+
+                    </span>
+
+                </a>
 
                 <form
                     class="d-flex"
@@ -328,51 +351,58 @@ if (
                 </form>
 
 
-                <a
-                    href="<?= BASE_URL ?>/carrinho"
-                    class="btn btn-carrinho position-relative"
-                    title="Carrinho">
-
-                    <i class="bi bi-cart3"></i>
-
-                    <span
-                        class="
-                        position-absolute
-                        top-0
-                        start-100
-                        translate-middle
-                        badge
-                        rounded-pill
-                        bg-danger
-                        ">
-
-                        <?= $quantidadeCarrinho ?>
-
-                    </span>
-
-                </a>
 
 
-                <a
-                    href="<?= BASE_URL ?>/login"
-                    class="btn btn-outline-secondary btn-navbar-menor">
 
-                    <i
-                        class="bi bi-person">
-                    </i>
+                <div class="dropdown">
 
-                    Entrar
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary btn-navbar-menor dropdown-toggle"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false">
 
-                </a>
+                        <i class="bi bi-person"></i>
+
+                        Entrar
+
+                    </button>
 
 
-                <a
-                    href="<?= BASE_URL ?>/cadastro"
-                    class="btn btn-warning text-white">
+                    <ul class="dropdown-menu dropdown-menu-end">
 
-                    Cadastrar
+                        <li>
 
-                </a>
+                            <a
+                                href="<?= BASE_URL ?>/login"
+                                class="dropdown-item">
+
+                                <i class="bi bi-box-arrow-in-right me-2"></i>
+
+                                Login
+
+                            </a>
+
+                        </li>
+
+
+                        <li>
+
+                            <a
+                                href="<?= BASE_URL ?>/cadastro"
+                                class="dropdown-item">
+
+                                <i class="bi bi-person-plus me-2"></i>
+
+                                Criar conta
+
+                            </a>
+
+                        </li>
+
+                    </ul>
+
+                </div>
 
 
                 <a
