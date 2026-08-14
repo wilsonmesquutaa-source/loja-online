@@ -88,6 +88,10 @@ body {
 .btn-navbar-menor {
     font-size: 0.9rem;
     padding: 0.4rem 0.7rem;
+    color: var(--cor-destaque);
+    background-color: var(--branco);
+    font-weight: 700;
+    border: 2px solid var(--cor-destaque);
 }
 
 /* ============================
