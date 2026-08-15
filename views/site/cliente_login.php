@@ -169,10 +169,8 @@ require APP_ROOT
             </div>
 
 
-            <a
-                href="<?= BASE_URL ?>/cadastro/google"
-                class="cliente-login-google"
-            >
+            <a href="<?= BASE_URL ?>/login/google"
+                class="cliente-login-google">
 
                 <i class="bi bi-google"></i>
 
