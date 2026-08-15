@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controllers\Cliente;
 
 use App\Controllers\Controller;
-use App\Repositories\ClienteRepository;
 
 final class PerfilController extends Controller
 {
@@ -13,7 +12,7 @@ final class PerfilController extends Controller
     {
         /*
         =================================
-        VERIFICA SESSÃO DO CLIENTE
+        VERIFICA LOGIN
         =================================
         */
 
@@ -25,14 +24,10 @@ final class PerfilController extends Controller
         }
 
 
-        $clienteId =
-            isset($_SESSION['cliente_id'])
-                ? (int) $_SESSION['cliente_id']
-                : 0;
-
-
         if (
-            $clienteId <= 0
+            empty(
+                $_SESSION['cliente_id']
+            )
         ) {
             $this->redirecionar(
                 'login'
@@ -42,59 +37,34 @@ final class PerfilController extends Controller
 
         /*
         =================================
-        BUSCA CLIENTE
+        DADOS DO CLIENTE
         =================================
         */
 
-        $repository =
-            new ClienteRepository(
-                $this->pdo
-            );
-
-
-        $cliente =
-            $repository->buscarPorId(
-                $clienteId
-            );
-
-
-        /*
-        =================================
-        CLIENTE NÃO ENCONTRADO
-        =================================
-        */
-
-        if (
-            $cliente === null
-        ) {
-
-            unset(
+        $cliente = [
+            'id' =>
+                (int)
                 $_SESSION['cliente_id'],
-                $_SESSION['cliente_nome'],
-                $_SESSION['cliente_email']
-            );
 
+            'nome' =>
+                (string)
+                (
+                    $_SESSION['cliente_nome']
+                    ?? ''
+                ),
 
-            $this->redirecionar(
-                'login'
-            );
-        }
-
-
-        /*
-        =================================
-        ATUALIZA ÚLTIMO ACESSO
-        =================================
-        */
-
-        $repository->atualizarUltimoAcesso(
-            $clienteId
-        );
+            'email' =>
+                (string)
+                (
+                    $_SESSION['cliente_email']
+                    ?? ''
+                ),
+        ];
 
 
         /*
         =================================
-        EXIBE PERFIL
+        VIEW
         =================================
         */
 

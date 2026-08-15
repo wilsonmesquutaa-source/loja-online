@@ -6,6 +6,38 @@ use App\Controllers\Cliente\ClienteController;
 use App\Controllers\Cliente\PerfilController;
 
 return [
+    /*
+    =================================
+    LOGIN DO CLIENTE
+    =================================
+    */
+
+    [
+        'method' => 'GET',
+        'path' => '/login',
+        'action' => [
+            ClienteController::class,
+            'login',
+        ],
+    ],
+
+    [
+        'method' => 'POST',
+        'path' => '/login',
+        'action' => [
+            ClienteController::class,
+            'autenticar',
+        ],
+    ],
+
+    [
+        'method' => 'POST',
+        'path' => '/logout',
+        'action' => [
+            ClienteController::class,
+            'logout',
+        ],
+    ],
 
     /*
     =================================
@@ -31,10 +63,9 @@ return [
         ],
     ],
 
-
     /*
     =================================
-    CADASTRO COM GOOGLE
+    GOOGLE
     =================================
     */
 
@@ -54,8 +85,27 @@ return [
             ClienteController::class,
             'callbackCadastroGoogle',
         ],
+
+        
     ],
 
+    [
+        'method' => 'GET',
+        'path' => '/login/google',
+        'action' => [
+            ClienteController::class,
+            'iniciarLoginGoogle',
+        ],
+    ],
+
+    [
+        'method' => 'GET',
+        'path' => '/login/google/callback',
+        'action' => [
+            ClienteController::class,
+            'callbackLoginGoogle',
+        ],
+    ],
 
     /*
     =================================
@@ -71,5 +121,4 @@ return [
             'index',
         ],
     ],
-
 ];

@@ -37,6 +37,29 @@ require APP_ROOT . '/views/layouts/site/header.php';
 
         </div>
     </div>
+    <form
+    method="POST"
+    action="<?= BASE_URL ?>/logout"
+    class="mt-4"
+>
+    <input
+        type="hidden"
+        name="_csrf"
+        value="<?= htmlspecialchars(
+            \App\Helpers\Csrf::gerarCliente(),
+            ENT_QUOTES,
+            'UTF-8'
+        ) ?>"
+    >
+
+    <button
+        type="submit"
+        class="btn btn-danger"
+    >
+        <i class="bi bi-box-arrow-right"></i>
+        Sair da conta
+    </button>
+</form>
 
 </main>
 
