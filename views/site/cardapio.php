@@ -7,11 +7,12 @@ use App\Helpers\View;
 require APP_ROOT
     . '/views/layouts/site/header.php';
 
+
 View::componente(
     'site/navbar',
     [
         'rotaAtual' =>
-        $rotaAtual,
+            $rotaAtual,
     ]
 );
 
@@ -21,18 +22,23 @@ View::componente(
 
     <?php
 
-
     View::componente(
-        'site/sections/produtos',
+        'site/sections/cardapio',
         [
             'categorias' =>
-            $categorias,
+                $categorias,
+
+            'etiquetaProdutos' =>
+                $etiquetaProdutos,
         ]
     );
-
 
     ?>
 
 </main>
 
-<?php require APP_ROOT . '/views/layouts/site/footer.php'; ?>
+<?php
+
+require APP_ROOT
+    . '/views/layouts/site/footer.php';
+?>

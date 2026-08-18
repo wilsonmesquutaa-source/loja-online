@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Controllers\Site\ContatoController;
 use App\Controllers\Site\HomeController;
-use App\Controllers\Site\ProdutoController;
+use App\Controllers\Site\CardapioController;
 use App\Controllers\Site\QuemSomosController;
 use App\Controllers\Site\TermosController;
 
@@ -21,18 +21,18 @@ return [
 
     [
         'method' => 'GET',
-        'path' => '/produtos',
+        'path' => '/cardapio',
         'action' => [
-            ProdutoController::class,
+            CardapioController::class,
             'index',
         ],
     ],
 
     [
         'method' => 'GET',
-        'path' => '/produtos/categoria/{id}',
+        'path' => '/cardapio/categoria/{id}',
         'action' => [
-            ProdutoController::class,
+            CardapioController::class,
             'categoria',
         ],
     ],

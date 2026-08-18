@@ -34,7 +34,7 @@
                     </li>
 
                     <li>
-                        <a href="<?= BASE_URL ?>/produtos"
+                        <a href="<?= BASE_URL ?>/cardapio"
                             class="text-decoration-none text-secondary">
                             Cardápio
                         </a>

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controllers\Site;
 
-use App\Repositories\ProdutoRepository;
+use App\Repositories\CardapioRepository;
 use App\Controllers\Controller;
 use PDO;
 
@@ -46,9 +46,9 @@ final class HomeController extends Controller
         ];
 
 
-        $produtoRepository = new ProdutoRepository($this->pdo);
+        $CardapioRepository = new CardapioRepository($this->pdo);
 
-        $categorias = $produtoRepository->buscarCategoriasDestaque();
+        $categorias = $CardapioRepository->buscarCategoriasDestaque();
 
 
 

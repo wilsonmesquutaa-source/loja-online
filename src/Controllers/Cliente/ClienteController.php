@@ -10,11 +10,12 @@ use App\Repositories\ClienteRepository;
 use App\Services\GoogleAuthService;
 
 final class ClienteController extends Controller
-{/*
-=================================
-LOGIN
-=================================
-*/
+{
+    /*
+    =================================
+    LOGIN
+    =================================
+    */
 
     public function login(): void
     {
@@ -30,24 +31,42 @@ LOGIN
                 $_SESSION['cliente_id']
             )
         ) {
-            $this->redirecionar(
-                'cliente/perfil'
+
+            /*
+            =================================
+            CLIENTE JÁ LOGADO
+            VOLTA PARA A LOJA
+            =================================
+            */
+
+            header(
+                'Location: '
+                . BASE_URL
+                . '/'
             );
+
+            exit;
         }
+
 
         $this->view(
             'site/cliente_login',
             [
-                'tituloPagina' => 'Entrar',
+                'tituloPagina' =>
+                    'Entrar',
 
-                'rotaAtual' => 'login',
+                'rotaAtual' =>
+                    'login',
 
-                'erro' => null,
+                'erro' =>
+                    null,
 
-                'email' => '',
+                'email' =>
+                    '',
             ]
         );
     }
+
 
     /*
     =================================
@@ -58,20 +77,26 @@ LOGIN
     public function autenticar(): void
     {
         $tokenCsrf =
-            isset($_POST['_csrf'])
-                ? (string) $_POST['_csrf']
+            isset(
+                $_POST['_csrf']
+            )
+                ? (string)
+                    $_POST['_csrf']
                 : null;
+
 
         if (
             !Csrf::validarCliente(
                 $tokenCsrf
             )
         ) {
+
             $this->mostrarLoginComErro(
                 'A sessão do formulário expirou. Atualize a página e tente novamente.',
                 ''
             );
         }
+
 
         $email =
             trim(
@@ -83,11 +108,13 @@ LOGIN
                 )
             );
 
+
         $senha =
             (string) (
                 $_POST['senha']
                 ?? ''
             );
+
 
         if (
             !filter_var(
@@ -95,30 +122,36 @@ LOGIN
                 FILTER_VALIDATE_EMAIL
             )
         ) {
+
             $this->mostrarLoginComErro(
                 'Informe um e-mail válido.',
                 $email
             );
         }
 
+
         if (
             $senha === ''
         ) {
+
             $this->mostrarLoginComErro(
                 'Informe sua senha.',
                 $email
             );
         }
 
+
         $repository =
             new ClienteRepository(
                 $this->pdo
             );
 
+
         $cliente =
             $repository->buscarPorEmail(
                 $email
             );
+
 
         /*
         =================================
@@ -128,19 +161,23 @@ LOGIN
 
         if (
             $cliente === null
-            || empty(
+            ||
+            empty(
                 $cliente['senha_hash']
             )
-            || !password_verify(
+            ||
+            !password_verify(
                 $senha,
                 $cliente['senha_hash']
             )
         ) {
+
             $this->mostrarLoginComErro(
                 'E-mail ou senha inválidos.',
                 $email
             );
         }
+
 
         /*
         =================================
@@ -149,10 +186,16 @@ LOGIN
         */
 
         $this->iniciarSessaoCliente(
-            (int) $cliente['id'],
-            (string) $cliente['nome'],
-            (string) $cliente['email']
+            (int)
+                $cliente['id'],
+
+            (string)
+                $cliente['nome'],
+
+            (string)
+                $cliente['email']
         );
+
 
         /*
         =================================
@@ -161,8 +204,10 @@ LOGIN
         */
 
         $repository->atualizarUltimoAcesso(
-            (int) $cliente['id']
+            (int)
+                $cliente['id']
         );
+
 
         /*
         =================================
@@ -172,16 +217,22 @@ LOGIN
 
         Csrf::renovarCliente();
 
+
         /*
         =================================
-        PERFIL
+        VOLTA PARA A LOJA
         =================================
         */
 
-        $this->redirecionar(
-            'cliente/perfil'
+        header(
+            'Location: '
+            . BASE_URL
+            . '/'
         );
+
+        exit;
     }
+
 
     /*
     =================================
@@ -192,15 +243,20 @@ LOGIN
     public function logout(): void
     {
         $tokenCsrf =
-            isset($_POST['_csrf'])
-                ? (string) $_POST['_csrf']
+            isset(
+                $_POST['_csrf']
+            )
+                ? (string)
+                    $_POST['_csrf']
                 : null;
+
 
         if (
             !Csrf::validarCliente(
                 $tokenCsrf
             )
         ) {
+
             http_response_code(403);
 
             exit(
@@ -208,22 +264,28 @@ LOGIN
             );
         }
 
+
         if (
             session_status() !==
             PHP_SESSION_ACTIVE
         ) {
+
             session_start();
         }
 
+
         $_SESSION = [];
+
 
         if (
             ini_get(
                 'session.use_cookies'
             )
         ) {
+
             $parametros =
                 session_get_cookie_params();
+
 
             setcookie(
                 session_name(),
@@ -231,21 +293,32 @@ LOGIN
                 time() - 42000,
                 $parametros['path'],
                 $parametros['domain'] ?? '',
-                (bool) $parametros['secure'],
-                (bool) $parametros['httponly']
+                (bool)
+                    $parametros['secure'],
+                (bool)
+                    $parametros['httponly']
             );
         }
 
+
         session_destroy();
+
+
+        /*
+        =================================
+        VOLTA PARA A LOJA
+        =================================
+        */
 
         header(
             'Location: '
-            .BASE_URL
-            .'/login'
+            . BASE_URL
+            . '/'
         );
 
         exit;
     }
+
 
     /*
     =================================
@@ -257,21 +330,28 @@ LOGIN
         string $mensagem,
         string $email
     ): never {
+
         $this->view(
             'site/cliente_login',
             [
-                'tituloPagina' => 'Entrar',
+                'tituloPagina' =>
+                    'Entrar',
 
-                'rotaAtual' => 'login',
+                'rotaAtual' =>
+                    'login',
 
-                'erro' => $mensagem,
+                'erro' =>
+                    $mensagem,
 
-                'email' => $email,
+                'email' =>
+                    $email,
             ]
         );
 
         exit;
     }
+
+
     /*
     =================================
     CADASTRO
@@ -283,18 +363,24 @@ LOGIN
         $this->view(
             'site/cliente_cadastro',
             [
-                'tituloPagina' => 'Criar conta',
+                'tituloPagina' =>
+                    'Criar conta',
 
-                'rotaAtual' => 'cadastro',
+                'rotaAtual' =>
+                    'cadastro',
 
-                'erro' => null,
+                'erro' =>
+                    null,
 
-                'nome' => '',
+                'nome' =>
+                    '',
 
-                'email' => '',
+                'email' =>
+                    '',
             ]
         );
     }
+
 
     /*
     =================================
@@ -305,21 +391,27 @@ LOGIN
     public function registrar(): void
     {
         $tokenCsrf =
-            isset($_POST['_csrf'])
-                ? (string) $_POST['_csrf']
+            isset(
+                $_POST['_csrf']
+            )
+                ? (string)
+                    $_POST['_csrf']
                 : null;
+
 
         if (
             !Csrf::validarCliente(
                 $tokenCsrf
             )
         ) {
+
             $this->mostrarCadastroComErro(
                 'A sessão do formulário expirou. Atualize a página e tente novamente.',
                 '',
                 ''
             );
         }
+
 
         $nome =
             trim(
@@ -328,6 +420,7 @@ LOGIN
                     ?? ''
                 )
             );
+
 
         $email =
             trim(
@@ -339,11 +432,13 @@ LOGIN
                 )
             );
 
+
         $senha =
             (string) (
                 $_POST['senha']
                 ?? ''
             );
+
 
         $senhaConfirmacao =
             (string) (
@@ -351,9 +446,11 @@ LOGIN
                 ?? ''
             );
 
+
         if (
             $nome === ''
         ) {
+
             $this->mostrarCadastroComErro(
                 'Informe seu nome completo.',
                 $nome,
@@ -361,12 +458,14 @@ LOGIN
             );
         }
 
+
         if (
             mb_strlen(
                 $nome,
                 'UTF-8'
             ) > 150
         ) {
+
             $this->mostrarCadastroComErro(
                 'O nome informado é muito longo.',
                 $nome,
@@ -374,12 +473,14 @@ LOGIN
             );
         }
 
+
         if (
             !filter_var(
                 $email,
                 FILTER_VALIDATE_EMAIL
             )
         ) {
+
             $this->mostrarCadastroComErro(
                 'Informe um e-mail válido.',
                 $nome,
@@ -387,9 +488,11 @@ LOGIN
             );
         }
 
+
         if (
             strlen($email) > 180
         ) {
+
             $this->mostrarCadastroComErro(
                 'O e-mail informado é muito longo.',
                 $nome,
@@ -397,9 +500,11 @@ LOGIN
             );
         }
 
+
         if (
             strlen($senha) < 8
         ) {
+
             $this->mostrarCadastroComErro(
                 'A senha deve ter pelo menos 8 caracteres.',
                 $nome,
@@ -407,10 +512,12 @@ LOGIN
             );
         }
 
+
         if (
             $senha !==
             $senhaConfirmacao
         ) {
+
             $this->mostrarCadastroComErro(
                 'As senhas não coincidem.',
                 $nome,
@@ -418,16 +525,19 @@ LOGIN
             );
         }
 
+
         $repository =
             new ClienteRepository(
                 $this->pdo
             );
+
 
         if (
             $repository->emailExiste(
                 $email
             )
         ) {
+
             $this->mostrarCadastroComErro(
                 'Já existe uma conta cadastrada com este e-mail.',
                 $nome,
@@ -435,21 +545,25 @@ LOGIN
             );
         }
 
+
         $senhaHash =
             password_hash(
                 $senha,
                 PASSWORD_DEFAULT
             );
 
+
         if (
             $senhaHash === false
         ) {
+
             $this->mostrarCadastroComErro(
                 'Não foi possível proteger sua senha. Tente novamente.',
                 $nome,
                 $email
             );
         }
+
 
         $clienteId =
             $repository->criar(
@@ -458,20 +572,34 @@ LOGIN
                 $senhaHash
             );
 
+
         $this->iniciarSessaoCliente(
             $clienteId,
             $nome,
             $email
         );
 
+
         Csrf::renovarCliente();
 
-        $this->redirecionar(
-            'cliente/perfil'
+
+        /*
+        =================================
+        CADASTRO → LOJA
+        =================================
+        */
+
+        header(
+            'Location: '
+            . BASE_URL
+            . '/'
         );
+
+        exit;
     }
 
- /*
+
+    /*
     =================================
     INICIA CADASTRO GOOGLE
     =================================
@@ -483,30 +611,38 @@ LOGIN
             session_status() !==
             PHP_SESSION_ACTIVE
         ) {
+
             session_start();
         }
+
 
         $state =
             bin2hex(
                 random_bytes(32)
             );
 
+
         $_SESSION['google_oauth_state'] =
             $state;
+
 
         $_SESSION['google_oauth_action'] =
             'cadastro';
 
+
         $google =
             new GoogleAuthService();
+
 
         $url =
             $google->criarUrlAutorizacao(
                 $state
             );
 
+
         header(
-            'Location: ' . $url
+            'Location: '
+            . $url
         );
 
         exit;
@@ -525,30 +661,38 @@ LOGIN
             session_status() !==
             PHP_SESSION_ACTIVE
         ) {
+
             session_start();
         }
+
 
         $state =
             bin2hex(
                 random_bytes(32)
             );
 
+
         $_SESSION['google_oauth_state'] =
             $state;
+
 
         $_SESSION['google_oauth_action'] =
             'login';
 
+
         $google =
             new GoogleAuthService();
+
 
         $url =
             $google->criarUrlAutorizacao(
                 $state
             );
 
+
         header(
-            'Location: ' . $url
+            'Location: '
+            . $url
         );
 
         exit;
@@ -567,8 +711,10 @@ LOGIN
             session_status() !==
             PHP_SESSION_ACTIVE
         ) {
+
             session_start();
         }
+
 
         /*
         =================================
@@ -578,29 +724,44 @@ LOGIN
 
         $stateRecebido =
             isset($_GET['state'])
-                ? (string) $_GET['state']
+                ? (string)
+                    $_GET['state']
                 : '';
+
 
         $stateEsperado =
             isset(
                 $_SESSION['google_oauth_state']
             )
                 ? (string)
-                    $_SESSION['google_oauth_state']
+                    $_SESSION[
+                        'google_oauth_state'
+                    ]
                 : '';
+
 
         $acao =
             isset(
-                $_SESSION['google_oauth_action']
+                $_SESSION[
+                    'google_oauth_action'
+                ]
             )
                 ? (string)
-                    $_SESSION['google_oauth_action']
+                    $_SESSION[
+                        'google_oauth_action'
+                    ]
                 : '';
 
+
         unset(
-            $_SESSION['google_oauth_state'],
-            $_SESSION['google_oauth_action']
+            $_SESSION[
+                'google_oauth_state'
+            ],
+            $_SESSION[
+                'google_oauth_action'
+            ]
         );
+
 
         if (
             $stateRecebido === ''
@@ -612,6 +773,7 @@ LOGIN
                 $stateRecebido
             )
         ) {
+
             $this->mostrarErroGoogle(
                 'Não foi possível validar a autenticação com o Google.'
             );
@@ -627,6 +789,7 @@ LOGIN
         if (
             isset($_GET['error'])
         ) {
+
             $this->mostrarErroGoogle(
                 'A autenticação com o Google foi cancelada ou não pôde ser concluída.'
             );
@@ -644,6 +807,7 @@ LOGIN
             &&
             $acao !== 'cadastro'
         ) {
+
             $this->mostrarErroGoogle(
                 'A ação de autenticação não pôde ser identificada.'
             );
@@ -658,12 +822,15 @@ LOGIN
 
         $code =
             isset($_GET['code'])
-                ? (string) $_GET['code']
+                ? (string)
+                    $_GET['code']
                 : '';
+
 
         if (
             $code === ''
         ) {
+
             $this->mostrarErroGoogle(
                 'O Google não retornou o código de autorização.'
             );
@@ -681,10 +848,12 @@ LOGIN
             $google =
                 new GoogleAuthService();
 
+
             $token =
                 $google->trocarCodigoPorToken(
                     $code
                 );
+
 
             $dadosGoogle =
                 $google->buscarUsuario(
@@ -712,16 +881,20 @@ LOGIN
             (string)
                 $dadosGoogle['google_sub'];
 
+
         $email =
             (string)
                 $dadosGoogle['email'];
+
 
         $nome =
             (string)
                 $dadosGoogle['nome'];
 
+
         $fotoUrl =
             $dadosGoogle['foto_url'];
+
 
         $emailVerificado =
             (bool)
@@ -759,18 +932,22 @@ LOGIN
             if (
                 $cliente === null
             ) {
+
                 $clientePorEmail =
                     $repository->buscarPorEmail(
                         $email
                     );
 
+
                 if (
                     $clientePorEmail !== null
                 ) {
+
                     $this->mostrarErroGoogle(
                         'Esta conta já existe, mas ainda não está vinculada ao Google. Entre com sua senha ou utilize o cadastro com Google para fazer a vinculação.'
                     );
                 }
+
 
                 $this->mostrarErroGoogle(
                     'Não encontramos uma conta vinculada a este Google. Para criar uma conta, utilize "Cadastrar com Google".'
@@ -780,7 +957,7 @@ LOGIN
 
             /*
             ==============================
-            LOGIN
+            LOGIN GOOGLE
             ==============================
             */
 
@@ -805,9 +982,19 @@ LOGIN
             Csrf::renovarCliente();
 
 
-            $this->redirecionar(
-                'cliente/perfil'
+            /*
+            =================================
+            LOGIN GOOGLE → LOJA
+            =================================
+            */
+
+            header(
+                'Location: '
+                . BASE_URL
+                . '/'
             );
+
+            exit;
         }
 
 
@@ -842,9 +1029,19 @@ LOGIN
             Csrf::renovarCliente();
 
 
-            $this->redirecionar(
-                'cliente/perfil'
+            /*
+            =================================
+            GOOGLE JÁ CADASTRADO → LOJA
+            =================================
+            */
+
+            header(
+                'Location: '
+                . BASE_URL
+                . '/'
             );
+
+            exit;
         }
 
 
@@ -875,6 +1072,7 @@ LOGIN
                     $clientePorEmail['google_sub']
                 )
             ) {
+
                 $this->mostrarErroGoogle(
                     'Este e-mail já está associado a outra conta Google.'
                 );
@@ -914,9 +1112,19 @@ LOGIN
             Csrf::renovarCliente();
 
 
-            $this->redirecionar(
-                'cliente/perfil'
+            /*
+            =================================
+            GOOGLE VINCULADO → LOJA
+            =================================
+            */
+
+            header(
+                'Location: '
+                . BASE_URL
+                . '/'
             );
+
+            exit;
         }
 
 
@@ -946,9 +1154,19 @@ LOGIN
         Csrf::renovarCliente();
 
 
-        $this->redirecionar(
-            'cliente/perfil'
+        /*
+        =================================
+        NOVO CADASTRO GOOGLE → LOJA
+        =================================
+        */
+
+        header(
+            'Location: '
+            . BASE_URL
+            . '/'
         );
+
+        exit;
     }
 
 
@@ -982,6 +1200,7 @@ LOGIN
         exit;
     }
 
+
     /*
     =================================
     INICIA SESSÃO DO CLIENTE
@@ -993,26 +1212,33 @@ LOGIN
         string $nome,
         string $email
     ): void {
+
         if (
             session_status() !==
             PHP_SESSION_ACTIVE
         ) {
+
             session_start();
         }
+
 
         session_regenerate_id(
             true
         );
 
+
         $_SESSION['cliente_id'] =
             $clienteId;
+
 
         $_SESSION['cliente_nome'] =
             $nome;
 
+
         $_SESSION['cliente_email'] =
             $email;
     }
+
 
     /*
     =================================
@@ -1025,18 +1251,24 @@ LOGIN
         string $nome,
         string $email
     ): never {
+
         $this->view(
             'site/cliente_cadastro',
             [
-                'tituloPagina' => 'Criar conta',
+                'tituloPagina' =>
+                    'Criar conta',
 
-                'rotaAtual' => 'cadastro',
+                'rotaAtual' =>
+                    'cadastro',
 
-                'erro' => $mensagem,
+                'erro' =>
+                    $mensagem,
 
-                'nome' => $nome,
+                'nome' =>
+                    $nome,
 
-                'email' => $email,
+                'email' =>
+                    $email,
             ]
         );
 
