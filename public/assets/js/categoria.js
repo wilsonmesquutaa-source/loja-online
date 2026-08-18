@@ -822,6 +822,32 @@ document.addEventListener(
 
 
                         /*
+                        =================================
+                        CARD SELECIONADO
+                        =================================
+
+                        Mantém o contorno laranja
+                        enquanto o produto tiver
+                        quantidade maior que zero.
+                        */
+
+                        const card =
+                            produto.querySelector(
+                                '.produto-selecao-card'
+                            );
+
+
+                        if (card) {
+
+                            card.classList.toggle(
+                                'selecionado',
+                                valor > 0
+                            );
+
+                        }
+
+
+                        /*
                         O + trava somente quando
                         o cento estiver completo.
                         */

@@ -166,70 +166,254 @@ PRODUTOS
 ============================ */
 
 .produto-card {
-    border: none;
-    border-radius: 20px;
+    position: relative;
+
+    height: 100%;
+
     overflow: hidden;
-    transition: 0.3s;
-}
 
+    background:
+        var(--branco);
 
-.produto-card:hover {
-    transform: translateY(-5px);
+    border:
+        1px solid
+        rgba(93, 64, 55, 0.06) !important;
+
+    border-radius:
+        20px !important;
 
     box-shadow:
-        0 10px 25px rgba(0, 0, 0, 0.12);
+        0 8px 32px
+        rgba(93, 64, 55, 0.08) !important;
+
+    transform:
+        translateY(0);
+
+    transition:
+        transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 0.35s ease !important;
 }
 
 
-.produto-card img {
-    height: 220px;
-    object-fit: cover;
+/*
+---------------------------------
+FAIXA LARANJA
+---------------------------------
+*/
+
+.produto-card::before {
+    content:
+        '';
+
+    position:
+        absolute;
+
+    top:
+        0;
+
+    left:
+        0;
+
+    width:
+        100%;
+
+    height:
+        3px;
+
+    background:
+        var(--cor-destaque);
+
+    opacity:
+        0;
+
+    transition:
+        opacity 0.3s ease;
+
+    z-index:
+        10;
 }
 
+
+.produto-card:hover::before {
+    opacity:
+        1;
+}
+
+
+/*
+---------------------------------
+HOVER DO CARD
+---------------------------------
+*/
+
+.produto-card:hover {
+    transform:
+        translateY(-8px) !important;
+
+    box-shadow:
+        0 18px 40px
+        rgba(93, 64, 55, 0.16) !important;
+
+    border-color:
+        rgba(245, 124, 0, 0.18) !important;
+}
+
+
+/*
+---------------------------------
+CONTEÚDO
+---------------------------------
+*/
+
+.produto-card .card-body {
+    padding:
+        1.35rem;
+}
+
+
+/*
+---------------------------------
+ETIQUETA
+---------------------------------
+*/
+
+.produto-card .badge {
+    border-radius:
+        10px;
+
+    padding:
+        0.45rem 0.7rem;
+
+    font-size:
+        0.72rem;
+
+    font-weight:
+        700;
+}
+
+
+/*
+---------------------------------
+TÍTULO
+---------------------------------
+*/
 
 .produto-card h3 {
-    color: var(--marrom);
+    margin-bottom:
+        0.5rem;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        1.05rem;
+
+    font-weight:
+        700;
+
+    line-height:
+        1.3;
 }
 
 
-.preco {
-    color: var(--cor-destaque);
-    font-size: 1.3rem;
-    font-weight: bold;
+/*
+---------------------------------
+DESCRIÇÃO
+---------------------------------
+*/
+
+.produto-card p.text-secondary {
+    color:
+        #777777 !important;
+
+    font-size:
+        0.88rem;
+
+    line-height:
+        1.5;
 }
 
 
-/* ============================
-SOBRE
-============================ */
+/*
+---------------------------------
+PREÇO
+---------------------------------
+*/
 
-.sobre-section {
-    background: var(--branco);
-    padding: 70px 0;
+.produto-card .text-warning {
+    color:
+        var(--cor-destaque) !important;
 }
 
 
-.sobre-section img {
-    border-radius: 25px;
-    max-width: 350px;
+/*
+---------------------------------
+BOTÃO
+---------------------------------
+*/
+
+.produto-card .btn-warning {
+    padding:
+        0.65rem 1rem;
+
+    border:
+        1px solid
+        var(--cor-destaque);
+
+    border-radius:
+        12px;
+
+    background:
+        var(--cor-destaque);
+
+    color:
+        var(--branco) !important;
+
+    font-weight:
+        600;
+
+    transition:
+        background-color 0.25s ease,
+        border-color 0.25s ease,
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
 }
 
 
-.sobre-section h2 {
-    color: var(--marrom);
+.produto-card .btn-warning:hover {
+    background:
+        var(--laranja-hover);
+
+    border-color:
+        var(--laranja-hover);
+
+    color:
+        var(--branco) !important;
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 5px 14px
+        rgba(93, 64, 55, 0.12);
 }
 
 
-.sobre-section span {
-    color: var(--cor-destaque);
+/*
+---------------------------------
+ACESSIBILIDADE
+---------------------------------
+*/
+
+.produto-card:focus-within {
+    outline:
+        2px solid
+        var(--cor-destaque);
+
+    outline-offset:
+        3px;
 }
-
-
-.sobre-section p {
-    color: var(--cor-texto);
-    line-height: 1.7;
-}
-
 
 /* ============================
 CONTATO / WHATSAPP

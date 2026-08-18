@@ -86,6 +86,15 @@ $baseUrl =
                 ); ?>">
 
 
+      <link
+        rel="stylesheet"
+        href="<?= htmlspecialchars(
+                    $baseUrl . '/assets/css/navbar.css',
+                    ENT_QUOTES,
+                    'UTF-8'
+                ); ?>">
+
+
 
 
 

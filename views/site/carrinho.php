@@ -61,7 +61,7 @@ $nomesCategorias = [
 
 
             <a
-                href="<?= BASE_URL ?>/produtos"
+                href="<?= BASE_URL ?>/cardapio"
                 class="btn btn-voltar-cardapio">
 
                 <i
@@ -504,7 +504,7 @@ $nomesCategorias = [
                         class="mt-4">
 
                         <a
-                            href="<?= BASE_URL ?>/produtos"
+                            href="<?= BASE_URL ?>/cardapio"
                             class="btn btn-outline-secondary">
 
                             <i

@@ -1,0 +1,184 @@
+.navbar-brand {
+    letter-spacing: 0.3px;
+}
+.navbar-brand-logo img {
+    filter:
+        drop-shadow(2px 0 0 var(--branco))
+        drop-shadow(-2px 0 0 var(--branco))
+        drop-shadow(0 2px 0 var(--branco))
+        drop-shadow(0 -2px 0 var(--branco));
+}
+
+/* ============================
+   CARRINHO DA NAVBAR
+============================ */
+
+.btn-carrinho {
+    color: var(--cor-destaque);
+    border: 2px solid var(--cor-destaque);
+    background: transparent;
+}
+
+
+.btn-carrinho:hover {
+    background: var(--cor-destaque);
+    color: var(--branco);
+}
+
+.btn-navbar-menor {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.7rem;
+    color: var(--cor-destaque);
+    background-color: var(--branco);
+    font-weight: 700;
+    border: 2px solid var(--cor-destaque);
+}
+
+/* ============================
+   Menu
+============================ */
+
+.nav-link-marca {
+    color: var(--branco);
+    font-weight: 600;
+
+    padding: 0.55rem 0.9rem;
+    margin: 0 0.6rem;
+
+    border-radius: 0.6rem;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.nav-link-marca:hover {
+    color: var(--branco);
+    background-color: var(--cor-destaque);
+}
+
+.nav-link-marca.active {
+    color: var(--branco);
+    background-color: var(--cor-destaque);
+}
+
+.navbar-site {
+    background-color: var(--cor-secundaria) !important;
+}
+
+
+/* ============================
+   CLIENTE LOGADO NA NAVBAR
+============================ */
+
+.btn-navbar-cliente {
+    min-height: 38px;
+
+    padding:
+        0.35rem 0.7rem;
+
+    color:
+        var(--branco);
+
+
+    font-size:
+        0.9rem;
+
+    font-weight:
+        600;
+    
+
+}
+.btn-navbar-cliente:hover{
+    color: var(--branco);
+}
+
+
+/* FOTO DO CLIENTE */
+
+.navbar-cliente-avatar {
+    width:
+        30px;
+
+    height:
+        30px;
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    flex-shrink:
+        0;
+
+    overflow:
+        hidden;
+
+    border-radius:
+        50%;
+
+    background-color:
+        var(--laranja-hover);
+
+    color:
+        var(--branco);
+}
+
+
+.navbar-cliente-avatar img {
+    width:
+        100%;
+
+    height:
+        100%;
+
+    display:
+        block;
+
+    object-fit:
+        cover;
+}
+
+
+.navbar-cliente-avatar i {
+    font-size:
+        17px;
+}
+
+
+/* NOME */
+
+.navbar-cliente-nome {
+    max-width:
+        150px;
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+}
+
+
+/* SETA DO DROPDOWN */
+
+.btn-navbar-cliente .bi-chevron-down {
+    font-size:
+        0.75rem;
+
+    transition:
+        transform 0.2s ease;
+}
+
+
+.btn-navbar-cliente.show .bi-chevron-down {
+    transform:
+        rotate(180deg);
+}

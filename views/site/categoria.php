@@ -88,7 +88,7 @@ View::componente(
         <div class="mb-5">
 
             <a
-                href="<?= BASE_URL ?>/produtos"
+                href="<?= BASE_URL ?>/cardapio"
                 class="btn btn-voltar-cardapio">
 
                 <i class="bi bi-arrow-left me-1"></i>

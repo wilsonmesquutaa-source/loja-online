@@ -6,29 +6,29 @@ namespace App\Controllers\Site;
 
 use App\Controllers\Controller;
 use App\Repositories\CarrinhoRepository;
-use App\Repositories\ProdutoRepository;
+use App\Repositories\CardapioRepository;
 
-final class ProdutoController extends Controller
+final class CardapioController extends Controller
 {
     public function index(): void
     {
-        $produtoRepository =
-            new ProdutoRepository(
+        $cardapioRepository =
+            new CardapioRepository(
                 $this->pdo
             );
 
         $categorias =
-            $produtoRepository
+            $cardapioRepository
             ->buscarCategoriasDestaque();
 
         $this->view(
-            'site/produtos',
+            'site/cardapio',
             [
                 'tituloPagina' =>
-                'Produtos',
+                'Cardápio',
 
                 'rotaAtual' =>
-                'produtos',
+                'cardapio',
 
                 'categorias' =>
                 $categorias,
@@ -43,18 +43,30 @@ final class ProdutoController extends Controller
     public function categoria(
         int $id
     ): void {
-        $produtoRepository =
-            new ProdutoRepository(
+        $cardapioRepository =
+            new CardapioRepository(
                 $this->pdo
             );
 
 
+        /*
+        =================================
+        BUSCA A CATEGORIA
+        =================================
+        */
+
         $categoria =
-            $produtoRepository
+            $cardapioRepository
             ->buscarCategoriaPorId(
                 $id
             );
 
+
+        /*
+        =================================
+        CATEGORIA NÃO ENCONTRADA
+        =================================
+        */
 
         if (
             $categoria === null
@@ -69,8 +81,13 @@ final class ProdutoController extends Controller
         }
 
 
+        /*
+        =================================
+        BUSCA OS PRODUTOS
+        =================================
+        */
         $produtos =
-            $produtoRepository
+            $cardapioRepository
             ->buscarProdutosPorCategoria(
                 $id
             );
@@ -121,14 +138,14 @@ final class ProdutoController extends Controller
 
             $limiteOpcoes =
                 4;
+        }
 
 
-            /*
+        /*
         =================================
         FOLHADOS
         =================================
-        */
-        } elseif (
+        */ elseif (
             str_contains(
                 $nomeCategoria,
                 'folhados'
@@ -139,14 +156,14 @@ final class ProdutoController extends Controller
 
             $limiteOpcoes =
                 2;
+        }
 
 
-            /*
+        /*
         =================================
         SALGADOS GRANDES
         =================================
-        */
-        } elseif (
+        */ elseif (
             str_contains(
                 $nomeCategoria,
                 'grandes'
@@ -157,14 +174,14 @@ final class ProdutoController extends Controller
 
             $limiteOpcoes =
                 null;
+        }
 
 
-            /*
+        /*
         =================================
         EMPADÃO
         =================================
-        */
-        } elseif (
+        */ elseif (
             str_contains(
                 $nomeCategoria,
                 'empadão'
@@ -213,12 +230,16 @@ final class ProdutoController extends Controller
         */
 
         $estaEditando =
-            isset($_GET['editar'])
+            isset(
+                $_GET['editar']
+            )
             &&
             $_GET['editar'] === '1';
 
 
-        if ($estaEditando) {
+        if (
+            $estaEditando
+        ) {
 
             /*
             ==============================
@@ -259,9 +280,11 @@ final class ProdutoController extends Controller
                 $carrinho === null
             ) {
                 $this->redirecionar(
-                    'produtos/categoria/'
+                    'cardapio/categoria/'
                         . $id
                 );
+
+                return;
             }
 
 
@@ -333,16 +356,18 @@ final class ProdutoController extends Controller
                 !$encontrouCategoria
             ) {
                 $this->redirecionar(
-                    'produtos/categoria/'
+                    'cardapio/categoria/'
                         . $id
                 );
+
+                return;
             }
         }
 
 
         /*
         =================================
-        CARREGA VIEW
+        CARREGA A VIEW
         =================================
         */
 
@@ -353,8 +378,7 @@ final class ProdutoController extends Controller
                 $categoria['nome'],
 
                 'rotaAtual' =>
-                'produtos',
-
+                'cardapio',
 
                 'categoria' =>
                 $categoria,

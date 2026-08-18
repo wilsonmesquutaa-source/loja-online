@@ -71,7 +71,7 @@ $textoHero = $textoHero
 
                     <a
                         class="btn btn-warning btn-lg text-white"
-                        href="<?= BASE_URL ?>/produtos"
+                        href="<?= BASE_URL ?>/cardapio"
                     >
 
                         <i class="bi bi-basket me-2"></i>

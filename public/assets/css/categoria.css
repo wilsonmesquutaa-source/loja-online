@@ -105,26 +105,160 @@ CARD DO PRODUTO
 
     background: var(--branco);
 
-    border:
-        1px solid rgba(93, 64, 55, 0.10);
+    border: 1px solid rgba(93, 64, 55, 0.06);
 
-    border-radius: 0.8rem;
+    border-radius: 20px;
 
     overflow: hidden;
 
     box-shadow:
-        0 0.25rem 0.7rem rgba(0, 0, 0, 0.08);
+        0 8px 20px rgba(93, 64, 55, 0.08);
 
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+    position: relative;
+
+    transform: translateY(0);
+
+
 }
 
-.produto-selecao-card:hover {
-    transform: translateY(-2px);
+
+/*
+=================================
+FAIXA LARANJA
+=================================
+*/
+
+.produto-selecao-card::before {
+    content:
+        '';
+
+    position:
+        absolute;
+
+    top:
+        0;
+
+    left:
+        0;
+
+    width:
+        100%;
+
+    height:
+        3px;
+
+    background:
+        var(--cor-destaque);
+
+    opacity:
+        0;
+
+    pointer-events:
+        none;
+
+    z-index:
+        10;
+
+    transition:
+        opacity 0.5s ease;
+}
+
+
+/*
+=================================
+HOVER DO CARD
+=================================
+*/
+
+
+
+.produto-wrapper:hover .produto-selecao-card {
+    transform: translateY(-8px) !important;
 
     box-shadow:
-        0 0.45rem 1rem rgba(0, 0, 0, 0.12);
+        0 18px 40px rgba(93, 64, 55, 0.16) !important;
+
+    border-color:
+        rgba(245, 124, 0, 0.18);
+     transition:
+        transform 0.3s ease !important;   
+}
+
+
+/*
+=================================
+FAIXA LARANJA NO HOVER
+=================================
+*/
+
+.produto-wrapper:hover
+.produto-selecao-card::before {
+    opacity:
+        1;
+}
+
+
+/*
+=================================
+PRODUTO SELECIONADO
+=================================
+*/
+
+.produto-selecao-card.selecionado {
+    border:
+        2px solid
+        var(--cor-destaque);
+
+    box-shadow:
+        0 10px 30px
+        rgba(245, 124, 0, 0.18);
+}
+
+
+/*
+=================================
+FAIXA LARANJA PERMANENTE
+=================================
+*/
+
+.produto-selecao-card.selecionado::before {
+    opacity:
+        1;
+}
+
+
+/*
+=================================
+SELECIONADO + HOVER
+=================================
+*/
+
+.produto-selecao-card.selecionado:hover {
+    transform:
+        translateY(-8px);
+
+    border-color:
+        var(--cor-destaque);
+
+    box-shadow:
+        0 18px 40px
+        rgba(245, 124, 0, 0.22);
+}
+
+
+/*
+=================================
+FOCO DO CARD
+=================================
+*/
+
+.produto-selecao-card:focus-within {
+    outline:
+        2px solid
+        var(--laranja-hover);
+
+    outline-offset:
+        3px;
 }
 
 
@@ -139,7 +273,9 @@ CONTEÚDO DO CARD
     height: 100%;
 
     display: flex;
+
     flex-direction: column;
+
     align-items: center;
 
     padding: 1rem;
@@ -154,24 +290,88 @@ IMAGEM
 
 .produto-imagem-placeholder {
     width: 100%;
-    height: 110px;
+    height: 125px;
 
     flex-shrink: 0;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.9rem;
 
-    background: var(--creme);
+    background:
+        var(--creme);
 
-    border-radius: 0.6rem;
+    border-radius:
+        14px;
+
+    overflow:
+        hidden;
+
+    transition:
+        transform 0.35s ease,
+        background-color 0.35s ease;
 }
 
+
+.produto-selecao-card:hover
+.produto-imagem-placeholder {
+    transform:
+        scale(1.015);
+
+    background:
+        #FFF1DE;
+}
+
+
 .produto-imagem-placeholder i {
-    font-size: 2.5rem;
-    color: #8a8a8a;
+    font-size:
+        2.5rem;
+
+    color:
+        #8a8a8a;
+
+    transition:
+        transform 0.35s ease,
+        color 0.35s ease;
+}
+
+
+.produto-selecao-card:hover
+.produto-imagem-placeholder i {
+    transform:
+        scale(1.08);
+
+    color:
+        var(--cor-destaque);
+}
+
+
+/*
+=================================
+CASO TENHA IMG REAL
+=================================
+*/
+
+.produto-imagem-placeholder img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+
+    transition:
+        transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+.produto-selecao-card:hover
+.produto-imagem-placeholder img {
+    transform:
+        scale(1.05);
 }
 
 
@@ -184,27 +384,38 @@ NOME DO PRODUTO
 .produto-card-titulo {
     width: 100%;
 
-    min-height: 38px;
-    max-height: 38px;
+    min-height: 40px;
+    max-height: 40px;
 
     margin:
         0 0 0.4rem;
 
-    color: var(--marrom);
+    color:
+        var(--marrom);
 
-    text-align: center;
+    text-align:
+        center;
 
-    font-size: 0.95rem;
-    font-weight: 700;
+    font-size:
+        0.95rem;
 
-    line-height: 1.15;
+    font-weight:
+        700;
 
-    overflow: hidden;
+    line-height:
+        1.2;
 
-    display: -webkit-box;
+    overflow:
+        hidden;
 
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
+    display:
+        -webkit-box;
+
+    -webkit-line-clamp:
+        2;
+
+    -webkit-box-orient:
+        vertical;
 }
 
 
@@ -217,25 +428,35 @@ DESCRIÇÃO
 .produto-card-descricao {
     width: 100%;
 
-    min-height: 50px;
+    min-height: 42px;
     max-height: 42px;
 
-    margin: 0;
+    margin:
+        0;
 
-    color: #6c757d;
+    color:
+        #777777;
 
-    text-align: center;
+    text-align:
+        center;
 
-    font-size: 0.8rem;
+    font-size:
+        0.8rem;
 
-    line-height: 1.3;
+    line-height:
+        1.4;
 
-    overflow: hidden;
+    overflow:
+        hidden;
 
-    display: -webkit-box;
+    display:
+        -webkit-box;
 
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
+    -webkit-line-clamp:
+        2;
+
+    -webkit-box-orient:
+        vertical;
 }
 
 
@@ -250,16 +471,23 @@ CONTADOR
 
     min-height: 42px;
 
-    margin-top: auto;
+    margin-top:
+        auto;
 
-    display: flex;
+    display:
+        flex;
 
-    align-items: center;
-    justify-content: center;
+    align-items:
+        center;
 
-    gap: 0.6rem;
+    justify-content:
+        center;
 
-    flex-shrink: 0;
+    gap:
+        0.6rem;
+
+    flex-shrink:
+        0;
 }
 
 
@@ -283,33 +511,53 @@ BOTÃO -
     justify-content: center;
 
     border:
-        1px solid var(--marrom);
+        1px solid
+        var(--marrom);
 
-    border-radius: 0.45rem;
+    border-radius:
+        10px;
 
-    background: var(--branco);
+    background:
+        var(--branco);
 
-    color: var(--marrom);
+    color:
+        var(--marrom);
 
-    font-size: 1rem;
+    font-size:
+        1rem;
 
-    cursor: pointer;
+    cursor:
+        pointer;
 
     transition:
-        background-color 0.2s ease,
-        color 0.2s ease,
-        border-color 0.2s ease;
+        background-color 0.25s ease,
+        color 0.25s ease,
+        border-color 0.25s ease,
+        transform 0.25s ease;
 }
+
 
 .contador-produto .contador-botao-menos:hover:not(:disabled) {
-    background: var(--marrom);
-    border-color: var(--marrom);
-    color: var(--branco);
+    background:
+        var(--marrom);
+
+    border-color:
+        var(--marrom);
+
+    color:
+        var(--branco);
+
+    transform:
+        translateY(-1px);
 }
 
+
 .contador-produto .contador-botao-menos:disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
+    opacity:
+        0.45;
+
+    cursor:
+        not-allowed;
 }
 
 
@@ -333,12 +581,14 @@ BOTÃO +
     justify-content: center;
 
     border:
-        1px solid var(--laranja);
+        1px solid
+        var(--cor-destaque);
 
-    border-radius: 0.45rem;
+    border-radius:
+        10px;
 
     background:
-        var(--laranja);
+        var(--cor-destaque);
 
     color:
         var(--branco);
@@ -359,56 +609,97 @@ BOTÃO +
         visible;
 
     transition:
-        background-color 0.2s ease,
-        border-color 0.2s ease,
-        color 0.2s ease,
-        opacity 0.2s ease;
+        background-color 0.25s ease,
+        border-color 0.25s ease,
+        color 0.25s ease,
+        transform 0.25s ease;
 }
+
 
 .contador-produto .contador-botao-mais,
 .contador-produto [data-aumentar] {
+    width:
+        34px !important;
 
-    width: 34px !important;
-    height: 34px !important;
+    height:
+        34px !important;
 
-    padding: 0 !important;
+    padding:
+        0 !important;
 
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
+    display:
+        flex !important;
 
-    border: 1px solid var(--cor-destaque) !important;
-    border-radius: 0.45rem !important;
+    align-items:
+        center !important;
 
-    background-color: var(--cor-destaque) !important;
-    color: var(--branco) !important;
+    justify-content:
+        center !important;
 
-    opacity: 1 !important;
-    visibility: visible !important;
+    border:
+        1px solid
+        var(--cor-destaque) !important;
 
-    cursor: pointer;
+    border-radius:
+        10px !important;
+
+    background-color:
+        var(--cor-destaque) !important;
+
+    color:
+        var(--branco) !important;
+
+    opacity:
+        1 !important;
+
+    visibility:
+        visible !important;
+
+    cursor:
+        pointer;
+
+    transition:
+        background-color 0.25s ease,
+        border-color 0.25s ease,
+        transform 0.25s ease;
 }
+
 
 .contador-produto .contador-botao-mais i,
 .contador-produto [data-aumentar] i {
+    color:
+        var(--branco) !important;
 
-    color: var(--branco) !important;
-    opacity: 1 !important;
-    visibility: visible !important;
+    opacity:
+        1 !important;
+
+    visibility:
+        visible !important;
 }
 
 
 .contador-produto .contador-botao-mais:hover:not(:disabled),
 .contador-produto [data-aumentar]:hover:not(:disabled) {
+    background-color:
+        var(--laranja-hover) !important;
 
-    background-color: var(--cor-destaque) !important;
-    border-color: var(--cor-destaque) !important;
-    color: var(--branco) !important;
+    border-color:
+        var(--laranja-hover) !important;
+
+    color:
+        var(--branco) !important;
+
+    transform:
+        translateY(-1px);
 }
 
+
 .contador-produto .contador-botao-mais:disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
+    opacity:
+        0.45;
+
+    cursor:
+        not-allowed;
 }
 
 
@@ -419,15 +710,20 @@ BOTÃO +
 */
 
 .contador-produto .contador-botao i {
-    display: inline-block;
+    display:
+        inline-block;
 
-    color: inherit;
+    color:
+        inherit;
 
-    font-size: 1.1rem;
+    font-size:
+        1.1rem;
 
-    line-height: 1;
+    line-height:
+        1;
 
-    pointer-events: none;
+    pointer-events:
+        none;
 }
 
 
@@ -438,18 +734,26 @@ NÚMERO
 */
 
 .contador-produto .contador-quantidade {
-    min-width: 30px;
+    min-width:
+        30px;
 
-    padding: 0;
+    padding:
+        0;
 
-    color: var(--marrom);
+    color:
+        var(--marrom);
 
-    text-align: center;
+    text-align:
+        center;
 
-    font-size: 1rem;
-    font-weight: 700;
+    font-size:
+        1rem;
 
-    line-height: 1;
+    font-weight:
+        700;
+
+    line-height:
+        1;
 }
 
 
@@ -460,18 +764,22 @@ LAYOUT DO CENTO
 */
 
 .categoria-cento-layout {
-    width: 100%;
+    width:
+        100%;
 }
 
 .categoria-cento-layout {
-    display: grid;
+    display:
+        grid;
 
     grid-template-columns:
         minmax(0, 1fr) 300px;
 
-    gap: 1.5rem;
+    gap:
+        1.5rem;
 
-    align-items: start;
+    align-items:
+        start;
 }
 
 
@@ -482,7 +790,8 @@ LAYOUT DO CENTO
 */
 
 .categoria-cento-layout .categoria-produtos-area {
-    min-width: 0;
+    min-width:
+        0;
 }
 
 
@@ -493,28 +802,37 @@ PAINEL DO CENTO
 */
 
 .cento-preview-area {
-    width: 300px;
+    width:
+        300px;
 }
 
 .cento-preview-sticky {
-    position: fixed;
+    position:
+        fixed;
 
-    top: 90px;
-    right: 30px;
+    top:
+        90px;
 
-    width: 300px;
+    right:
+        30px;
 
-    z-index: 100;
+    width:
+        300px;
+
+    z-index:
+        100;
 }
 
 .cento-preview {
-    width: 100%;
+    width:
+        100%;
 
     background:
         var(--branco);
 
     border:
-        1px solid rgba(93, 64, 55, 0.12);
+        1px solid
+        rgba(93, 64, 55, 0.12);
 
     border-radius:
         0.8rem;
@@ -523,7 +841,8 @@ PAINEL DO CENTO
         1.5rem 0.6rem;
 
     box-shadow:
-        0 0.3rem 0.8rem rgba(0, 0, 0, 0.10);
+        0 0.3rem 0.8rem
+        rgba(0, 0, 0, 0.10);
 }
 
 
@@ -598,7 +917,8 @@ CÍRCULO DO CENTO
         var(--creme);
 
     border:
-        4px solid var(--marrom);
+        4px solid
+        var(--marrom);
 }
 
 
@@ -652,36 +972,48 @@ SETORES
 =================================
 */
 
-.cento-circulo[data-partes="4"] .cento-setor[data-parte="1"] {
+.cento-circulo[data-partes="4"]
+.cento-setor[data-parte="1"] {
     clip-path:
-        polygon(0 0,
+        polygon(
+            0 0,
             50% 0,
             50% 50%,
-            0 50%);
+            0 50%
+        );
 }
 
-.cento-circulo[data-partes="4"] .cento-setor[data-parte="2"] {
+.cento-circulo[data-partes="4"]
+.cento-setor[data-parte="2"] {
     clip-path:
-        polygon(50% 0,
+        polygon(
+            50% 0,
             100% 0,
             100% 50%,
-            50% 50%);
+            50% 50%
+        );
 }
 
-.cento-circulo[data-partes="4"] .cento-setor[data-parte="3"] {
+.cento-circulo[data-partes="4"]
+.cento-setor[data-parte="3"] {
     clip-path:
-        polygon(50% 50%,
+        polygon(
+            50% 50%,
             100% 50%,
             100% 100%,
-            50% 100%);
+            50% 100%
+        );
 }
 
-.cento-circulo[data-partes="4"] .cento-setor[data-parte="4"] {
+.cento-circulo[data-partes="4"]
+.cento-setor[data-parte="4"] {
     clip-path:
-        polygon(0 50%,
+        polygon(
+            0 50%,
             50% 50%,
             50% 100%,
-            0 100%);
+            0 100%
+        );
 }
 
 
@@ -691,20 +1023,26 @@ SETORES
 =================================
 */
 
-.cento-circulo[data-partes="2"] .cento-setor[data-parte="1"] {
+.cento-circulo[data-partes="2"]
+.cento-setor[data-parte="1"] {
     clip-path:
-        polygon(0 0,
+        polygon(
+            0 0,
             50% 0,
             50% 100%,
-            0 100%);
+            0 100%
+        );
 }
 
-.cento-circulo[data-partes="2"] .cento-setor[data-parte="2"] {
+.cento-circulo[data-partes="2"]
+.cento-setor[data-parte="2"] {
     clip-path:
-        polygon(50% 0,
+        polygon(
+            50% 0,
             100% 0,
             100% 100%,
-            50% 100%);
+            50% 100%
+        );
 }
 
 
@@ -773,24 +1111,44 @@ TEXTOS - 4 PARTES
 =================================
 */
 
-.cento-circulo[data-partes="4"] .cento-setor[data-parte="1"] .cento-setor-texto {
-    top: 25%;
-    left: 25%;
+.cento-circulo[data-partes="4"]
+.cento-setor[data-parte="1"]
+.cento-setor-texto {
+    top:
+        25%;
+
+    left:
+        25%;
 }
 
-.cento-circulo[data-partes="4"] .cento-setor[data-parte="2"] .cento-setor-texto {
-    top: 25%;
-    left: 75%;
+.cento-circulo[data-partes="4"]
+.cento-setor[data-parte="2"]
+.cento-setor-texto {
+    top:
+        25%;
+
+    left:
+        75%;
 }
 
-.cento-circulo[data-partes="4"] .cento-setor[data-parte="3"] .cento-setor-texto {
-    top: 75%;
-    left: 75%;
+.cento-circulo[data-partes="4"]
+.cento-setor[data-parte="3"]
+.cento-setor-texto {
+    top:
+        75%;
+
+    left:
+        75%;
 }
 
-.cento-circulo[data-partes="4"] .cento-setor[data-parte="4"] .cento-setor-texto {
-    top: 75%;
-    left: 25%;
+.cento-circulo[data-partes="4"]
+.cento-setor[data-parte="4"]
+.cento-setor-texto {
+    top:
+        75%;
+
+    left:
+        25%;
 }
 
 
@@ -800,14 +1158,24 @@ TEXTOS - 2 PARTES
 =================================
 */
 
-.cento-circulo[data-partes="2"] .cento-setor[data-parte="1"] .cento-setor-texto {
-    top: 50%;
-    left: 25%;
+.cento-circulo[data-partes="2"]
+.cento-setor[data-parte="1"]
+.cento-setor-texto {
+    top:
+        50%;
+
+    left:
+        25%;
 }
 
-.cento-circulo[data-partes="2"] .cento-setor[data-parte="2"] .cento-setor-texto {
-    top: 50%;
-    left: 75%;
+.cento-circulo[data-partes="2"]
+.cento-setor[data-parte="2"]
+.cento-setor-texto {
+    top:
+        50%;
+
+    left:
+        75%;
 }
 
 
@@ -825,7 +1193,12 @@ DIVISÕES
         10;
 
     background:
-        rgba(93, 64, 55, 0.35);
+        rgba(
+            93,
+            64,
+            55,
+            0.35
+        );
 
     pointer-events:
         none;
@@ -916,7 +1289,8 @@ CENTRO
         var(--marrom);
 
     border:
-        2px solid var(--marrom);
+        2px solid
+        var(--marrom);
 
     text-align:
         center;
@@ -925,7 +1299,8 @@ CENTRO
         1;
 
     box-shadow:
-        0 0.15rem 0.4rem rgba(0, 0, 0, 0.14);
+        0 0.15rem 0.4rem
+        rgba(0, 0, 0, 0.14);
 
     pointer-events:
         none;
@@ -962,7 +1337,8 @@ BOTÃO LIMPAR CENTO
         0 0 0.35rem;
 
     border:
-        1px solid var(--marrom);
+        1px solid
+        var(--marrom);
 
     border-radius:
         0.45rem;
@@ -1010,7 +1386,8 @@ BOTÃO ADICIONAR
         0.65rem 0.5rem;
 
     border:
-        1px solid var(--laranja);
+        1px solid
+        var(--laranja);
 
     border-radius:
         0.45rem;
@@ -1080,7 +1457,8 @@ PAINEL SALGADOS GRANDES / EMPADÃO
         var(--branco);
 
     border:
-        1px solid rgba(93, 64, 55, 0.12);
+        1px solid
+        rgba(93, 64, 55, 0.12);
 
     border-radius:
         1rem;
@@ -1089,7 +1467,8 @@ PAINEL SALGADOS GRANDES / EMPADÃO
         1.25rem;
 
     box-shadow:
-        0 0.5rem 1.5rem rgba(0, 0, 0, 0.12);
+        0 0.5rem 1.5rem
+        rgba(0, 0, 0, 0.12);
 }
 
 .categoria-acao-titulo {
@@ -1172,7 +1551,8 @@ PAINEL SALGADOS GRANDES / EMPADÃO
         0.65rem;
 
     border:
-        1px solid var(--cor-destaque);
+        1px solid
+        var(--cor-destaque);
 
     border-radius:
         0.45rem;
@@ -1280,7 +1660,7 @@ TABLET MENOR
 
     .produto-imagem-placeholder {
         height:
-            95px;
+            100px;
     }
 
     .cento-circulo {
@@ -1314,7 +1694,7 @@ CELULAR
             300px;
 
         border-radius:
-            0.7rem;
+            18px;
     }
 
     .produto-card-conteudo {
@@ -1328,6 +1708,9 @@ CELULAR
 
         margin-bottom:
             0.6rem;
+
+        border-radius:
+            12px;
     }
 
     .produto-card-titulo {
@@ -1367,6 +1750,9 @@ CELULAR
 
         min-width:
             30px;
+
+        border-radius:
+            9px;
     }
 
     .contador-produto .contador-botao i {
@@ -1401,3 +1787,28 @@ CELULAR
     }
 }
 
+
+/*
+=================================
+REDUZIR MOVIMENTO
+=================================
+*/
+
+@media (prefers-reduced-motion: reduce) {
+
+    .produto-selecao-card,
+    .produto-selecao-card::before,
+    .produto-imagem-placeholder,
+    .produto-imagem-placeholder img,
+    .produto-imagem-placeholder i,
+    .contador-produto .contador-botao-menos,
+    .contador-produto .contador-botao-mais {
+        transition:
+            none !important;
+    }
+
+    .produto-selecao-card:hover {
+        transform:
+            none;
+    }
+}

@@ -4,19 +4,26 @@ declare(strict_types=1);
 
 use Dotenv\Dotenv;
 
-require_once dirname(__DIR__)
-    . '/vendor/autoload.php';
-
 
 /*
 |--------------------------------------------------------------------------
-| Raiz do projeto
+| Autoload
 |--------------------------------------------------------------------------
 */
 
 $raizProjeto =
     dirname(__DIR__);
 
+
+require_once $raizProjeto
+    . '/vendor/autoload.php';
+
+
+/*
+|--------------------------------------------------------------------------
+| Constante: raiz do projeto
+|--------------------------------------------------------------------------
+*/
 
 define(
     'APP_ROOT',
@@ -40,37 +47,67 @@ $dotenv->safeLoad();
 
 /*
 |--------------------------------------------------------------------------
-| URL base
+| URL BASE
 |--------------------------------------------------------------------------
+|
+| O projeto está em:
+|
+| C:\xampp\htdocs\loja-online
+|
+| E a URL pública é:
+|
+| http://localhost/loja-online
+|
+| A pasta /public é interna e não aparece nas URLs.
+|
 */
 
-$scriptName =
-    $_SERVER['SCRIPT_NAME']
-    ?? '/index.php';
-
-
-$caminhoBase =
+$diretorioPublico =
     str_replace(
         '\\',
         '/',
-        dirname($scriptName)
+        dirname(
+            $_SERVER['SCRIPT_NAME']
+            ?? '/index.php'
+        )
+    );
+
+
+/*
+|--------------------------------------------------------------------------
+| Remove /public da URL
+|--------------------------------------------------------------------------
+*/
+
+if (
+    str_ends_with(
+        $diretorioPublico,
+        '/public'
+    )
+) {
+
+    $diretorioPublico =
+        substr(
+            $diretorioPublico,
+            0,
+            -strlen('/public')
+        );
+}
+
+
+$caminhoBase =
+    rtrim(
+        $diretorioPublico,
+        '/'
     );
 
 
 if (
-    $caminhoBase === '/'
-    || $caminhoBase === '.'
+    $caminhoBase === '.'
+    || $caminhoBase === '/'
 ) {
 
     $caminhoBase = '';
-
-} else {
-
-    $caminhoBase =
-        rtrim(
-            $caminhoBase,
-            '/'
-        );
 }
 
 
@@ -149,12 +186,13 @@ $pdo =
 
 /*
 |--------------------------------------------------------------------------
-| Carregamento dos arquivos de rotas
+| Carregamento das rotas
 |--------------------------------------------------------------------------
 */
 
 $rotas =
     array_merge(
+
         require $raizProjeto
             . '/routes/web.php',
 
@@ -171,7 +209,7 @@ $rotas =
 
 /*
 |--------------------------------------------------------------------------
-| Identificação da requisição
+| Método HTTP
 |--------------------------------------------------------------------------
 */
 
@@ -181,6 +219,12 @@ $metodoHttp =
         ?? 'GET'
     );
 
+
+/*
+|--------------------------------------------------------------------------
+| URI solicitada
+|--------------------------------------------------------------------------
+*/
 
 $caminho =
     parse_url(
@@ -199,27 +243,29 @@ $caminho =
 
 /*
 |--------------------------------------------------------------------------
-| Remoção do caminho-base no XAMPP
+| Remove a BASE_URL da URI
 |--------------------------------------------------------------------------
+|
+| Exemplo:
+|
+| /loja-online/cardapio
+|
+| vira:
+|
+| /cardapio
+|
 */
 
-$estaNoCaminhoBase =
+if (
     $caminhoBase !== ''
     && (
-        $caminho ===
-        $caminhoBase
-
+        $caminho === $caminhoBase
         ||
-
         str_starts_with(
             $caminho,
             $caminhoBase . '/'
         )
-    );
-
-
-if (
-    $estaNoCaminhoBase
+    )
 ) {
 
     $caminho =
@@ -265,8 +311,27 @@ foreach (
     }
 
 
+    /*
+    |--------------------------------------------------------------------------
+    | Parâmetros
+    |--------------------------------------------------------------------------
+    */
+
     $parametros = [];
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Converte parâmetros da rota
+    |--------------------------------------------------------------------------
+    |
+    | /cardapio/categoria/{id}
+    |
+    | vira:
+    |
+    | /cardapio/categoria/([^/]+)
+    |
+    */
 
     $padrao =
         preg_replace(
@@ -303,12 +368,24 @@ foreach (
         $matches;
 
 
+    /*
+    |--------------------------------------------------------------------------
+    | Controller e ação
+    |--------------------------------------------------------------------------
+    */
+
     [
         $controller,
         $acao
     ] =
         $rota['action'];
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Verifica Controller
+    |--------------------------------------------------------------------------
+    */
 
     if (
         !class_exists(
@@ -322,11 +399,23 @@ foreach (
     }
 
 
+    /*
+    |--------------------------------------------------------------------------
+    | Instancia Controller
+    |--------------------------------------------------------------------------
+    */
+
     $objetoController =
         new $controller(
             $pdo
         );
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Verifica ação
+    |--------------------------------------------------------------------------
+    */
 
     if (
         !method_exists(
@@ -340,6 +429,12 @@ foreach (
         );
     }
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Executa ação
+    |--------------------------------------------------------------------------
+    */
 
     $objetoController->{$acao}(
         ...array_map(

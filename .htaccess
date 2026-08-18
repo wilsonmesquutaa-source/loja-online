@@ -1,37 +1,66 @@
-# Impede a listagem automática de pastas
 Options -Indexes
 
+RewriteEngine On
 
-# Bloqueia arquivos ocultos:
-# .env, .env.example, .gitignore, .htaccess etc.
+
+# ============================================================
+# BLOQUEIA ARQUIVOS OCULTOS
+# ============================================================
+
 <FilesMatch "^\.">
     Require all denied
 </FilesMatch>
 
 
-# Bloqueia arquivos internos conhecidos
+# ============================================================
+# BLOQUEIA ARQUIVOS INTERNOS
+# ============================================================
+
 <FilesMatch "(?i)^(composer\.(json|lock)|README\.md)$">
     Require all denied
 </FilesMatch>
 
 
-# Ativa o mecanismo de reescrita
-RewriteEngine On
+# ============================================================
+# BLOQUEIA DIRETÓRIOS INTERNOS
+# ============================================================
 
-
-# Bloqueia diretórios ocultos internos
 RewriteRule ^(?:\.git|\.idea|\.vscode)(?:/|$) - [F,L,NC]
 
-
-# Bloqueia pastas internas do projeto
 RewriteRule ^(?:config|database|documentacao|routes|src|storage|vendor|views)(?:/|$) - [F,L,NC]
 
 
-# Permite acesso direto aos arquivos existentes
-RewriteCond %{REQUEST_FILENAME} -f [OR]
-RewriteCond %{REQUEST_FILENAME} -d
-RewriteRule ^ - [L]
+# ============================================================
+# ASSETS PÚBLICOS
+# ============================================================
+#
+# /loja-online/assets/css/navbar.css
+#
+# será servido de:
+#
+# /loja-online/public/assets/css/navbar.css
+#
+
+RewriteRule ^assets/(.*)$ public/assets/$1 [L]
 
 
-# Envia todas as rotas para o front controller
-RewriteRule ^ index.php [L,QSA]
+# ============================================================
+# ACESSO DIRETO À PASTA PUBLIC
+# ============================================================
+#
+# Mantém /public funcionando durante a transição.
+#
+
+RewriteRule ^public(?:/|$) - [L]
+
+
+# ============================================================
+# FRONT CONTROLLER
+# ============================================================
+#
+# Todas as demais requisições passam pelo:
+#
+# public/index.php
+#
+
+RewriteRule ^ public/index.php [L,QSA]

@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 use App\Helpers\View;
 
+
 require APP_ROOT
     . '/views/layouts/site/header.php';
+
 
 View::componente(
     'site/navbar',
     [
         'rotaAtual' =>
-        $rotaAtual,
+            $rotaAtual,
     ]
 );
 
@@ -21,52 +23,81 @@ View::componente(
 
     <?php
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | HERO
+    |--------------------------------------------------------------------------
+    */
+
     View::componente(
         'site/sections/hero',
         [
             'tituloHero' =>
-            $tituloHero,
+                $tituloHero,
 
             'textoHero' =>
-            $textoHero,
+                $textoHero,
         ]
     );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CARDÁPIO
+    |--------------------------------------------------------------------------
+    */
 
     View::componente(
-        'site/sections/produtos',
+        'site/sections/cardapio',
         [
             'categorias' =>
-            $categorias,
+                $categorias,
+
+            'etiquetaProdutos' =>
+                'Cardápio',
         ]
     );
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | BENEFÍCIOS
+    |--------------------------------------------------------------------------
+    */
 
     View::componente(
         'site/sections/beneficios',
         [
             'beneficios' =>
-            $beneficios,
+                $beneficios,
         ]
     );
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | CONTATO
+    |--------------------------------------------------------------------------
+    */
 
     View::componente(
         'site/sections/contato',
         [
             'emailContato' =>
-            $emailContato,
+                $emailContato,
 
             'telefoneContato' =>
-            $telefoneContato,
+                $telefoneContato,
 
             'whatsappContato' =>
-            $whatsappContato,
+                $whatsappContato,
 
             'instagramContato' =>
-            $instagramContato,
+                $instagramContato,
 
             'facebookContato' =>
-            $facebookContato,
+                $facebookContato,
         ]
     );
 
@@ -78,3 +109,4 @@ View::componente(
 
 require APP_ROOT
     . '/views/layouts/site/footer.php';
+?>
