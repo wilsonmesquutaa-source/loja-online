@@ -1,0 +1,1087 @@
+/* ============================
+   QUEM SOMOS
+============================ */
+
+.quem-somos {
+    padding:
+        80px 20px;
+
+    background:
+        var(--creme);
+}
+
+
+.quem-somos-container {
+    width:
+        100%;
+
+    max-width:
+        1150px;
+
+    margin:
+        0 auto;
+}
+
+
+/* ============================
+   CABEÇALHO
+============================ */
+
+.quem-somos-header {
+    max-width:
+        850px;
+
+    margin:
+        0 auto 80px;
+
+    text-align:
+        center;
+}
+
+
+.quem-somos-subtitulo,
+.quem-somos-etapa,
+.quem-somos-final-subtitulo {
+    display:
+        inline-block;
+
+    color:
+        var(--laranja);
+
+    font-size:
+        14px;
+
+    font-weight:
+        bold;
+
+    text-transform:
+        uppercase;
+
+    letter-spacing:
+        2px;
+}
+
+
+.quem-somos-header h1 {
+    margin:
+        10px 0 15px;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        46px;
+
+    line-height:
+        1.2;
+}
+
+
+.quem-somos-header p {
+    margin:
+        0;
+
+    color:
+        var(--texto);
+
+    font-size:
+        20px;
+
+    line-height:
+        1.6;
+}
+
+
+/* ============================
+   SEÇÕES COM FOTO
+============================ */
+
+.quem-somos-historia {
+    display:
+        grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:
+        70px;
+
+    align-items:
+        center;
+
+    margin-bottom:
+        100px;
+}
+
+
+.quem-somos-historia.historia-invertida {
+    direction:
+        rtl;
+}
+
+
+.quem-somos-historia.historia-invertida > * {
+    direction:
+        ltr;
+}
+
+
+/* ============================
+   TEXTO
+============================ */
+
+.quem-somos-texto h2,
+.quem-somos-artesanal-texto h2,
+.quem-somos-futuro-texto h2 {
+    margin:
+        10px 0 25px;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        32px;
+
+    line-height:
+        1.3;
+}
+
+
+.quem-somos-texto p,
+.quem-somos-artesanal-texto p,
+.quem-somos-futuro-texto p {
+    margin:
+        0 0 18px;
+
+    color:
+        var(--texto);
+
+    font-size:
+        17px;
+
+    line-height:
+        1.8;
+}
+
+
+.quem-somos-destaque {
+    color:
+        var(--marrom) !important;
+
+    font-size:
+        19px !important;
+
+    font-weight:
+        bold;
+}
+
+
+/* ============================
+   FOTOS
+============================ */
+
+.quem-somos-foto {
+    width:
+        100%;
+
+    min-height:
+        390px;
+}
+
+
+.quem-somos-foto-placeholder {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    min-height:
+        390px;
+
+    padding:
+        30px;
+
+    background:
+        rgba(245, 124, 0, 0.08);
+
+    border:
+        2px dashed rgba(245, 124, 0, 0.45);
+
+    border-radius:
+        24px;
+
+    color:
+        var(--laranja);
+
+    text-align:
+        center;
+
+    font-size:
+        15px;
+
+    font-weight:
+        bold;
+}
+
+
+.quem-somos-foto-placeholder span {
+    padding:
+        10px 18px;
+
+    background:
+        var(--branco);
+
+    border-radius:
+        30px;
+
+    box-shadow:
+        0 5px 20px rgba(93, 64, 55, 0.08);
+}
+
+
+/* ============================
+   PRIMEIRO PEDIDO
+============================ */
+
+.quem-somos-momento {
+    display:
+        grid;
+
+    grid-template-columns:
+        1.2fr 0.8fr;
+
+    gap:
+        60px;
+
+    align-items:
+        center;
+
+    margin-bottom:
+        110px;
+
+    padding:
+        60px;
+
+    background:
+        var(--branco);
+
+    border-radius:
+        30px;
+
+    box-shadow:
+        0 10px 35px rgba(93, 64, 55, 0.08);
+}
+
+
+.quem-somos-momento-conteudo h2 {
+    margin:
+        10px 0 25px;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        32px;
+}
+
+
+.quem-somos-momento-conteudo p {
+    color:
+        var(--texto);
+
+    font-size:
+        17px;
+
+    line-height:
+        1.8;
+}
+
+
+.quem-somos-momento-foto {
+    min-height:
+        350px;
+}
+
+
+.quem-somos-momento-foto .quem-somos-foto-placeholder {
+    min-height:
+        350px;
+}
+
+
+/* ============================
+   CITAÇÃO
+============================ */
+
+.quem-somos-momento blockquote,
+.quem-somos-artesanal blockquote {
+    margin:
+        30px 0;
+
+    padding:
+        25px;
+
+    background:
+        var(--creme);
+
+    border-left:
+        5px solid var(--laranja);
+
+    border-radius:
+        0 15px 15px 0;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        23px;
+
+    font-weight:
+        bold;
+
+    font-style:
+        italic;
+}
+
+
+/* ============================
+   LINHA DO TEMPO
+============================ */
+
+.quem-somos-timeline {
+    max-width:
+        900px;
+
+    margin:
+        0 auto 110px;
+}
+
+
+.quem-somos-section-header {
+    margin:
+        0 auto 55px;
+
+    text-align:
+        center;
+}
+
+
+.quem-somos-section-header h2 {
+    margin:
+        10px 0 12px;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        34px;
+}
+
+
+.quem-somos-section-header p {
+    margin:
+        0;
+
+    color:
+        var(--texto);
+
+    font-size:
+        17px;
+}
+
+
+.timeline-item {
+    display:
+        grid;
+
+    grid-template-columns:
+        120px 1fr;
+
+    gap:
+        30px;
+
+    position:
+        relative;
+
+    padding:
+        0 0 45px;
+}
+
+
+.timeline-item::before {
+    content:
+        "";
+
+    position:
+        absolute;
+
+    left:
+        59px;
+
+    top:
+        50px;
+
+    width:
+        2px;
+
+    height:
+        calc(100% - 50px);
+
+    background:
+        rgba(245, 124, 0, 0.25);
+}
+
+
+.timeline-item:last-child::before {
+    display:
+        none;
+}
+
+
+/* ============================
+   ANOS
+============================ */
+
+.timeline-ano {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    height: 50px;
+    background-color: var(--cor-destaque);
+    border: 2px solid var(--cor-destaque);
+    border-radius: 30px;
+    color: var(--branco);
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+
+/* ============================
+   CONTEÚDO DA LINHA DO TEMPO
+============================ */
+
+.timeline-conteudo {
+    padding:
+        5px 0;
+}
+
+
+.timeline-conteudo h3 {
+    margin:
+        0 0 8px;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        22px;
+}
+
+
+.timeline-conteudo p {
+    margin:
+        0;
+
+    color:
+        var(--texto);
+
+    font-size:
+        16px;
+
+    line-height:
+        1.7;
+}
+
+
+/* ============================
+   CELULAR
+============================ */
+
+@media (max-width: 600px) {
+
+    .timeline-item {
+        grid-template-columns:
+            85px 1fr;
+
+        gap:
+            20px;
+    }
+
+
+    .timeline-ano {
+        width:
+            85px;
+
+        height:
+            45px;
+
+        background-color:
+            var(--laranja);
+
+        color:
+            #FFFFFF;
+
+        font-size:
+            14px;
+    }
+
+
+    .timeline-item::before {
+        left:
+            41px;
+    }
+
+}
+
+/* ============================
+   FEITO À MÃO
+============================ */
+
+.quem-somos-artesanal {
+    display:
+        grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:
+        70px;
+
+    align-items:
+        center;
+
+    margin-bottom:
+        110px;
+
+    padding:
+        60px;
+
+    background:
+        var(--branco);
+
+    border-radius:
+        30px;
+
+    box-shadow:
+        0 10px 35px rgba(93, 64, 55, 0.08);
+}
+
+
+.quem-somos-artesanal-foto {
+    min-height:
+        430px;
+}
+
+
+.quem-somos-artesanal-foto .quem-somos-foto-placeholder {
+    min-height:
+        430px;
+}
+
+
+/* ============================
+   HOJE
+============================ */
+
+.quem-somos-hoje {
+    margin-bottom:
+        110px;
+}
+
+
+.quem-somos-cards {
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap:
+        30px;
+}
+
+
+.quem-somos-card {
+    overflow:
+        hidden;
+
+    background:
+        var(--branco);
+
+    border-radius:
+        25px;
+
+    box-shadow:
+        0 10px 30px rgba(93, 64, 55, 0.08);
+}
+
+
+.quem-somos-card-foto {
+    min-height:
+        280px;
+}
+
+
+.quem-somos-card-foto .quem-somos-foto-placeholder {
+    min-height:
+        280px;
+
+    border:
+        none;
+
+    border-radius:
+        0;
+}
+
+
+.quem-somos-card-conteudo {
+    padding:
+        30px;
+}
+
+
+.quem-somos-card-conteudo h3 {
+    margin:
+        0 0 12px;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        23px;
+}
+
+
+.quem-somos-card-conteudo p {
+    margin:
+        0;
+
+    color:
+        var(--texto);
+
+    line-height:
+        1.7;
+}
+
+
+/* ============================
+   VALORES
+============================ */
+
+.quem-somos-valores {
+    margin-bottom:
+        110px;
+}
+
+
+.quem-somos-valores-grid {
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap:
+        20px;
+}
+
+
+.quem-somos-valor {
+    padding:
+        30px 20px;
+
+    background:
+        var(--branco);
+
+    border-radius:
+        20px;
+
+    text-align:
+        center;
+
+    box-shadow:
+        0 8px 25px rgba(93, 64, 55, 0.06);
+}
+
+
+.quem-somos-valor-icone {
+    display:
+        block;
+
+    margin-bottom:
+        15px;
+
+    font-size:
+        32px;
+}
+
+
+.quem-somos-valor h3 {
+    margin:
+        0 0 10px;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        21px;
+}
+
+
+.quem-somos-valor p {
+    margin:
+        0;
+
+    color:
+        var(--texto);
+
+    font-size:
+        15px;
+
+    line-height:
+        1.6;
+}
+
+
+/* ============================
+   FUTURO
+============================ */
+
+.quem-somos-futuro {
+    display:
+        grid;
+
+    grid-template-columns:
+        0.9fr 1.1fr;
+
+    gap:
+        70px;
+
+    align-items:
+        center;
+
+    margin-bottom:
+        100px;
+}
+
+
+.quem-somos-futuro-foto {
+    min-height:
+        400px;
+}
+
+
+.quem-somos-futuro-foto .quem-somos-foto-placeholder {
+    min-height:
+        400px;
+}
+
+
+/* ============================
+   FINAL
+============================ */
+
+.quem-somos-final {
+    max-width:
+        900px;
+
+    margin:
+        0 auto;
+
+    padding:
+        65px 45px;
+
+    background:
+        var(--marrom);
+
+    border-radius:
+        30px;
+
+    text-align:
+        center;
+
+    box-shadow:
+        0 15px 40px rgba(93, 64, 55, 0.18);
+}
+
+
+.quem-somos-final-subtitulo {
+    color:
+        var(--branco);
+
+    opacity:
+        0.8;
+}
+
+
+.quem-somos-final p {
+    margin:
+        20px auto 0;
+
+    max-width:
+        700px;
+
+    color:
+        var(--branco);
+
+    font-size:
+        18px;
+
+    line-height:
+        1.7;
+}
+
+
+.quem-somos-final strong {
+    display:
+        block;
+
+    margin-top:
+        30px;
+
+    color:
+        var(--branco);
+
+    font-size:
+        28px;
+
+    line-height:
+        1.4;
+}
+
+
+/* ============================
+   TABLET
+============================ */
+
+@media (max-width: 900px) {
+
+    .quem-somos-historia,
+    .quem-somos-artesanal,
+    .quem-somos-futuro {
+        grid-template-columns:
+            1fr;
+
+        gap:
+            40px;
+    }
+
+
+    .historia-invertida {
+        direction:
+            ltr !important;
+    }
+
+
+    .quem-somos-texto {
+        order:
+            1;
+    }
+
+
+    .quem-somos-foto,
+    .quem-somos-artesanal-foto,
+    .quem-somos-futuro-foto {
+        order:
+            2;
+    }
+
+
+    .quem-somos-valores-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+}
+
+
+/* ============================
+   CELULAR
+============================ */
+
+@media (max-width: 600px) {
+
+    .quem-somos {
+        padding:
+            55px 15px;
+    }
+
+
+    .quem-somos-header {
+        margin-bottom:
+            55px;
+    }
+
+
+    .quem-somos-header h1 {
+        font-size:
+            34px;
+    }
+
+
+    .quem-somos-header p {
+        font-size:
+            17px;
+    }
+
+
+    .quem-somos-texto h2,
+    .quem-somos-artesanal-texto h2,
+    .quem-somos-futuro-texto h2,
+    .quem-somos-momento-conteudo h2 {
+        font-size:
+            27px;
+    }
+
+
+    .quem-somos-texto p,
+    .quem-somos-artesanal-texto p,
+    .quem-somos-futuro-texto p,
+    .quem-somos-momento-conteudo p {
+        font-size:
+            16px;
+
+        line-height:
+            1.7;
+    }
+
+
+    .quem-somos-historia,
+    .quem-somos-artesanal,
+    .quem-somos-futuro {
+        margin-bottom:
+            75px;
+    }
+
+
+    .quem-somos-foto,
+    .quem-somos-foto-placeholder {
+        min-height:
+            280px;
+    }
+
+
+    .quem-somos-momento,
+    .quem-somos-artesanal {
+        padding:
+            30px 20px;
+
+        border-radius:
+            20px;
+    }
+
+
+    .quem-somos-momento {
+        grid-template-columns:
+            1fr;
+
+        gap:
+            30px;
+    }
+
+
+    .quem-somos-momento-foto,
+    .quem-somos-momento-foto .quem-somos-foto-placeholder {
+        min-height:
+            280px;
+    }
+
+
+    .timeline-item {
+        grid-template-columns:
+            85px 1fr;
+
+        gap:
+            20px;
+    }
+
+
+    .timeline-ano {
+        width:
+            85px;
+
+        height:
+            45px;
+
+        font-size:
+            14px;
+    }
+
+
+    .timeline-item::before {
+        left:
+            41px;
+    }
+
+
+    .quem-somos-section-header h2 {
+        font-size:
+            28px;
+    }
+
+
+    .quem-somos-cards {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .quem-somos-card-foto,
+    .quem-somos-card-foto .quem-somos-foto-placeholder {
+        min-height:
+            230px;
+    }
+
+
+    .quem-somos-valores-grid {
+        grid-template-columns:
+            1fr 1fr;
+
+        gap:
+            12px;
+    }
+
+
+    .quem-somos-valor {
+        padding:
+            25px 12px;
+    }
+
+
+    .quem-somos-valor p {
+        font-size:
+            14px;
+    }
+
+
+    .quem-somos-final {
+        padding:
+            45px 20px;
+
+        border-radius:
+            22px;
+    }
+
+
+    .quem-somos-final strong {
+        font-size:
+            23px;
+    }
+
+}

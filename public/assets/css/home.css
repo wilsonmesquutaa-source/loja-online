@@ -400,20 +400,7 @@ BOTÃO
 }
 
 
-/*
----------------------------------
-ACESSIBILIDADE
----------------------------------
-*/
 
-.produto-card:focus-within {
-    outline:
-        2px solid
-        var(--cor-destaque);
-
-    outline-offset:
-        3px;
-}
 
 /* ============================
 CONTATO / WHATSAPP
@@ -472,4 +459,61 @@ RESPONSIVO
         text-align: center;
     }
 
+}
+
+/* ============================
+DESTAQUES
+============================ */
+
+.destaques-section {
+    background: var(--creme);
+}
+
+.destaques-section .section-etiqueta {
+    color: var(--laranja-hover);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.destaque-card {
+    background: var(--branco);
+    border-radius: 18px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.destaque-card:hover {
+    transform: translateY(-5px);
+}
+
+.destaque-etiqueta {
+    display: inline-flex;
+    align-self: flex-start;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 14px;
+    background: var(--cor-destaque);
+    color: var(--cor-secundaria);
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.destaque-preco {
+    color: var(--laranja-hover);
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.destaque-card .btn-marca {
+    background: var(--laranja-hover);
+    color: var(--branco);
+    border: none;
+}
+
+.destaque-card .btn-marca:hover {
+    background: var(--marrom);
+    color: var(--branco);
 }
