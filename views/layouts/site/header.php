@@ -94,6 +94,15 @@ $baseUrl =
                     'UTF-8'
                 ); ?>">
 
+        
+      <link
+        rel="stylesheet"
+        href="<?= htmlspecialchars(
+                    $baseUrl . '/assets/css/quemsomos.css',
+                    ENT_QUOTES,
+                    'UTF-8'
+                ); ?>">
+
 
 
 

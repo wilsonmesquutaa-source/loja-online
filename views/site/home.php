@@ -13,7 +13,7 @@ View::componente(
     'site/navbar',
     [
         'rotaAtual' =>
-            $rotaAtual,
+        $rotaAtual,
     ]
 );
 
@@ -34,28 +34,25 @@ View::componente(
         'site/sections/hero',
         [
             'tituloHero' =>
-                $tituloHero,
+            $tituloHero,
 
             'textoHero' =>
-                $textoHero,
+            $textoHero,
         ]
     );
 
 
     /*
-    |--------------------------------------------------------------------------
-    | CARDÁPIO
-    |--------------------------------------------------------------------------
-    */
+|--------------------------------------------------------------------------
+| DESTAQUES
+|--------------------------------------------------------------------------
+*/
 
     View::componente(
-        'site/sections/cardapio',
+        'site/sections/destaques',
         [
-            'categorias' =>
-                $categorias,
-
-            'etiquetaProdutos' =>
-                'Cardápio',
+            'categoriasDestaques' =>
+            $categoriasDestaques,
         ]
     );
 
@@ -70,7 +67,7 @@ View::componente(
         'site/sections/beneficios',
         [
             'beneficios' =>
-                $beneficios,
+            $beneficios,
         ]
     );
 
@@ -85,19 +82,19 @@ View::componente(
         'site/sections/contato',
         [
             'emailContato' =>
-                $emailContato,
+            $emailContato,
 
             'telefoneContato' =>
-                $telefoneContato,
+            $telefoneContato,
 
             'whatsappContato' =>
-                $whatsappContato,
+            $whatsappContato,
 
             'instagramContato' =>
-                $instagramContato,
+            $instagramContato,
 
             'facebookContato' =>
-                $facebookContato,
+            $facebookContato,
         ]
     );
 

@@ -46,9 +46,9 @@ final class HomeController extends Controller
         ];
 
 
-        $CardapioRepository = new CardapioRepository($this->pdo);
+        $cardapioRepository = new CardapioRepository($this->pdo);
 
-        $categorias = $CardapioRepository->buscarCategoriasDestaque();
+        $categoriasDestaques = $cardapioRepository->buscarCategoriasDestaque();
 
 
 
@@ -81,12 +81,9 @@ final class HomeController extends Controller
                 $beneficios,
 
 
-               'categorias' =>
-                $categorias,
+                'categoriasDestaques' =>
+                $categoriasDestaques,
 
-                'etiquetaProdutos' =>
-                'Destaque',
-                
                 'emailContato' =>
                 'contato@cantimdolanche.com',
 

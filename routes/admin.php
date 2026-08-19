@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Controllers\Admin\LoginAdminController;
 use App\Controllers\Admin\DashboardController;
 use App\Controllers\Admin\ProdutoController;
+use App\Controllers\Admin\CategoriaController;
 
 
 return [
@@ -18,6 +19,54 @@ return [
         ],
     ],
 
+    [
+        'method' => 'GET',
+        'path' => '/admin/categorias',
+        'action' => [
+            CategoriaController::class,
+            'index',
+        ],
+    ],
+
+
+    [
+        'method' => 'GET',
+        'path' => '/admin/categorias/novo',
+        'action' => [
+            CategoriaController::class,
+            'novo',
+        ],
+    ],
+
+
+    [
+        'method' => 'POST',
+        'path' => '/admin/categorias/salvar',
+        'action' => [
+            CategoriaController::class,
+            'salvar',
+        ],
+    ],
+
+
+    [
+        'method' => 'GET',
+        'path' => '/admin/categorias/editar/{id}',
+        'action' => [
+            CategoriaController::class,
+            'editar',
+        ],
+    ],
+
+
+    [
+        'method' => 'POST',
+        'path' => '/admin/categorias/atualizar/{id}',
+        'action' => [
+            CategoriaController::class,
+            'atualizar',
+        ],
+    ],
 
     [
         'method' => 'GET',

@@ -27,27 +27,25 @@ final class CardapioRepository
     public function buscarCategoriasDestaque(): array
     {
         $sql = '
-            SELECT
-                id,
-                nome,
-                descricao,
-                preco,
-                preco_revenda,
-                quantidade_minima_revenda
-            FROM categorias
-            WHERE ativo = 1
-            ORDER BY id
-        ';
-
+        SELECT
+            id,
+            nome,
+            descricao,
+            preco,
+            preco_revenda,
+            quantidade_minima_revenda
+        FROM categorias
+        WHERE ativo = 1
+        AND destaque = 1
+        ORDER BY ordem_destaque ASC, id ASC
+    ';
 
         $consulta =
             $this->pdo->prepare(
                 $sql
             );
 
-
         $consulta->execute();
-
 
         return
             $consulta->fetchAll();
@@ -100,8 +98,8 @@ final class CardapioRepository
 
         return
             $categoria !== false
-                ? $categoria
-                : null;
+            ? $categoria
+            : null;
     }
 
 

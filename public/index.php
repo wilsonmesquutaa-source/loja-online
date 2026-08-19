@@ -50,15 +50,13 @@ $dotenv->safeLoad();
 | URL BASE
 |--------------------------------------------------------------------------
 |
-| O projeto está em:
+| Projeto:
 |
 | C:\xampp\htdocs\loja-online
 |
-| E a URL pública é:
+| URL:
 |
 | http://localhost/loja-online
-|
-| A pasta /public é interna e não aparece nas URLs.
 |
 */
 
@@ -68,7 +66,7 @@ $diretorioPublico =
         '/',
         dirname(
             $_SERVER['SCRIPT_NAME']
-            ?? '/index.php'
+                ?? '/index.php'
         )
     );
 
@@ -216,7 +214,7 @@ $rotas =
 $metodoHttp =
     strtoupper(
         $_SERVER['REQUEST_METHOD']
-        ?? 'GET'
+            ?? 'GET'
     );
 
 
@@ -229,7 +227,7 @@ $metodoHttp =
 $caminho =
     parse_url(
         $_SERVER['REQUEST_URI']
-        ?? '/',
+            ?? '/',
         PHP_URL_PATH
     );
 
@@ -294,6 +292,12 @@ foreach (
     $rotas as $rota
 ) {
 
+    /*
+    |--------------------------------------------------------------------------
+    | Verifica método HTTP
+    |--------------------------------------------------------------------------
+    */
+
     $mesmoMetodo =
         (
             $rota['method']
@@ -313,7 +317,7 @@ foreach (
 
     /*
     |--------------------------------------------------------------------------
-    | Parâmetros
+    | Parâmetros da rota
     |--------------------------------------------------------------------------
     */
 
@@ -325,11 +329,13 @@ foreach (
     | Converte parâmetros da rota
     |--------------------------------------------------------------------------
     |
-    | /cardapio/categoria/{id}
+    | Exemplo:
+    |
+    | /admin/produtos/editar/{id}
     |
     | vira:
     |
-    | /cardapio/categoria/([^/]+)
+    | /admin/produtos/editar/([^/]+)
     |
     */
 
@@ -347,6 +353,12 @@ foreach (
         . '$#';
 
 
+    /*
+    |--------------------------------------------------------------------------
+    | Verifica se esta é realmente a rota solicitada
+    |--------------------------------------------------------------------------
+    */
+
     if (
         !preg_match(
             $padrao,
@@ -358,6 +370,45 @@ foreach (
         continue;
     }
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Proteção das rotas administrativas
+    |--------------------------------------------------------------------------
+    |
+    | A proteção acontece somente depois
+    | de confirmar que a rota corresponde
+    | à URL solicitada.
+    |
+    */
+
+    if (
+        str_starts_with(
+            $rota['path'],
+            '/admin'
+        )
+        && empty(
+            $_SESSION[
+                'usuario_admin'
+            ]['id']
+        )
+    ) {
+
+        header(
+            'Location: '
+            . BASE_URL
+            . '/login-admin'
+        );
+
+        exit;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Remove a correspondência completa
+    |--------------------------------------------------------------------------
+    */
 
     array_shift(
         $matches
@@ -403,12 +454,32 @@ foreach (
     |--------------------------------------------------------------------------
     | Instancia Controller
     |--------------------------------------------------------------------------
+    |
+    | O LoginAdminController possui
+    | seu próprio construtor e cria
+    | internamente o repository.
+    |
+    | Os demais controllers utilizam
+    | o construtor do Controller base,
+    | que recebe a conexão PDO.
+    |
     */
 
-    $objetoController =
-        new $controller(
-            $pdo
-        );
+    if (
+        $controller ===
+        \App\Controllers\Admin\LoginAdminController::class
+    ) {
+
+        $objetoController =
+            new $controller();
+
+    } else {
+
+        $objetoController =
+            new $controller(
+                $pdo
+            );
+    }
 
 
     /*
@@ -425,7 +496,8 @@ foreach (
     ) {
 
         throw new RuntimeException(
-            "Método não encontrado: {$controller}::{$acao}"
+            "Método não encontrado: "
+            . "{$controller}::{$acao}"
         );
     }
 
