@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\Helpers\View;
 
 require APP_ROOT
-    . '/views/layouts/admin-header.php';?>
+    . '/views/layouts/admin-header.php'; ?>
 
 <div class="container-fluid">
 
@@ -60,6 +60,10 @@ require APP_ROOT
                                 Status
                             </th>
 
+                            <th>
+                                Ações
+                            </th>
+
                         </tr>
 
                     </thead>
@@ -76,9 +80,7 @@ require APP_ROOT
 
                                 <td>
                                     <?= (int)
-                                        $categoria[
-                                            'ordem_destaque'
-                                        ] ?>
+                                    $categoria['ordem_destaque'] ?>
                                 </td>
 
 
@@ -87,30 +89,21 @@ require APP_ROOT
                                     <strong>
                                         <?= htmlspecialchars(
                                             (string)
-                                                $categoria[
-                                                    'nome'
-                                                ]
+                                            $categoria['nome']
                                         ) ?>
                                     </strong>
 
                                     <?php if (
-                                        !empty(
-                                            $categoria[
-                                                'descricao'
-                                            ]
-                                        )
+                                        !empty($categoria['descricao'])
                                     ): ?>
 
                                         <br>
 
                                         <small
-                                            class="text-muted"
-                                        >
+                                            class="text-muted">
                                             <?= htmlspecialchars(
                                                 (string)
-                                                    $categoria[
-                                                        'descricao'
-                                                    ]
+                                                $categoria['descricao']
                                             ) ?>
                                         </small>
 
@@ -123,9 +116,7 @@ require APP_ROOT
                                     R$
                                     <?= number_format(
                                         (float)
-                                            $categoria[
-                                                'preco'
-                                            ],
+                                        $categoria['preco'],
                                         2,
                                         ',',
                                         '.'
@@ -136,17 +127,13 @@ require APP_ROOT
                                 <td>
 
                                     <?php if (
-                                        $categoria[
-                                            'preco_revenda'
-                                        ] !== null
+                                        $categoria['preco_revenda'] !== null
                                     ): ?>
 
                                         R$
                                         <?= number_format(
                                             (float)
-                                                $categoria[
-                                                    'preco_revenda'
-                                                ],
+                                            $categoria['preco_revenda'],
                                             2,
                                             ',',
                                             '.'
@@ -155,8 +142,7 @@ require APP_ROOT
                                     <?php else: ?>
 
                                         <span
-                                            class="text-muted"
-                                        >
+                                            class="text-muted">
                                             Não definido
                                         </span>
 
@@ -169,22 +155,18 @@ require APP_ROOT
 
                                     <?php if (
                                         (int)
-                                            $categoria[
-                                                'destaque'
-                                            ] === 1
+                                        $categoria['destaque'] === 1
                                     ): ?>
 
                                         <span
-                                            class="badge bg-warning text-dark"
-                                        >
+                                            class="badge bg-warning text-dark">
                                             Destaque
                                         </span>
 
                                     <?php else: ?>
 
                                         <span
-                                            class="badge bg-secondary"
-                                        >
+                                            class="badge bg-secondary">
                                             Normal
                                         </span>
 
@@ -197,29 +179,31 @@ require APP_ROOT
 
                                     <?php if (
                                         (int)
-                                            $categoria[
-                                                'ativo'
-                                            ] === 1
+                                        $categoria['ativo'] === 1
                                     ): ?>
 
                                         <span
-                                            class="badge bg-success"
-                                        >
+                                            class="badge bg-success">
                                             Ativa
                                         </span>
 
                                     <?php else: ?>
 
                                         <span
-                                            class="badge bg-danger"
-                                        >
+                                            class="badge bg-danger">
                                             Inativa
                                         </span>
 
                                     <?php endif; ?>
 
                                 </td>
-
+                                <td>
+                                    <a
+                                        href="<?= BASE_URL ?>/admin/categorias/editar/<?= (int) $categoria['id'] ?>"
+                                        class="btn btn-primary btn-sm">
+                                        Editar
+                                    </a>
+                                </td>
                             </tr>
 
                         <?php endforeach; ?>

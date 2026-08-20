@@ -1,0 +1,858 @@
+/* =========================================================
+   EDITAR PERFIL
+   ÁREA DO CLIENTE
+========================================================= */
+
+
+/* =========================================================
+   PÁGINA
+========================================================= */
+
+.cliente-editar-page {
+    min-height: calc(100vh - 140px);
+
+    padding: 60px 20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff,
+            var(--creme)
+        );
+}
+
+
+.cliente-editar-container {
+    width: 100%;
+    max-width: 900px;
+
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   CABEÇALHO
+========================================================= */
+
+.cliente-editar-header {
+    margin-bottom: 30px;
+}
+
+
+.cliente-editar-etiqueta {
+    margin: 0 0 8px;
+
+    color:
+        var(--cor-primaria);
+
+    font-size:
+        0.85rem;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        0.12rem;
+
+    text-transform:
+        uppercase;
+}
+
+
+.cliente-editar-header h1 {
+    margin: 0;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        2.2rem;
+
+    font-weight:
+        800;
+
+    line-height:
+        1.2;
+}
+
+
+.cliente-editar-header p:last-child {
+    margin:
+        10px 0 0;
+
+    color:
+        var(--cor-texto);
+
+    font-size:
+        1rem;
+
+    line-height:
+        1.6;
+}
+
+
+/* =========================================================
+   ALERTAS
+========================================================= */
+
+.cliente-editar-alert {
+    width: 100%;
+
+    margin-bottom:
+        24px;
+
+    padding:
+        14px 18px;
+
+    box-sizing:
+        border-box;
+
+    border-radius:
+        12px;
+
+    font-size:
+        0.95rem;
+
+    line-height:
+        1.5;
+}
+
+
+.cliente-editar-alert-danger {
+    border:
+        1px solid
+        rgba(220, 38, 38, 0.20);
+
+    background:
+        #fef2f2;
+
+    color:
+        #991b1b;
+}
+
+
+.cliente-editar-alert-success {
+    border:
+        1px solid
+        rgba(22, 163, 74, 0.20);
+
+    background:
+        #f0fdf4;
+
+    color:
+        #166534;
+}
+
+
+/* =========================================================
+   CARD PRINCIPAL
+========================================================= */
+
+.cliente-editar-card {
+    width: 100%;
+
+    overflow:
+        hidden;
+
+    background:
+        var(--branco);
+
+    border:
+        1px solid
+        rgba(93, 64, 55, 0.08);
+
+    border-radius:
+        24px;
+
+    box-shadow:
+        0 12px 35px
+        rgba(93, 64, 55, 0.10);
+}
+
+
+.cliente-editar-card-body {
+    padding:
+        40px;
+}
+
+
+/* =========================================================
+   FORMULÁRIO
+========================================================= */
+
+.cliente-editar-form {
+    width: 100%;
+}
+
+
+/* =========================================================
+   EDITOR DE FOTO
+========================================================= */
+
+.cliente-editar-foto-area {
+    margin-bottom:
+        35px;
+
+    text-align:
+        center;
+}
+
+
+.cliente-editar-foto-editor {
+    width:
+        280px;
+
+    margin:
+        0 auto 18px;
+}
+
+
+.cliente-editar-foto-preview {
+    position:
+        relative;
+
+    width:
+        280px;
+
+    height:
+        280px;
+
+    overflow:
+        hidden;
+
+    background:
+        #f8f8f8;
+
+    border:
+        4px solid
+        rgba(245, 124, 0, 0.18);
+
+    border-radius:
+        50%;
+
+    box-shadow:
+        0 10px 30px
+        rgba(93, 64, 55, 0.14);
+
+    cursor:
+        grab;
+
+    touch-action:
+        none;
+}
+
+
+.cliente-editar-foto-preview.arrastando {
+    cursor:
+        grabbing;
+}
+
+
+.cliente-editar-foto-preview img {
+    position:
+        absolute;
+
+    top:
+        50%;
+
+    left:
+        50%;
+
+    width:
+        auto;
+
+    height:
+        auto;
+
+    max-width:
+        none;
+
+    max-height:
+        none;
+
+    display:
+        block;
+
+    user-select:
+        none;
+
+    pointer-events:
+        none;
+
+    transform-origin:
+        center center;
+
+    will-change:
+        transform;
+}
+
+
+.cliente-editar-foto-placeholder {
+    width:
+        100%;
+
+    height:
+        100%;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    color:
+        var(--cor-destaque);
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff7ed,
+            #ffedd5
+        );
+
+    font-size:
+        5rem;
+}
+
+
+.cliente-editar-foto-placeholder span {
+    line-height:
+        1;
+}
+
+
+.cliente-editar-foto-titulo {
+    margin-bottom:
+        10px;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        1rem;
+
+    font-weight:
+        700;
+}
+
+
+/* =========================================================
+   UPLOAD DA FOTO
+========================================================= */
+
+.cliente-editar-upload {
+    width:
+        100%;
+
+    max-width:
+        420px;
+
+    margin:
+        0 auto;
+}
+
+
+.cliente-editar-upload input[type="file"] {
+    width:
+        100%;
+
+    min-height:
+        48px;
+
+    padding:
+        10px 12px;
+
+    box-sizing:
+        border-box;
+
+    border:
+        1px solid
+        rgba(93, 64, 55, 0.16);
+
+    border-radius:
+        12px;
+
+    background:
+        var(--branco);
+
+    color:
+        var(--cor-texto);
+
+    font-family:
+        inherit;
+
+    font-size:
+        0.9rem;
+
+    cursor:
+        pointer;
+
+    transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+
+.cliente-editar-upload input[type="file"]:hover {
+    border-color:
+        rgba(245, 124, 0, 0.45);
+}
+
+
+.cliente-editar-upload input[type="file"]:focus {
+    outline:
+        none;
+
+    border-color:
+        var(--cor-destaque);
+
+    box-shadow:
+        0 0 0 0.2rem
+        rgba(245, 124, 0, 0.14);
+}
+
+
+.cliente-editar-upload small {
+    display:
+        block;
+
+    margin-top:
+        8px;
+
+    color:
+        #777777;
+
+    font-size:
+        0.82rem;
+
+    line-height:
+        1.4;
+}
+
+
+/* =========================================================
+   CONTROLES DA FOTO
+========================================================= */
+
+.cliente-editar-foto-controles {
+    width:
+        280px;
+
+    margin:
+        18px auto 0;
+
+    text-align:
+        left;
+}
+
+
+.cliente-editar-foto-controles[hidden] {
+    display:
+        none;
+}
+
+
+.cliente-editar-foto-controles label {
+    display:
+        block;
+
+    margin-bottom:
+        7px;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        0.9rem;
+
+    font-weight:
+        700;
+}
+
+
+.cliente-editar-foto-controles input[type="range"] {
+    display:
+        block;
+
+    width:
+        100%;
+
+    margin:
+        0;
+
+    accent-color:
+        var(--cor-destaque);
+
+    cursor:
+        pointer;
+}
+
+
+.cliente-editar-foto-controles button {
+    width:
+        100%;
+
+    margin-top:
+        10px;
+
+    padding:
+        10px 16px;
+
+    border:
+        1px solid
+        rgba(93, 64, 55, 0.18);
+
+    border-radius:
+        30px;
+
+    background:
+        transparent;
+
+    color:
+        var(--marrom);
+
+    font-family:
+        inherit;
+
+    font-size:
+        0.95rem;
+
+    font-weight:
+        700;
+
+    cursor:
+        pointer;
+
+    transition:
+        background-color 0.25s ease,
+        border-color 0.25s ease,
+        color 0.25s ease;
+}
+
+
+.cliente-editar-foto-controles button:hover {
+    border-color:
+        var(--cor-destaque);
+
+    background:
+        rgba(245, 124, 0, 0.08);
+
+    color:
+        var(--marrom);
+}
+
+
+/* =========================================================
+   CAMPOS DO FORMULÁRIO
+========================================================= */
+
+.cliente-editar-form-group {
+    margin-bottom:
+        24px;
+}
+
+
+.cliente-editar-form-group label {
+    display:
+        block;
+
+    margin-bottom:
+        8px;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        0.95rem;
+
+    font-weight:
+        700;
+}
+
+
+.cliente-editar-form-group input {
+    width:
+        100%;
+
+    min-height:
+        48px;
+
+    padding:
+        12px 16px;
+
+    box-sizing:
+        border-box;
+
+    border:
+        1px solid
+        rgba(93, 64, 55, 0.14);
+
+    border-radius:
+        12px;
+
+    outline:
+        none;
+
+    background:
+        var(--branco);
+
+    color:
+        var(--cor-texto);
+
+    font-family:
+        inherit;
+
+    font-size:
+        1rem;
+
+    transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        background-color 0.25s ease;
+}
+
+
+.cliente-editar-form-group input:hover {
+    border-color:
+        rgba(245, 124, 0, 0.35);
+}
+
+
+.cliente-editar-form-group input:focus {
+    border-color:
+        var(--cor-destaque);
+
+    background:
+        var(--branco);
+
+    box-shadow:
+        0 0 0 0.2rem
+        rgba(245, 124, 0, 0.14);
+}
+
+
+.cliente-editar-form-group input::placeholder {
+    color:
+        #999999;
+}
+
+
+/* =========================================================
+   ÁREA DOS BOTÕES
+========================================================= */
+
+.cliente-editar-acoes {
+    display:
+        flex;
+
+    flex-wrap:
+        wrap;
+
+    align-items:
+        center;
+
+    gap:
+        12px;
+
+    margin-top:
+        32px;
+}
+
+
+/* =========================================================
+   BOTÃO SALVAR
+========================================================= */
+
+.cliente-editar-acoes .btn-marca {
+    min-height:
+        48px;
+
+    padding:
+        12px 30px;
+
+    border:
+        none;
+
+    border-radius:
+        30px;
+
+    background:
+        var(--cor-destaque);
+
+    color:
+        var(--branco);
+
+    font-family:
+        inherit;
+
+    font-size:
+        1rem;
+
+    font-weight:
+        700;
+
+    cursor:
+        pointer;
+
+    box-shadow:
+        0 6px 18px
+        rgba(245, 124, 0, 0.16);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        background-color 0.25s ease;
+}
+
+
+.cliente-editar-acoes .btn-marca:hover {
+    background:
+        var(--laranja-hover);
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 10px 22px
+        rgba(245, 124, 0, 0.22);
+}
+
+
+/* =========================================================
+   BOTÃO VOLTAR PARA A LOJA
+========================================================= */
+
+.btn-voltar-loja {
+    min-height:
+        48px;
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    padding:
+        12px 30px;
+
+    border:
+        1px solid
+        rgba(93, 64, 55, 0.18);
+
+    border-radius:
+        30px;
+
+    background:
+        transparent;
+
+    color:
+        var(--marrom);
+
+    font-family:
+        inherit;
+
+    font-size:
+        1rem;
+
+    font-weight:
+        700;
+
+    text-decoration:
+        none;
+
+    cursor:
+        pointer;
+
+    transition:
+        background-color 0.25s ease,
+        border-color 0.25s ease,
+        color 0.25s ease,
+        transform 0.25s ease;
+}
+
+
+.btn-voltar-loja:hover {
+    transform:
+        translateY(-2px);
+
+    border-color:
+        var(--cor-destaque);
+
+    background:
+        rgba(245, 124, 0, 0.08);
+
+    color:
+        var(--marrom);
+
+    text-decoration:
+        none;
+}
+
+
+/* =========================================================
+   RESPONSIVO
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .cliente-editar-page {
+        padding:
+            40px 16px;
+    }
+
+
+    .cliente-editar-header h1 {
+        font-size:
+            1.9rem;
+    }
+
+
+    .cliente-editar-card-body {
+        padding:
+            28px 20px;
+    }
+
+
+    .cliente-editar-foto-editor {
+        width:
+            240px;
+    }
+
+
+    .cliente-editar-foto-preview {
+        width:
+            240px;
+
+        height:
+            240px;
+    }
+
+
+    .cliente-editar-foto-controles {
+        width:
+            240px;
+    }
+
+
+    .cliente-editar-acoes {
+        flex-direction:
+            column;
+
+        align-items:
+            stretch;
+    }
+
+
+    .cliente-editar-acoes .btn-marca,
+    .btn-voltar-loja {
+        width:
+            100%;
+    }
+
+}

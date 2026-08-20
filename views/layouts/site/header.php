@@ -86,7 +86,7 @@ $baseUrl =
                 ); ?>">
 
 
-      <link
+    <link
         rel="stylesheet"
         href="<?= htmlspecialchars(
                     $baseUrl . '/assets/css/navbar.css',
@@ -94,8 +94,8 @@ $baseUrl =
                     'UTF-8'
                 ); ?>">
 
-        
-      <link
+
+    <link
         rel="stylesheet"
         href="<?= htmlspecialchars(
                     $baseUrl . '/assets/css/quemsomos.css',
@@ -104,7 +104,28 @@ $baseUrl =
                 ); ?>">
 
 
+    <link
+        rel="stylesheet"
+        href="<?= htmlspecialchars(
+                    $baseUrl . '/assets/css/cliente_editar.css',
+                    ENT_QUOTES,
+                    'UTF-8'
+                ); ?>">
 
+    <link
+        rel="stylesheet"
+        href="<?= htmlspecialchars(
+                    $baseUrl . '/assets/css/cliente_pedidos.css',
+                    ENT_QUOTES,
+                    'UTF-8'
+                ); ?>">
+        <link
+        rel="stylesheet"
+        href="<?= htmlspecialchars(
+                    $baseUrl . '/assets/css/cliente_enderecos.css',
+                    ENT_QUOTES,
+                    'UTF-8'
+                ); ?>">
 
 
 </head>

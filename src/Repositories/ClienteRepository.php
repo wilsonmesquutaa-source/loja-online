@@ -44,7 +44,7 @@ final class ClienteRepository
 
         $stmt->execute([
             ':email' =>
-                $email,
+            $email,
         ]);
 
         return
@@ -53,7 +53,42 @@ final class ClienteRepository
             ) !== false;
     }
 
+    /*
+=================================
+VERIFICA E-MAIL DE OUTRO CLIENTE
+=================================
+*/
 
+    public function emailExisteParaOutroCliente(
+        string $email,
+        int $clienteId
+    ): bool {
+        $sql = "
+        SELECT id
+        FROM clientes
+        WHERE email = :email
+        AND id <> :id
+        LIMIT 1
+    ";
+
+        $stmt =
+            $this->pdo->prepare(
+                $sql
+            );
+
+        $stmt->execute([
+            ':email' =>
+            $email,
+
+            ':id' =>
+            $clienteId,
+        ]);
+
+        return
+            $stmt->fetch(
+                PDO::FETCH_ASSOC
+            ) !== false;
+    }
     /*
     =================================
     BUSCA POR E-MAIL
@@ -88,7 +123,7 @@ final class ClienteRepository
 
         $stmt->execute([
             ':email' =>
-                $email,
+            $email,
         ]);
 
         $cliente =
@@ -140,7 +175,7 @@ final class ClienteRepository
 
         $stmt->execute([
             ':google_sub' =>
-                $googleSub,
+            $googleSub,
         ]);
 
         $cliente =
@@ -192,7 +227,7 @@ final class ClienteRepository
 
         $stmt->execute([
             ':id' =>
-                $id,
+            $id,
         ]);
 
         $cliente =
@@ -207,6 +242,73 @@ final class ClienteRepository
         }
 
         return $cliente;
+    }
+
+    /*
+=================================
+ATUALIZA DADOS DO CLIENTE
+=================================
+*/
+
+    public function atualizarDados(
+        int $clienteId,
+        string $nome,
+        string $email
+    ): void {
+        $sql = "
+        UPDATE clientes
+        SET
+            nome = :nome,
+            email = :email
+        WHERE id = :id
+    ";
+
+        $stmt =
+            $this->pdo->prepare(
+                $sql
+            );
+
+        $stmt->execute([
+            ':nome' =>
+            $nome,
+
+            ':email' =>
+            $email,
+
+            ':id' =>
+            $clienteId,
+        ]);
+    }
+
+    /*
+=================================
+ATUALIZA FOTO DO CLIENTE
+=================================
+*/
+
+    public function atualizarFoto(
+        int $clienteId,
+        ?string $fotoUrl
+    ): void {
+        $sql = "
+        UPDATE clientes
+        SET
+            foto_url = :foto_url
+        WHERE id = :id
+    ";
+
+        $stmt =
+            $this->pdo->prepare(
+                $sql
+            );
+
+        $stmt->execute([
+            ':foto_url' =>
+            $fotoUrl,
+
+            ':id' =>
+            $clienteId,
+        ]);
     }
 
 
@@ -250,13 +352,13 @@ final class ClienteRepository
 
         $stmt->execute([
             ':nome' =>
-                $nome,
+            $nome,
 
             ':email' =>
-                $email,
+            $email,
 
             ':senha_hash' =>
-                $senhaHash,
+            $senhaHash,
         ]);
 
         return
@@ -309,23 +411,22 @@ final class ClienteRepository
 
             $stmt->execute([
                 ':google_sub' =>
-                    $googleSub,
+                $googleSub,
 
                 ':nome' =>
-                    $nome,
+                $nome,
 
                 ':email' =>
-                    $email,
+                $email,
 
                 ':foto_url' =>
-                    $fotoUrl,
+                $fotoUrl,
 
                 ':email_verificado' =>
-                    $emailVerificado
-                        ? 1
-                        : 0,
+                $emailVerificado
+                    ? 1
+                    : 0,
             ]);
-
         } catch (
             PDOException $erro
         ) {
@@ -375,20 +476,19 @@ final class ClienteRepository
 
             $stmt->execute([
                 ':google_sub' =>
-                    $googleSub,
+                $googleSub,
 
                 ':foto_url' =>
-                    $fotoUrl,
+                $fotoUrl,
 
                 ':email_verificado' =>
-                    $emailVerificado
-                        ? 1
-                        : 0,
+                $emailVerificado
+                    ? 1
+                    : 0,
 
                 ':id' =>
-                    $clienteId,
+                $clienteId,
             ]);
-
         } catch (
             PDOException $erro
         ) {
@@ -425,7 +525,7 @@ final class ClienteRepository
 
         $stmt->execute([
             ':id' =>
-                $clienteId,
+            $clienteId,
         ]);
     }
 }

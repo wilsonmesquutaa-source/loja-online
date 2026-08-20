@@ -6,16 +6,16 @@
 
 body.admin-body {
 
-    margin:0;
+    margin: 0;
 
-    background:#f8fafc;
+    background: #f8fafc;
 
     font-family:
-    "Segoe UI",
-    Arial,
-    sans-serif;
+        "Segoe UI",
+        Arial,
+        sans-serif;
 
-    color:#1f2937;
+    color: #1f2937;
 
 }
 
@@ -28,25 +28,25 @@ body.admin-body {
 
 .sidebar {
 
-    position:fixed;
+    position: fixed;
 
-    left:0;
+    left: 0;
 
-    top:0;
+    top: 0;
 
-    height:100vh;
+    height: 100vh;
 
-    width:260px;
+    width: 260px;
 
-    background:#d97706;
+    background: #d97706;
 
-    color:white;
+    color: white;
 
-    transition:.3s ease;
+    transition: .3s ease;
 
-    overflow:hidden;
+    overflow: hidden;
 
-    z-index:1000;
+    z-index: 1000;
 
 }
 
@@ -54,7 +54,7 @@ body.admin-body {
 
 .sidebar.collapsed {
 
-    width:75px;
+    width: 75px;
 
 }
 
@@ -63,15 +63,15 @@ body.admin-body {
 
 .sidebar-header {
 
-    height:100px;
+    height: 100px;
 
-    display:flex;
+    display: flex;
 
-    justify-content:center;
+    justify-content: center;
 
-    align-items:center;
+    align-items: center;
 
-    padding:10px;
+    padding: 10px;
 
 }
 
@@ -79,18 +79,16 @@ body.admin-body {
 
 .logo-admin {
 
-    width:250px;
+    width: 250px;
 
-    height:75px;
+    height: 75px;
 
-    object-fit:contain;
+    object-fit: contain;
 
     filter:
-        drop-shadow(
-            0 5px 10px rgba(0,0,0,.55)
-        );
+        drop-shadow(0 5px 10px rgba(0, 0, 0, .55));
 
-    transition:.3s ease;
+    transition: .3s ease;
 
 }
 
@@ -103,7 +101,7 @@ body.admin-body {
 
 .sidebar-menu {
 
-    padding-top:20px;
+    padding-top: 20px;
 
 }
 
@@ -112,26 +110,26 @@ body.admin-body {
 .sidebar-menu a {
 
 
-    display:flex;
+    display: flex;
 
-    align-items:center;
+    align-items: center;
 
-    gap:18px;
-
-
-    color:white;
+    gap: 18px;
 
 
-    text-decoration:none;
+    color: white;
 
 
-    padding:15px 20px;
+    text-decoration: none;
 
 
-    font-size:16px;
+    padding: 15px 20px;
 
 
-    transition:.3s;
+    font-size: 16px;
+
+
+    transition: .3s;
 
 
 }
@@ -141,7 +139,7 @@ body.admin-body {
 .sidebar-menu a span:first-child {
 
 
-    font-size:22px;
+    font-size: 22px;
 
 }
 
@@ -153,10 +151,10 @@ body.admin-body {
 
     background:
 
-    rgba(255,255,255,.20);
+        rgba(255, 255, 255, .20);
 
 
-    padding-left:30px;
+    padding-left: 30px;
 
 
 }
@@ -167,7 +165,7 @@ body.admin-body {
 .collapsed .menu-text {
 
 
-    display:none;
+    display: none;
 
 }
 
@@ -182,40 +180,40 @@ body.admin-body {
 .btn-toggle {
 
 
-    position:absolute;
+    position: absolute;
 
 
-    bottom:30px;
+    bottom: 30px;
 
 
-    left:18px;
+    left: 18px;
 
 
-    width:42px;
+    width: 42px;
 
 
-    height:42px;
+    height: 42px;
 
 
-    border:none;
+    border: none;
 
 
-    border-radius:50%;
+    border-radius: 50%;
 
 
-    background:white;
+    background: white;
 
 
-    color:#d97706;
+    color: #d97706;
 
 
-    font-size:20px;
+    font-size: 20px;
 
 
-    cursor:pointer;
+    cursor: pointer;
 
 
-    transition:.3s;
+    transition: .3s;
 
 
 }
@@ -225,10 +223,10 @@ body.admin-body {
 .btn-toggle:hover {
 
 
-    transform:rotate(180deg);
+    transform: rotate(180deg);
 
 
-    background:#fff7ed;
+    background: #fff7ed;
 
 
 }
@@ -245,13 +243,13 @@ body.admin-body {
 .content {
 
 
-    margin-left:260px;
+    margin-left: 260px;
 
 
-    transition:.3s;
+    transition: .3s;
 
 
-    min-height:100vh;
+    min-height: 100vh;
 
 
 }
@@ -262,7 +260,7 @@ body.admin-body {
 .content.expanded {
 
 
-    margin-left:75px;
+    margin-left: 75px;
 
 
 }
@@ -277,22 +275,22 @@ body.admin-body {
 
 .admin-topbar {
 
-    height:70px;
+    height: 70px;
 
-    background:white;
+    background: white;
 
     box-shadow:
-    0 2px 10px rgba(0,0,0,.08);
+        0 2px 10px rgba(0, 0, 0, .08);
 
-    display:flex;
+    display: flex;
 
-    align-items:center;
+    align-items: center;
 
-    justify-content:space-between;
+    justify-content: space-between;
 
-    padding:0 30px;
+    padding: 0 30px;
 
-    margin-bottom:35px;
+    margin-bottom: 35px;
 }
 
 
@@ -300,13 +298,13 @@ body.admin-body {
 .admin-topbar h4 {
 
 
-    margin:0;
+    margin: 0;
 
 
-    color:#d97706;
+    color: #d97706;
 
 
-    font-weight:700;
+    font-weight: 700;
 
 
 }
@@ -323,16 +321,16 @@ body.admin-body {
 .admin-top {
 
 
-    display:flex;
+    display: flex;
 
 
-    justify-content:space-between;
+    justify-content: space-between;
 
 
-    align-items:center;
+    align-items: center;
 
 
-    margin-bottom:30px;
+    margin-bottom: 30px;
 
 
 }
@@ -343,10 +341,10 @@ body.admin-body {
 .dashboard-title {
 
 
-    color:#1f2937;
+    color: #1f2937;
 
 
-    font-weight:700;
+    font-weight: 700;
 
 
 }
@@ -356,15 +354,15 @@ body.admin-body {
 
 .admin-user {
 
-    background:#d97706;
+    background: #d97706;
 
-    color:white;
+    color: white;
 
-    padding:8px 18px;
+    padding: 8px 18px;
 
-    border-radius:20px;
+    border-radius: 20px;
 
-    font-weight:600;
+    font-weight: 600;
 
 }
 
@@ -379,21 +377,17 @@ body.admin-body {
 .cards {
 
 
-    display:grid;
+    display: grid;
 
 
     grid-template-columns:
 
-    repeat(
+        repeat(auto-fit,
 
-        auto-fit,
-
-        minmax(220px,1fr)
-
-    );
+            minmax(220px, 1fr));
 
 
-    gap:25px;
+    gap: 25px;
 
 
 }
@@ -403,31 +397,29 @@ body.admin-body {
 .card-admin {
 
 
-    background:white;
+    background: white;
 
 
-    border-radius:16px;
+    border-radius: 16px;
 
 
-    padding:30px;
+    padding: 30px;
 
 
     box-shadow:
 
 
-    0 8px 20px
-
-    rgba(0,0,0,.08);
+        0 8px 20px rgba(0, 0, 0, .08);
 
 
 
     border-left:
 
-    5px solid #d97706;
+        5px solid #d97706;
 
 
 
-    transition:.3s;
+    transition: .3s;
 
 
 }
@@ -440,15 +432,13 @@ body.admin-body {
 
     transform:
 
-    translateY(-6px);
+        translateY(-6px);
 
 
     box-shadow:
 
 
-    0 15px 30px
-
-    rgba(0,0,0,.12);
+        0 15px 30px rgba(0, 0, 0, .12);
 
 
 }
@@ -459,16 +449,16 @@ body.admin-body {
 .card-admin h2 {
 
 
-    font-size:15px;
+    font-size: 15px;
 
 
-    text-transform:uppercase;
+    text-transform: uppercase;
 
 
-    color:#64748b;
+    color: #64748b;
 
 
-    margin-bottom:15px;
+    margin-bottom: 15px;
 
 
 }
@@ -479,10 +469,10 @@ body.admin-body {
 .card-admin strong {
 
 
-    font-size:48px;
+    font-size: 48px;
 
 
-    color:#1f2937;
+    color: #1f2937;
 
 
 }
@@ -499,13 +489,13 @@ body.admin-body {
 .table {
 
 
-    background:white;
+    background: white;
 
 
-    border-radius:12px;
+    border-radius: 12px;
 
 
-    overflow:hidden;
+    overflow: hidden;
 
 
 }
@@ -516,10 +506,10 @@ body.admin-body {
 .table thead {
 
 
-    background:#d97706;
+    background: #d97706;
 
 
-    color:white;
+    color: white;
 
 
 }
@@ -529,7 +519,7 @@ body.admin-body {
 .table th {
 
 
-    border:none;
+    border: none;
 
 
 }
@@ -540,7 +530,7 @@ body.admin-body {
 .table td {
 
 
-    vertical-align:middle;
+    vertical-align: middle;
 
 
 }
@@ -557,10 +547,10 @@ body.admin-body {
 .btn-primary {
 
 
-    background:#d97706;
+    background: #d97706;
 
 
-    border-color:#d97706;
+    border-color: #d97706;
 
 
 }
@@ -570,10 +560,10 @@ body.admin-body {
 .btn-primary:hover {
 
 
-    background:#b45309;
+    background: #b45309;
 
 
-    border-color:#b45309;
+    border-color: #b45309;
 
 
 }
@@ -583,13 +573,13 @@ body.admin-body {
 .btn-warning {
 
 
-    background:#f59e0b;
+    background: #f59e0b;
 
 
-    border:none;
+    border: none;
 
 
-    color:white;
+    color: white;
 
 
 }
@@ -599,7 +589,7 @@ body.admin-body {
 .btn-warning:hover {
 
 
-    background:#d97706;
+    background: #d97706;
 
 
 }
@@ -609,10 +599,10 @@ body.admin-body {
 .btn-success {
 
 
-    background:#16a34a;
+    background: #16a34a;
 
 
-    border:none;
+    border: none;
 
 
 }
@@ -622,11 +612,75 @@ body.admin-body {
 .btn-danger {
 
 
-    background:#dc2626;
+    background: #dc2626;
 
 
-    border:none;
+    border: none;
 
+
+}
+
+
+/* ==================================
+   BOTÃO SAIR
+================================== */
+
+.logout-form {
+
+    margin: 0;
+
+    padding: 0;
+
+}
+
+
+.logout-button {
+
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+    color: white;
+
+    padding: 15px 20px;
+
+    font-size: 16px;
+
+    transition: .3s;
+
+    background: transparent;
+
+    border: none;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    text-align: left;
+
+    cursor: pointer;
+
+}
+
+
+.logout-button span:first-child {
+
+    font-size: 22px;
+
+}
+
+
+.logout-button:hover {
+
+    background:
+        rgba(255, 255, 255, .20);
+
+    padding-left: 30px;
 
 }
 
@@ -642,10 +696,10 @@ body.admin-body {
 .form-control {
 
 
-    border-radius:8px;
+    border-radius: 8px;
 
 
-    border:1px solid #d1d5db;
+    border: 1px solid #d1d5db;
 
 
 }
@@ -655,14 +709,12 @@ body.admin-body {
 .form-control:focus {
 
 
-    border-color:#d97706;
+    border-color: #d97706;
 
 
     box-shadow:
 
-    0 0 0 .2rem
-
-    rgba(217,119,6,.25);
+        0 0 0 .2rem rgba(217, 119, 6, .25);
 
 
 }
@@ -674,13 +726,13 @@ body.admin-body {
 ================================== */
 
 
-@media(max-width:768px){
+@media(max-width:768px) {
 
 
     .sidebar {
 
 
-        width:75px;
+        width: 75px;
 
 
     }
@@ -690,7 +742,7 @@ body.admin-body {
     .content {
 
 
-        margin-left:75px;
+        margin-left: 75px;
 
 
     }
@@ -700,7 +752,7 @@ body.admin-body {
     .menu-text {
 
 
-        display:none;
+        display: none;
 
 
     }

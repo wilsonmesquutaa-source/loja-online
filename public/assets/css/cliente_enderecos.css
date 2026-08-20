@@ -1,0 +1,904 @@
+/* =========================================================
+   MEUS ENDEREÇOS
+========================================================= */
+
+.cliente-enderecos-page {
+    min-height:
+        calc(100vh - 140px);
+
+    padding:
+        60px 20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff,
+            var(--creme)
+        );
+}
+
+
+.cliente-enderecos-container {
+    width:
+        100%;
+
+    max-width:
+        1000px;
+
+    margin:
+        0 auto;
+}
+
+
+/* =========================================================
+   CABEÇALHO
+========================================================= */
+
+.cliente-enderecos-header {
+    margin-bottom:
+        30px;
+}
+
+
+.cliente-enderecos-etiqueta {
+    margin:
+        0 0 8px;
+
+    color:
+        var(--cor-primaria);
+
+    font-size:
+        0.85rem;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        0.12rem;
+
+    text-transform:
+        uppercase;
+}
+
+
+.cliente-enderecos-header h1 {
+    margin:
+        0;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        2.2rem;
+
+    font-weight:
+        800;
+}
+
+
+.cliente-enderecos-header p:last-child {
+    margin:
+        10px 0 0;
+
+    color:
+        var(--cor-texto);
+
+    line-height:
+        1.6;
+}
+
+
+/* =========================================================
+   ALERTAS
+========================================================= */
+
+.cliente-enderecos-alert {
+    margin-bottom:
+        24px;
+
+    padding:
+        14px 18px;
+
+    border-radius:
+        12px;
+
+    font-size:
+        0.95rem;
+}
+
+
+.cliente-enderecos-alert-danger {
+    background:
+        #fef2f2;
+
+    border:
+        1px solid
+        rgba(220, 38, 38, 0.20);
+
+    color:
+        #991b1b;
+}
+
+
+.cliente-enderecos-alert-success {
+    background:
+        #f0fdf4;
+
+    border:
+        1px solid
+        rgba(22, 163, 74, 0.20);
+
+    color:
+        #166534;
+}
+
+
+/* =========================================================
+   TOPO
+========================================================= */
+
+.cliente-enderecos-topo {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        20px;
+
+    margin-bottom:
+        28px;
+}
+
+
+.cliente-enderecos-topo h2 {
+    margin:
+        0;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        1.35rem;
+
+    font-weight:
+        800;
+}
+
+
+.cliente-enderecos-topo p {
+    margin:
+        7px 0 0;
+
+    color:
+        var(--cor-texto);
+
+    font-size:
+        0.9rem;
+}
+
+
+/* =========================================================
+   BOTÃO PRINCIPAL
+========================================================= */
+
+.cliente-enderecos-btn-principal {
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    min-height:
+        48px;
+
+    padding:
+        12px 24px;
+
+    border:
+        none;
+
+    border-radius:
+        30px;
+
+    background:
+        var(--cor-destaque);
+
+    color:
+        var(--branco);
+
+    font-weight:
+        700;
+
+    text-decoration:
+        none;
+
+    white-space:
+        nowrap;
+
+    transition:
+        background-color 0.25s ease,
+        transform 0.25s ease;
+}
+
+
+.cliente-enderecos-btn-principal:hover {
+    background:
+        var(--laranja-hover);
+
+    color:
+        var(--branco);
+
+    transform:
+        translateY(-2px);
+}
+
+
+/* =========================================================
+   ESTADO VAZIO
+========================================================= */
+
+.cliente-enderecos-vazio {
+    padding:
+        60px 30px;
+
+    text-align:
+        center;
+
+    background:
+        var(--branco);
+
+    border:
+        1px solid
+        rgba(93, 64, 55, 0.08);
+
+    border-radius:
+        24px;
+
+    box-shadow:
+        0 12px 35px
+        rgba(93, 64, 55, 0.08);
+}
+
+
+.cliente-enderecos-vazio-icone {
+    margin-bottom:
+        15px;
+
+    font-size:
+        4rem;
+}
+
+
+.cliente-enderecos-vazio h2 {
+    margin:
+        0;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        1.3rem;
+}
+
+
+.cliente-enderecos-vazio p {
+    max-width:
+        520px;
+
+    margin:
+        12px auto 24px;
+
+    color:
+        var(--cor-texto);
+
+    line-height:
+        1.6;
+}
+
+
+/* =========================================================
+   LISTA
+========================================================= */
+
+.cliente-enderecos-lista {
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(
+                0,
+                1fr
+            )
+        );
+
+    gap:
+        20px;
+}
+
+
+/* =========================================================
+   CARD DO ENDEREÇO
+========================================================= */
+
+.cliente-endereco-card {
+    background:
+        var(--branco);
+
+    border:
+        1px solid
+        rgba(93, 64, 55, 0.08);
+
+    border-radius:
+        20px;
+
+    box-shadow:
+        0 8px 28px
+        rgba(93, 64, 55, 0.08);
+}
+
+
+.cliente-endereco-card-topo {
+    padding:
+        22px 22px 18px;
+
+    border-bottom:
+        1px solid
+        rgba(93, 64, 55, 0.08);
+}
+
+
+.cliente-endereco-titulo {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        9px;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        1rem;
+}
+
+
+.cliente-endereco-principal {
+    display:
+        inline-flex;
+
+    margin-top:
+        10px;
+
+    padding:
+        6px 11px;
+
+    border-radius:
+        20px;
+
+    background:
+        rgba(245, 124, 0, 0.10);
+
+    color:
+        var(--cor-destaque);
+
+    font-size:
+        0.75rem;
+
+    font-weight:
+        700;
+}
+
+
+/* =========================================================
+   DADOS
+========================================================= */
+
+.cliente-endereco-dados {
+    padding:
+        20px 22px 10px;
+
+    color:
+        var(--cor-texto);
+
+    font-size:
+        0.92rem;
+
+    line-height:
+        1.5;
+}
+
+
+.cliente-endereco-dados p {
+    margin:
+        0 0 6px;
+}
+
+
+/* =========================================================
+   AÇÕES
+========================================================= */
+
+.cliente-endereco-acoes {
+    display:
+        flex;
+
+    flex-wrap:
+        wrap;
+
+    gap:
+        8px;
+
+    padding:
+        10px 22px 22px;
+}
+
+
+.cliente-endereco-acoes form {
+    margin:
+        0;
+}
+
+
+.cliente-endereco-btn {
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    min-height:
+        40px;
+
+    padding:
+        9px 16px;
+
+    border-radius:
+        30px;
+
+    font-family:
+        inherit;
+
+    font-size:
+        0.84rem;
+
+    font-weight:
+        700;
+
+    text-decoration:
+        none;
+
+    cursor:
+        pointer;
+
+    transition:
+        background-color 0.25s ease,
+        border-color 0.25s ease,
+        color 0.25s ease,
+        transform 0.25s ease;
+}
+
+
+.cliente-endereco-btn:hover {
+    transform:
+        translateY(-1px);
+}
+
+
+.cliente-endereco-btn-principal {
+    border:
+        1px solid
+        var(--cor-destaque);
+
+    background:
+        transparent;
+
+    color:
+        var(--cor-destaque);
+}
+
+
+.cliente-endereco-btn-principal:hover {
+    background:
+        var(--cor-destaque);
+
+    color:
+        var(--branco);
+}
+
+
+.cliente-endereco-btn-editar {
+    border:
+        1px solid
+        rgba(93, 64, 55, 0.20);
+
+    background:
+        transparent;
+
+    color:
+        var(--marrom);
+}
+
+
+.cliente-endereco-btn-editar:hover {
+    border-color:
+        var(--cor-destaque);
+
+    color:
+        var(--cor-destaque);
+}
+
+
+.cliente-endereco-btn-excluir {
+    border:
+        1px solid
+        rgba(220, 38, 38, 0.20);
+
+    background:
+        transparent;
+
+    color:
+        #b91c1c;
+}
+
+
+.cliente-endereco-btn-excluir:hover {
+    background:
+        #fef2f2;
+
+    border-color:
+        #dc2626;
+
+    color:
+        #b91c1c;
+}
+
+
+/* =========================================================
+   FORMULÁRIO
+========================================================= */
+
+.cliente-endereco-form-container {
+    max-width:
+        800px;
+}
+
+
+.cliente-endereco-form-card {
+    padding:
+        40px;
+
+    background:
+        var(--branco);
+
+    border:
+        1px solid
+        rgba(93, 64, 55, 0.08);
+
+    border-radius:
+        24px;
+
+    box-shadow:
+        0 12px 35px
+        rgba(93, 64, 55, 0.10);
+}
+
+
+.cliente-endereco-form {
+    width:
+        100%;
+}
+
+
+.cliente-endereco-form-group {
+    margin-bottom:
+        22px;
+}
+
+
+.cliente-endereco-form-group label {
+    display:
+        block;
+
+    margin-bottom:
+        8px;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        0.94rem;
+
+    font-weight:
+        700;
+}
+
+
+.cliente-endereco-form-group input {
+    width:
+        100%;
+
+    min-height:
+        48px;
+
+    padding:
+        12px 16px;
+
+    box-sizing:
+        border-box;
+
+    border:
+        1px solid
+        rgba(93, 64, 55, 0.14);
+
+    border-radius:
+        12px;
+
+    outline:
+        none;
+
+    background:
+        var(--branco);
+
+    color:
+        var(--cor-texto);
+
+    font-family:
+        inherit;
+
+    font-size:
+        1rem;
+
+    transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+
+.cliente-endereco-form-group input:focus {
+    border-color:
+        var(--cor-destaque);
+
+    box-shadow:
+        0 0 0 0.2rem
+        rgba(245, 124, 0, 0.14);
+}
+
+
+.cliente-endereco-form-grid {
+    display:
+        grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:
+        18px;
+}
+
+
+.cliente-endereco-principal-checkbox {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+
+    margin-top:
+        8px;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        0.92rem;
+
+    font-weight:
+        600;
+
+    cursor:
+        pointer;
+}
+
+
+.cliente-endereco-principal-checkbox input {
+    width:
+        18px;
+
+    height:
+        18px;
+
+    accent-color:
+        var(--cor-destaque);
+
+    cursor:
+        pointer;
+}
+
+
+.cliente-endereco-form-acoes {
+    display:
+        flex;
+
+    flex-wrap:
+        wrap;
+
+    gap:
+        12px;
+
+    margin-top:
+        30px;
+}
+
+
+.cliente-endereco-form-btn-salvar,
+.cliente-endereco-form-btn-voltar {
+    min-height:
+        48px;
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    padding:
+        12px 28px;
+
+    border-radius:
+        30px;
+
+    font-family:
+        inherit;
+
+    font-size:
+        1rem;
+
+    font-weight:
+        700;
+
+    text-decoration:
+        none;
+
+    cursor:
+        pointer;
+
+    transition:
+        background-color 0.25s ease,
+        border-color 0.25s ease,
+        color 0.25s ease,
+        transform 0.25s ease;
+}
+
+
+.cliente-endereco-form-btn-salvar {
+    border:
+        none;
+
+    background:
+        var(--cor-destaque);
+
+    color:
+        var(--branco);
+}
+
+
+.cliente-endereco-form-btn-salvar:hover {
+    background:
+        var(--laranja-hover);
+
+    color:
+        var(--branco);
+
+    transform:
+        translateY(-2px);
+}
+
+
+.cliente-endereco-form-btn-voltar {
+    border:
+        1px solid
+        rgba(93, 64, 55, 0.18);
+
+    background:
+        transparent;
+
+    color:
+        var(--marrom);
+}
+
+
+.cliente-endereco-form-btn-voltar:hover {
+    border-color:
+        var(--cor-destaque);
+
+    background:
+        rgba(245, 124, 0, 0.08);
+
+    color:
+        var(--marrom);
+
+    transform:
+        translateY(-2px);
+}
+
+
+/* =========================================================
+   RESPONSIVO
+========================================================= */
+
+@media (max-width: 800px) {
+
+    .cliente-enderecos-page {
+        padding:
+            40px 16px;
+    }
+
+
+    .cliente-enderecos-lista {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .cliente-enderecos-topo {
+        align-items:
+            stretch;
+
+        flex-direction:
+            column;
+    }
+
+
+    .cliente-enderecos-btn-principal {
+        width:
+            100%;
+    }
+
+
+    .cliente-endereco-form-card {
+        padding:
+            28px 20px;
+    }
+
+
+    .cliente-endereco-form-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .cliente-endereco-form-acoes {
+        flex-direction:
+            column;
+    }
+
+
+    .cliente-endereco-form-btn-salvar,
+    .cliente-endereco-form-btn-voltar {
+        width:
+            100%;
+    }
+
+}
