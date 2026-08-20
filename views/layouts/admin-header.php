@@ -164,7 +164,34 @@ $baseUrl = defined('BASE_URL')
 
             </a>
 
+            <form
+                method="POST"
+                action="<?= $baseUrl ?>/logout-admin" class="logout-form">
 
+                <input
+                    type="hidden"
+                    name="_token"
+                    value="<?= htmlspecialchars(
+                                \App\Helpers\Csrf::gerar(),
+                                ENT_QUOTES,
+                                'UTF-8'
+                            ) ?>">
+
+                <button
+                    type="submit"
+                    class="sidebar-link logout-button">
+
+                    <span>
+                        🚪
+                    </span>
+
+                    <span class="menu-text">
+                        Sair
+                    </span>
+
+                </button>
+
+            </form>
 
 
 
@@ -211,11 +238,7 @@ $baseUrl = defined('BASE_URL')
                     'UTF-8'
                 ) ?>
             </h4>
-            <pre>
-                <?php
-                var_dump($_SESSION['usuario_admin'] ?? null);
-                ?>
-            </pre>
+
 
 
             <div class="admin-user">

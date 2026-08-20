@@ -1,0 +1,513 @@
+/* =========================================================
+   MEUS PEDIDOS
+========================================================= */
+
+.cliente-pedidos-page {
+    min-height: calc(100vh - 140px);
+
+    padding: 60px 20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff,
+            var(--creme)
+        );
+}
+
+
+.cliente-pedidos-container {
+    width: 100%;
+
+    max-width: 1000px;
+
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   CABEÇALHO
+========================================================= */
+
+.cliente-pedidos-header {
+    margin-bottom: 30px;
+}
+
+
+.cliente-pedidos-etiqueta {
+    margin: 0 0 8px;
+
+    color:
+        var(--cor-primaria);
+
+    font-size: 0.85rem;
+
+    font-weight: 700;
+
+    letter-spacing: 0.12rem;
+
+    text-transform: uppercase;
+}
+
+
+.cliente-pedidos-header h1 {
+    margin: 0;
+
+    color:
+        var(--marrom);
+
+    font-size: 2.2rem;
+
+    font-weight: 800;
+}
+
+
+.cliente-pedidos-header p:last-child {
+    margin: 10px 0 0;
+
+    color:
+        var(--cor-texto);
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   ESTADO VAZIO
+========================================================= */
+
+.cliente-pedidos-vazio {
+    padding: 60px 30px;
+
+    text-align: center;
+
+    background:
+        var(--branco);
+
+    border:
+        1px solid
+        rgba(93, 64, 55, 0.08);
+
+    border-radius: 24px;
+
+    box-shadow:
+        0 12px 35px
+        rgba(93, 64, 55, 0.08);
+}
+
+
+.cliente-pedidos-vazio-icone {
+    margin-bottom: 18px;
+
+    font-size: 4rem;
+}
+
+
+.cliente-pedidos-vazio h2 {
+    margin: 0;
+
+    color:
+        var(--marrom);
+
+    font-size: 1.3rem;
+}
+
+
+.cliente-pedidos-vazio p {
+    margin:
+        12px auto 25px;
+
+    max-width: 520px;
+
+    color:
+        var(--cor-texto);
+
+    line-height: 1.6;
+}
+
+
+.cliente-pedidos-btn-principal {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-height: 48px;
+
+    padding: 12px 30px;
+
+    border-radius: 30px;
+
+    background:
+        var(--cor-destaque);
+
+    color:
+        var(--branco);
+
+    font-weight: 700;
+
+    text-decoration: none;
+
+    transition:
+        background-color 0.25s ease,
+        transform 0.25s ease;
+}
+
+
+.cliente-pedidos-btn-principal:hover {
+    background:
+        var(--laranja-hover);
+
+    color:
+        var(--branco);
+
+    transform:
+        translateY(-2px);
+}
+
+
+/* =========================================================
+   LISTA
+========================================================= */
+
+.cliente-pedidos-lista {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 18px;
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.cliente-pedido-card {
+    background:
+        var(--branco);
+
+    border:
+        1px solid
+        rgba(93, 64, 55, 0.08);
+
+    border-radius:
+        20px;
+
+    box-shadow:
+        0 8px 28px
+        rgba(93, 64, 55, 0.08);
+
+    overflow:
+        hidden;
+}
+
+
+.cliente-pedido-card-topo {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        20px;
+
+    padding:
+        22px 25px;
+
+    border-bottom:
+        1px solid
+        rgba(93, 64, 55, 0.08);
+}
+
+
+.cliente-pedido-codigo {
+    margin:
+        0;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        1rem;
+}
+
+
+.cliente-pedido-data {
+    margin:
+        5px 0 0;
+
+    color:
+        #777777;
+
+    font-size:
+        0.86rem;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.cliente-pedido-status {
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    padding:
+        7px 13px;
+
+    border-radius:
+        30px;
+
+    font-size:
+        0.78rem;
+
+    font-weight:
+        700;
+
+    white-space:
+        nowrap;
+}
+
+
+.cliente-pedido-status-aguardando {
+    background:
+        #fff7ed;
+
+    color:
+        #c2410c;
+}
+
+
+.cliente-pedido-status-pago {
+    background:
+        #eff6ff;
+
+    color:
+        #1d4ed8;
+}
+
+
+.cliente-pedido-status-separacao {
+    background:
+        #fefce8;
+
+    color:
+        #a16207;
+}
+
+
+.cliente-pedido-status-enviado {
+    background:
+        #f0fdf4;
+
+    color:
+        #15803d;
+}
+
+
+.cliente-pedido-status-entregue {
+    background:
+        #ecfdf5;
+
+    color:
+        #047857;
+}
+
+
+.cliente-pedido-status-cancelado {
+    background:
+        #fef2f2;
+
+    color:
+        #b91c1c;
+}
+
+
+/* =========================================================
+   RESUMO
+========================================================= */
+
+.cliente-pedido-resumo {
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            1fr
+        );
+
+    gap:
+        20px;
+
+    padding:
+        22px 25px;
+}
+
+
+.cliente-pedido-resumo div {
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        5px;
+}
+
+
+.cliente-pedido-resumo span {
+    color:
+        #777777;
+
+    font-size:
+        0.82rem;
+}
+
+
+.cliente-pedido-resumo strong {
+    color:
+        var(--marrom);
+
+    font-size:
+        1rem;
+}
+
+
+.cliente-pedido-resumo .cliente-pedido-total {
+    color:
+        var(--cor-destaque);
+
+    font-size:
+        1.15rem;
+}
+
+
+/* =========================================================
+   AÇÕES
+========================================================= */
+
+.cliente-pedido-card-acoes {
+    display:
+        flex;
+
+    justify-content:
+        flex-end;
+
+    padding:
+        0 25px 22px;
+}
+
+
+.cliente-pedido-btn {
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    min-height:
+        44px;
+
+    padding:
+        10px 22px;
+
+    border:
+        1px solid
+        var(--cor-destaque);
+
+    border-radius:
+        30px;
+
+    background:
+        transparent;
+
+    color:
+        var(--cor-destaque);
+
+    font-weight:
+        700;
+
+    text-decoration:
+        none;
+
+    transition:
+        background-color 0.25s ease,
+        color 0.25s ease,
+        transform 0.25s ease;
+}
+
+
+.cliente-pedido-btn:hover {
+    background:
+        var(--cor-destaque);
+
+    color:
+        var(--branco);
+
+    transform:
+        translateY(-2px);
+}
+
+
+/* =========================================================
+   RESPONSIVO
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .cliente-pedidos-page {
+        padding:
+            40px 16px;
+    }
+
+
+    .cliente-pedidos-header h1 {
+        font-size:
+            1.9rem;
+    }
+
+
+    .cliente-pedido-card-topo {
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+    }
+
+
+    .cliente-pedido-resumo {
+        grid-template-columns:
+            repeat(
+                2,
+                1fr
+            );
+    }
+
+
+    .cliente-pedido-card-acoes {
+        justify-content:
+            stretch;
+    }
+
+
+    .cliente-pedido-btn {
+        width:
+            100%;
+    }
+
+}

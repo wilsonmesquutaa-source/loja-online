@@ -19,26 +19,25 @@ final class CardapioController extends Controller
 
         $categorias =
             $cardapioRepository
-            ->buscarCategoriasDestaque();
+            ->buscarCategorias();
 
         $this->view(
             'site/cardapio',
             [
                 'tituloPagina' =>
-                'Cardápio',
+                    'Cardápio',
 
                 'rotaAtual' =>
-                'cardapio',
+                    'cardapio',
 
                 'categorias' =>
-                $categorias,
+                    $categorias,
 
                 'etiquetaProdutos' =>
-                'Cardápio',
+                    'Cardápio',
             ]
         );
     }
-
 
     public function categoria(
         int $id
@@ -47,7 +46,6 @@ final class CardapioController extends Controller
             new CardapioRepository(
                 $this->pdo
             );
-
 
         /*
         =================================
@@ -60,7 +58,6 @@ final class CardapioController extends Controller
             ->buscarCategoriaPorId(
                 $id
             );
-
 
         /*
         =================================
@@ -80,18 +77,17 @@ final class CardapioController extends Controller
             return;
         }
 
-
         /*
         =================================
         BUSCA OS PRODUTOS
         =================================
         */
+
         $produtos =
             $cardapioRepository
             ->buscarProdutosPorCategoria(
                 $id
             );
-
 
         /*
         =================================
@@ -107,7 +103,6 @@ final class CardapioController extends Controller
                 'UTF-8'
             );
 
-
         /*
         =================================
         VALORES PADRÃO
@@ -119,7 +114,6 @@ final class CardapioController extends Controller
 
         $limiteOpcoes =
             1;
-
 
         /*
         =================================
@@ -140,12 +134,13 @@ final class CardapioController extends Controller
                 4;
         }
 
-
         /*
         =================================
         FOLHADOS
         =================================
-        */ elseif (
+        */
+
+        elseif (
             str_contains(
                 $nomeCategoria,
                 'folhados'
@@ -158,12 +153,13 @@ final class CardapioController extends Controller
                 2;
         }
 
-
         /*
         =================================
         SALGADOS GRANDES
         =================================
-        */ elseif (
+        */
+
+        elseif (
             str_contains(
                 $nomeCategoria,
                 'grandes'
@@ -176,12 +172,13 @@ final class CardapioController extends Controller
                 null;
         }
 
-
         /*
         =================================
         EMPADÃO
         =================================
-        */ elseif (
+        */
+
+        elseif (
             str_contains(
                 $nomeCategoria,
                 'empadão'
@@ -209,7 +206,6 @@ final class CardapioController extends Controller
                 null;
         }
 
-
         /*
         =================================
         ESTADO PADRÃO
@@ -221,7 +217,6 @@ final class CardapioController extends Controller
 
         $quantidadesIniciais =
             [];
-
 
         /*
         =================================
@@ -236,11 +231,9 @@ final class CardapioController extends Controller
             &&
             $_GET['editar'] === '1';
 
-
         if (
             $estaEditando
         ) {
-
             /*
             ==============================
             TOKEN DA SESSÃO
@@ -249,7 +242,6 @@ final class CardapioController extends Controller
 
             $tokenSessao =
                 $this->obterTokenSessao();
-
 
             /*
             ==============================
@@ -262,13 +254,11 @@ final class CardapioController extends Controller
                     $this->pdo
                 );
 
-
             $carrinho =
                 $carrinhoRepository
                 ->buscarAbertoPorToken(
                     $tokenSessao
                 );
-
 
             /*
             ==============================
@@ -281,12 +271,11 @@ final class CardapioController extends Controller
             ) {
                 $this->redirecionar(
                     'cardapio/categoria/'
-                        . $id
+                    . $id
                 );
 
                 return;
             }
-
 
             /*
             ==============================
@@ -301,7 +290,6 @@ final class CardapioController extends Controller
                     $carrinho['id']
                 );
 
-
             /*
             ==============================
             LOCALIZA A CATEGORIA
@@ -311,11 +299,9 @@ final class CardapioController extends Controller
             $encontrouCategoria =
                 false;
 
-
             foreach (
                 $itens as $item
             ) {
-
                 if (
                     (int)
                     $item['categoria_id']
@@ -323,7 +309,6 @@ final class CardapioController extends Controller
                 ) {
                     continue;
                 }
-
 
                 /*
                 ------------------------------
@@ -334,17 +319,16 @@ final class CardapioController extends Controller
                 $encontrouCategoria =
                     true;
 
-
                 $editarCategoriaId =
                     $id;
 
-
-                $quantidadesIniciais[(int)
-                $item['produto_id']] =
+                $quantidadesIniciais[
+                    (int)
+                    $item['produto_id']
+                ] =
                     (int)
                     $item['quantidade'];
             }
-
 
             /*
             ==============================
@@ -357,13 +341,12 @@ final class CardapioController extends Controller
             ) {
                 $this->redirecionar(
                     'cardapio/categoria/'
-                        . $id
+                    . $id
                 );
 
                 return;
             }
         }
-
 
         /*
         =================================
@@ -375,35 +358,34 @@ final class CardapioController extends Controller
             'site/categoria',
             [
                 'tituloPagina' =>
-                $categoria['nome'],
+                    $categoria['nome'],
 
                 'rotaAtual' =>
-                'cardapio',
+                    'cardapio',
 
                 'categoria' =>
-                $categoria,
+                    $categoria,
 
                 'nomeCategoria' =>
-                $categoria['nome'],
+                    $categoria['nome'],
 
                 'produtos' =>
-                $produtos,
+                    $produtos,
 
                 'limiteOpcoes' =>
-                $limiteOpcoes,
+                    $limiteOpcoes,
 
                 'tipoCategoria' =>
-                $tipoCategoria,
+                    $tipoCategoria,
 
                 'quantidadesIniciais' =>
-                $quantidadesIniciais,
+                    $quantidadesIniciais,
 
                 'editarCategoriaId' =>
-                $editarCategoriaId,
+                    $editarCategoriaId,
             ]
         );
     }
-
 
     /*
     =================================
@@ -420,16 +402,16 @@ final class CardapioController extends Controller
             session_start();
         }
 
-
         if (
-            empty($_SESSION['carrinho_token'])
+            empty(
+                $_SESSION['carrinho_token']
+            )
         ) {
             $_SESSION['carrinho_token'] =
                 bin2hex(
                     random_bytes(32)
                 );
         }
-
 
         return
             (string)

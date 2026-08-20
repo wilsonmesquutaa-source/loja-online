@@ -133,9 +133,7 @@ ini_set(
 
 
 $usaHttps =
-    !empty(
-        $_SERVER['HTTPS']
-    )
+    !empty($_SERVER['HTTPS'])
     && $_SERVER['HTTPS'] !== 'off';
 
 
@@ -146,19 +144,19 @@ session_name(
 
 session_set_cookie_params([
     'lifetime' =>
-        0,
+    0,
 
     'path' =>
-        '/',
+    '/',
 
     'secure' =>
-        $usaHttps,
+    $usaHttps,
 
     'httponly' =>
-        true,
+    true,
 
     'samesite' =>
-        'Lax',
+    'Lax',
 ]);
 
 
@@ -179,7 +177,7 @@ if (
 
 $pdo =
     require $raizProjeto
-        . '/database/conexao.php';
+    . '/database/conexao.php';
 
 
 /*
@@ -187,6 +185,8 @@ $pdo =
 | Carregamento das rotas
 |--------------------------------------------------------------------------
 */
+
+
 
 $rotas =
     array_merge(
@@ -235,8 +235,8 @@ $caminho =
 $caminho =
     is_string($caminho)
     && $caminho !== ''
-        ? $caminho
-        : '/';
+    ? $caminho
+    : '/';
 
 
 /*
@@ -387,17 +387,13 @@ foreach (
             $rota['path'],
             '/admin'
         )
-        && empty(
-            $_SESSION[
-                'usuario_admin'
-            ]['id']
-        )
+        && empty($_SESSION['usuario_admin']['id'])
     ) {
 
         header(
             'Location: '
-            . BASE_URL
-            . '/login-admin'
+                . BASE_URL
+                . '/login-admin'
         );
 
         exit;
@@ -472,7 +468,6 @@ foreach (
 
         $objetoController =
             new $controller();
-
     } else {
 
         $objetoController =
@@ -497,7 +492,7 @@ foreach (
 
         throw new RuntimeException(
             "Método não encontrado: "
-            . "{$controller}::{$acao}"
+                . "{$controller}::{$acao}"
         );
     }
 

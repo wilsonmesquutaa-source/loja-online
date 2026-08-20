@@ -10,35 +10,32 @@ final class CardapioRepository
 {
     private PDO $pdo;
 
-
     public function __construct(
         PDO $pdo
     ) {
         $this->pdo = $pdo;
     }
 
-
     /*
     =================================
-    CATEGORIAS DO CARDÁPIO
+    TODAS AS CATEGORIAS DO CARDÁPIO
     =================================
     */
 
-    public function buscarCategoriasDestaque(): array
+    public function buscarCategorias(): array
     {
         $sql = '
-        SELECT
-            id,
-            nome,
-            descricao,
-            preco,
-            preco_revenda,
-            quantidade_minima_revenda
-        FROM categorias
-        WHERE ativo = 1
-        AND destaque = 1
-        ORDER BY ordem_destaque ASC, id ASC
-    ';
+            SELECT
+                id,
+                nome,
+                descricao,
+                preco,
+                preco_revenda,
+                quantidade_minima_revenda
+            FROM categorias
+            WHERE ativo = 1
+            ORDER BY id ASC
+        ';
 
         $consulta =
             $this->pdo->prepare(
@@ -51,6 +48,38 @@ final class CardapioRepository
             $consulta->fetchAll();
     }
 
+    /*
+    =================================
+    CATEGORIAS EM DESTAQUE
+    =================================
+    */
+
+    public function buscarCategoriasDestaque(): array
+    {
+        $sql = '
+            SELECT
+                id,
+                nome,
+                descricao,
+                preco,
+                preco_revenda,
+                quantidade_minima_revenda
+            FROM categorias
+            WHERE ativo = 1
+            AND destaque = 1
+            ORDER BY ordem_destaque ASC, id ASC
+        ';
+
+        $consulta =
+            $this->pdo->prepare(
+                $sql
+            );
+
+        $consulta->execute();
+
+        return
+            $consulta->fetchAll();
+    }
 
     /*
     =================================
@@ -75,12 +104,10 @@ final class CardapioRepository
             LIMIT 1
         ';
 
-
         $consulta =
             $this->pdo->prepare(
                 $sql
             );
-
 
         $consulta->bindValue(
             ':id',
@@ -88,20 +115,16 @@ final class CardapioRepository
             PDO::PARAM_INT
         );
 
-
         $consulta->execute();
-
 
         $categoria =
             $consulta->fetch();
 
-
         return
             $categoria !== false
-            ? $categoria
-            : null;
+                ? $categoria
+                : null;
     }
-
 
     /*
     =================================
@@ -125,12 +148,10 @@ final class CardapioRepository
             ORDER BY nome
         ';
 
-
         $consulta =
             $this->pdo->prepare(
                 $sql
             );
-
 
         $consulta->bindValue(
             ':categoria_id',
@@ -138,16 +159,13 @@ final class CardapioRepository
             PDO::PARAM_INT
         );
 
-
         $consulta->bindValue(
             ':status',
             'ativo',
             PDO::PARAM_STR
         );
 
-
         $consulta->execute();
-
 
         return
             $consulta->fetchAll();

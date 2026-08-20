@@ -636,7 +636,7 @@ $clienteFoto =
                             <li>
 
                                 <a
-                                    href="<?= BASE_URL ?>/cliente/perfil/editar"
+                                    href="<?= BASE_URL ?>/cliente/perfil"
                                     class="dropdown-item">
 
                                     <i
