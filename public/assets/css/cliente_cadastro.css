@@ -1,0 +1,770 @@
+/*
+=================================
+CADASTRO DO CLIENTE
+=================================
+*/
+
+main.cliente-cadastro {
+    width: 100%;
+
+    min-height:
+        calc(100vh - 160px);
+
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: center;
+
+    box-sizing: border-box;
+
+    padding:
+        50px 20px 70px;
+
+    background:
+        var(--creme);
+
+    visibility: visible;
+
+    opacity: 1;
+}
+
+
+/*
+=================================
+CARD
+=================================
+*/
+
+main.cliente-cadastro
+.cliente-cadastro-card {
+
+    width: 100%;
+
+    max-width:
+        500px;
+
+    box-sizing: border-box;
+
+    display: block;
+
+    padding:
+        35px;
+
+    background:
+        var(--branco);
+
+    border:
+        1px solid
+        rgba(93, 64, 55, 0.12);
+
+    border-radius:
+        18px;
+
+    box-shadow:
+        0 8px 30px
+        rgba(93, 64, 55, 0.10);
+
+    visibility:
+        visible;
+
+    opacity:
+        1;
+
+    overflow:
+        visible;
+}
+
+
+/*
+=================================
+CABEÇALHO
+=================================
+*/
+
+main.cliente-cadastro
+.cliente-cadastro-cabecalho {
+
+    display:
+        block;
+
+    margin-bottom:
+        30px;
+
+    text-align:
+        center;
+
+    visibility:
+        visible;
+
+    opacity:
+        1;
+}
+
+
+main.cliente-cadastro
+.cliente-cadastro-icone {
+
+    width:
+        64px;
+
+    height:
+        64px;
+
+    margin:
+        0 auto 18px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        50%;
+
+    background:
+        var(--creme);
+
+    color:
+        var(--cor-destaque);
+
+    font-size:
+        28px;
+}
+
+
+main.cliente-cadastro
+.cliente-cadastro-cabecalho h1 {
+
+    display:
+        block;
+
+    margin:
+        0 0 8px;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        28px;
+
+    font-weight:
+        700;
+}
+
+
+main.cliente-cadastro
+.cliente-cadastro-cabecalho p {
+
+    display:
+        block;
+
+    margin:
+        0;
+
+    color:
+        var(--cor-texto);
+
+    font-size:
+        15px;
+
+    line-height:
+        1.5;
+}
+
+
+/*
+=================================
+ERRO
+=================================
+*/
+
+main.cliente-cadastro
+.cliente-cadastro-erro {
+
+    display:
+        block;
+
+    margin-bottom:
+        20px;
+
+    padding:
+        12px 14px;
+
+    border:
+        1px solid
+        #f1b0b7;
+
+    border-radius:
+        8px;
+
+    background:
+        #f8d7da;
+
+    color:
+        #842029;
+
+    font-size:
+        14px;
+
+    line-height:
+        1.4;
+}
+
+
+/*
+=================================
+FORMULÁRIO
+=================================
+*/
+
+main.cliente-cadastro
+form.cliente-cadastro-formulario {
+
+    width:
+        100%;
+
+    display:
+        flex !important;
+
+    flex-direction:
+        column;
+
+    gap:
+        18px;
+
+    box-sizing:
+        border-box;
+
+    visibility:
+        visible !important;
+
+    opacity:
+        1 !important;
+
+    height:
+        auto !important;
+
+    max-height:
+        none !important;
+
+    overflow:
+        visible !important;
+}
+
+
+/*
+=================================
+CAMPOS
+=================================
+*/
+
+main.cliente-cadastro
+.cliente-cadastro-campo {
+
+    width:
+        100%;
+
+    display:
+        flex !important;
+
+    flex-direction:
+        column;
+
+    gap:
+        7px;
+
+    box-sizing:
+        border-box;
+
+    visibility:
+        visible !important;
+
+    opacity:
+        1 !important;
+}
+
+
+main.cliente-cadastro
+.cliente-cadastro-campo label {
+
+    display:
+        block;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        14px;
+
+    font-weight:
+        600;
+}
+
+
+main.cliente-cadastro
+.cliente-cadastro-campo input {
+
+    width:
+        100%;
+
+    height:
+        48px;
+
+    min-height:
+        48px;
+
+    box-sizing:
+        border-box;
+
+    padding:
+        0 14px;
+
+    border:
+        1px solid
+        #d6d3d1;
+
+    border-radius:
+        9px;
+
+    background:
+        var(--branco);
+
+    color:
+        var(--cor-texto);
+
+    font-family:
+        inherit;
+
+    font-size:
+        15px;
+
+    outline:
+        none;
+
+    opacity:
+        1;
+
+    visibility:
+        visible;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+main.cliente-cadastro
+.cliente-cadastro-campo input::placeholder {
+
+    color:
+        #9ca3af;
+}
+
+
+main.cliente-cadastro
+.cliente-cadastro-campo input:focus {
+
+    border-color:
+        var(--cor-destaque);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(245, 158, 11, 0.15);
+}
+
+
+/*
+=================================
+INFORMAÇÃO DA SENHA
+=================================
+*/
+
+main.cliente-cadastro
+.cliente-cadastro-senha-info {
+
+    display:
+        block;
+
+    margin-top:
+        -2px;
+
+    color:
+        #777;
+
+    font-size:
+        12px;
+
+    line-height:
+        1.4;
+}
+
+
+/*
+=================================
+BOTÃO CRIAR CONTA
+=================================
+*/
+
+main.cliente-cadastro
+.cliente-cadastro-botao {
+
+    width:
+        100%;
+
+    min-height:
+        48px;
+
+    display:
+        flex !important;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        8px;
+
+    padding:
+        10px 18px;
+
+    box-sizing:
+        border-box;
+
+    border:
+        1px solid
+        var(--cor-destaque);
+
+    border-radius:
+        9px;
+
+    background:
+        var(--cor-destaque);
+
+    color:
+        var(--branco);
+
+    font-family:
+        inherit;
+
+    font-size:
+        15px;
+
+    font-weight:
+        700;
+
+    cursor:
+        pointer;
+
+    visibility:
+        visible !important;
+
+    opacity:
+        1 !important;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+main.cliente-cadastro
+.cliente-cadastro-botao:hover {
+
+    background:
+        var(--laranja-hover);
+
+    border-color:
+        var(--laranja-hover);
+
+    color:
+        var(--branco);
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 4px 10px
+        rgba(239, 108, 0, 0.20);
+}
+
+
+main.cliente-cadastro
+.cliente-cadastro-botao:active {
+
+    transform:
+        translateY(0);
+}
+
+
+/*
+=================================
+DIVISOR
+=================================
+*/
+
+main.cliente-cadastro
+.cliente-cadastro-divisor {
+
+    width:
+        100%;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        12px;
+
+    margin:
+        2px 0;
+}
+
+
+main.cliente-cadastro
+.cliente-cadastro-divisor::before,
+main.cliente-cadastro
+.cliente-cadastro-divisor::after {
+
+    content:
+        "";
+
+    flex:
+        1;
+
+    height:
+        1px;
+
+    background:
+        #e5e7eb;
+}
+
+
+main.cliente-cadastro
+.cliente-cadastro-divisor span {
+
+    display:
+        block;
+
+    color:
+        #888;
+
+    font-size:
+        13px;
+
+    white-space:
+        nowrap;
+}
+
+
+/*
+=================================
+GOOGLE
+=================================
+*/
+
+main.cliente-cadastro
+.cliente-cadastro-google {
+
+    width:
+        100%;
+
+    min-height:
+        48px;
+
+    display:
+        flex !important;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        10px;
+
+    padding:
+        10px 18px;
+
+    box-sizing:
+        border-box;
+
+    border:
+        1px solid
+        #d6d3d1;
+
+    border-radius:
+        9px;
+
+    background:
+        var(--branco);
+
+    color:
+        var(--cor-secundaria);
+
+    font-size:
+        15px;
+
+    font-weight:
+        600;
+
+    text-decoration:
+        none;
+
+    visibility:
+        visible !important;
+
+    opacity:
+        1 !important;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+main.cliente-cadastro
+.cliente-cadastro-google:hover {
+
+    background:
+        var(--cor-clara);
+
+    border-color:
+        #bdbdbd;
+
+    color:
+        var(--cor-secundaria);
+
+    box-shadow:
+        0 3px 10px
+        rgba(0, 0, 0, 0.06);
+}
+
+
+main.cliente-cadastro
+.cliente-cadastro-google i {
+
+    font-size:
+        18px;
+}
+
+
+/*
+=================================
+LINK PARA LOGIN
+=================================
+*/
+
+main.cliente-cadastro
+.cliente-cadastro-login {
+
+    display:
+        block;
+
+    margin:
+        24px 0 0;
+
+    text-align:
+        center;
+
+    color:
+        var(--cor-texto);
+
+    font-size:
+        14px;
+}
+
+
+main.cliente-cadastro
+.cliente-cadastro-login a {
+
+    color:
+        var(--laranja-hover);
+
+    font-weight:
+        700;
+
+    text-decoration:
+        none;
+}
+
+
+main.cliente-cadastro
+.cliente-cadastro-login a:hover {
+
+    color:
+        var(--marrom);
+
+    text-decoration:
+        underline;
+}
+
+
+/*
+=================================
+RESPONSIVO
+=================================
+*/
+
+@media (max-width: 576px) {
+
+    main.cliente-cadastro {
+
+        min-height:
+            calc(100vh - 120px);
+
+        padding:
+            30px 15px 50px;
+
+        align-items:
+            flex-start;
+    }
+
+
+    main.cliente-cadastro
+    .cliente-cadastro-card {
+
+        padding:
+            28px 22px;
+
+        border-radius:
+            15px;
+    }
+
+
+    main.cliente-cadastro
+    .cliente-cadastro-cabecalho {
+
+        margin-bottom:
+            25px;
+    }
+
+
+    main.cliente-cadastro
+    .cliente-cadastro-cabecalho h1 {
+
+        font-size:
+            24px;
+    }
+
+
+    main.cliente-cadastro
+    .cliente-cadastro-cabecalho p {
+
+        font-size:
+            14px;
+    }
+
+}

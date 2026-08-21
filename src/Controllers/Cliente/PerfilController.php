@@ -10,6 +10,12 @@ use App\Repositories\ClienteRepository;
 
 final class PerfilController extends Controller
 {
+    /*
+    =================================
+    EDITAR PERFIL
+    =================================
+    */
+
     public function index(): void
     {
         if (
@@ -18,6 +24,7 @@ final class PerfilController extends Controller
         ) {
             session_start();
         }
+
 
         if (
             empty(
@@ -31,16 +38,23 @@ final class PerfilController extends Controller
             return;
         }
 
+
+        $clienteId =
+            (int)
+            $_SESSION['cliente_id'];
+
+
         $repository =
             new ClienteRepository(
                 $this->pdo
             );
 
+
         $cliente =
             $repository->buscarPorId(
-                (int)
-                $_SESSION['cliente_id']
+                $clienteId
             );
+
 
         if (
             $cliente === null
@@ -53,6 +67,30 @@ final class PerfilController extends Controller
 
             return;
         }
+
+
+        /*
+        =================================
+        GARANTE FOTO NA SESSÃO
+        =================================
+        */
+
+        $_SESSION[
+            'cliente_foto_url'
+        ] =
+            !empty(
+                $cliente['foto_url']
+            )
+                ? (string)
+                    $cliente['foto_url']
+                : null;
+
+
+        /*
+        =================================
+        VIEW
+        =================================
+        */
 
         $this->view(
             'cliente/perfil',
@@ -73,6 +111,12 @@ final class PerfilController extends Controller
     }
 
 
+    /*
+    =================================
+    ATUALIZAR PERFIL
+    =================================
+    */
+
     public function atualizar(): void
     {
         if (
@@ -81,6 +125,7 @@ final class PerfilController extends Controller
         ) {
             session_start();
         }
+
 
         if (
             empty(
@@ -94,6 +139,13 @@ final class PerfilController extends Controller
             return;
         }
 
+
+        /*
+        =================================
+        CSRF
+        =================================
+        */
+
         $tokenCsrf =
             isset(
                 $_POST['_csrf']
@@ -101,6 +153,7 @@ final class PerfilController extends Controller
                 ? (string)
                     $_POST['_csrf']
                 : null;
+
 
         if (
             !Csrf::validarCliente(
@@ -117,9 +170,48 @@ final class PerfilController extends Controller
             return;
         }
 
+
+        /*
+        =================================
+        CLIENTE
+        =================================
+        */
+
         $clienteId =
             (int)
             $_SESSION['cliente_id'];
+
+
+        $repository =
+            new ClienteRepository(
+                $this->pdo
+            );
+
+
+        $clienteAtual =
+            $repository->buscarPorId(
+                $clienteId
+            );
+
+
+        if (
+            $clienteAtual === null
+        ) {
+            $_SESSION = [];
+
+            $this->redirecionar(
+                '/login'
+            );
+
+            return;
+        }
+
+
+        /*
+        =================================
+        DADOS
+        =================================
+        */
 
         $nome =
             trim(
@@ -128,6 +220,7 @@ final class PerfilController extends Controller
                     ?? ''
                 )
             );
+
 
         $email =
             trim(
@@ -138,6 +231,13 @@ final class PerfilController extends Controller
                     )
                 )
             );
+
+
+        /*
+        =================================
+        VALIDA NOME
+        =================================
+        */
 
         if (
             $nome === ''
@@ -151,6 +251,7 @@ final class PerfilController extends Controller
 
             return;
         }
+
 
         if (
             mb_strlen(
@@ -168,6 +269,13 @@ final class PerfilController extends Controller
             return;
         }
 
+
+        /*
+        =================================
+        VALIDA E-MAIL
+        =================================
+        */
+
         if (
             !filter_var(
                 $email,
@@ -184,6 +292,7 @@ final class PerfilController extends Controller
             return;
         }
 
+
         if (
             strlen($email) > 180
         ) {
@@ -197,17 +306,19 @@ final class PerfilController extends Controller
             return;
         }
 
-        $repository =
-            new ClienteRepository(
-                $this->pdo
-            );
+
+        /*
+        =================================
+        E-MAIL DUPLICADO
+        =================================
+        */
 
         if (
             $repository
-            ->emailExisteParaOutroCliente(
-                $email,
-                $clienteId
-            )
+                ->emailExisteParaOutroCliente(
+                    $email,
+                    $clienteId
+                )
         ) {
             $this->redirecionar(
                 '/cliente/perfil?erro='
@@ -219,37 +330,27 @@ final class PerfilController extends Controller
             return;
         }
 
-        $repository->atualizarDados(
-            $clienteId,
-            $nome,
-            $email
-        );
 
         /*
         =================================
-        FOTO
+        FOTO ATUAL
         =================================
         */
 
-        $fotoAtual =
-            null;
-
-        $clienteAtual =
-            $repository->buscarPorId(
-                $clienteId
-            );
-
-        if (
-            $clienteAtual !== null
-            &&
+        $fotoUrl =
             !empty(
                 $clienteAtual['foto_url']
             )
-        ) {
-            $fotoAtual =
-                (string)
-                $clienteAtual['foto_url'];
-        }
+                ? (string)
+                    $clienteAtual['foto_url']
+                : null;
+
+
+        /*
+        =================================
+        NOVA FOTO
+        =================================
+        */
 
         if (
             isset(
@@ -262,6 +363,13 @@ final class PerfilController extends Controller
 
             $arquivo =
                 $_FILES['foto'];
+
+
+            /*
+            ==============================
+            ERRO UPLOAD
+            ==============================
+            */
 
             if (
                 $arquivo['error']
@@ -276,6 +384,13 @@ final class PerfilController extends Controller
 
                 return;
             }
+
+
+            /*
+            ==============================
+            ARQUIVO VÁLIDO
+            ==============================
+            */
 
             if (
                 !is_uploaded_file(
@@ -292,6 +407,13 @@ final class PerfilController extends Controller
                 return;
             }
 
+
+            /*
+            ==============================
+            TAMANHO
+            ==============================
+            */
+
             if (
                 $arquivo['size']
                 > 5 * 1024 * 1024
@@ -306,22 +428,36 @@ final class PerfilController extends Controller
                 return;
             }
 
+
+            /*
+            ==============================
+            MIME
+            ==============================
+            */
+
             $mime =
                 mime_content_type(
                     $arquivo['tmp_name']
                 );
 
+
             $tiposPermitidos = [
-                'image/jpeg' => 'jpg',
+                'image/jpeg' =>
+                    'jpg',
+
                 'image/png' =>
                     'png',
+
                 'image/webp' =>
                     'webp',
             ];
 
+
             if (
                 !isset(
-                    $tiposPermitidos[$mime]
+                    $tiposPermitidos[
+                        $mime
+                    ]
                 )
             ) {
                 $this->redirecionar(
@@ -334,21 +470,57 @@ final class PerfilController extends Controller
                 return;
             }
 
+
+            /*
+            ==============================
+            DIRETÓRIO
+            ==============================
+            */
+
             $diretorio =
                 APP_ROOT
                 . '/public/assets/uploads/clientes';
+
 
             if (
                 !is_dir(
                     $diretorio
                 )
             ) {
-                mkdir(
-                    $diretorio,
-                    0755,
-                    true
-                );
+                if (
+                    !mkdir(
+                        $diretorio,
+                        0755,
+                        true
+                    )
+                    &&
+                    !is_dir(
+                        $diretorio
+                    )
+                ) {
+                    $this->redirecionar(
+                        '/cliente/perfil?erro='
+                        . rawurlencode(
+                            'Não foi possível criar o diretório das fotos.'
+                        )
+                    );
+
+                    return;
+                }
             }
+
+
+            /*
+            ==============================
+            NOME
+            ==============================
+            */
+
+            $extensao =
+                $tiposPermitidos[
+                    $mime
+                ];
+
 
             $nomeArquivo =
                 'cliente_'
@@ -358,12 +530,20 @@ final class PerfilController extends Controller
                     random_bytes(8)
                 )
                 . '.'
-                . $tiposPermitidos[$mime];
+                . $extensao;
+
 
             $caminhoArquivo =
                 $diretorio
-                . '/'
+                . DIRECTORY_SEPARATOR
                 . $nomeArquivo;
+
+
+            /*
+            ==============================
+            MOVE ARQUIVO
+            ==============================
+            */
 
             if (
                 !move_uploaded_file(
@@ -381,35 +561,121 @@ final class PerfilController extends Controller
                 return;
             }
 
+
+            /*
+            ==============================
+            URL PÚBLICA
+            ==============================
+            */
+
             $fotoUrl =
                 BASE_URL
                 . '/assets/uploads/clientes/'
                 . $nomeArquivo;
+
+
+            /*
+            ==============================
+            ATUALIZA FOTO NO BANCO
+            ==============================
+            */
 
             $repository->atualizarFoto(
                 $clienteId,
                 $fotoUrl
             );
 
-            $_SESSION[
-                'cliente_foto_url'
-            ] =
-                $fotoUrl;
-        } else {
 
-            $_SESSION[
-                'cliente_foto_url'
-            ] =
-                $fotoAtual;
+            /*
+            ==============================
+            REMOVE FOTO ANTIGA
+            ==============================
+            */
+
+            $fotoAntiga =
+                $clienteAtual['foto_url']
+                ?? null;
+
+
+            if (
+                !empty(
+                    $fotoAntiga
+                )
+                &&
+                $fotoAntiga !==
+                    $fotoUrl
+            ) {
+
+                $caminhoFotoAntiga =
+                    APP_ROOT
+                    . '/public'
+                    . $fotoAntiga;
+
+
+                if (
+                    is_file(
+                        $caminhoFotoAntiga
+                    )
+                ) {
+                    @unlink(
+                        $caminhoFotoAntiga
+                    );
+                }
+            }
         }
 
-        $_SESSION['cliente_nome'] =
+
+        /*
+        =================================
+        ATUALIZA NOME E E-MAIL
+        =================================
+        */
+
+        $repository->atualizarDados(
+            $clienteId,
+            $nome,
+            $email
+        );
+
+
+        /*
+        =================================
+        ATUALIZA SESSÃO
+        =================================
+        */
+
+        $_SESSION[
+            'cliente_nome'
+        ] =
             $nome;
 
-        $_SESSION['cliente_email'] =
+
+        $_SESSION[
+            'cliente_email'
+        ] =
             $email;
 
+
+        $_SESSION[
+            'cliente_foto_url'
+        ] =
+            $fotoUrl;
+
+
+        /*
+        =================================
+        RENOVA CSRF
+        =================================
+        */
+
         Csrf::renovarCliente();
+
+
+        /*
+        =================================
+        SUCESSO
+        =================================
+        */
 
         $this->redirecionar(
             '/cliente/perfil?sucesso='

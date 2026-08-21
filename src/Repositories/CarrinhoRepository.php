@@ -439,4 +439,75 @@ final class CarrinhoRepository
 
         $consulta->execute();
     }
+
+
+    /*
+    =================================
+    ASSOCIA CLIENTE AO CARRINHO
+    =================================
+    */
+
+    public function associarCliente(
+        int $carrinhoId,
+        int $clienteId
+    ): void {
+        $sql = '
+            UPDATE carrinhos
+            SET cliente_id = :cliente_id
+            WHERE id = :id
+            AND status = :status
+        ';
+
+        $consulta =
+            $this->pdo->prepare(
+                $sql
+            );
+
+        $consulta->execute([
+            ':cliente_id' =>
+            $clienteId,
+
+            ':id' =>
+            $carrinhoId,
+
+            ':status' =>
+            'aberto',
+        ]);
+    }
+
+
+    /*
+    =================================
+    MARCA CARRINHO COMO CONVERTIDO
+    =================================
+    */
+
+    public function marcarConvertido(
+        int $carrinhoId,
+        int $clienteId
+    ): void {
+        $sql = '
+            UPDATE carrinhos
+            SET
+                cliente_id = :cliente_id,
+                status = :status
+            WHERE id = :id
+        ';
+
+        $consulta =
+            $this->pdo->prepare(
+                $sql
+            );
+
+        $consulta->execute([
+            ':cliente_id' =>
+            $clienteId,
+
+            ':status' =>
+            'convertido',
+
+            ':id' =>
+            $carrinhoId,
+        ]);
+    }
 }

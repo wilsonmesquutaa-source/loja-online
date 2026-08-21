@@ -6,6 +6,7 @@ use App\Controllers\Cliente\ClienteController;
 use App\Controllers\Cliente\PerfilController;
 use App\Controllers\Cliente\PedidoController;
 use App\Controllers\Cliente\EnderecoController;
+use App\Controllers\Cliente\SegurancaController;
 
 return [
 
@@ -227,6 +228,50 @@ return [
         'action' => [
             EnderecoController::class,
             'excluir',
+        ],
+    ],
+
+
+
+    /*
+=================================
+SEGURANÇA
+=================================
+*/
+
+    [
+        'method' => 'GET',
+        'path' => '/cliente/seguranca',
+        'action' => [
+            SegurancaController::class,
+            'index',
+        ],
+    ],
+
+    [
+        'method' => 'POST',
+        'path' => '/cliente/seguranca/senha',
+        'action' => [
+            SegurancaController::class,
+            'alterarSenha',
+        ],
+    ],
+
+    [
+        'method' => 'POST',
+        'path' => '/cliente/seguranca/email',
+        'action' => [
+            SegurancaController::class,
+            'alterarEmail',
+        ],
+    ],
+
+    [
+        'method' => 'POST',
+        'path' => '/cliente/seguranca/excluir',
+        'action' => [
+            SegurancaController::class,
+            'excluirConta',
         ],
     ],
 

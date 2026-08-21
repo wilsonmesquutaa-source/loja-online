@@ -1,0 +1,139 @@
+/* =========================================================
+   AÇÕES DO CARRINHO
+========================================================= */
+
+.carrinho-acoes {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 12px;
+
+    margin-top: 24px;
+}
+
+
+/* =========================================================
+   BOTÕES
+========================================================= */
+
+.carrinho-btn {
+    min-height: 46px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    padding: 11px 24px;
+
+    border-radius: 30px;
+
+    font-family: inherit;
+
+    font-size: 0.95rem;
+
+    font-weight: 700;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.25s ease,
+        border-color 0.25s ease,
+        color 0.25s ease,
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+
+/* =========================================================
+   CONTINUAR COMPRANDO
+========================================================= */
+
+.carrinho-btn-voltar {
+    border:
+        1px solid
+        rgba(93, 64, 55, 0.18);
+
+    background:
+        transparent;
+
+    color:
+        var(--marrom);
+}
+
+
+.carrinho-btn-voltar:hover {
+    border-color:
+        var(--cor-destaque);
+
+    background:
+        rgba(245, 124, 0, 0.08);
+
+    color:
+        var(--marrom);
+
+    transform:
+        translateY(-2px);
+}
+
+
+/* =========================================================
+   FINALIZAR PEDIDO
+========================================================= */
+
+.carrinho-btn-finalizar {
+    border:
+        1px solid
+        var(--cor-destaque);
+
+    background:
+        var(--cor-destaque);
+
+    color:
+        var(--branco);
+
+    box-shadow:
+        0 5px 16px
+        rgba(245, 124, 0, 0.15);
+}
+
+
+.carrinho-btn-finalizar:hover {
+    border-color:
+        var(--laranja-hover);
+
+    background:
+        var(--laranja-hover);
+
+    color:
+        var(--branco);
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 8px 20px
+        rgba(245, 124, 0, 0.22);
+}
+
+
+/* =========================================================
+   RESPONSIVO
+========================================================= */
+
+@media (max-width: 576px) {
+
+    .carrinho-acoes {
+        flex-direction: column;
+    }
+
+    .carrinho-btn {
+        width: 100%;
+    }
+
+}
