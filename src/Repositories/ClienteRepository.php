@@ -503,6 +503,269 @@ ATUALIZA FOTO DO CLIENTE
 
 
     /*
+=================================
+ATUALIZA E-MAIL
+=================================
+*/
+
+    public function atualizarEmail(
+        int $clienteId,
+        string $email
+    ): void {
+        $sql = "
+        UPDATE clientes
+        SET
+            email = :email
+        WHERE id = :id
+    ";
+
+        $stmt =
+            $this->pdo->prepare(
+                $sql
+            );
+
+        $stmt->execute([
+            ':email' =>
+            $email,
+
+            ':id' =>
+            $clienteId,
+        ]);
+    }
+
+
+    /*
+=================================
+ATUALIZA SENHA
+=================================
+*/
+
+    public function atualizarSenha(
+        int $clienteId,
+        string $senhaHash
+    ): void {
+        $sql = "
+        UPDATE clientes
+        SET
+            senha_hash = :senha_hash
+        WHERE id = :id
+    ";
+
+        $stmt =
+            $this->pdo->prepare(
+                $sql
+            );
+
+        $stmt->execute([
+            ':senha_hash' =>
+            $senhaHash,
+
+            ':id' =>
+            $clienteId,
+        ]);
+    }
+
+
+    /*
+=================================
+VERIFICA PEDIDOS
+=================================
+*/
+
+    public function possuiPedidos(
+        int $clienteId
+    ): bool {
+        $sql = "
+        SELECT id
+        FROM pedidos
+        WHERE cliente_id = :cliente_id
+        LIMIT 1
+    ";
+
+        $stmt =
+            $this->pdo->prepare(
+                $sql
+            );
+
+        $stmt->execute([
+            ':cliente_id' =>
+            $clienteId,
+        ]);
+
+        return
+            $stmt->fetch(
+                PDO::FETCH_ASSOC
+            ) !== false;
+    }
+
+
+    /*
+=================================
+EXCLUI CONTA SEM PEDIDOS
+=================================
+*/
+
+    public function excluirConta(
+        int $clienteId
+    ): void {
+        $this->pdo->beginTransaction();
+
+        try {
+
+            $stmt =
+                $this->pdo->prepare("
+                DELETE FROM dispositivos_notificacao
+                WHERE cliente_id = :cliente_id
+            ");
+
+            $stmt->execute([
+                ':cliente_id' =>
+                $clienteId,
+            ]);
+
+
+            $stmt =
+                $this->pdo->prepare("
+                DELETE FROM enderecos
+                WHERE cliente_id = :cliente_id
+            ");
+
+            $stmt->execute([
+                ':cliente_id' =>
+                $clienteId,
+            ]);
+
+
+            $stmt =
+                $this->pdo->prepare("
+                DELETE FROM carrinhos
+                WHERE cliente_id = :cliente_id
+            ");
+
+            $stmt->execute([
+                ':cliente_id' =>
+                $clienteId,
+            ]);
+
+
+            $stmt =
+                $this->pdo->prepare("
+                DELETE FROM clientes
+                WHERE id = :cliente_id
+            ");
+
+            $stmt->execute([
+                ':cliente_id' =>
+                $clienteId,
+            ]);
+
+
+            $this->pdo->commit();
+        } catch (\Throwable $erro) {
+
+            if (
+                $this->pdo->inTransaction()
+            ) {
+                $this->pdo->rollBack();
+            }
+
+            throw $erro;
+        }
+    }
+
+
+    /*
+=================================
+ENCERRA CONTA COM PEDIDOS
+=================================
+*/
+
+    public function anonimizarConta(
+        int $clienteId
+    ): void {
+        $this->pdo->beginTransaction();
+
+        try {
+
+            $emailAnonimo =
+                'conta-excluida-'
+                . $clienteId
+                . '@local.invalid';
+
+
+            $stmt =
+                $this->pdo->prepare("
+                UPDATE clientes
+                SET
+                    google_sub = NULL,
+                    nome = 'Conta excluída',
+                    email = :email,
+                    senha_hash = NULL,
+                    foto_url = NULL,
+                    email_verificado = 0
+                WHERE id = :id
+            ");
+
+            $stmt->execute([
+                ':email' =>
+                $emailAnonimo,
+
+                ':id' =>
+                $clienteId,
+            ]);
+
+
+            $stmt =
+                $this->pdo->prepare("
+                DELETE FROM dispositivos_notificacao
+                WHERE cliente_id = :cliente_id
+            ");
+
+            $stmt->execute([
+                ':cliente_id' =>
+                $clienteId,
+            ]);
+
+
+            $stmt =
+                $this->pdo->prepare("
+                DELETE FROM enderecos
+                WHERE cliente_id = :cliente_id
+            ");
+
+            $stmt->execute([
+                ':cliente_id' =>
+                $clienteId,
+            ]);
+
+
+            $stmt =
+                $this->pdo->prepare("
+                DELETE FROM carrinhos
+                WHERE cliente_id = :cliente_id
+            ");
+
+            $stmt->execute([
+                ':cliente_id' =>
+                $clienteId,
+            ]);
+
+
+            $this->pdo->commit();
+        } catch (\Throwable $erro) {
+
+            if (
+                $this->pdo->inTransaction()
+            ) {
+                $this->pdo->rollBack();
+            }
+
+            throw $erro;
+        }
+    }
+
+
+    /*
     =================================
     ATUALIZA ÚLTIMO ACESSO
     =================================

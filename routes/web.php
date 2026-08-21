@@ -7,6 +7,7 @@ use App\Controllers\Site\HomeController;
 use App\Controllers\Site\CardapioController;
 use App\Controllers\Site\QuemSomosController;
 use App\Controllers\Site\TermosController;
+use App\Controllers\Site\CheckoutController;
 
 return [
 
@@ -108,4 +109,32 @@ return [
             'remover',
         ],
     ],
+
+    [
+        'method' => 'GET',
+        'path' => '/checkout',
+        'action' => [
+            CheckoutController::class,
+            'index',
+        ],
+    ],
+
+    [
+        'method' => 'POST',
+        'path' => '/checkout/finalizar',
+        'action' => [
+            CheckoutController::class,
+            'finalizar',
+        ],
+    ],
+
+    [
+        'method' => 'GET',
+        'path' => '/checkout/sucesso/{id}',
+        'action' => [
+            CheckoutController::class,
+            'sucesso',
+        ],
+    ],
+
 ];

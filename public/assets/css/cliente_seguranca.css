@@ -1,0 +1,532 @@
+/* =========================================================
+   SEGURANÇA
+========================================================= */
+
+.cliente-seguranca-page {
+    min-height:
+        calc(100vh - 140px);
+
+    padding:
+        60px 20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff,
+            var(--creme)
+        );
+}
+
+
+.cliente-seguranca-container {
+    width:
+        100%;
+
+    max-width:
+        850px;
+
+    margin:
+        0 auto;
+}
+
+
+/* =========================================================
+   CABEÇALHO
+========================================================= */
+
+.cliente-seguranca-header {
+    margin-bottom:
+        30px;
+}
+
+
+.cliente-seguranca-etiqueta {
+    margin:
+        0 0 8px;
+
+    color:
+        var(--cor-primaria);
+
+    font-size:
+        0.85rem;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        0.12rem;
+
+    text-transform:
+        uppercase;
+}
+
+
+.cliente-seguranca-header h1 {
+    margin:
+        0;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        2.2rem;
+
+    font-weight:
+        800;
+}
+
+
+.cliente-seguranca-header p:last-child {
+    margin:
+        10px 0 0;
+
+    color:
+        var(--cor-texto);
+
+    line-height:
+        1.6;
+}
+
+
+/* =========================================================
+   ALERTAS
+========================================================= */
+
+.cliente-seguranca-alert {
+    margin-bottom:
+        24px;
+
+    padding:
+        14px 18px;
+
+    border-radius:
+        12px;
+
+    font-size:
+        0.95rem;
+}
+
+
+.cliente-seguranca-alert-danger {
+    background:
+        #fef2f2;
+
+    border:
+        1px solid
+        rgba(220, 38, 38, 0.20);
+
+    color:
+        #991b1b;
+}
+
+
+.cliente-seguranca-alert-success {
+    background:
+        #f0fdf4;
+
+    border:
+        1px solid
+        rgba(22, 163, 74, 0.20);
+
+    color:
+        #166534;
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.cliente-seguranca-card {
+    margin-bottom:
+        20px;
+
+    padding:
+        30px;
+
+    background:
+        var(--branco);
+
+    border:
+        1px solid
+        rgba(93, 64, 55, 0.08);
+
+    border-radius:
+        20px;
+
+    box-shadow:
+        0 8px 28px
+        rgba(93, 64, 55, 0.08);
+}
+
+
+.cliente-seguranca-card-header {
+    display:
+        flex;
+
+    align-items:
+        flex-start;
+
+    gap:
+        16px;
+
+    margin-bottom:
+        25px;
+}
+
+
+.cliente-seguranca-icone {
+    width:
+        48px;
+
+    height:
+        48px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    flex-shrink:
+        0;
+
+    border-radius:
+        14px;
+
+    background:
+        rgba(245, 124, 0, 0.10);
+
+    font-size:
+        1.35rem;
+}
+
+
+.cliente-seguranca-card-header h2 {
+    margin:
+        0;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        1.25rem;
+
+    font-weight:
+        800;
+}
+
+
+.cliente-seguranca-card-header p {
+    margin:
+        5px 0 0;
+
+    color:
+        var(--cor-texto);
+
+    line-height:
+        1.5;
+}
+
+
+/* =========================================================
+   FORMULÁRIO
+========================================================= */
+
+.cliente-seguranca-form {
+    width:
+        100%;
+}
+
+
+.cliente-seguranca-form-group {
+    margin-bottom:
+        20px;
+}
+
+
+.cliente-seguranca-form-group label {
+    display:
+        block;
+
+    margin-bottom:
+        8px;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        0.94rem;
+
+    font-weight:
+        700;
+}
+
+
+.cliente-seguranca-form-group input {
+    width:
+        100%;
+
+    min-height:
+        48px;
+
+    padding:
+        12px 16px;
+
+    box-sizing:
+        border-box;
+
+    border:
+        1px solid
+        rgba(93, 64, 55, 0.14);
+
+    border-radius:
+        12px;
+
+    outline:
+        none;
+
+    background:
+        var(--branco);
+
+    color:
+        var(--cor-texto);
+
+    font-family:
+        inherit;
+
+    font-size:
+        1rem;
+
+    transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+
+.cliente-seguranca-form-group input:focus {
+    border-color:
+        var(--cor-destaque);
+
+    box-shadow:
+        0 0 0 0.2rem
+        rgba(245, 124, 0, 0.14);
+}
+
+
+.cliente-seguranca-form-group small {
+    display:
+        block;
+
+    margin-top:
+        7px;
+
+    color:
+        #777777;
+
+    font-size:
+        0.82rem;
+
+    line-height:
+        1.4;
+}
+
+
+/* =========================================================
+   BOTÃO PRINCIPAL
+========================================================= */
+
+.cliente-seguranca-btn-principal {
+    min-height:
+        46px;
+
+    padding:
+        11px 24px;
+
+    border:
+        none;
+
+    border-radius:
+        30px;
+
+    background:
+        var(--cor-destaque);
+
+    color:
+        var(--branco);
+
+    font-family:
+        inherit;
+
+    font-size:
+        0.95rem;
+
+    font-weight:
+        700;
+
+    cursor:
+        pointer;
+
+    transition:
+        background-color 0.25s ease,
+        transform 0.25s ease;
+}
+
+
+.cliente-seguranca-btn-principal:hover {
+    background:
+        var(--laranja-hover);
+
+    transform:
+        translateY(-2px);
+}
+
+
+/* =========================================================
+   GOOGLE
+========================================================= */
+
+.cliente-seguranca-google-info {
+    padding:
+        16px 18px;
+
+    border-radius:
+        12px;
+
+    background:
+        #f8fafc;
+
+    border:
+        1px solid
+        #e2e8f0;
+}
+
+
+.cliente-seguranca-google-info strong {
+    color:
+        var(--marrom);
+}
+
+
+.cliente-seguranca-google-info p {
+    margin:
+        6px 0 0;
+
+    color:
+        var(--cor-texto);
+
+    line-height:
+        1.5;
+}
+
+
+/* =========================================================
+   EXCLUSÃO
+========================================================= */
+
+.cliente-seguranca-card-perigo {
+    border:
+        1px solid
+        rgba(220, 38, 38, 0.16);
+}
+
+
+.cliente-seguranca-perigo-texto {
+    margin-bottom:
+        22px;
+
+    color:
+        var(--cor-texto);
+
+    line-height:
+        1.6;
+}
+
+
+.cliente-seguranca-perigo-texto p {
+    margin:
+        0 0 10px;
+}
+
+
+.cliente-seguranca-btn-excluir {
+    min-height:
+        46px;
+
+    padding:
+        11px 24px;
+
+    border:
+        1px solid
+        #dc2626;
+
+    border-radius:
+        30px;
+
+    background:
+        transparent;
+
+    color:
+        #b91c1c;
+
+    font-family:
+        inherit;
+
+    font-size:
+        0.95rem;
+
+    font-weight:
+        700;
+
+    cursor:
+        pointer;
+
+    transition:
+        background-color 0.25s ease,
+        color 0.25s ease;
+}
+
+
+.cliente-seguranca-btn-excluir:hover {
+    background:
+        #dc2626;
+
+    color:
+        #ffffff;
+}
+
+
+/* =========================================================
+   RESPONSIVO
+========================================================= */
+
+@media (max-width: 700px) {
+
+    .cliente-seguranca-page {
+        padding:
+            40px 16px;
+    }
+
+
+    .cliente-seguranca-header h1 {
+        font-size:
+            1.9rem;
+    }
+
+
+    .cliente-seguranca-card {
+        padding:
+            24px 20px;
+    }
+
+
+    .cliente-seguranca-btn-principal,
+    .cliente-seguranca-btn-excluir {
+        width:
+            100%;
+    }
+
+}

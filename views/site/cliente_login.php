@@ -2,11 +2,27 @@
 
 declare(strict_types=1);
 
+use App\Helpers\View;
 use App\Helpers\Csrf;
+
+require APP_ROOT
+    . '/views/layouts/site/header.php';
+
+View::componente(
+    'site/navbar',
+    [
+        'rotaAtual' =>
+            $rotaAtual,
+    ]
+);
 
 $erro =
     $erro
     ?? null;
+
+$nome =
+    $nome
+    ?? '';
 
 $email =
     $email
@@ -14,16 +30,8 @@ $email =
 
 ?>
 
-<?php
 
-require APP_ROOT
-    . '/views/layouts/site/header.php';
 
-?>
-
-<link
-    rel="stylesheet"
-    href="<?= BASE_URL ?>/assets/css/cliente_login.css">
 
 
 <main class="cliente-login">

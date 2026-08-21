@@ -11,7 +11,7 @@ View::componente(
     'site/navbar',
     [
         'rotaAtual' =>
-            $rotaAtual,
+        $rotaAtual,
     ]
 );
 
@@ -52,8 +52,7 @@ $erro =
         <?php if ($erro !== null): ?>
 
             <div
-                class="cliente-enderecos-alert cliente-enderecos-alert-danger"
-            >
+                class="cliente-enderecos-alert cliente-enderecos-alert-danger">
                 <?= htmlspecialchars(
                     (string) $erro,
                     ENT_QUOTES,
@@ -69,23 +68,34 @@ $erro =
             <form
                 method="POST"
                 action="<?= BASE_URL ?><?= $endereco
-                    ? '/cliente/enderecos/atualizar/'
-                        . (int) $endereco['id']
-                    : '/cliente/enderecos/salvar'
-                ?>"
-                class="cliente-endereco-form"
-            >
+                                            ? '/cliente/enderecos/atualizar/'
+                                            . (int) $endereco['id']
+                                            : '/cliente/enderecos/salvar'
+                                        ?>"
+                class="cliente-endereco-form">
 
                 <input
                     type="hidden"
                     name="_csrf"
                     value="<?= htmlspecialchars(
-                        $csrfToken,
-                        ENT_QUOTES,
-                        'UTF-8'
-                    ) ?>"
-                >
+                                $csrfToken,
+                                ENT_QUOTES,
+                                'UTF-8'
+                            ) ?>">
+                <?php if (
+                    !empty($retorno)
+                ): ?>
 
+                    <input
+                        type="hidden"
+                        name="retorno"
+                        value="<?= htmlspecialchars(
+                                    (string) $retorno,
+                                    ENT_QUOTES,
+                                    'UTF-8'
+                                ) ?>">
+
+                <?php endif; ?>
 
                 <div class="cliente-endereco-form-group">
 
@@ -101,15 +111,14 @@ $erro =
                         required
                         placeholder="Ex.: Minha casa, Casa da tia, Trabalho"
                         value="<?= htmlspecialchars(
-                            (string)
-                            (
-                                $endereco['identificacao']
-                                ?? ''
-                            ),
-                            ENT_QUOTES,
-                            'UTF-8'
-                        ) ?>"
-                    >
+                                    (string)
+                                    (
+                                        $endereco['identificacao']
+                                        ?? ''
+                                    ),
+                                    ENT_QUOTES,
+                                    'UTF-8'
+                                ) ?>">
 
                 </div>
 
@@ -127,15 +136,14 @@ $erro =
                         maxlength="150"
                         required
                         value="<?= htmlspecialchars(
-                            (string)
-                            (
-                                $endereco['destinatario']
-                                ?? ''
-                            ),
-                            ENT_QUOTES,
-                            'UTF-8'
-                        ) ?>"
-                    >
+                                    (string)
+                                    (
+                                        $endereco['destinatario']
+                                        ?? ''
+                                    ),
+                                    ENT_QUOTES,
+                                    'UTF-8'
+                                ) ?>">
 
                 </div>
 
@@ -156,15 +164,14 @@ $erro =
                             required
                             placeholder="00000-000"
                             value="<?= htmlspecialchars(
-                                (string)
-                                (
-                                    $endereco['cep']
-                                    ?? ''
-                                ),
-                                ENT_QUOTES,
-                                'UTF-8'
-                            ) ?>"
-                        >
+                                        (string)
+                                        (
+                                            $endereco['cep']
+                                            ?? ''
+                                        ),
+                                        ENT_QUOTES,
+                                        'UTF-8'
+                                    ) ?>">
 
                     </div>
 
@@ -183,15 +190,14 @@ $erro =
                             required
                             placeholder="CE"
                             value="<?= htmlspecialchars(
-                                (string)
-                                (
-                                    $endereco['estado']
-                                    ?? ''
-                                ),
-                                ENT_QUOTES,
-                                'UTF-8'
-                            ) ?>"
-                        >
+                                        (string)
+                                        (
+                                            $endereco['estado']
+                                            ?? ''
+                                        ),
+                                        ENT_QUOTES,
+                                        'UTF-8'
+                                    ) ?>">
 
                     </div>
 
@@ -212,15 +218,14 @@ $erro =
                         required
                         placeholder="Rua, avenida, travessa..."
                         value="<?= htmlspecialchars(
-                            (string)
-                            (
-                                $endereco['logradouro']
-                                ?? ''
-                            ),
-                            ENT_QUOTES,
-                            'UTF-8'
-                        ) ?>"
-                    >
+                                    (string)
+                                    (
+                                        $endereco['logradouro']
+                                        ?? ''
+                                    ),
+                                    ENT_QUOTES,
+                                    'UTF-8'
+                                ) ?>">
 
                 </div>
 
@@ -240,15 +245,14 @@ $erro =
                             maxlength="20"
                             required
                             value="<?= htmlspecialchars(
-                                (string)
-                                (
-                                    $endereco['numero']
-                                    ?? ''
-                                ),
-                                ENT_QUOTES,
-                                'UTF-8'
-                            ) ?>"
-                        >
+                                        (string)
+                                        (
+                                            $endereco['numero']
+                                            ?? ''
+                                        ),
+                                        ENT_QUOTES,
+                                        'UTF-8'
+                                    ) ?>">
 
                     </div>
 
@@ -266,15 +270,14 @@ $erro =
                             maxlength="120"
                             placeholder="Apartamento, bloco, casa..."
                             value="<?= htmlspecialchars(
-                                (string)
-                                (
-                                    $endereco['complemento']
-                                    ?? ''
-                                ),
-                                ENT_QUOTES,
-                                'UTF-8'
-                            ) ?>"
-                        >
+                                        (string)
+                                        (
+                                            $endereco['complemento']
+                                            ?? ''
+                                        ),
+                                        ENT_QUOTES,
+                                        'UTF-8'
+                                    ) ?>">
 
                     </div>
 
@@ -294,15 +297,14 @@ $erro =
                         maxlength="120"
                         required
                         value="<?= htmlspecialchars(
-                            (string)
-                            (
-                                $endereco['bairro']
-                                ?? ''
-                            ),
-                            ENT_QUOTES,
-                            'UTF-8'
-                        ) ?>"
-                    >
+                                    (string)
+                                    (
+                                        $endereco['bairro']
+                                        ?? ''
+                                    ),
+                                    ENT_QUOTES,
+                                    'UTF-8'
+                                ) ?>">
 
                 </div>
 
@@ -320,15 +322,14 @@ $erro =
                         maxlength="120"
                         required
                         value="<?= htmlspecialchars(
-                            (string)
-                            (
-                                $endereco['cidade']
-                                ?? ''
-                            ),
-                            ENT_QUOTES,
-                            'UTF-8'
-                        ) ?>"
-                    >
+                                    (string)
+                                    (
+                                        $endereco['cidade']
+                                        ?? ''
+                                    ),
+                                    ENT_QUOTES,
+                                    'UTF-8'
+                                ) ?>">
 
                 </div>
 
@@ -336,14 +337,12 @@ $erro =
                 <?php if (!$endereco): ?>
 
                     <label
-                        class="cliente-endereco-principal-checkbox"
-                    >
+                        class="cliente-endereco-principal-checkbox">
 
                         <input
                             type="checkbox"
                             name="principal"
-                            value="1"
-                        >
+                            value="1">
 
                         <span>
                             Definir como endereço principal
@@ -354,8 +353,7 @@ $erro =
                 <?php else: ?>
 
                     <label
-                        class="cliente-endereco-principal-checkbox"
-                    >
+                        class="cliente-endereco-principal-checkbox">
 
                         <input
                             type="checkbox"
@@ -370,8 +368,7 @@ $erro =
                             )
                                 ? 'checked'
                                 : ''
-                            ?>
-                        >
+                            ?>>
 
                         <span>
                             Definir como endereço principal
@@ -386,8 +383,7 @@ $erro =
 
                     <button
                         type="submit"
-                        class="cliente-endereco-form-btn-salvar"
-                    >
+                        class="cliente-endereco-form-btn-salvar">
 
                         <?= $endereco
                             ? 'Salvar alterações'
@@ -398,10 +394,14 @@ $erro =
 
 
                     <a
-                        href="<?= BASE_URL ?>/cliente/enderecos"
-                        class="cliente-endereco-form-btn-voltar"
-                    >
+                        href="<?= BASE_URL ?><?= !empty($retorno) && $retorno === 'checkout'
+                                                    ? '/checkout'
+                                                    : '/cliente/enderecos'
+                                                ?>"
+                        class="cliente-endereco-form-btn-voltar">
+
                         Voltar
+
                     </a>
 
                 </div>
@@ -416,26 +416,59 @@ $erro =
 
 
 <script>
-document.addEventListener(
-    'DOMContentLoaded',
-    function () {
+    document.addEventListener(
+        'DOMContentLoaded',
+        function() {
 
-        const cep =
-            document.getElementById('cep');
+            const cep =
+                document.getElementById('cep');
 
-        if (!cep) {
-            return;
-        }
+            const logradouro =
+                document.getElementById(
+                    'logradouro'
+                );
 
-        cep.addEventListener(
-            'input',
-            function () {
+            const bairro =
+                document.getElementById(
+                    'bairro'
+                );
 
-                let valor =
-                    this.value.replace(
+            const cidade =
+                document.getElementById(
+                    'cidade'
+                );
+
+            const estado =
+                document.getElementById(
+                    'estado'
+                );
+
+
+            if (
+                !cep ||
+                !logradouro ||
+                !bairro ||
+                !cidade ||
+                !estado
+            ) {
+                return;
+            }
+
+
+            /*
+            =================================
+            FORMATA CEP
+            =================================
+            */
+
+            function formatarCep(valor) {
+
+                valor =
+                    valor.replace(
                         /\D/g,
                         ''
                     );
+
 
                 if (
                     valor.length > 8
@@ -447,35 +480,293 @@ document.addEventListener(
                         );
                 }
 
+
                 if (
                     valor.length > 5
                 ) {
-                    valor =
+                    return (
                         valor.substring(
                             0,
                             5
-                        )
-                        + '-'
-                        + valor.substring(
+                        ) +
+                        '-' +
+                        valor.substring(
                             5
-                        );
+                        )
+                    );
                 }
 
-                this.value =
-                    valor;
-            }
-        );
 
-        const estado =
-            document.getElementById(
-                'estado'
+                return valor;
+            }
+
+
+            /*
+            =================================
+            LIMPA CAMPOS AUTOMÁTICOS
+            =================================
+            */
+
+            function limparEndereco() {
+
+                logradouro.value =
+                    '';
+
+                bairro.value =
+                    '';
+
+                cidade.value =
+                    '';
+
+                estado.value =
+                    '';
+            }
+
+
+            /*
+            =================================
+            CONSULTA CEP
+            =================================
+            */
+
+            async function consultarCep() {
+
+                const cepNumeros =
+                    cep.value.replace(
+                        /\D/g,
+                        ''
+                    );
+
+
+                if (
+                    cepNumeros.length !== 8
+                ) {
+                    return;
+                }
+
+
+                /*
+                Evita consultas repetidas
+                para o mesmo CEP.
+                */
+
+                if (
+                    cep.dataset.cepConsultado ===
+                    cepNumeros
+                ) {
+                    return;
+                }
+
+
+                cep.dataset.cepConsultado =
+                    cepNumeros;
+
+
+                /*
+                Indica carregamento.
+                */
+
+                cep.classList.add(
+                    'cliente-endereco-cep-carregando'
+                );
+
+
+                try {
+
+                    const resposta =
+                        await fetch(
+                            'https://viacep.com.br/ws/' +
+                            cepNumeros +
+                            '/json/'
+                        );
+
+
+                    if (
+                        !resposta.ok
+                    ) {
+                        throw new Error(
+                            'Falha na consulta do CEP.'
+                        );
+                    }
+
+
+                    const dados =
+                        await resposta.json();
+
+
+                    /*
+                    CEP inexistente.
+                    */
+
+                    if (
+                        dados.erro
+                    ) {
+
+                        limparEndereco();
+
+                        cep.dataset.cepConsultado =
+                            '';
+
+                        alert(
+                            'CEP não encontrado.'
+                        );
+
+                        return;
+                    }
+
+
+                    /*
+                    Preenche automaticamente.
+                    */
+
+                    logradouro.value =
+                        dados.logradouro ??
+                        '';
+
+                    bairro.value =
+                        dados.bairro ??
+                        '';
+
+                    cidade.value =
+                        dados.localidade ??
+                        '';
+
+                    estado.value =
+                        dados.uf ??
+                        '';
+
+
+                    /*
+                    Dispara eventos para qualquer
+                    outra lógica do formulário.
+                    */
+
+                    logradouro.dispatchEvent(
+                        new Event(
+                            'change', {
+                                bubbles: true
+                            }
+                        )
+                    );
+
+                    bairro.dispatchEvent(
+                        new Event(
+                            'change', {
+                                bubbles: true
+                            }
+                        )
+                    );
+
+                    cidade.dispatchEvent(
+                        new Event(
+                            'change', {
+                                bubbles: true
+                            }
+                        )
+                    );
+
+                    estado.dispatchEvent(
+                        new Event(
+                            'change', {
+                                bubbles: true
+                            }
+                        )
+                    );
+
+                } catch (erro) {
+
+                    cep.dataset.cepConsultado =
+                        '';
+
+                    alert(
+                        'Não foi possível consultar o CEP. Verifique sua conexão e tente novamente.'
+                    );
+
+                } finally {
+
+                    cep.classList.remove(
+                        'cliente-endereco-cep-carregando'
+                    );
+                }
+            }
+
+
+            /*
+            =================================
+            DIGITAÇÃO DO CEP
+            =================================
+            */
+
+            cep.addEventListener(
+                'input',
+                function() {
+
+                    this.value =
+                        formatarCep(
+                            this.value
+                        );
+
+
+                    /*
+                    Permite consultar novamente
+                    caso o usuário altere o CEP.
+                    */
+
+                    const atual =
+                        this.value.replace(
+                            /\D/g,
+                            ''
+                        );
+
+
+                    if (
+                        atual !==
+                        this.dataset.cepConsultado
+                    ) {
+                        this.dataset.cepConsultado =
+                            '';
+                    }
+
+
+                    /*
+                    Consulta automaticamente
+                    ao completar 8 números.
+                    */
+
+                    if (
+                        atual.length === 8
+                    ) {
+                        consultarCep();
+                    }
+                }
             );
 
-        if (estado) {
+
+            /*
+            =================================
+            CONSULTA AO SAIR DO CAMPO
+            =================================
+            */
+
+            cep.addEventListener(
+                'blur',
+                function() {
+
+                    consultarCep();
+
+                }
+            );
+
+
+            /*
+            =================================
+            ESTADO
+            =================================
+            */
 
             estado.addEventListener(
                 'input',
-                function () {
+                function() {
 
                     this.value =
                         this.value
@@ -490,10 +781,25 @@ document.addEventListener(
                         );
                 }
             );
-        }
 
-    }
-);
+
+            /*
+            =================================
+            CEP JÁ PREENCHIDO
+            =================================
+            */
+
+            if (
+                cep.value.replace(
+                    /\D/g,
+                    ''
+                ).length === 8
+            ) {
+                consultarCep();
+            }
+
+        }
+    );
 </script>
 
 

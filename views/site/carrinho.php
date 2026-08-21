@@ -11,7 +11,7 @@ View::componente(
     'site/navbar',
     [
         'rotaAtual' =>
-            $rotaAtual,
+        $rotaAtual,
     ]
 );
 
@@ -23,19 +23,19 @@ $totalCarrinho =
 
 $nomesCategorias = [
     'cento_tradicionais' =>
-        'Salgados Tradicionais',
+    'Salgados Tradicionais',
 
     'cento_folhados' =>
-        'Salgados Folhados',
+    'Salgados Folhados',
 
     'salgados_grandes' =>
-        'Salgados Grandes',
+    'Salgados Grandes',
 
     'empadao' =>
-        'Empadão de Frango',
+    'Empadão de Frango',
 
     'unica' =>
-        'Produto',
+    'Produto',
 ];
 
 ?>
@@ -84,15 +84,11 @@ $nomesCategorias = [
                 <?php
 
                 $tipoCategoria =
-                    $item[
-                        'tipo_categoria'
-                    ]
+                    $item['tipo_categoria']
                     ?? 'unica';
 
                 $nomeCategoria =
-                    $nomesCategorias[
-                        $tipoCategoria
-                    ]
+                    $nomesCategorias[$tipoCategoria]
                     ?? 'Produto';
 
                 $totalCarrinho +=
@@ -137,9 +133,7 @@ $nomesCategorias = [
                                     class="text-secondary">
 
                                     <?= htmlspecialchars(
-                                        $item[
-                                            'categoria_nome'
-                                        ],
+                                        $item['categoria_nome'],
                                         ENT_QUOTES,
                                         'UTF-8'
                                     ) ?>
@@ -173,10 +167,10 @@ $nomesCategorias = [
                                     data-remover-carrinho
                                     data-categoria-id="<?= (int) $item['categoria_id'] ?>"
                                     data-nome="<?= htmlspecialchars(
-                                        $nomeCategoria,
-                                        ENT_QUOTES,
-                                        'UTF-8'
-                                    ) ?>"
+                                                    $nomeCategoria,
+                                                    ENT_QUOTES,
+                                                    'UTF-8'
+                                                ) ?>"
                                     data-bs-toggle="modal"
                                     data-bs-target="#modalRemoverCarrinho">
 
@@ -196,9 +190,7 @@ $nomesCategorias = [
                         <div class="mb-4">
 
                             <?php foreach (
-                                $item[
-                                    'produtos'
-                                ] ?? []
+                                $item['produtos'] ?? []
                                 as $produto
                             ): ?>
 
@@ -219,9 +211,7 @@ $nomesCategorias = [
                                         ×
 
                                         <?= (int)
-                                            $produto[
-                                                'quantidade'
-                                            ] ?>
+                                        $produto['quantidade'] ?>
 
                                     </span>
 
@@ -252,15 +242,11 @@ $nomesCategorias = [
                                 <strong>
 
                                     <?= (int)
-                                        $item[
-                                            'quantidade_centos'
-                                        ] ?>
+                                    $item['quantidade_centos'] ?>
 
                                     <?= (
                                         (int)
-                                        $item[
-                                            'quantidade_centos'
-                                        ]
+                                        $item['quantidade_centos']
                                     ) === 1
                                         ? 'cento'
                                         : 'centos'
@@ -286,9 +272,7 @@ $nomesCategorias = [
 
                                     <?= number_format(
                                         (float)
-                                        $item[
-                                            'preco_unitario'
-                                        ],
+                                        $item['preco_unitario'],
                                         2,
                                         ',',
                                         '.'
@@ -318,9 +302,7 @@ $nomesCategorias = [
                                 <strong>
 
                                     <?= (int)
-                                        $item[
-                                            'quantidade_total'
-                                        ] ?>
+                                    $item['quantidade_total'] ?>
 
                                     unidades
 
@@ -345,11 +327,7 @@ $nomesCategorias = [
                                     <?= number_format(
                                         (float)
                                         (
-                                            $item[
-                                                'produtos'
-                                            ][0][
-                                                'preco_unitario'
-                                            ]
+                                            $item['produtos'][0]['preco_unitario']
                                             ?? 0
                                         ),
                                         2,
@@ -379,9 +357,7 @@ $nomesCategorias = [
                                 <strong>
 
                                     <?= (int)
-                                        $item[
-                                            'quantidade_total'
-                                        ] ?>
+                                    $item['quantidade_total'] ?>
 
                                     unidade(s)
 
@@ -406,11 +382,7 @@ $nomesCategorias = [
                                     <?= number_format(
                                         (float)
                                         (
-                                            $item[
-                                                'produtos'
-                                            ][0][
-                                                'preco_unitario'
-                                            ]
+                                            $item['produtos'][0]['preco_unitario']
                                             ?? 0
                                         ),
                                         2,
@@ -443,9 +415,7 @@ $nomesCategorias = [
 
                                 <?= number_format(
                                     (float)
-                                    $item[
-                                        'subtotal'
-                                    ],
+                                    $item['subtotal'],
                                     2,
                                     ',',
                                     '.'
@@ -500,23 +470,30 @@ $nomesCategorias = [
                     </div>
 
 
-                    <div
-                        class="mt-4">
+                    <div class="carrinho-acoes">
 
                         <a
                             href="<?= BASE_URL ?>/cardapio"
-                            class="btn btn-outline-secondary">
+                            class="carrinho-btn carrinho-btn-voltar">
 
-                            <i
-                                class="bi bi-arrow-left me-1">
-                            </i>
+                            <i class="bi bi-arrow-left"></i>
 
                             Continuar comprando
 
                         </a>
 
-                    </div>
 
+                        <a
+                            href="<?= BASE_URL ?>/checkout"
+                            class="carrinho-btn carrinho-btn-finalizar">
+
+                            <i class="bi bi-bag-check"></i>
+
+                            Finalizar pedido
+
+                        </a>
+
+                    </div>
                 </div>
 
             </div>

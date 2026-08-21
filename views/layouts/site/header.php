@@ -119,10 +119,51 @@ $baseUrl =
                     ENT_QUOTES,
                     'UTF-8'
                 ); ?>">
-        <link
+    <link
         rel="stylesheet"
         href="<?= htmlspecialchars(
                     $baseUrl . '/assets/css/cliente_enderecos.css',
+                    ENT_QUOTES,
+                    'UTF-8'
+                ); ?>">
+
+    <link
+        rel="stylesheet"
+        href="<?= htmlspecialchars(
+                    $baseUrl . '/assets/css/cliente_seguranca.css',
+                    ENT_QUOTES,
+                    'UTF-8'
+                ); ?>">
+
+    <link
+        rel="stylesheet"
+        href="<?= htmlspecialchars(
+                    $baseUrl . '/assets/css/checkout.css',
+                    ENT_QUOTES,
+                    'UTF-8'
+                ); ?>">
+
+    <link
+        rel="stylesheet"
+        href="<?= htmlspecialchars(
+                    $baseUrl . '/assets/css/cliente_cadastro.css',
+                    ENT_QUOTES,
+                    'UTF-8'
+                ); ?>">
+
+
+    <link
+        rel="stylesheet"
+        href="<?= htmlspecialchars(
+                    $baseUrl . '/assets/css/cliente_login.css',
+                    ENT_QUOTES,
+                    'UTF-8'
+                ); ?>">
+
+    <link
+        rel="stylesheet"
+        href="<?= htmlspecialchars(
+                    $baseUrl . '/assets/css/carrinho.css',
                     ENT_QUOTES,
                     'UTF-8'
                 ); ?>">

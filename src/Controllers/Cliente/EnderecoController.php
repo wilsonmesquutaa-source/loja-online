@@ -60,6 +60,36 @@ final class EnderecoController extends Controller
     {
         $this->clienteAutenticado();
 
+
+        /*
+        =================================
+        RETORNO
+        =================================
+        */
+
+        $retorno =
+            isset(
+                $_GET['retorno']
+            )
+                ? trim(
+                    (string)
+                    $_GET['retorno']
+                )
+                : '';
+
+
+        /*
+        Apenas permitimos destinos
+        internos conhecidos.
+        */
+
+        if (
+            $retorno !== 'checkout'
+        ) {
+            $retorno = '';
+        }
+
+
         $this->view(
             'cliente/endereco-form',
             [
@@ -77,6 +107,9 @@ final class EnderecoController extends Controller
 
                 'erro' =>
                     null,
+
+                'retorno' =>
+                    $retorno,
             ]
         );
     }
@@ -96,6 +129,36 @@ final class EnderecoController extends Controller
         $this->validarCsrf();
 
 
+        /*
+        =================================
+        RETORNO
+        =================================
+        */
+
+        $retorno =
+            isset(
+                $_POST['retorno']
+            )
+                ? trim(
+                    (string)
+                    $_POST['retorno']
+                )
+                : '';
+
+
+        if (
+            $retorno !== 'checkout'
+        ) {
+            $retorno = '';
+        }
+
+
+        /*
+        =================================
+        DADOS
+        =================================
+        */
+
         $dados =
             $this->obterDadosFormulario();
 
@@ -109,14 +172,41 @@ final class EnderecoController extends Controller
         if (
             $erro !== null
         ) {
-            $this->redirecionarComErro(
-                '/cliente/enderecos/novo',
-                $erro
+
+            $rotaErro =
+                '/cliente/enderecos/novo';
+
+
+            if (
+                $retorno === 'checkout'
+            ) {
+                $rotaErro .=
+                    '?retorno=checkout&erro='
+                    . rawurlencode(
+                        $erro
+                    );
+            } else {
+                $rotaErro .=
+                    '?erro='
+                    . rawurlencode(
+                        $erro
+                    );
+            }
+
+
+            $this->redirecionar(
+                $rotaErro
             );
 
             return;
         }
 
+
+        /*
+        =================================
+        REPOSITORY
+        =================================
+        */
 
         $repository =
             new EnderecoRepository(
@@ -157,19 +247,20 @@ final class EnderecoController extends Controller
         =================================
         */
 
-        $repository->criar(
-            $clienteId,
-            $dados['identificacao'],
-            $dados['destinatario'],
-            $dados['cep'],
-            $dados['logradouro'],
-            $dados['numero'],
-            $dados['complemento'],
-            $dados['bairro'],
-            $dados['cidade'],
-            $dados['estado'],
-            $principal
-        );
+        $novoEnderecoId =
+            $repository->criar(
+                $clienteId,
+                $dados['identificacao'],
+                $dados['destinatario'],
+                $dados['cep'],
+                $dados['logradouro'],
+                $dados['numero'],
+                $dados['complemento'],
+                $dados['bairro'],
+                $dados['cidade'],
+                $dados['estado'],
+                $principal
+            );
 
 
         /*
@@ -182,32 +273,37 @@ final class EnderecoController extends Controller
             $principal
         ) {
 
-            /*
-            Busca novamente para identificar
-            o endereço recém-criado.
-            */
-
-            $enderecosAtualizados =
-                $repository->buscarPorCliente(
-                    $clienteId
-                );
-
-            if (
-                $enderecosAtualizados !== []
-            ) {
-
-                $novoPrincipal =
-                    $enderecosAtualizados[0];
-
-                $repository->definirPrincipal(
-                    (int)
-                    $novoPrincipal['id'],
-
-                    $clienteId
-                );
-            }
+            $repository->definirPrincipal(
+                $novoEnderecoId,
+                $clienteId
+            );
         }
 
+
+        /*
+        =================================
+        RETORNO PARA CHECKOUT
+        =================================
+        */
+
+        if (
+            $retorno === 'checkout'
+        ) {
+
+            $this->redirecionar(
+                '/checkout?endereco='
+                . $novoEnderecoId
+            );
+
+            return;
+        }
+
+
+        /*
+        =================================
+        VOLTA PARA ENDEREÇOS
+        =================================
+        */
 
         $this->redirecionar(
             '/cliente/enderecos?sucesso='
@@ -229,6 +325,24 @@ final class EnderecoController extends Controller
     ): void {
         $clienteId =
             $this->clienteAutenticado();
+
+
+        $retorno =
+            isset(
+                $_GET['retorno']
+            )
+                ? trim(
+                    (string)
+                    $_GET['retorno']
+                )
+                : '';
+
+
+        if (
+            $retorno !== 'checkout'
+        ) {
+            $retorno = '';
+        }
 
 
         $repository =
@@ -275,6 +389,9 @@ final class EnderecoController extends Controller
 
                 'erro' =>
                     null,
+
+                'retorno' =>
+                    $retorno,
             ]
         );
     }
@@ -295,6 +412,36 @@ final class EnderecoController extends Controller
         $this->validarCsrf();
 
 
+        /*
+        =================================
+        RETORNO
+        =================================
+        */
+
+        $retorno =
+            isset(
+                $_POST['retorno']
+            )
+                ? trim(
+                    (string)
+                    $_POST['retorno']
+                )
+                : '';
+
+
+        if (
+            $retorno !== 'checkout'
+        ) {
+            $retorno = '';
+        }
+
+
+        /*
+        =================================
+        DADOS
+        =================================
+        */
+
         $dados =
             $this->obterDadosFormulario();
 
@@ -308,15 +455,42 @@ final class EnderecoController extends Controller
         if (
             $erro !== null
         ) {
-            $this->redirecionarComErro(
+
+            $rotaErro =
                 '/cliente/enderecos/editar/'
-                . $id,
-                $erro
+                . $id;
+
+
+            if (
+                $retorno === 'checkout'
+            ) {
+                $rotaErro .=
+                    '?retorno=checkout&erro='
+                    . rawurlencode(
+                        $erro
+                    );
+            } else {
+                $rotaErro .=
+                    '?erro='
+                    . rawurlencode(
+                        $erro
+                    );
+            }
+
+
+            $this->redirecionar(
+                $rotaErro
             );
 
             return;
         }
 
+
+        /*
+        =================================
+        REPOSITORY
+        =================================
+        */
 
         $repository =
             new EnderecoRepository(
@@ -344,6 +518,12 @@ final class EnderecoController extends Controller
             return;
         }
 
+
+        /*
+        =================================
+        ATUALIZA
+        =================================
+        */
 
         $repository->atualizar(
             $id,
@@ -376,6 +556,31 @@ final class EnderecoController extends Controller
             );
         }
 
+
+        /*
+        =================================
+        RETORNO CHECKOUT
+        =================================
+        */
+
+        if (
+            $retorno === 'checkout'
+        ) {
+
+            $this->redirecionar(
+                '/checkout?endereco='
+                . $id
+            );
+
+            return;
+        }
+
+
+        /*
+        =================================
+        VOLTA PARA ENDEREÇOS
+        =================================
+        */
 
         $this->redirecionar(
             '/cliente/enderecos?sucesso='

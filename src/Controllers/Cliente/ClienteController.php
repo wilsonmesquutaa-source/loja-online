@@ -193,7 +193,14 @@ final class ClienteController extends Controller
                 $cliente['nome'],
 
             (string)
-                $cliente['email']
+                $cliente['email'],
+
+            !empty(
+                $cliente['foto_url']
+            )
+                ? (string)
+                    $cliente['foto_url']
+                : null
         );
 
 
@@ -573,10 +580,18 @@ final class ClienteController extends Controller
             );
 
 
+        /*
+        =================================
+        CADASTRO TRADICIONAL
+        SEM FOTO
+        =================================
+        */
+
         $this->iniciarSessaoCliente(
             $clienteId,
             $nome,
-            $email
+            $email,
+            null
         );
 
 
@@ -893,7 +908,12 @@ final class ClienteController extends Controller
 
 
         $fotoUrl =
-            $dadosGoogle['foto_url'];
+            !empty(
+                $dadosGoogle['foto_url']
+            )
+                ? (string)
+                    $dadosGoogle['foto_url']
+                : null;
 
 
         $emailVerificado =
@@ -975,7 +995,14 @@ final class ClienteController extends Controller
                     $cliente['nome'],
 
                 (string)
-                    $cliente['email']
+                    $cliente['email'],
+
+                !empty(
+                    $cliente['foto_url']
+                )
+                    ? (string)
+                        $cliente['foto_url']
+                    : null
             );
 
 
@@ -1022,7 +1049,14 @@ final class ClienteController extends Controller
                     $cliente['nome'],
 
                 (string)
-                    $cliente['email']
+                    $cliente['email'],
+
+                !empty(
+                    $cliente['foto_url']
+                )
+                    ? (string)
+                        $cliente['foto_url']
+                    : $fotoUrl
             );
 
 
@@ -1105,7 +1139,9 @@ final class ClienteController extends Controller
                     $clientePorEmail['nome'],
 
                 (string)
-                    $clientePorEmail['email']
+                    $clientePorEmail['email'],
+
+                $fotoUrl
             );
 
 
@@ -1147,7 +1183,8 @@ final class ClienteController extends Controller
         $this->iniciarSessaoCliente(
             $clienteId,
             $nome,
-            $email
+            $email,
+            $fotoUrl
         );
 
 
@@ -1210,7 +1247,8 @@ final class ClienteController extends Controller
     private function iniciarSessaoCliente(
         int $clienteId,
         string $nome,
-        string $email
+        string $email,
+        ?string $fotoUrl = null
     ): void {
 
         if (
@@ -1237,6 +1275,10 @@ final class ClienteController extends Controller
 
         $_SESSION['cliente_email'] =
             $email;
+
+
+        $_SESSION['cliente_foto_url'] =
+            $fotoUrl;
     }
 
 
