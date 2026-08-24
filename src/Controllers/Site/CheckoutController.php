@@ -8,11 +8,22 @@ use App\Controllers\Controller;
 use App\Helpers\Csrf;
 use App\Repositories\CarrinhoRepository;
 use App\Repositories\EnderecoRepository;
-use App\Repositories\EntregaRepository;
 use App\Repositories\PedidoRepository;
+use App\Services\EntregaService;
+use RuntimeException;
 
 final class CheckoutController extends Controller
 {
+    /*
+    =================================
+    ENDEREÇO DE RETIRADA
+    =================================
+    */
+
+    private const ENDERECO_RETIRADA =
+        'Rua Dragão do Mar, 608, Praia de Iracema, Fortaleza - CE';
+
+
     /*
     =================================
     TOKEN DO CARRINHO
@@ -90,24 +101,48 @@ final class CheckoutController extends Controller
 
     public function index(): void
     {
-        /*
-        =================================
-        CLIENTE
-        =================================
-        */
-
         $clienteId =
             $this->obterClienteId();
 
 
+        $tokenSessao =
+            $this->obterTokenSessao();
+
+
         /*
         =================================
-        TOKEN
+        MODALIDADE
         =================================
         */
 
-        $tokenSessao =
-            $this->obterTokenSessao();
+        $modalidadeRecebimento =
+            strtolower(
+                trim(
+                    (string)
+                    (
+                        $_GET[
+                            'recebimento'
+                        ]
+                        ?? 'entrega'
+                    )
+                )
+            );
+
+
+        if (
+            !in_array(
+                $modalidadeRecebimento,
+                [
+                    'entrega',
+                    'retirada',
+                ],
+                true
+            )
+        ) {
+
+            $modalidadeRecebimento =
+                'entrega';
+        }
 
 
         /*
@@ -167,7 +202,7 @@ final class CheckoutController extends Controller
 
         /*
         =================================
-        ASSOCIA CLIENTE AO CARRINHO
+        ASSOCIA CLIENTE
         =================================
         */
 
@@ -236,87 +271,91 @@ final class CheckoutController extends Controller
             null;
 
 
-        /*
-        =================================
-        ENDEREÇO INFORMADO NA URL
-        =================================
-        */
-
         if (
-            isset(
-                $_GET['endereco']
-            )
-        ) {
-
-            $enderecoId =
-                filter_var(
-                    $_GET['endereco'],
-                    FILTER_VALIDATE_INT
-                );
-
-
-            if (
-                $enderecoId
-            ) {
-
-                $enderecoSelecionado =
-                    $enderecoRepository
-                    ->buscarPorIdDoCliente(
-                        (int)
-                        $enderecoId,
-
-                        $clienteId
-                    );
-            }
-        }
-
-
-        /*
-        =================================
-        ENDEREÇO PADRÃO
-        =================================
-        */
-
-        if (
-            $enderecoSelecionado === null
-            &&
-            $enderecos !== []
+            $modalidadeRecebimento ===
+            'entrega'
         ) {
 
             /*
-            Primeiro tenta encontrar
-            o endereço principal.
+            ==============================
+            ENDEREÇO DA URL
+            ==============================
             */
 
-            foreach (
-                $enderecos as $endereco
+            if (
+                isset(
+                    $_GET['endereco']
+                )
             ) {
 
+                $enderecoId =
+                    filter_var(
+                        $_GET[
+                            'endereco'
+                        ],
+                        FILTER_VALIDATE_INT
+                    );
+
+
                 if (
-                    (int)
-                    $endereco['principal']
-                    === 1
+                    $enderecoId
                 ) {
 
                     $enderecoSelecionado =
-                        $endereco;
+                        $enderecoRepository
+                        ->buscarPorIdDoCliente(
+                            (int)
+                            $enderecoId,
 
-                    break;
+                            $clienteId
+                        );
                 }
             }
 
 
             /*
-            Se não houver principal,
-            usa o primeiro.
+            ==============================
+            ENDEREÇO PRINCIPAL
+            ==============================
             */
 
             if (
                 $enderecoSelecionado === null
+                &&
+                $enderecos !== []
             ) {
 
-                $enderecoSelecionado =
-                    $enderecos[0];
+                foreach (
+                    $enderecos as $endereco
+                ) {
+
+                    if (
+                        (int)
+                        $endereco['principal']
+                        === 1
+                    ) {
+
+                        $enderecoSelecionado =
+                            $endereco;
+
+                        break;
+                    }
+                }
+
+
+                /*
+                ==============================
+                PRIMEIRO ENDEREÇO
+                ==============================
+                */
+
+                if (
+                    $enderecoSelecionado === null
+                ) {
+
+                    $enderecoSelecionado =
+                        $enderecos[0];
+                }
             }
         }
 
@@ -328,51 +367,103 @@ final class CheckoutController extends Controller
         */
 
         $frete =
+            0.0;
+
+
+        $distanciaKm =
             null;
 
 
-        $taxaEntrega =
-            null;
+        $freteDisponivel =
+            true;
 
+
+        /*
+        =================================
+        CALCULA SOMENTE SE FOR ENTREGA
+        =================================
+        */
 
         if (
-            $enderecoSelecionado !== null
+            $modalidadeRecebimento ===
+            'entrega'
         ) {
 
-            $entregaRepository =
-                new EntregaRepository(
-                    $this->pdo
-                );
-
-
-            $taxaEntrega =
-                $entregaRepository
-                ->buscarTaxa(
-                    (string)
-                    $enderecoSelecionado[
-                        'bairro'
-                    ],
-
-                    (string)
-                    $enderecoSelecionado[
-                        'cidade'
-                    ],
-
-                    (string)
-                    $enderecoSelecionado[
-                        'estado'
-                    ]
-                );
-
-
             if (
-                $taxaEntrega !== null
+                $enderecoSelecionado === null
             ) {
 
-                $frete =
-                    (float)
-                    $taxaEntrega['valor'];
+                $freteDisponivel =
+                    false;
+
+            } else {
+
+                try {
+
+                    $entregaService =
+                        new EntregaService();
+
+
+                    $entrega =
+                        $entregaService
+                        ->calcular(
+                            $enderecoSelecionado
+                        );
+
+
+                    $frete =
+                        (float)
+                        $entrega[
+                            'frete'
+                        ];
+
+
+                    $distanciaKm =
+                        (float)
+                        $entrega[
+                            'distancia_km'
+                        ];
+
+                } catch (
+                    RuntimeException $erroFrete
+                ) {
+
+                    $freteDisponivel =
+                        false;
+
+
+                    $frete =
+                        0.0;
+
+
+                    $distanciaKm =
+                        null;
+                }
             }
+        }
+
+
+        /*
+        =================================
+        RETIRADA
+        =================================
+        */
+
+        if (
+            $modalidadeRecebimento ===
+            'retirada'
+        ) {
+
+            $frete =
+                0.0;
+
+
+            $freteDisponivel =
+                true;
+
+
+            $distanciaKm =
+                null;
         }
 
 
@@ -395,11 +486,29 @@ final class CheckoutController extends Controller
         $total =
             $subtotal
             +
-            (
-                $frete ?? 0
-            )
+            $frete
             -
             $desconto;
+
+
+        /*
+        =================================
+        PODE FINALIZAR?
+        =================================
+        */
+
+        $podeFinalizar =
+            $modalidadeRecebimento ===
+            'retirada'
+            ||
+            (
+                $modalidadeRecebimento ===
+                'entrega'
+                &&
+                $enderecoSelecionado !== null
+                &&
+                $freteDisponivel
+            );
 
 
         /*
@@ -426,11 +535,26 @@ final class CheckoutController extends Controller
                 'enderecoSelecionado' =>
                     $enderecoSelecionado,
 
+                'modalidadeRecebimento' =>
+                    $modalidadeRecebimento,
+
+                'enderecoRetirada' =>
+                    self::ENDERECO_RETIRADA,
+
                 'subtotal' =>
                     $subtotal,
 
                 'frete' =>
                     $frete,
+
+                'distanciaKm' =>
+                    $distanciaKm,
+
+                'freteDisponivel' =>
+                    $freteDisponivel,
+
+                'podeFinalizar' =>
+                    $podeFinalizar,
 
                 'desconto' =>
                     $desconto,
@@ -453,21 +577,9 @@ final class CheckoutController extends Controller
 
     public function finalizar(): void
     {
-        /*
-        =================================
-        CLIENTE
-        =================================
-        */
-
         $clienteId =
             $this->obterClienteId();
 
-
-        /*
-        =================================
-        TOKEN
-        =================================
-        */
 
         $tokenSessao =
             $this->obterTokenSessao();
@@ -499,6 +611,48 @@ final class CheckoutController extends Controller
             exit(
                 'Token CSRF inválido.'
             );
+        }
+
+
+        /*
+        =================================
+        MODALIDADE
+        =================================
+        */
+
+        $modalidadeRecebimento =
+            strtolower(
+                trim(
+                    (string)
+                    (
+                        $_POST[
+                            'modalidade_recebimento'
+                        ]
+                        ?? ''
+                    )
+                )
+            );
+
+
+        if (
+            !in_array(
+                $modalidadeRecebimento,
+                [
+                    'entrega',
+                    'retirada',
+                ],
+                true
+            )
+        ) {
+
+            $this->redirecionar(
+                '/checkout?erro='
+                . rawurlencode(
+                    'Selecione a forma de recebimento.'
+                )
+            );
+
+            return;
         }
 
 
@@ -538,27 +692,6 @@ final class CheckoutController extends Controller
 
         /*
         =================================
-        VALIDA ENDEREÇO
-        =================================
-        */
-
-        if (
-            !$enderecoId
-        ) {
-
-            $this->redirecionar(
-                '/checkout?erro='
-                . rawurlencode(
-                    'Selecione um endereço de entrega.'
-                )
-            );
-
-            return;
-        }
-
-
-        /*
-        =================================
         VALIDA PAGAMENTO
         =================================
         */
@@ -582,6 +715,68 @@ final class CheckoutController extends Controller
             );
 
             return;
+        }
+
+
+        /*
+        =================================
+        ENTREGA
+        =================================
+        */
+
+        $endereco =
+            null;
+
+
+        if (
+            $modalidadeRecebimento ===
+            'entrega'
+        ) {
+
+            if (
+                !$enderecoId
+            ) {
+
+                $this->redirecionar(
+                    '/checkout?recebimento=entrega&erro='
+                    . rawurlencode(
+                        'Selecione um endereço de entrega.'
+                    )
+                );
+
+                return;
+            }
+
+
+            $enderecoRepository =
+                new EnderecoRepository(
+                    $this->pdo
+                );
+
+
+            $endereco =
+                $enderecoRepository
+                ->buscarPorIdDoCliente(
+                    (int)
+                    $enderecoId,
+
+                    $clienteId
+                );
+
+
+            if (
+                $endereco === null
+            ) {
+
+                $this->redirecionar(
+                    '/checkout?recebimento=entrega&erro='
+                    . rawurlencode(
+                        'O endereço selecionado não é válido.'
+                    )
+                );
+
+                return;
+            }
         }
 
 
@@ -659,43 +854,6 @@ final class CheckoutController extends Controller
 
         /*
         =================================
-        ENDEREÇO
-        =================================
-        */
-
-        $enderecoRepository =
-            new EnderecoRepository(
-                $this->pdo
-            );
-
-
-        $endereco =
-            $enderecoRepository
-            ->buscarPorIdDoCliente(
-                (int)
-                $enderecoId,
-
-                $clienteId
-            );
-
-
-        if (
-            $endereco === null
-        ) {
-
-            $this->redirecionar(
-                '/checkout?erro='
-                . rawurlencode(
-                    'O endereço selecionado não é válido.'
-                )
-            );
-
-            return;
-        }
-
-
-        /*
-        =================================
         SUBTOTAL
         =================================
         */
@@ -711,12 +869,16 @@ final class CheckoutController extends Controller
             $subtotal +=
                 (
                     (float)
-                    $item['preco_unitario']
+                    $item[
+                        'preco_unitario'
+                    ]
                 )
                 *
                 (
                     (int)
-                    $item['quantidade']
+                    $item[
+                        'quantidade'
+                    ]
                 );
         }
 
@@ -727,53 +889,82 @@ final class CheckoutController extends Controller
         =================================
         */
 
-        $entregaRepository =
-            new EntregaRepository(
-                $this->pdo
-            );
+        $frete =
+            0.0;
 
 
-        $taxaEntrega =
-            $entregaRepository
-            ->buscarTaxa(
-                (string)
-                $endereco['bairro'],
+        $distanciaKm =
+            null;
 
-                (string)
-                $endereco['cidade'],
 
-                (string)
-                $endereco['estado']
-            );
+        if (
+            $modalidadeRecebimento ===
+            'entrega'
+        ) {
+
+            try {
+
+                $entregaService =
+                    new EntregaService();
+
+
+                $entrega =
+                    $entregaService
+                    ->calcular(
+                        $endereco
+                    );
+
+
+                $frete =
+                    (float)
+                    $entrega[
+                        'frete'
+                    ];
+
+
+                $distanciaKm =
+                    (float)
+                    $entrega[
+                        'distancia_km'
+                    ];
+
+            } catch (
+                RuntimeException $erroFrete
+            ) {
+
+                $this->redirecionar(
+                    '/checkout?recebimento=entrega&endereco='
+                    . (int)
+                    $enderecoId
+                    . '&erro='
+                    . rawurlencode(
+                        'Não foi possível calcular o frete. Tente novamente.'
+                    )
+                );
+
+                return;
+            }
+        }
 
 
         /*
         =================================
-        BAIRRO NÃO ATENDIDO
+        RETIRADA
         =================================
         */
 
         if (
-            $taxaEntrega === null
+            $modalidadeRecebimento ===
+            'retirada'
         ) {
 
-            $this->redirecionar(
-                '/checkout?endereco='
-                . (int)
-                $enderecoId
-                . '&erro='
-                . rawurlencode(
-                    'Não realizamos entrega neste bairro no momento.'
-                )
-            );
+            $frete =
+                0.0;
 
-            return;
+
+            $distanciaKm =
+                null;
         }
-
-
-        $frete =
-            (float)
-            $taxaEntrega['valor'];
 
 
         /*
@@ -836,7 +1027,7 @@ final class CheckoutController extends Controller
 
             /*
             ==============================
-            CARRINHO
+            ASSOCIA CARRINHO
             ==============================
             */
 
@@ -862,6 +1053,8 @@ final class CheckoutController extends Controller
 
                     $clienteId,
 
+                    $modalidadeRecebimento,
+
                     $subtotal,
 
                     $frete,
@@ -886,12 +1079,16 @@ final class CheckoutController extends Controller
 
                 $quantidade =
                     (int)
-                    $item['quantidade'];
+                    $item[
+                        'quantidade'
+                    ];
 
 
                 $precoUnitario =
                     (float)
-                    $item['preco_unitario'];
+                    $item[
+                        'preco_unitario'
+                    ];
 
 
                 $subtotalItem =
@@ -905,10 +1102,14 @@ final class CheckoutController extends Controller
                         $pedidoId,
 
                         (int)
-                        $item['produto_id'],
+                        $item[
+                            'produto_id'
+                        ],
 
                         (string)
-                        $item['nome'],
+                        $item[
+                            'nome'
+                        ],
 
                         $quantidade,
 
@@ -925,12 +1126,20 @@ final class CheckoutController extends Controller
             ==============================
             */
 
-            $pedidoRepository
-                ->adicionarEndereco(
-                    $pedidoId,
+            if (
+                $modalidadeRecebimento ===
+                'entrega'
+                &&
+                $endereco !== null
+            ) {
 
-                    $endereco
-                );
+                $pedidoRepository
+                    ->adicionarEndereco(
+                        $pedidoId,
+
+                        $endereco
+                    );
+            }
 
 
             /*
@@ -981,6 +1190,7 @@ final class CheckoutController extends Controller
                 $this->pdo
                 ->inTransaction()
             ) {
+
                 $this->pdo
                     ->rollBack();
             }

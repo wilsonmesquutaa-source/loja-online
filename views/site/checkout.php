@@ -37,6 +37,16 @@ $enderecoSelecionado =
     ?? null;
 
 
+$modalidadeRecebimento =
+    $modalidadeRecebimento
+    ?? 'entrega';
+
+
+$enderecoRetirada =
+    $enderecoRetirada
+    ?? 'Rua Dragão do Mar, 608, Praia de Iracema, Fortaleza - CE';
+
+
 $subtotal =
     (float)
     (
@@ -46,8 +56,34 @@ $subtotal =
 
 
 $frete =
-    $frete
+    (float)
+    (
+        $frete
+        ?? 0
+    );
+
+
+$distanciaKm =
+    $distanciaKm
     ?? null;
+
+
+$freteDisponivel =
+    isset(
+        $freteDisponivel
+    )
+        ? (bool)
+        $freteDisponivel
+        : true;
+
+
+$podeFinalizar =
+    isset(
+        $podeFinalizar
+    )
+        ? (bool)
+        $podeFinalizar
+        : false;
 
 
 $desconto =
@@ -65,9 +101,7 @@ $total =
         ?? (
             $subtotal
             +
-            (
-                $frete ?? 0
-            )
+            $frete
             -
             $desconto
         )
@@ -79,13 +113,9 @@ $csrfToken =
     ?? '';
 
 
-$freteDisponivel =
-    $frete !== null;
-
-
 /*
 =================================
-AGRUPA OS ITENS DO CHECKOUT
+AGRUPA OS ITENS
 =================================
 */
 
@@ -98,13 +128,17 @@ foreach (
 
     $categoriaId =
         (int)
-        $item['categoria_id'];
+        $item[
+            'categoria_id'
+        ];
 
 
     $categoriaNome =
         (string)
         (
-            $item['categoria_nome']
+            $item[
+                'categoria_nome'
+            ]
             ?? ''
         );
 
@@ -221,15 +255,21 @@ foreach (
 
         'nome' =>
             (string)
-            $item['nome'],
+            $item[
+                'nome'
+            ],
 
         'quantidade' =>
             (int)
-            $item['quantidade'],
+            $item[
+                'quantidade'
+            ],
 
         'preco_unitario' =>
             (float)
-            $item['preco_unitario'],
+            $item[
+                'preco_unitario'
+            ],
     ];
 
 
@@ -237,7 +277,9 @@ foreach (
         $categoriaId
     ]['quantidade_total'] +=
         (int)
-        $item['quantidade'];
+        $item[
+            'quantidade'
+        ];
 }
 
 
@@ -253,14 +295,10 @@ foreach (
 ) {
 
     $tipoCategoria =
-        $grupo['tipo_categoria'];
+        $grupo[
+            'tipo_categoria'
+        ];
 
-
-    /*
-    ==============================
-    CENTO TRADICIONAIS
-    ==============================
-    */
 
     if (
         $tipoCategoria ===
@@ -271,46 +309,50 @@ foreach (
             4;
 
 
-        $grupo['quantidade_centos'] =
+        $grupo[
+            'quantidade_centos'
+        ] =
             (int)
             ceil(
-                $grupo['quantidade_total']
+                $grupo[
+                    'quantidade_total'
+                ]
                 /
                 $partesPorCento
             );
 
 
         $precoPorParte =
+            (float)
             (
-                (float)
-                (
-                    $grupo[
-                        'produtos'
-                    ][0][
-                        'preco_unitario'
-                    ]
-                    ?? 0
-                )
+                $grupo[
+                    'produtos'
+                ][0][
+                    'preco_unitario'
+                ]
+                ?? 0
             );
 
 
-        $grupo['preco_unitario'] =
+        $grupo[
+            'preco_unitario'
+        ] =
             $precoPorParte
             *
             $partesPorCento;
 
 
-        $grupo['subtotal'] =
-            $grupo['quantidade_centos']
+        $grupo[
+            'subtotal'
+        ] =
+            $grupo[
+                'quantidade_centos'
+            ]
             *
-            $grupo['preco_unitario'];
+            $grupo[
+                'preco_unitario'
+            ];
 
-
-    /*
-    ==============================
-    CENTO FOLHADOS
-    ==============================
-    */
 
     } elseif (
         $tipoCategoria ===
@@ -321,46 +363,50 @@ foreach (
             2;
 
 
-        $grupo['quantidade_centos'] =
+        $grupo[
+            'quantidade_centos'
+        ] =
             (int)
             ceil(
-                $grupo['quantidade_total']
+                $grupo[
+                    'quantidade_total'
+                ]
                 /
                 $partesPorCento
             );
 
 
         $precoPorParte =
+            (float)
             (
-                (float)
-                (
-                    $grupo[
-                        'produtos'
-                    ][0][
-                        'preco_unitario'
-                    ]
-                    ?? 0
-                )
+                $grupo[
+                    'produtos'
+                ][0][
+                    'preco_unitario'
+                ]
+                ?? 0
             );
 
 
-        $grupo['preco_unitario'] =
+        $grupo[
+            'preco_unitario'
+        ] =
             $precoPorParte
             *
             $partesPorCento;
 
 
-        $grupo['subtotal'] =
-            $grupo['quantidade_centos']
+        $grupo[
+            'subtotal'
+        ] =
+            $grupo[
+                'quantidade_centos'
+            ]
             *
-            $grupo['preco_unitario'];
+            $grupo[
+                'preco_unitario'
+            ];
 
-
-    /*
-    ==============================
-    UNITÁRIOS
-    ==============================
-    */
 
     } else {
 
@@ -369,7 +415,9 @@ foreach (
 
 
         foreach (
-            $grupo['produtos']
+            $grupo[
+                'produtos'
+            ]
             as $produto
         ) {
 
@@ -390,11 +438,15 @@ foreach (
         }
 
 
-        $grupo['subtotal'] =
+        $grupo[
+            'subtotal'
+        ] =
             $subtotalGrupo;
 
 
-        $grupo['preco_unitario'] =
+        $grupo[
+            'preco_unitario'
+        ] =
             (float)
             (
                 $grupo[
@@ -428,10 +480,6 @@ unset($grupo);
     <div class="checkout-container">
 
 
-        <!-- =================================
-             CABEÇALHO
-        ================================== -->
-
         <header class="checkout-header">
 
             <p class="checkout-etiqueta">
@@ -445,16 +493,12 @@ unset($grupo);
 
 
             <p>
-                Confira seus produtos, escolha o endereço
-                e selecione a forma de pagamento.
+                Escolha como deseja receber seu pedido
+                e confira os valores antes de finalizar.
             </p>
 
         </header>
 
-
-        <!-- =================================
-             ERRO
-        ================================== -->
 
         <?php if (
             $erro !== null
@@ -477,80 +521,182 @@ unset($grupo);
         <?php endif; ?>
 
 
-        <!-- =================================
-             SEM ENDEREÇO
-        ================================== -->
+        <form
+            method="POST"
+            action="<?= BASE_URL ?>/checkout/finalizar"
+            class="checkout-form"
+        >
 
-        <?php if (
-            $enderecos === []
-        ): ?>
+            <input
+                type="hidden"
+                name="_csrf"
+                value="<?= htmlspecialchars(
+                    $csrfToken,
+                    ENT_QUOTES,
+                    'UTF-8'
+                ) ?>"
+            >
 
-            <section class="checkout-endereco-vazio">
 
-                <div class="checkout-endereco-icone">
-                    📍
+            <!-- =================================
+                 MODALIDADE
+            ================================== -->
+
+            <section class="checkout-card mb-4">
+
+                <div class="checkout-card-header">
+
+                    <span>
+                        1
+                    </span>
+
+
+                    <div>
+
+                        <h2>
+                            Forma de recebimento
+                        </h2>
+
+                        <p>
+                            Escolha entre receber em seu endereço
+                            ou retirar seu pedido.
+                        </p>
+
+                    </div>
+
                 </div>
 
 
-                <h2>
-                    Precisamos do seu endereço
-                </h2>
+                <div class="checkout-pagamentos">
+
+                    <label
+                        class="checkout-pagamento-option"
+                    >
+
+                        <input
+                            type="radio"
+                            name="modalidade_recebimento"
+                            value="entrega"
+                            <?= $modalidadeRecebimento === 'entrega'
+                                ? 'checked'
+                                : ''
+                            ?>
+                        >
 
 
-                <p>
-                    Para finalizar o pedido,
-                    cadastre o endereço onde deseja
-                    receber sua compra.
-                </p>
+                        <div>
+
+                            <strong>
+                                Entrega
+                            </strong>
+
+                            <small>
+                                Receba seu pedido no endereço
+                                cadastrado.
+                            </small>
+
+                        </div>
+
+                    </label>
 
 
-                <a
-                    href="<?= BASE_URL ?>/cliente/enderecos/novo?retorno=checkout"
-                    class="checkout-btn-principal"
-                >
-                    Cadastrar endereço
-                </a>
+                    <label
+                        class="checkout-pagamento-option"
+                    >
+
+                        <input
+                            type="radio"
+                            name="modalidade_recebimento"
+                            value="retirada"
+                            <?= $modalidadeRecebimento === 'retirada'
+                                ? 'checked'
+                                : ''
+                            ?>
+                        >
+
+
+                        <div>
+
+                            <strong>
+                                Retirada
+                            </strong>
+
+                            <small>
+                                Retire seu pedido no local de produção.
+                            </small>
+
+                        </div>
+
+                    </label>
+
+                </div>
+
+
+                <?php if (
+                    $modalidadeRecebimento ===
+                    'retirada'
+                ): ?>
+
+                    <div
+                        class="checkout-frete-alerta"
+                        style="
+                            border-color:
+                                rgba(245, 124, 0, 0.18);
+
+                            background:
+                                #fffaf4;
+
+                            color:
+                                var(--marrom);
+                        "
+                    >
+
+                        <strong>
+                            Local de retirada
+                        </strong>
+
+                        <span>
+
+                            <?= htmlspecialchars(
+                                $enderecoRetirada,
+                                ENT_QUOTES,
+                                'UTF-8'
+                            ) ?>
+
+                        </span>
+
+                        <span>
+                            Taxa de entrega:
+                            R$ 0,00
+                        </span>
+
+                    </div>
+
+                <?php endif; ?>
 
             </section>
 
 
-        <?php else: ?>
+            <div class="checkout-grid">
 
 
-            <!-- =================================
-                 FORMULÁRIO
-            ================================== -->
+                <!-- =================================
+                     ENDEREÇO
+                ================================== -->
 
-            <form
-                method="POST"
-                action="<?= BASE_URL ?>/checkout/finalizar"
-                class="checkout-form"
-            >
-
-                <input
-                    type="hidden"
-                    name="_csrf"
-                    value="<?= htmlspecialchars(
-                        $csrfToken,
-                        ENT_QUOTES,
-                        'UTF-8'
-                    ) ?>"
-                >
-
-
-                <div class="checkout-grid">
-
-
-                    <!-- =================================
-                         ENDEREÇO
-                    ================================== -->
+                <?php if (
+                    $modalidadeRecebimento ===
+                    'entrega'
+                ): ?>
 
                     <section class="checkout-card">
 
-                        <div class="checkout-card-header">
+                        <div
+                            class="checkout-card-header"
+                        >
 
                             <span>
-                                1
+                                2
                             </span>
 
 
@@ -571,111 +717,146 @@ unset($grupo);
                         </div>
 
 
-                        <div class="checkout-enderecos">
+                        <?php if (
+                            $enderecos === []
+                        ): ?>
 
-                            <?php foreach (
-                                $enderecos
-                                as $endereco
-                            ): ?>
+                            <div
+                                class="checkout-endereco-vazio"
+                                style="
+                                    padding:
+                                        30px 20px;
 
-                                <label
-                                    class="checkout-endereco-option"
+                                    box-shadow:
+                                        none;
+                                "
+                            >
+
+                                <div
+                                    class="checkout-endereco-icone"
+                                    style="
+                                        font-size:
+                                            2.5rem;
+                                    "
                                 >
+                                    📍
+                                </div>
 
-                                    <input
-                                        type="radio"
-                                        name="endereco_id"
-                                        value="<?= (int) $endereco['id'] ?>"
-                                        <?= (
-                                            $enderecoSelecionado !== null
-                                            &&
-                                            (int)
-                                            $enderecoSelecionado['id']
-                                            ===
-                                            (int)
-                                            $endereco['id']
-                                        )
-                                            ? 'checked'
-                                            : ''
-                                        ?>
+
+                                <h2>
+                                    Nenhum endereço cadastrado
+                                </h2>
+
+
+                                <p>
+
+                                    Cadastre um endereço
+                                    para receber seu pedido.
+
+                                </p>
+
+
+                                <a
+                                    href="<?= BASE_URL ?>/cliente/enderecos/novo?retorno=checkout"
+                                    class="checkout-btn-principal"
+                                >
+                                    Cadastrar endereço
+                                </a>
+
+                            </div>
+
+                        <?php else: ?>
+
+                            <div
+                                class="checkout-enderecos"
+                            >
+
+                                <?php foreach (
+                                    $enderecos
+                                    as $endereco
+                                ): ?>
+
+                                    <label
+                                        class="checkout-endereco-option"
                                     >
 
-
-                                    <div
-                                        class="checkout-endereco-option-conteudo"
-                                    >
-
-                                        <div
-                                            class="checkout-endereco-option-topo"
-                                        >
-
-                                            <strong>
-
-                                                <?= htmlspecialchars(
-                                                    (string)
-                                                    $endereco[
-                                                        'identificacao'
-                                                    ],
-                                                    ENT_QUOTES,
-                                                    'UTF-8'
-                                                ) ?>
-
-                                            </strong>
-
-
-                                            <?php if (
+                                        <input
+                                            type="radio"
+                                            name="endereco_id"
+                                            value="<?= (int) $endereco['id'] ?>"
+                                            <?= (
+                                                $enderecoSelecionado !== null
+                                                &&
                                                 (int)
-                                                $endereco['principal']
+                                                $enderecoSelecionado[
+                                                    'id'
+                                                ]
                                                 ===
-                                                1
-                                            ): ?>
-
-                                                <span>
-                                                    Principal
-                                                </span>
-
-                                            <?php endif; ?>
-
-                                        </div>
-
-
-                                        <p>
-
-                                            <?= htmlspecialchars(
-                                                (string)
+                                                (int)
                                                 $endereco[
-                                                    'logradouro'
-                                                ],
-                                                ENT_QUOTES,
-                                                'UTF-8'
-                                            ) ?>,
-
-                                            <?= htmlspecialchars(
-                                                (string)
-                                                $endereco[
-                                                    'numero'
-                                                ],
-                                                ENT_QUOTES,
-                                                'UTF-8'
-                                            ) ?>
-
-                                        </p>
-
-
-                                        <?php if (
-                                            !empty(
-                                                $endereco[
-                                                    'complemento'
+                                                    'id'
                                                 ]
                                             )
-                                        ): ?>
+                                                ? 'checked'
+                                                : ''
+                                            ?>
+                                        >
+
+
+                                        <div
+                                            class="checkout-endereco-option-conteudo"
+                                        >
+
+                                            <div
+                                                class="checkout-endereco-option-topo"
+                                            >
+
+                                                <strong>
+
+                                                    <?= htmlspecialchars(
+                                                        (string)
+                                                        $endereco[
+                                                            'identificacao'
+                                                        ],
+                                                        ENT_QUOTES,
+                                                        'UTF-8'
+                                                    ) ?>
+
+                                                </strong>
+
+
+                                                <?php if (
+                                                    (int)
+                                                    $endereco[
+                                                        'principal'
+                                                    ]
+                                                    === 1
+                                                ): ?>
+
+                                                    <span>
+                                                        Principal
+                                                    </span>
+
+                                                <?php endif; ?>
+
+                                            </div>
+
 
                                             <p>
 
                                                 <?= htmlspecialchars(
                                                     (string)
                                                     $endereco[
-                                                        'complemento'
+                                                        'logradouro'
+                                                    ],
+                                                    ENT_QUOTES,
+                                                    'UTF-8'
+                                                ) ?>,
+
+                                                <?= htmlspecialchars(
+                                                    (string)
+                                                    $endereco[
+                                                        'numero'
                                                     ],
                                                     ENT_QUOTES,
                                                     'UTF-8'
@@ -683,113 +864,203 @@ unset($grupo);
 
                                             </p>
 
-                                        <?php endif; ?>
+
+                                            <?php if (
+                                                !empty(
+                                                    $endereco[
+                                                        'complemento'
+                                                    ]
+                                                )
+                                            ): ?>
+
+                                                <p>
+
+                                                    <?= htmlspecialchars(
+                                                        (string)
+                                                        $endereco[
+                                                            'complemento'
+                                                        ],
+                                                        ENT_QUOTES,
+                                                        'UTF-8'
+                                                    ) ?>
+
+                                                </p>
+
+                                            <?php endif; ?>
 
 
-                                        <p>
+                                            <p>
 
-                                            <?= htmlspecialchars(
-                                                (string)
-                                                $endereco[
-                                                    'bairro'
-                                                ],
-                                                ENT_QUOTES,
-                                                'UTF-8'
-                                            ) ?>
+                                                <?= htmlspecialchars(
+                                                    (string)
+                                                    $endereco[
+                                                        'bairro'
+                                                    ],
+                                                    ENT_QUOTES,
+                                                    'UTF-8'
+                                                ) ?>
 
-                                            ·
+                                                ·
 
-                                            <?= htmlspecialchars(
-                                                (string)
-                                                $endereco[
-                                                    'cidade'
-                                                ],
-                                                ENT_QUOTES,
-                                                'UTF-8'
-                                            ) ?>
+                                                <?= htmlspecialchars(
+                                                    (string)
+                                                    $endereco[
+                                                        'cidade'
+                                                    ],
+                                                    ENT_QUOTES,
+                                                    'UTF-8'
+                                                ) ?>
 
-                                            -
+                                                -
 
-                                            <?= htmlspecialchars(
-                                                (string)
-                                                $endereco[
-                                                    'estado'
-                                                ],
-                                                ENT_QUOTES,
-                                                'UTF-8'
-                                            ) ?>
+                                                <?= htmlspecialchars(
+                                                    (string)
+                                                    $endereco[
+                                                        'estado'
+                                                    ],
+                                                    ENT_QUOTES,
+                                                    'UTF-8'
+                                                ) ?>
 
-                                        </p>
-
-
-                                        <small>
-
-                                            CEP:
-
-                                            <?= htmlspecialchars(
-                                                (string)
-                                                $endereco[
-                                                    'cep'
-                                                ],
-                                                ENT_QUOTES,
-                                                'UTF-8'
-                                            ) ?>
-
-                                        </small>
-
-                                    </div>
-
-                                </label>
-
-                            <?php endforeach; ?>
-
-                        </div>
+                                            </p>
 
 
-                        <?php if (
-                            $enderecoSelecionado !== null
-                            &&
-                            !$freteDisponivel
-                        ): ?>
+                                            <small>
 
-                            <div
-                                class="checkout-frete-alerta"
-                                role="alert"
-                            >
+                                                CEP:
 
-                                <strong>
-                                    Entrega não disponível
-                                </strong>
+                                                <?= htmlspecialchars(
+                                                    (string)
+                                                    $endereco[
+                                                        'cep'
+                                                    ],
+                                                    ENT_QUOTES,
+                                                    'UTF-8'
+                                                ) ?>
 
+                                            </small>
 
-                                <span>
-                                    Não encontramos uma taxa
-                                    de entrega cadastrada para
-                                    este bairro.
-                                </span>
+                                        </div>
+
+                                    </label>
+
+                                <?php endforeach; ?>
 
                             </div>
 
+
+                            <?php if (
+                                $enderecoSelecionado !== null
+                            ): ?>
+
+                                <?php if (
+                                    $freteDisponivel
+                                ): ?>
+
+                                    <div
+                                        class="checkout-frete-alerta"
+                                        style="
+                                            border-color:
+                                                rgba(245, 124, 0, 0.18);
+
+                                            background:
+                                                #fffaf4;
+
+                                            color:
+                                                var(--marrom);
+                                        "
+                                    >
+
+                                        <strong>
+                                            Entrega calculada
+                                        </strong>
+
+
+                                        <?php if (
+                                            $distanciaKm !== null
+                                        ): ?>
+
+                                            <span>
+
+                                                Distância aproximada:
+                                                <?= number_format(
+                                                    (float)
+                                                    $distanciaKm,
+                                                    2,
+                                                    ',',
+                                                    '.'
+                                                ) ?>
+                                                km
+
+                                            </span>
+
+                                        <?php endif; ?>
+
+
+                                        <span>
+
+                                            Frete:
+                                            R$
+
+                                            <?= number_format(
+                                                $frete,
+                                                2,
+                                                ',',
+                                                '.'
+                                            ) ?>
+
+                                        </span>
+
+                                    </div>
+
+                                <?php else: ?>
+
+                                    <div
+                                        class="checkout-frete-alerta"
+                                        role="alert"
+                                    >
+
+                                        <strong>
+                                            Frete não calculado
+                                        </strong>
+
+
+                                        <span>
+                                            Não foi possível calcular
+                                            a distância até o endereço
+                                            selecionado.
+                                        </span>
+
+                                    </div>
+
+                                <?php endif; ?>
+
+                            <?php endif; ?>
+
+
+                            <a
+                                href="<?= BASE_URL ?>/cliente/enderecos/novo?retorno=checkout"
+                                class="checkout-link-endereco"
+                            >
+                                + Adicionar outro endereço
+                            </a>
+
                         <?php endif; ?>
-
-
-                        <a
-                            href="<?= BASE_URL ?>/cliente/enderecos/novo?retorno=checkout"
-                            class="checkout-link-endereco"
-                        >
-                            + Adicionar outro endereço
-                        </a>
 
                     </section>
 
+                <?php else: ?>
+
 
                     <!-- =================================
-                         PAGAMENTO
+                         RETIRADA
                     ================================== -->
 
                     <section class="checkout-card">
 
-                        <div class="checkout-card-header">
+                        <div
+                            class="checkout-card-header"
+                        >
 
                             <span>
                                 2
@@ -799,12 +1070,13 @@ unset($grupo);
                             <div>
 
                                 <h2>
-                                    Forma de pagamento
+                                    Retirada
                                 </h2>
 
 
                                 <p>
-                                    Escolha como deseja pagar.
+                                    Seu pedido ficará disponível
+                                    para retirada no local.
                                 </p>
 
                             </div>
@@ -812,78 +1084,57 @@ unset($grupo);
                         </div>
 
 
-                        <div class="checkout-pagamentos">
+                        <div
+                            class="checkout-frete-alerta"
+                            style="
+                                border-color:
+                                    rgba(245, 124, 0, 0.18);
 
-                            <label
-                                class="checkout-pagamento-option"
-                            >
+                                background:
+                                    #fffaf4;
 
-                                <input
-                                    type="radio"
-                                    name="metodo_pagamento"
-                                    value="pix"
-                                    checked
-                                >
+                                color:
+                                    var(--marrom);
+                            "
+                        >
 
-
-                                <div>
-
-                                    <strong>
-                                        Pix
-                                    </strong>
+                            <strong>
+                                Endereço para retirada
+                            </strong>
 
 
-                                    <small>
-                                        Pagamento instantâneo.
-                                    </small>
+                            <span>
 
-                                </div>
+                                <?= htmlspecialchars(
+                                    $enderecoRetirada,
+                                    ENT_QUOTES,
+                                    'UTF-8'
+                                ) ?>
 
-                            </label>
-
-
-                            <label
-                                class="checkout-pagamento-option"
-                            >
-
-                                <input
-                                    type="radio"
-                                    name="metodo_pagamento"
-                                    value="cartao"
-                                >
+                            </span>
 
 
-                                <div>
-
-                                    <strong>
-                                        Cartão
-                                    </strong>
-
-
-                                    <small>
-                                        Crédito ou débito.
-                                    </small>
-
-                                </div>
-
-                            </label>
+                            <span>
+                                Frete:
+                                R$ 0,00
+                            </span>
 
                         </div>
 
                     </section>
 
-                </div>
+                <?php endif; ?>
 
 
                 <!-- =================================
-                     RESUMO DO PEDIDO
+                     PAGAMENTO
                 ================================== -->
 
-                <section
-                    class="checkout-card checkout-resumo"
-                >
+                <section class="checkout-card">
 
-                    <div class="checkout-card-header">
+                    <div
+                        class="checkout-card-header"
+                    >
 
                         <span>
                             3
@@ -893,13 +1144,12 @@ unset($grupo);
                         <div>
 
                             <h2>
-                                Resumo do pedido
+                                Forma de pagamento
                             </h2>
 
 
                             <p>
-                                Confira os valores antes
-                                de finalizar.
+                                Escolha como deseja pagar.
                             </p>
 
                         </div>
@@ -907,464 +1157,368 @@ unset($grupo);
                     </div>
 
 
-                    <!-- =================================
-                         GRUPOS DE PRODUTOS
-                    ================================== -->
+                    <div
+                        class="checkout-pagamentos"
+                    >
 
-                    <div class="checkout-produtos">
+                        <label
+                            class="checkout-pagamento-option"
+                        >
 
-                        <?php foreach (
-                            $gruposCheckout
-                            as $grupo
-                        ): ?>
-
-                            <div
-                                class="checkout-produto-grupo"
+                            <input
+                                type="radio"
+                                name="metodo_pagamento"
+                                value="pix"
+                                checked
                             >
 
 
-                                <!-- ==========================
-                                     PRODUTOS
-                                =========================== -->
+                            <div>
 
-                                <div
-                                    class="checkout-produto-lista"
-                                >
+                                <strong>
+                                    Pix
+                                </strong>
 
-                                    <?php foreach (
-                                        $grupo['produtos']
-                                        as $produto
-                                    ): ?>
 
-                                        <div
-                                            class="checkout-produto-linha"
-                                        >
-
-                                            <span>
-
-                                                <?= htmlspecialchars(
-                                                    (string)
-                                                    $produto['nome'],
-                                                    ENT_QUOTES,
-                                                    'UTF-8'
-                                                ) ?>
-
-                                                ×
-
-                                                <?= (int)
-                                                    $produto[
-                                                        'quantidade'
-                                                    ] ?>
-
-                                            </span>
-
-                                        </div>
-
-                                    <?php endforeach; ?>
-
-                                </div>
-
-
-                                <!-- ==========================
-                                     TRADICIONAIS
-                                =========================== -->
-
-                                <?php if (
-                                    $grupo[
-                                        'tipo_categoria'
-                                    ]
-                                    ===
-                                    'cento_tradicionais'
-                                ): ?>
-
-                                    <div
-                                        class="checkout-produto-detalhes"
-                                    >
-
-                                        <div>
-
-                                            <span>
-                                                Quantidade
-                                            </span>
-
-
-                                            <strong>
-
-                                                <?= (int)
-                                                    $grupo[
-                                                        'quantidade_centos'
-                                                    ] ?>
-
-                                                <?= (
-                                                    (int)
-                                                    $grupo[
-                                                        'quantidade_centos'
-                                                    ]
-                                                    === 1
-                                                )
-                                                    ? 'cento'
-                                                    : 'centos'
-                                                ?>
-
-                                            </strong>
-
-                                        </div>
-
-
-                                        <div>
-
-                                            <span>
-                                                Valor
-                                            </span>
-
-
-                                            <strong>
-
-                                                R$
-
-                                                <?= number_format(
-                                                    (float)
-                                                    $grupo[
-                                                        'preco_unitario'
-                                                    ],
-                                                    2,
-                                                    ',',
-                                                    '.'
-                                                ) ?>
-
-                                                / cento
-
-                                            </strong>
-
-                                        </div>
-
-                                    </div>
-
-
-                                <!-- ==========================
-                                     FOLHADOS
-                                =========================== -->
-
-                                <?php elseif (
-                                    $grupo[
-                                        'tipo_categoria'
-                                    ]
-                                    ===
-                                    'cento_folhados'
-                                ): ?>
-
-                                    <div
-                                        class="checkout-produto-detalhes"
-                                    >
-
-                                        <div>
-
-                                            <span>
-                                                Quantidade
-                                            </span>
-
-
-                                            <strong>
-
-                                                <?= (int)
-                                                    $grupo[
-                                                        'quantidade_centos'
-                                                    ] ?>
-
-                                                <?= (
-                                                    (int)
-                                                    $grupo[
-                                                        'quantidade_centos'
-                                                    ]
-                                                    === 1
-                                                )
-                                                    ? 'cento'
-                                                    : 'centos'
-                                                ?>
-
-                                            </strong>
-
-                                        </div>
-
-
-                                        <div>
-
-                                            <span>
-                                                Valor
-                                            </span>
-
-
-                                            <strong>
-
-                                                R$
-
-                                                <?= number_format(
-                                                    (float)
-                                                    $grupo[
-                                                        'preco_unitario'
-                                                    ],
-                                                    2,
-                                                    ',',
-                                                    '.'
-                                                ) ?>
-
-                                                / cento
-
-                                            </strong>
-
-                                        </div>
-
-                                    </div>
-
-
-                                <!-- ==========================
-                                     SALGADOS GRANDES
-                                =========================== -->
-
-                                <?php elseif (
-                                    $grupo[
-                                        'tipo_categoria'
-                                    ]
-                                    ===
-                                    'salgados_grandes'
-                                ): ?>
-
-                                    <div
-                                        class="checkout-produto-detalhes"
-                                    >
-
-                                        <div>
-
-                                            <span>
-                                                Quantidade total
-                                            </span>
-
-
-                                            <strong>
-
-                                                <?= (int)
-                                                    $grupo[
-                                                        'quantidade_total'
-                                                    ] ?>
-
-                                                unidades
-
-                                            </strong>
-
-                                        </div>
-
-
-                                        <div>
-
-                                            <span>
-                                                Preço por unidade
-                                            </span>
-
-
-                                            <strong>
-
-                                                R$
-
-                                                <?= number_format(
-                                                    (float)
-                                                    $grupo[
-                                                        'preco_unitario'
-                                                    ],
-                                                    2,
-                                                    ',',
-                                                    '.'
-                                                ) ?>
-
-                                            </strong>
-
-                                        </div>
-
-                                    </div>
-
-
-                                <!-- ==========================
-                                     EMPADÃO
-                                =========================== -->
-
-                                <?php elseif (
-                                    $grupo[
-                                        'tipo_categoria'
-                                    ]
-                                    ===
-                                    'empadao'
-                                ): ?>
-
-                                    <div
-                                        class="checkout-produto-detalhes"
-                                    >
-
-                                        <div>
-
-                                            <span>
-                                                Quantidade
-                                            </span>
-
-
-                                            <strong>
-
-                                                <?= (int)
-                                                    $grupo[
-                                                        'quantidade_total'
-                                                    ] ?>
-
-                                                unidade(s)
-
-                                            </strong>
-
-                                        </div>
-
-
-                                        <div>
-
-                                            <span>
-                                                Preço por unidade
-                                            </span>
-
-
-                                            <strong>
-
-                                                R$
-
-                                                <?= number_format(
-                                                    (float)
-                                                    $grupo[
-                                                        'preco_unitario'
-                                                    ],
-                                                    2,
-                                                    ',',
-                                                    '.'
-                                                ) ?>
-
-                                            </strong>
-
-                                        </div>
-
-                                    </div>
-
-                                <?php endif; ?>
-
-
-                                <!-- ==========================
-                                     SUBTOTAL DO GRUPO
-                                =========================== -->
-
-                                <div
-                                    class="checkout-produto-subtotal"
-                                >
-
-                                    <span>
-                                        Subtotal
-                                    </span>
-
-
-                                    <strong>
-
-                                        R$
-
-                                        <?= number_format(
-                                            (float)
-                                            $grupo[
-                                                'subtotal'
-                                            ],
-                                            2,
-                                            ',',
-                                            '.'
-                                        ) ?>
-
-                                    </strong>
-
-                                </div>
+                                <small>
+                                    Pagamento instantâneo.
+                                </small>
 
                             </div>
 
-                        <?php endforeach; ?>
-
-                    </div>
+                        </label>
 
 
-                    <!-- =================================
-                         VALORES GERAIS
-                    ================================== -->
+                        <label
+                            class="checkout-pagamento-option"
+                        >
 
-                    <div class="checkout-valores">
+                            <input
+                                type="radio"
+                                name="metodo_pagamento"
+                                value="cartao"
+                            >
 
-
-                        <!-- SUBTOTAL -->
-
-                        <div>
-
-                            <span>
-                                Subtotal
-                            </span>
-
-
-                            <strong>
-
-                                R$
-
-                                <?= number_format(
-                                    $subtotal,
-                                    2,
-                                    ',',
-                                    '.'
-                                ) ?>
-
-                            </strong>
-
-                        </div>
-
-
-                        <!-- ENTREGA -->
-
-                        <div>
-
-                            <span>
-                                Entrega
-                            </span>
-
-
-                            <strong>
-
-                                <?php if (
-                                    $freteDisponivel
-                                ): ?>
-
-                                    R$
-
-                                    <?= number_format(
-                                        (float)
-                                        $frete,
-                                        2,
-                                        ',',
-                                        '.'
-                                    ) ?>
-
-                                <?php else: ?>
-
-                                    A calcular
-
-                                <?php endif; ?>
-
-                            </strong>
-
-                        </div>
-
-
-                        <!-- DESCONTO -->
-
-                        <?php if (
-                            $desconto > 0
-                        ): ?>
 
                             <div>
 
+                                <strong>
+                                    Cartão
+                                </strong>
+
+
+                                <small>
+                                    Crédito ou débito.
+                                </small>
+
+                            </div>
+
+                        </label>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+
+            <!-- =================================
+                 RESUMO
+            ================================== -->
+
+            <section
+                class="checkout-card checkout-resumo mt-4"
+            >
+
+                <div
+                    class="checkout-card-header"
+                >
+
+                    <span>
+                        4
+                    </span>
+
+
+                    <div>
+
+                        <h2>
+                            Resumo do pedido
+                        </h2>
+
+
+                        <p>
+                            Confira os valores antes
+                            de finalizar.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="checkout-produtos"
+                >
+
+                    <?php foreach (
+                        $gruposCheckout
+                        as $grupo
+                    ): ?>
+
+                        <div
+                            class="checkout-produto-grupo"
+                        >
+
+                            <div
+                                class="checkout-produto-lista"
+                            >
+
+                                <?php foreach (
+                                    $grupo[
+                                        'produtos'
+                                    ]
+                                    as $produto
+                                ): ?>
+
+                                    <div
+                                        class="checkout-produto-linha"
+                                    >
+
+                                        <span>
+
+                                            <?= htmlspecialchars(
+                                                (string)
+                                                $produto[
+                                                    'nome'
+                                                ],
+                                                ENT_QUOTES,
+                                                'UTF-8'
+                                            ) ?>
+
+                                            ×
+
+                                            <?= (int)
+                                            $produto[
+                                                'quantidade'
+                                            ] ?>
+
+                                        </span>
+
+                                    </div>
+
+                                <?php endforeach; ?>
+
+                            </div>
+
+
+                            <?php if (
+                                $grupo[
+                                    'tipo_categoria'
+                                ]
+                                ===
+                                'cento_tradicionais'
+                                ||
+                                $grupo[
+                                    'tipo_categoria'
+                                ]
+                                ===
+                                'cento_folhados'
+                            ): ?>
+
+                                <div
+                                    class="checkout-produto-detalhes"
+                                >
+
+                                    <div>
+
+                                        <span>
+                                            Quantidade
+                                        </span>
+
+
+                                        <strong>
+
+                                            <?= (int)
+                                            $grupo[
+                                                'quantidade_centos'
+                                            ] ?>
+
+                                            <?= (
+                                                (int)
+                                                $grupo[
+                                                    'quantidade_centos'
+                                                ]
+                                                === 1
+                                            )
+                                                ? 'cento'
+                                                : 'centos'
+                                            ?>
+
+                                        </strong>
+
+                                    </div>
+
+
+                                    <div>
+
+                                        <span>
+                                            Valor
+                                        </span>
+
+
+                                        <strong>
+
+                                            R$
+
+                                            <?= number_format(
+                                                (float)
+                                                $grupo[
+                                                    'preco_unitario'
+                                                ],
+                                                2,
+                                                ',',
+                                                '.'
+                                            ) ?>
+
+                                            / cento
+
+                                        </strong>
+
+                                    </div>
+
+                                </div>
+
+
+                            <?php elseif (
+                                $grupo[
+                                    'tipo_categoria'
+                                ]
+                                ===
+                                'salgados_grandes'
+                            ): ?>
+
+                                <div
+                                    class="checkout-produto-detalhes"
+                                >
+
+                                    <div>
+
+                                        <span>
+                                            Quantidade total
+                                        </span>
+
+
+                                        <strong>
+
+                                            <?= (int)
+                                            $grupo[
+                                                'quantidade_total'
+                                            ] ?>
+
+                                            unidades
+
+                                        </strong>
+
+                                    </div>
+
+
+                                    <div>
+
+                                        <span>
+                                            Preço por unidade
+                                        </span>
+
+
+                                        <strong>
+
+                                            R$
+
+                                            <?= number_format(
+                                                (float)
+                                                $grupo[
+                                                    'preco_unitario'
+                                                ],
+                                                2,
+                                                ',',
+                                                '.'
+                                            ) ?>
+
+                                        </strong>
+
+                                    </div>
+
+                                </div>
+
+
+                            <?php elseif (
+                                $grupo[
+                                    'tipo_categoria'
+                                ]
+                                ===
+                                'empadao'
+                            ): ?>
+
+                                <div
+                                    class="checkout-produto-detalhes"
+                                >
+
+                                    <div>
+
+                                        <span>
+                                            Quantidade
+                                        </span>
+
+
+                                        <strong>
+
+                                            <?= (int)
+                                            $grupo[
+                                                'quantidade_total'
+                                            ] ?>
+
+                                            unidade(s)
+
+                                        </strong>
+
+                                    </div>
+
+
+                                    <div>
+
+                                        <span>
+                                            Preço por unidade
+                                        </span>
+
+
+                                        <strong>
+
+                                            R$
+
+                                            <?= number_format(
+                                                (float)
+                                                $grupo[
+                                                    'preco_unitario'
+                                                ],
+                                                2,
+                                                ',',
+                                                '.'
+                                            ) ?>
+
+                                        </strong>
+
+                                    </div>
+
+                                </div>
+
+                            <?php endif; ?>
+
+
+                            <div
+                                class="checkout-produto-subtotal"
+                            >
+
                                 <span>
-                                    Desconto
+                                    Subtotal
                                 </span>
 
 
@@ -1373,7 +1527,10 @@ unset($grupo);
                                     R$
 
                                     <?= number_format(
-                                        $desconto,
+                                        (float)
+                                        $grupo[
+                                            'subtotal'
+                                        ],
                                         2,
                                         ',',
                                         '.'
@@ -1383,17 +1540,109 @@ unset($grupo);
 
                             </div>
 
-                        <?php endif; ?>
+                        </div>
+
+                    <?php endforeach; ?>
+
+                </div>
 
 
-                        <!-- TOTAL -->
+                <div
+                    class="checkout-valores"
+                >
 
-                        <div
-                            class="checkout-total"
-                        >
+                    <div>
+
+                        <span>
+                            Subtotal
+                        </span>
+
+
+                        <strong>
+
+                            R$
+
+                            <?= number_format(
+                                $subtotal,
+                                2,
+                                ',',
+                                '.'
+                            ) ?>
+
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Entrega
+                        </span>
+
+
+                        <strong>
+
+                            <?= $modalidadeRecebimento === 'retirada'
+                                ? 'R$ 0,00'
+                                : (
+                                    $freteDisponivel
+                                        ? 'R$ '
+                                            . number_format(
+                                                $frete,
+                                                2,
+                                                ',',
+                                                '.'
+                                            )
+                                        : 'A calcular'
+                                )
+                            ?>
+
+                        </strong>
+
+                    </div>
+
+
+                    <?php if (
+                        $distanciaKm !== null
+                        &&
+                        $modalidadeRecebimento === 'entrega'
+                    ): ?>
+
+                        <div>
 
                             <span>
-                                Total
+                                Distância
+                            </span>
+
+
+                            <strong>
+
+                                <?= number_format(
+                                    (float)
+                                    $distanciaKm,
+                                    2,
+                                    ',',
+                                    '.'
+                                ) ?>
+
+                                km
+
+                            </strong>
+
+                        </div>
+
+                    <?php endif; ?>
+
+
+                    <?php if (
+                        $desconto > 0
+                    ): ?>
+
+                        <div>
+
+                            <span>
+                                Desconto
                             </span>
 
 
@@ -1402,7 +1651,7 @@ unset($grupo);
                                 R$
 
                                 <?= number_format(
-                                    $total,
+                                    $desconto,
                                     2,
                                     ',',
                                     '.'
@@ -1412,63 +1661,90 @@ unset($grupo);
 
                         </div>
 
-                    </div>
+                    <?php endif; ?>
 
 
-                    <!-- =================================
-                         AÇÕES
-                    ================================== -->
+                    <div
+                        class="checkout-total"
+                    >
 
-                    <div class="checkout-acoes">
-
-                        <a
-                            href="<?= BASE_URL ?>/carrinho"
-                            class="checkout-btn-voltar"
-                        >
-                            Voltar ao carrinho
-                        </a>
+                        <span>
+                            Total
+                        </span>
 
 
-                        <button
-                            type="submit"
-                            class="checkout-btn-finalizar"
-                            <?= !$freteDisponivel
-                                ? 'disabled'
-                                : ''
-                            ?>
-                        >
-                            Continuar para pagamento
-                        </button>
+                        <strong>
+
+                            R$
+
+                            <?= number_format(
+                                $total,
+                                2,
+                                ',',
+                                '.'
+                            ) ?>
+
+                        </strong>
 
                     </div>
 
-                </section>
+                </div>
 
-            </form>
 
-        <?php endif; ?>
+                <div
+                    class="checkout-acoes"
+                >
+
+                    <a
+                        href="<?= BASE_URL ?>/carrinho"
+                        class="checkout-btn-voltar"
+                    >
+                        Voltar ao carrinho
+                    </a>
+
+
+                    <button
+                        type="submit"
+                        class="checkout-btn-finalizar"
+                        <?= !$podeFinalizar
+                            ? 'disabled'
+                            : ''
+                        ?>
+                    >
+
+                        Continuar para pagamento
+
+                    </button>
+
+                </div>
+
+            </section>
+
+        </form>
 
     </div>
 
 </main>
 
 
-<!-- =========================================
-     TROCA DE ENDEREÇO
-========================================== -->
-
 <script>
 document.addEventListener(
     'DOMContentLoaded',
     function () {
 
-        const radios =
+        /*
+        =================================
+        MODALIDADE
+        =================================
+        */
+
+        const modalidades =
             document.querySelectorAll(
-                'input[name="endereco_id"]'
+                'input[name="modalidade_recebimento"]'
             );
 
 
-        radios.forEach(
+        modalidades.forEach(
             function (radio) {
 
                 radio.addEventListener(
@@ -1482,6 +1758,56 @@ document.addEventListener(
 
 
                         url.searchParams.set(
+                            'recebimento',
+                            this.value
+                        );
+
+
+                        url.searchParams.delete(
+                            'endereco'
+                        );
+
+
+                        window.location.href =
+                            url.toString();
+                    }
+                );
+            }
+        );
+
+
+        /*
+        =================================
+        ENDEREÇO
+        =================================
+        */
+
+        const enderecos =
+            document.querySelectorAll(
+                'input[name="endereco_id"]'
+            );
+
+
+        enderecos.forEach(
+            function (radio) {
+
+                radio.addEventListener(
+                    'change',
+                    function () {
+
+                        const url =
+                            new URL(
+                                window.location.href
+                            );
+
+
+                        url.searchParams.set(
+                            'recebimento',
+                            'entrega'
+                        );
+
+
+                        url.searchParams.set(
                             'endereco',
                             this.value
                         );
@@ -1489,13 +1815,10 @@ document.addEventListener(
 
                         window.location.href =
                             url.toString();
-
                     }
                 );
-
             }
         );
-
     }
 );
 </script>

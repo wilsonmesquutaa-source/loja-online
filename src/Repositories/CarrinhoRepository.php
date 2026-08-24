@@ -146,6 +146,7 @@ final class CarrinhoRepository
                 p.categoria_id,
                 p.nome,
                 p.descricao,
+                p.tipo_preparo,
                 p.estoque,
                 p.status,
 
