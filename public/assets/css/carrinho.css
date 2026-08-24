@@ -12,6 +12,117 @@
     margin-top: 24px;
 }
 
+/*
+=================================
+AGENDA DO PEDIDO
+=================================
+*/
+
+.carrinho-agenda {
+    display:
+        flex;
+
+    align-items:
+        flex-start;
+
+    gap:
+        14px;
+
+    margin:
+        22px 0 24px;
+
+    padding:
+        16px 18px;
+
+    border:
+        1px solid
+        rgba(245, 124, 0, 0.20);
+
+    border-radius:
+        14px;
+
+    background:
+        #fffaf4;
+}
+
+
+.carrinho-agenda-icone {
+    width:
+        42px;
+
+    height:
+        42px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    flex-shrink:
+        0;
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(245, 124, 0, 0.12);
+
+    color:
+        var(--cor-destaque);
+
+    font-size:
+        1.2rem;
+}
+
+
+.carrinho-agenda-conteudo {
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        4px;
+}
+
+
+.carrinho-agenda-conteudo strong {
+    color:
+        var(--marrom);
+
+    font-size:
+        0.95rem;
+}
+
+
+.carrinho-agenda-conteudo span {
+    color:
+        var(--cor-destaque);
+
+    font-weight:
+        700;
+
+    font-size:
+        1rem;
+}
+
+
+.carrinho-agenda-conteudo small {
+    color:
+        #777;
+
+    font-size:
+        0.82rem;
+
+    line-height:
+        1.4;
+}
+
 
 /* =========================================================
    BOTÕES

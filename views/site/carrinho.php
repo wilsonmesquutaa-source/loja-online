@@ -18,6 +18,10 @@ View::componente(
 $carrinho =
     $carrinho ?? [];
 
+$agenda =
+    $agenda
+    ?? null;
+
 $totalCarrinho =
     0.0;
 
@@ -469,6 +473,76 @@ $nomesCategorias = [
 
                     </div>
 
+
+                    <?php if (
+                        $agenda !== null
+                    ): ?>
+
+                        <div
+                            class="carrinho-agenda">
+
+                            <div
+                                class="carrinho-agenda-icone">
+
+                                <i class="bi bi-clock"></i>
+
+                            </div>
+
+
+                            <div
+                                class="carrinho-agenda-conteudo">
+
+                                <strong>
+                                    Primeiro horário disponível
+                                </strong>
+
+
+                                <span>
+
+                                    <?= htmlspecialchars(
+                                        (string)
+                                        $agenda['primeiro_horario_formatado'],
+                                        ENT_QUOTES,
+                                        'UTF-8'
+                                    ) ?>
+
+                                </span>
+
+
+                                <?php if (
+                                    !empty($agenda['exige_24h'])
+                                ): ?>
+
+                                    <small>
+
+                                        Este pedido precisa de
+                                        no mínimo 24 horas de antecedência.
+
+                                    </small>
+
+                                <?php elseif (
+                                    !empty($agenda['tempo_producao'])
+                                ): ?>
+
+                                    <small>
+
+                                        Tempo mínimo de preparo:
+                                        <?= htmlspecialchars(
+                                            (string)
+                                            $agenda['tempo_producao'],
+                                            ENT_QUOTES,
+                                            'UTF-8'
+                                        ) ?>.
+
+                                    </small>
+
+                                <?php endif; ?>
+
+                            </div>
+
+                        </div>
+
+                    <?php endif; ?>
 
                     <div class="carrinho-acoes">
 
