@@ -7,7 +7,9 @@ namespace App\Controllers\Cliente;
 use App\Controllers\Controller;
 use App\Helpers\Csrf;
 use App\Repositories\ClienteRepository;
+use App\Repositories\EnderecoRepository;
 use App\Services\GoogleAuthService;
+use App\Services\EmailService;
 
 final class ClienteController extends Controller
 {
@@ -26,23 +28,15 @@ final class ClienteController extends Controller
             session_start();
         }
 
-        if (
-            !empty(
-                $_SESSION['cliente_id']
-            )
-        ) {
 
-            /*
-            =================================
-            CLIENTE JÁ LOGADO
-            VOLTA PARA A LOJA
-            =================================
-            */
+        if (
+            !empty($_SESSION['cliente_id'])
+        ) {
 
             header(
                 'Location: '
-                . BASE_URL
-                . '/'
+                    . BASE_URL
+                    . '/'
             );
 
             exit;
@@ -53,16 +47,16 @@ final class ClienteController extends Controller
             'site/cliente_login',
             [
                 'tituloPagina' =>
-                    'Entrar',
+                'Entrar',
 
                 'rotaAtual' =>
-                    'login',
+                'login',
 
                 'erro' =>
-                    null,
+                null,
 
                 'email' =>
-                    '',
+                '',
             ]
         );
     }
@@ -80,9 +74,9 @@ final class ClienteController extends Controller
             isset(
                 $_POST['_csrf']
             )
-                ? (string)
-                    $_POST['_csrf']
-                : null;
+            ? (string)
+            $_POST['_csrf']
+            : null;
 
 
         if (
@@ -153,18 +147,10 @@ final class ClienteController extends Controller
             );
 
 
-        /*
-        =================================
-        CREDENCIAIS INVÁLIDAS
-        =================================
-        */
-
         if (
             $cliente === null
             ||
-            empty(
-                $cliente['senha_hash']
-            )
+            empty($cliente['senha_hash'])
             ||
             !password_verify(
                 $senha,
@@ -179,62 +165,36 @@ final class ClienteController extends Controller
         }
 
 
-        /*
-        =================================
-        SESSÃO
-        =================================
-        */
-
         $this->iniciarSessaoCliente(
             (int)
-                $cliente['id'],
+            $cliente['id'],
 
             (string)
-                $cliente['nome'],
+            $cliente['nome'],
 
             (string)
-                $cliente['email'],
+            $cliente['email'],
 
-            !empty(
-                $cliente['foto_url']
-            )
+            !empty($cliente['foto_url'])
                 ? (string)
-                    $cliente['foto_url']
+                $cliente['foto_url']
                 : null
         );
 
 
-        /*
-        =================================
-        ATUALIZA ACESSO
-        =================================
-        */
-
         $repository->atualizarUltimoAcesso(
             (int)
-                $cliente['id']
+            $cliente['id']
         );
 
-
-        /*
-        =================================
-        RENOVA CSRF
-        =================================
-        */
 
         Csrf::renovarCliente();
 
 
-        /*
-        =================================
-        VOLTA PARA A LOJA
-        =================================
-        */
-
         header(
             'Location: '
-            . BASE_URL
-            . '/'
+                . BASE_URL
+                . '/'
         );
 
         exit;
@@ -253,9 +213,9 @@ final class ClienteController extends Controller
             isset(
                 $_POST['_csrf']
             )
-                ? (string)
-                    $_POST['_csrf']
-                : null;
+            ? (string)
+            $_POST['_csrf']
+            : null;
 
 
         if (
@@ -266,9 +226,7 @@ final class ClienteController extends Controller
 
             http_response_code(403);
 
-            exit(
-                'Token CSRF inválido.'
-            );
+            exit('Token CSRF inválido.');
         }
 
 
@@ -301,9 +259,9 @@ final class ClienteController extends Controller
                 $parametros['path'],
                 $parametros['domain'] ?? '',
                 (bool)
-                    $parametros['secure'],
+                $parametros['secure'],
                 (bool)
-                    $parametros['httponly']
+                $parametros['httponly']
             );
         }
 
@@ -311,16 +269,10 @@ final class ClienteController extends Controller
         session_destroy();
 
 
-        /*
-        =================================
-        VOLTA PARA A LOJA
-        =================================
-        */
-
         header(
             'Location: '
-            . BASE_URL
-            . '/'
+                . BASE_URL
+                . '/'
         );
 
         exit;
@@ -342,16 +294,16 @@ final class ClienteController extends Controller
             'site/cliente_login',
             [
                 'tituloPagina' =>
-                    'Entrar',
+                'Entrar',
 
                 'rotaAtual' =>
-                    'login',
+                'login',
 
                 'erro' =>
-                    $mensagem,
+                $mensagem,
 
                 'email' =>
-                    $email,
+                $email,
             ]
         );
 
@@ -367,23 +319,73 @@ final class ClienteController extends Controller
 
     public function cadastro(): void
     {
+        $retorno =
+            trim(
+                (string)
+                (
+                    $_GET['retorno']
+                    ?? ''
+                )
+            );
+
+
+        if (
+            $retorno !==
+            'carrinho'
+        ) {
+
+            $retorno =
+                '';
+        }
+
+
         $this->view(
             'site/cliente_cadastro',
             [
                 'tituloPagina' =>
-                    'Criar conta',
+                'Criar conta',
 
                 'rotaAtual' =>
-                    'cadastro',
+                'cadastro',
 
                 'erro' =>
-                    null,
+                null,
 
                 'nome' =>
-                    '',
+                '',
 
                 'email' =>
-                    '',
+                '',
+
+                'retorno' =>
+                $retorno,
+
+                'identificacao' =>
+                'Minha casa',
+
+                'destinatario' =>
+                '',
+
+                'cep' =>
+                '',
+
+                'logradouro' =>
+                '',
+
+                'numero' =>
+                '',
+
+                'complemento' =>
+                '',
+
+                'bairro' =>
+                '',
+
+                'cidade' =>
+                'Fortaleza',
+
+                'estado' =>
+                'CE',
             ]
         );
     }
@@ -401,9 +403,9 @@ final class ClienteController extends Controller
             isset(
                 $_POST['_csrf']
             )
-                ? (string)
-                    $_POST['_csrf']
-                : null;
+            ? (string)
+            $_POST['_csrf']
+            : null;
 
 
         if (
@@ -415,10 +417,44 @@ final class ClienteController extends Controller
             $this->mostrarCadastroComErro(
                 'A sessão do formulário expirou. Atualize a página e tente novamente.',
                 '',
+                '',
+                [],
                 ''
             );
         }
 
+
+        /*
+        =================================
+        RETORNO
+        =================================
+        */
+
+        $retorno =
+            trim(
+                (string)
+                (
+                    $_POST['retorno']
+                    ?? ''
+                )
+            );
+
+
+        if (
+            $retorno !==
+            'carrinho'
+        ) {
+
+            $retorno =
+                '';
+        }
+
+
+        /*
+        =================================
+        DADOS DA CONTA
+        =================================
+        */
 
         $nome =
             trim(
@@ -454,6 +490,103 @@ final class ClienteController extends Controller
             );
 
 
+        /*
+        =================================
+        DADOS DO ENDEREÇO
+        =================================
+        */
+
+        $identificacao =
+            trim(
+                (string) (
+                    $_POST['identificacao']
+                    ?? 'Minha casa'
+                )
+            );
+
+
+        $destinatario =
+            trim(
+                (string) (
+                    $_POST['destinatario']
+                    ?? ''
+                )
+            );
+
+
+        $cep =
+            preg_replace(
+                '/\D+/',
+                '',
+                (string) (
+                    $_POST['cep']
+                    ?? ''
+                )
+            );
+
+
+        $logradouro =
+            trim(
+                (string) (
+                    $_POST['logradouro']
+                    ?? ''
+                )
+            );
+
+
+        $numero =
+            trim(
+                (string) (
+                    $_POST['numero']
+                    ?? ''
+                )
+            );
+
+
+        $complemento =
+            trim(
+                (string) (
+                    $_POST['complemento']
+                    ?? ''
+                )
+            );
+
+
+        $bairro =
+            trim(
+                (string) (
+                    $_POST['bairro']
+                    ?? ''
+                )
+            );
+
+
+        $cidade =
+            trim(
+                (string) (
+                    $_POST['cidade']
+                    ?? 'Fortaleza'
+                )
+            );
+
+
+        $estado =
+            strtoupper(
+                trim(
+                    (string) (
+                        $_POST['estado']
+                        ?? 'CE'
+                    )
+                )
+            );
+
+
+        /*
+        =================================
+        VALIDA NOME
+        =================================
+        */
+
         if (
             $nome === ''
         ) {
@@ -461,7 +594,19 @@ final class ClienteController extends Controller
             $this->mostrarCadastroComErro(
                 'Informe seu nome completo.',
                 $nome,
-                $email
+                $email,
+                $this->dadosEnderecoFormulario(
+                    $identificacao,
+                    $destinatario,
+                    $cep,
+                    $logradouro,
+                    $numero,
+                    $complemento,
+                    $bairro,
+                    $cidade,
+                    $estado
+                ),
+                $retorno
             );
         }
 
@@ -476,10 +621,28 @@ final class ClienteController extends Controller
             $this->mostrarCadastroComErro(
                 'O nome informado é muito longo.',
                 $nome,
-                $email
+                $email,
+                $this->dadosEnderecoFormulario(
+                    $identificacao,
+                    $destinatario,
+                    $cep,
+                    $logradouro,
+                    $numero,
+                    $complemento,
+                    $bairro,
+                    $cidade,
+                    $estado
+                ),
+                $retorno
             );
         }
 
+
+        /*
+        =================================
+        VALIDA E-MAIL
+        =================================
+        */
 
         if (
             !filter_var(
@@ -491,7 +654,19 @@ final class ClienteController extends Controller
             $this->mostrarCadastroComErro(
                 'Informe um e-mail válido.',
                 $nome,
-                $email
+                $email,
+                $this->dadosEnderecoFormulario(
+                    $identificacao,
+                    $destinatario,
+                    $cep,
+                    $logradouro,
+                    $numero,
+                    $complemento,
+                    $bairro,
+                    $cidade,
+                    $estado
+                ),
+                $retorno
             );
         }
 
@@ -503,10 +678,28 @@ final class ClienteController extends Controller
             $this->mostrarCadastroComErro(
                 'O e-mail informado é muito longo.',
                 $nome,
-                $email
+                $email,
+                $this->dadosEnderecoFormulario(
+                    $identificacao,
+                    $destinatario,
+                    $cep,
+                    $logradouro,
+                    $numero,
+                    $complemento,
+                    $bairro,
+                    $cidade,
+                    $estado
+                ),
+                $retorno
             );
         }
 
+
+        /*
+        =================================
+        VALIDA SENHA
+        =================================
+        */
 
         if (
             strlen($senha) < 8
@@ -515,7 +708,19 @@ final class ClienteController extends Controller
             $this->mostrarCadastroComErro(
                 'A senha deve ter pelo menos 8 caracteres.',
                 $nome,
-                $email
+                $email,
+                $this->dadosEnderecoFormulario(
+                    $identificacao,
+                    $destinatario,
+                    $cep,
+                    $logradouro,
+                    $numero,
+                    $complemento,
+                    $bairro,
+                    $cidade,
+                    $estado
+                ),
+                $retorno
             );
         }
 
@@ -528,30 +733,279 @@ final class ClienteController extends Controller
             $this->mostrarCadastroComErro(
                 'As senhas não coincidem.',
                 $nome,
-                $email
+                $email,
+                $this->dadosEnderecoFormulario(
+                    $identificacao,
+                    $destinatario,
+                    $cep,
+                    $logradouro,
+                    $numero,
+                    $complemento,
+                    $bairro,
+                    $cidade,
+                    $estado
+                ),
+                $retorno
             );
         }
 
 
-        $repository =
+        /*
+        =================================
+        VALIDA ENDEREÇO
+        =================================
+        */
+
+        if (
+            $identificacao === ''
+        ) {
+
+            $this->mostrarCadastroComErro(
+                'Informe uma identificação para o endereço.',
+                $nome,
+                $email,
+                $this->dadosEnderecoFormulario(
+                    $identificacao,
+                    $destinatario,
+                    $cep,
+                    $logradouro,
+                    $numero,
+                    $complemento,
+                    $bairro,
+                    $cidade,
+                    $estado
+                ),
+                $retorno
+            );
+        }
+
+
+        if (
+            $destinatario === ''
+        ) {
+
+            $this->mostrarCadastroComErro(
+                'Informe o nome do destinatário.',
+                $nome,
+                $email,
+                $this->dadosEnderecoFormulario(
+                    $identificacao,
+                    $destinatario,
+                    $cep,
+                    $logradouro,
+                    $numero,
+                    $complemento,
+                    $bairro,
+                    $cidade,
+                    $estado
+                ),
+                $retorno
+            );
+        }
+
+
+        if (
+            strlen($cep) !== 8
+        ) {
+
+            $this->mostrarCadastroComErro(
+                'Informe um CEP válido.',
+                $nome,
+                $email,
+                $this->dadosEnderecoFormulario(
+                    $identificacao,
+                    $destinatario,
+                    $cep,
+                    $logradouro,
+                    $numero,
+                    $complemento,
+                    $bairro,
+                    $cidade,
+                    $estado
+                ),
+                $retorno
+            );
+        }
+
+
+        if (
+            $logradouro === ''
+        ) {
+
+            $this->mostrarCadastroComErro(
+                'Informe o logradouro.',
+                $nome,
+                $email,
+                $this->dadosEnderecoFormulario(
+                    $identificacao,
+                    $destinatario,
+                    $cep,
+                    $logradouro,
+                    $numero,
+                    $complemento,
+                    $bairro,
+                    $cidade,
+                    $estado
+                ),
+                $retorno
+            );
+        }
+
+
+        if (
+            $numero === ''
+        ) {
+
+            $this->mostrarCadastroComErro(
+                'Informe o número do endereço.',
+                $nome,
+                $email,
+                $this->dadosEnderecoFormulario(
+                    $identificacao,
+                    $destinatario,
+                    $cep,
+                    $logradouro,
+                    $numero,
+                    $complemento,
+                    $bairro,
+                    $cidade,
+                    $estado
+                ),
+                $retorno
+            );
+        }
+
+
+        if (
+            $bairro === ''
+        ) {
+
+            $this->mostrarCadastroComErro(
+                'Informe o bairro.',
+                $nome,
+                $email,
+                $this->dadosEnderecoFormulario(
+                    $identificacao,
+                    $destinatario,
+                    $cep,
+                    $logradouro,
+                    $numero,
+                    $complemento,
+                    $bairro,
+                    $cidade,
+                    $estado
+                ),
+                $retorno
+            );
+        }
+
+
+        if (
+            $cidade === ''
+        ) {
+
+            $this->mostrarCadastroComErro(
+                'Informe a cidade.',
+                $nome,
+                $email,
+                $this->dadosEnderecoFormulario(
+                    $identificacao,
+                    $destinatario,
+                    $cep,
+                    $logradouro,
+                    $numero,
+                    $complemento,
+                    $bairro,
+                    $cidade,
+                    $estado
+                ),
+                $retorno
+            );
+        }
+
+
+        if (
+            !preg_match(
+                '/^[A-Z]{2}$/',
+                $estado
+            )
+        ) {
+
+            $this->mostrarCadastroComErro(
+                'Informe um estado válido.',
+                $nome,
+                $email,
+                $this->dadosEnderecoFormulario(
+                    $identificacao,
+                    $destinatario,
+                    $cep,
+                    $logradouro,
+                    $numero,
+                    $complemento,
+                    $bairro,
+                    $cidade,
+                    $estado
+                ),
+                $retorno
+            );
+        }
+
+
+        /*
+        =================================
+        REPOSITORIES
+        =================================
+        */
+
+        $clienteRepository =
             new ClienteRepository(
                 $this->pdo
             );
 
 
+        $enderecoRepository =
+            new EnderecoRepository(
+                $this->pdo
+            );
+
+
+        /*
+        =================================
+        E-MAIL EXISTENTE
+        =================================
+        */
+
         if (
-            $repository->emailExiste(
+            $clienteRepository->emailExiste(
                 $email
             )
         ) {
 
             $this->mostrarCadastroComErro(
-                'Já existe uma conta cadastrada com este e-mail.',
+                'Já existe uma conta cadastrada com este e-mail. Entre com sua conta existente.',
                 $nome,
-                $email
+                $email,
+                $this->dadosEnderecoFormulario(
+                    $identificacao,
+                    $destinatario,
+                    $cep,
+                    $logradouro,
+                    $numero,
+                    $complemento,
+                    $bairro,
+                    $cidade,
+                    $estado
+                ),
+                $retorno
             );
         }
 
+
+        /*
+        =================================
+        HASH DA SENHA
+        =================================
+        */
 
         $senhaHash =
             password_hash(
@@ -567,23 +1021,185 @@ final class ClienteController extends Controller
             $this->mostrarCadastroComErro(
                 'Não foi possível proteger sua senha. Tente novamente.',
                 $nome,
-                $email
+                $email,
+                $this->dadosEnderecoFormulario(
+                    $identificacao,
+                    $destinatario,
+                    $cep,
+                    $logradouro,
+                    $numero,
+                    $complemento,
+                    $bairro,
+                    $cidade,
+                    $estado
+                ),
+                $retorno
             );
         }
 
+        /*
+        =================================
+        TOKEN DE VERIFICAÇÃO
+        =================================
+        */
 
-        $clienteId =
-            $repository->criar(
-                $nome,
-                $email,
-                $senhaHash
+        $tokenVerificacao =
+            bin2hex(
+                random_bytes(32)
+            );
+
+
+        $tokenVerificacaoHash =
+            hash(
+                'sha256',
+                $tokenVerificacao
             );
 
 
         /*
         =================================
-        CADASTRO TRADICIONAL
-        SEM FOTO
+        TRANSAÇÃO
+        =================================
+        */
+
+        $this->pdo
+            ->beginTransaction();
+
+
+        try {
+
+            /*
+            ==============================
+            CRIA CLIENTE
+            ==============================
+            */
+
+            $clienteId =
+                $clienteRepository->criar(
+                    $nome,
+                    $email,
+                    $senhaHash
+                );
+
+            /*
+            ==============================
+            CRIA TOKEN DE VERIFICAÇÃO
+            ==============================
+            */
+
+            $clienteRepository
+                ->criarTokenVerificacao(
+                    $clienteId,
+                    $tokenVerificacaoHash
+                );
+            /*
+            ==============================
+            CRIA ENDEREÇO PRINCIPAL
+            ==============================
+            */
+
+            $enderecoRepository->criar(
+                $clienteId,
+                $identificacao,
+                $destinatario,
+                $cep,
+                $logradouro,
+                $numero,
+                $complemento !== ''
+                    ? $complemento
+                    : null,
+                $bairro,
+                $cidade,
+                $estado,
+                true
+            );
+
+
+            /*
+            ==============================
+            COMMIT
+            ==============================
+            */
+
+            $this->pdo
+                ->commit();
+        } catch (
+            \Throwable $erro
+        ) {
+
+            if (
+                $this->pdo
+                ->inTransaction()
+            ) {
+
+                $this->pdo
+                    ->rollBack();
+            }
+
+
+            throw $erro;
+        }
+
+        /*
+=================================
+ENVIA E-MAIL DE VERIFICAÇÃO
+=================================
+*/
+
+        $urlVerificacao =
+            BASE_URL
+            . '/cadastro/verificar-email?token='
+            . urlencode(
+                $tokenVerificacao
+            );
+
+
+        try {
+
+            $emailService =
+                new EmailService();
+
+
+            $emailService
+                ->enviarVerificacao(
+                    $email,
+                    $nome,
+                    $urlVerificacao
+                );
+        } catch (
+            \Throwable $erro
+        ) {
+
+            /*
+    A conta já foi criada.
+    O cliente não será autenticado.
+    */
+
+            $this->view(
+                'site/cliente_verificacao_pendente',
+                [
+                    'tituloPagina' =>
+                    'Confirme seu e-mail',
+
+                    'rotaAtual' =>
+                    'cadastro',
+
+                    'nome' =>
+                    $nome,
+
+                    'email' =>
+                    $email,
+
+                    'erroEnvio' =>
+                    'Sua conta foi criada, mas não conseguimos enviar o e-mail de confirmação.',
+                ]
+            );
+
+            exit;
+        }
+        /*
+        =================================
+        SESSÃO
         =================================
         */
 
@@ -600,17 +1216,87 @@ final class ClienteController extends Controller
 
         /*
         =================================
-        CADASTRO → LOJA
+        RETORNO
+        =================================
+        */
+
+        if (
+            $retorno ===
+            'carrinho'
+        ) {
+
+            header(
+                'Location: '
+                    . BASE_URL
+                    . '/carrinho'
+            );
+
+            exit;
+        }
+
+
+        /*
+        =================================
+        CADASTRO NORMAL
         =================================
         */
 
         header(
             'Location: '
-            . BASE_URL
-            . '/'
+                . BASE_URL
+                . '/'
         );
 
         exit;
+    }
+
+
+    /*
+    =================================
+    DADOS DE ENDEREÇO PARA ERRO
+    =================================
+    */
+
+    private function dadosEnderecoFormulario(
+        string $identificacao,
+        string $destinatario,
+        string $cep,
+        string $logradouro,
+        string $numero,
+        string $complemento,
+        string $bairro,
+        string $cidade,
+        string $estado
+    ): array {
+
+        return [
+            'identificacao' =>
+            $identificacao,
+
+            'destinatario' =>
+            $destinatario,
+
+            'cep' =>
+            $cep,
+
+            'logradouro' =>
+            $logradouro,
+
+            'numero' =>
+            $numero,
+
+            'complemento' =>
+            $complemento,
+
+            'bairro' =>
+            $bairro,
+
+            'cidade' =>
+            $cidade,
+
+            'estado' =>
+            $estado,
+        ];
     }
 
 
@@ -657,7 +1343,7 @@ final class ClienteController extends Controller
 
         header(
             'Location: '
-            . $url
+                . $url
         );
 
         exit;
@@ -707,7 +1393,7 @@ final class ClienteController extends Controller
 
         header(
             'Location: '
-            . $url
+                . $url
         );
 
         exit;
@@ -731,50 +1417,34 @@ final class ClienteController extends Controller
         }
 
 
-        /*
-        =================================
-        VALIDA STATE
-        =================================
-        */
-
         $stateRecebido =
             isset($_GET['state'])
-                ? (string)
-                    $_GET['state']
-                : '';
+            ? (string)
+            $_GET['state']
+            : '';
 
 
         $stateEsperado =
             isset(
                 $_SESSION['google_oauth_state']
             )
-                ? (string)
-                    $_SESSION[
-                        'google_oauth_state'
-                    ]
-                : '';
+            ? (string)
+            $_SESSION['google_oauth_state']
+            : '';
 
 
         $acao =
             isset(
-                $_SESSION[
-                    'google_oauth_action'
-                ]
+                $_SESSION['google_oauth_action']
             )
-                ? (string)
-                    $_SESSION[
-                        'google_oauth_action'
-                    ]
-                : '';
+            ? (string)
+            $_SESSION['google_oauth_action']
+            : '';
 
 
         unset(
-            $_SESSION[
-                'google_oauth_state'
-            ],
-            $_SESSION[
-                'google_oauth_action'
-            ]
+            $_SESSION['google_oauth_state'],
+            $_SESSION['google_oauth_action']
         );
 
 
@@ -795,12 +1465,6 @@ final class ClienteController extends Controller
         }
 
 
-        /*
-        =================================
-        GOOGLE CANCELADO
-        =================================
-        */
-
         if (
             isset($_GET['error'])
         ) {
@@ -810,12 +1474,6 @@ final class ClienteController extends Controller
             );
         }
 
-
-        /*
-        =================================
-        VERIFICA AÇÃO
-        =================================
-        */
 
         if (
             $acao !== 'login'
@@ -829,17 +1487,11 @@ final class ClienteController extends Controller
         }
 
 
-        /*
-        =================================
-        CODE
-        =================================
-        */
-
         $code =
             isset($_GET['code'])
-                ? (string)
-                    $_GET['code']
-                : '';
+            ? (string)
+            $_GET['code']
+            : '';
 
 
         if (
@@ -851,12 +1503,6 @@ final class ClienteController extends Controller
             );
         }
 
-
-        /*
-        =================================
-        TROCA CODE POR TOKEN
-        =================================
-        */
 
         try {
 
@@ -873,9 +1519,8 @@ final class ClienteController extends Controller
             $dadosGoogle =
                 $google->buscarUsuario(
                     (string)
-                        $token['access_token']
+                    $token['access_token']
                 );
-
         } catch (
             \RuntimeException $erro
         ) {
@@ -886,39 +1531,31 @@ final class ClienteController extends Controller
         }
 
 
-        /*
-        =================================
-        DADOS GOOGLE
-        =================================
-        */
-
         $googleSub =
             (string)
-                $dadosGoogle['google_sub'];
+            $dadosGoogle['google_sub'];
 
 
         $email =
             (string)
-                $dadosGoogle['email'];
+            $dadosGoogle['email'];
 
 
         $nome =
             (string)
-                $dadosGoogle['nome'];
+            $dadosGoogle['nome'];
 
 
         $fotoUrl =
-            !empty(
-                $dadosGoogle['foto_url']
-            )
-                ? (string)
-                    $dadosGoogle['foto_url']
-                : null;
+            !empty($dadosGoogle['foto_url'])
+            ? (string)
+            $dadosGoogle['foto_url']
+            : null;
 
 
         $emailVerificado =
             (bool)
-                $dadosGoogle['email_verificado'];
+            $dadosGoogle['email_verificado'];
 
 
         $repository =
@@ -926,12 +1563,6 @@ final class ClienteController extends Controller
                 $this->pdo
             );
 
-
-        /*
-        =================================
-        PROCURA GOOGLE SUB
-        =================================
-        */
 
         $cliente =
             $repository->buscarPorGoogleSub(
@@ -975,33 +1606,25 @@ final class ClienteController extends Controller
             }
 
 
-            /*
-            ==============================
-            LOGIN GOOGLE
-            ==============================
-            */
-
             $repository->atualizarUltimoAcesso(
                 (int)
-                    $cliente['id']
+                $cliente['id']
             );
 
 
             $this->iniciarSessaoCliente(
                 (int)
-                    $cliente['id'],
+                $cliente['id'],
 
                 (string)
-                    $cliente['nome'],
+                $cliente['nome'],
 
                 (string)
-                    $cliente['email'],
+                $cliente['email'],
 
-                !empty(
-                    $cliente['foto_url']
-                )
+                !empty($cliente['foto_url'])
                     ? (string)
-                        $cliente['foto_url']
+                    $cliente['foto_url']
                     : null
             );
 
@@ -1009,16 +1632,10 @@ final class ClienteController extends Controller
             Csrf::renovarCliente();
 
 
-            /*
-            =================================
-            LOGIN GOOGLE → LOJA
-            =================================
-            */
-
             header(
                 'Location: '
-                . BASE_URL
-                . '/'
+                    . BASE_URL
+                    . '/'
             );
 
             exit;
@@ -1037,25 +1654,23 @@ final class ClienteController extends Controller
 
             $repository->atualizarUltimoAcesso(
                 (int)
-                    $cliente['id']
+                $cliente['id']
             );
 
 
             $this->iniciarSessaoCliente(
                 (int)
-                    $cliente['id'],
+                $cliente['id'],
 
                 (string)
-                    $cliente['nome'],
+                $cliente['nome'],
 
                 (string)
-                    $cliente['email'],
+                $cliente['email'],
 
-                !empty(
-                    $cliente['foto_url']
-                )
+                !empty($cliente['foto_url'])
                     ? (string)
-                        $cliente['foto_url']
+                    $cliente['foto_url']
                     : $fotoUrl
             );
 
@@ -1063,16 +1678,10 @@ final class ClienteController extends Controller
             Csrf::renovarCliente();
 
 
-            /*
-            =================================
-            GOOGLE JÁ CADASTRADO → LOJA
-            =================================
-            */
-
             header(
                 'Location: '
-                . BASE_URL
-                . '/'
+                    . BASE_URL
+                    . '/'
             );
 
             exit;
@@ -1095,16 +1704,8 @@ final class ClienteController extends Controller
             $clientePorEmail !== null
         ) {
 
-            /*
-            ==============================
-            JÁ POSSUI GOOGLE DIFERENTE
-            ==============================
-            */
-
             if (
-                !empty(
-                    $clientePorEmail['google_sub']
-                )
+                !empty($clientePorEmail['google_sub'])
             ) {
 
                 $this->mostrarErroGoogle(
@@ -1113,15 +1714,9 @@ final class ClienteController extends Controller
             }
 
 
-            /*
-            ==============================
-            VINCULA GOOGLE
-            ==============================
-            */
-
             $repository->vincularGoogle(
                 (int)
-                    $clientePorEmail['id'],
+                $clientePorEmail['id'],
 
                 $googleSub,
 
@@ -1133,13 +1728,13 @@ final class ClienteController extends Controller
 
             $this->iniciarSessaoCliente(
                 (int)
-                    $clientePorEmail['id'],
+                $clientePorEmail['id'],
 
                 (string)
-                    $clientePorEmail['nome'],
+                $clientePorEmail['nome'],
 
                 (string)
-                    $clientePorEmail['email'],
+                $clientePorEmail['email'],
 
                 $fotoUrl
             );
@@ -1148,16 +1743,10 @@ final class ClienteController extends Controller
             Csrf::renovarCliente();
 
 
-            /*
-            =================================
-            GOOGLE VINCULADO → LOJA
-            =================================
-            */
-
             header(
                 'Location: '
-                . BASE_URL
-                . '/'
+                    . BASE_URL
+                    . '/'
             );
 
             exit;
@@ -1166,7 +1755,7 @@ final class ClienteController extends Controller
 
         /*
         =================================
-        CRIA NOVA CONTA GOOGLE
+        NOVA CONTA GOOGLE
         =================================
         */
 
@@ -1191,16 +1780,10 @@ final class ClienteController extends Controller
         Csrf::renovarCliente();
 
 
-        /*
-        =================================
-        NOVO CADASTRO GOOGLE → LOJA
-        =================================
-        */
-
         header(
             'Location: '
-            . BASE_URL
-            . '/'
+                . BASE_URL
+                . '/'
         );
 
         exit;
@@ -1221,16 +1804,16 @@ final class ClienteController extends Controller
             'site/cliente_login',
             [
                 'tituloPagina' =>
-                    'Entrar',
+                'Entrar',
 
                 'rotaAtual' =>
-                    'login',
+                'login',
 
                 'erro' =>
-                    $mensagem,
+                $mensagem,
 
                 'email' =>
-                    '',
+                '',
             ]
         );
 
@@ -1291,26 +1874,67 @@ final class ClienteController extends Controller
     private function mostrarCadastroComErro(
         string $mensagem,
         string $nome,
-        string $email
+        string $email,
+        array $endereco = [],
+        string $retorno = ''
     ): never {
 
         $this->view(
             'site/cliente_cadastro',
             [
                 'tituloPagina' =>
-                    'Criar conta',
+                'Criar conta',
 
                 'rotaAtual' =>
-                    'cadastro',
+                'cadastro',
 
                 'erro' =>
-                    $mensagem,
+                $mensagem,
 
                 'nome' =>
-                    $nome,
+                $nome,
 
                 'email' =>
-                    $email,
+                $email,
+
+                'retorno' =>
+                $retorno,
+
+                'identificacao' =>
+                $endereco['identificacao']
+                    ?? 'Minha casa',
+
+                'destinatario' =>
+                $endereco['destinatario']
+                    ?? '',
+
+                'cep' =>
+                $endereco['cep']
+                    ?? '',
+
+                'logradouro' =>
+                $endereco['logradouro']
+                    ?? '',
+
+                'numero' =>
+                $endereco['numero']
+                    ?? '',
+
+                'complemento' =>
+                $endereco['complemento']
+                    ?? '',
+
+                'bairro' =>
+                $endereco['bairro']
+                    ?? '',
+
+                'cidade' =>
+                $endereco['cidade']
+                    ?? 'Fortaleza',
+
+                'estado' =>
+                $endereco['estado']
+                    ?? 'CE',
             ]
         );
 

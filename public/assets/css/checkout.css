@@ -276,7 +276,8 @@
 
     transition:
         border-color 0.25s ease,
-        background-color 0.25s ease;
+        background-color 0.25s ease,
+        box-shadow 0.25s ease;
 }
 
 
@@ -286,6 +287,21 @@
 
     background:
         #fffaf4;
+}
+
+
+.checkout-endereco-option:has(
+    input:checked
+) {
+    border-color:
+        var(--cor-destaque);
+
+    background:
+        #fffaf4;
+
+    box-shadow:
+        0 4px 16px
+        rgba(245, 124, 0, 0.10);
 }
 
 
@@ -435,6 +451,35 @@
 
     cursor:
         pointer;
+
+    transition:
+        border-color 0.25s ease,
+        background-color 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+
+.checkout-pagamento-option:hover {
+    border-color:
+        rgba(245, 124, 0, 0.40);
+
+    background:
+        #fffaf4;
+}
+
+
+.checkout-pagamento-option:has(
+    input:checked
+) {
+    border-color:
+        var(--cor-destaque);
+
+    background:
+        #fffaf4;
+
+    box-shadow:
+        0 4px 15px
+        rgba(245, 124, 0, 0.08);
 }
 
 
@@ -475,6 +520,234 @@
 
 
 /* =========================================================
+   AVISO DE FRETE / ENTREGA
+========================================================= */
+
+.checkout-frete-alerta {
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        4px;
+
+    margin-top:
+        18px;
+
+    padding:
+        14px 16px;
+
+    border:
+        1px solid
+        rgba(220, 38, 38, 0.18);
+
+    border-radius:
+        12px;
+
+    background:
+        #fef2f2;
+
+    color:
+        #991b1b;
+
+    font-size:
+        0.88rem;
+}
+
+
+.checkout-frete-alerta strong {
+    font-weight:
+        800;
+}
+
+
+.checkout-frete-alerta span {
+    color:
+        #7f1d1d;
+}
+
+
+/* =========================================================
+   HORÁRIOS DISPONÍVEIS
+========================================================= */
+
+.checkout-horarios {
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        28px;
+}
+
+
+.checkout-horario-dia {
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        12px;
+}
+
+
+.checkout-horario-dia h3 {
+    margin:
+        0;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        1rem;
+
+    font-weight:
+        800;
+
+    text-transform:
+        capitalize;
+}
+
+
+.checkout-horario-lista {
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(
+                0,
+                1fr
+            )
+        );
+
+    gap:
+        10px;
+}
+
+
+.checkout-horario-opcao {
+    position:
+        relative;
+
+    display:
+        block;
+
+    margin:
+        0;
+
+    cursor:
+        pointer;
+}
+
+
+.checkout-horario-opcao input {
+    position:
+        absolute;
+
+    width:
+        1px;
+
+    height:
+        1px;
+
+    opacity:
+        0;
+
+    overflow:
+        hidden;
+
+    pointer-events:
+        none;
+}
+
+
+.checkout-horario-opcao span {
+    min-height:
+        48px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    padding:
+        10px 12px;
+
+    border:
+        1px solid
+        rgba(93, 64, 55, 0.16);
+
+    border-radius:
+        12px;
+
+    background:
+        var(--branco);
+
+    color:
+        var(--marrom);
+
+    font-size:
+        0.9rem;
+
+    font-weight:
+        700;
+
+    text-align:
+        center;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.checkout-horario-opcao:hover span {
+    border-color:
+        var(--cor-destaque);
+
+    background:
+        #fffaf4;
+
+    transform:
+        translateY(-1px);
+}
+
+
+.checkout-horario-opcao:has(
+    input:checked
+) span,
+.checkout-horario-opcao.selecionado span {
+    border-color:
+        var(--cor-destaque);
+
+    background:
+        var(--cor-destaque);
+
+    color:
+        var(--branco);
+
+    box-shadow:
+        0 6px 16px
+        rgba(245, 124, 0, 0.20);
+}
+
+
+/* =========================================================
    PRODUTOS
 ========================================================= */
 
@@ -482,6 +755,15 @@
     border-top:
         1px solid
         rgba(93, 64, 55, 0.08);
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        16px;
 }
 
 
@@ -531,6 +813,154 @@
 
     font-size:
         0.85rem;
+}
+
+
+/* =========================================================
+   GRUPOS DE PRODUTOS
+========================================================= */
+
+.checkout-produto-grupo {
+    padding:
+        18px;
+
+    border:
+        1px solid
+        rgba(93, 64, 55, 0.08);
+
+    border-radius:
+        14px;
+
+    background:
+        #fff;
+}
+
+
+.checkout-produto-lista {
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        2px;
+}
+
+
+.checkout-produto-linha {
+    padding:
+        4px 0;
+
+    color:
+        var(--cor-texto);
+
+    font-size:
+        0.9rem;
+
+    line-height:
+        1.5;
+}
+
+
+.checkout-produto-detalhes {
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(
+                0,
+                1fr
+            )
+        );
+
+    gap:
+        15px;
+
+    margin-top:
+        15px;
+
+    padding-top:
+        15px;
+
+    border-top:
+        1px solid
+        rgba(93, 64, 55, 0.08);
+}
+
+
+.checkout-produto-detalhes > div {
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        4px;
+}
+
+
+.checkout-produto-detalhes span {
+    color:
+        #777777;
+
+    font-size:
+        0.8rem;
+}
+
+
+.checkout-produto-detalhes strong {
+    color:
+        var(--marrom);
+
+    font-size:
+        0.92rem;
+}
+
+
+.checkout-produto-subtotal {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        15px;
+
+    margin-top:
+        15px;
+
+    padding-top:
+        15px;
+
+    border-top:
+        1px solid
+        rgba(93, 64, 55, 0.08);
+}
+
+
+.checkout-produto-subtotal span {
+    color:
+        var(--cor-texto);
+
+    font-weight:
+        700;
+}
+
+
+.checkout-produto-subtotal strong {
+    color:
+        var(--marrom);
+
+    font-size:
+        1rem;
 }
 
 
@@ -707,6 +1137,21 @@
 
     transform:
         translateY(-2px);
+}
+
+
+.checkout-btn-finalizar:disabled {
+    opacity:
+        0.5;
+
+    cursor:
+        not-allowed;
+
+    transform:
+        none !important;
+
+    box-shadow:
+        none !important;
 }
 
 
@@ -1003,39 +1448,48 @@
             1.7rem;
     }
 
+
+    .checkout-horario-lista {
+        grid-template-columns:
+            repeat(
+                3,
+                minmax(
+                    0,
+                    1fr
+                )
+            );
+    }
+
 }
 
-.checkout-frete-alerta {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
 
-    margin-top: 18px;
-    padding: 14px 16px;
+@media (max-width: 600px) {
 
-    border: 1px solid rgba(220, 38, 38, 0.18);
-    border-radius: 12px;
+    .checkout-horario-lista {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(
+                    0,
+                    1fr
+                )
+            );
+    }
 
-    background: #fef2f2;
-    color: #991b1b;
 
-    font-size: 0.88rem;
+    .checkout-produto-detalhes {
+        grid-template-columns:
+            1fr;
+    }
+
 }
 
-.checkout-frete-alerta strong {
-    font-weight: 800;
-}
 
-.checkout-frete-alerta span {
-    color: #7f1d1d;
-}
+@media (max-width: 380px) {
 
-.checkout-btn-finalizar:disabled {
-    opacity: 0.5;
+    .checkout-horario-lista {
+        grid-template-columns:
+            1fr;
+    }
 
-    cursor: not-allowed;
-
-    transform: none !important;
-
-    box-shadow: none !important;
 }

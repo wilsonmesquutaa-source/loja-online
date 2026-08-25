@@ -17,6 +17,12 @@ View::componente(
 );
 
 
+/*
+=================================
+DADOS
+=================================
+*/
+
 $erro =
     $_GET['erro']
     ?? null;
@@ -45,6 +51,11 @@ $modalidadeRecebimento =
 $enderecoRetirada =
     $enderecoRetirada
     ?? 'Rua Dragão do Mar, 608, Praia de Iracema, Fortaleza - CE';
+
+
+$horariosDisponiveis =
+    $horariosDisponiveis
+    ?? [];
 
 
 $subtotal =
@@ -300,6 +311,12 @@ foreach (
         ];
 
 
+    /*
+    =================================
+    CENTO TRADICIONAIS
+    =================================
+    */
+
     if (
         $tipoCategoria ===
         'cento_tradicionais'
@@ -353,6 +370,12 @@ foreach (
                 'preco_unitario'
             ];
 
+
+    /*
+    =================================
+    CENTO FOLHADOS
+    =================================
+    */
 
     } elseif (
         $tipoCategoria ===
@@ -408,6 +431,12 @@ foreach (
             ];
 
 
+    /*
+    =================================
+    PRODUTOS UNITÁRIOS
+    =================================
+    */
+
     } else {
 
         $subtotalGrupo =
@@ -462,8 +491,74 @@ foreach (
 
 unset($grupo);
 
-?>
 
+/*
+=================================
+AGRUPA HORÁRIOS POR DATA
+=================================
+*/
+
+$horariosPorData =
+    [];
+
+
+foreach (
+    $horariosDisponiveis
+    as $horario
+) {
+
+    $data =
+        (string)
+        (
+            $horario[
+                'data'
+            ]
+            ?? ''
+        );
+
+
+    if (
+        $data === ''
+    ) {
+
+        continue;
+    }
+
+
+    if (
+        !isset(
+            $horariosPorData[
+                $data
+            ]
+        )
+    ) {
+
+        $horariosPorData[
+            $data
+        ] = [];
+    }
+
+
+    $horariosPorData[
+        $data
+    ][] =
+        $horario;
+}
+
+
+/*
+=================================
+TIPO DO HORÁRIO
+=================================
+*/
+
+$textoTipoHorario =
+    $modalidadeRecebimento ===
+    'retirada'
+        ? 'retirada'
+        : 'entrega';
+
+?>
 
 <link
     rel="stylesheet"
@@ -480,6 +575,10 @@ unset($grupo);
     <div class="checkout-container">
 
 
+        <!-- =================================
+             CABEÇALHO
+        ================================== -->
+
         <header class="checkout-header">
 
             <p class="checkout-etiqueta">
@@ -493,12 +592,17 @@ unset($grupo);
 
 
             <p>
-                Escolha como deseja receber seu pedido
-                e confira os valores antes de finalizar.
+                Escolha como deseja receber seu pedido,
+                selecione o horário e confira os valores
+                antes de finalizar.
             </p>
 
         </header>
 
+
+        <!-- =================================
+             ERRO
+        ================================== -->
 
         <?php if (
             $erro !== null
@@ -520,6 +624,10 @@ unset($grupo);
 
         <?php endif; ?>
 
+
+        <!-- =================================
+             FORMULÁRIO
+        ================================== -->
 
         <form
             method="POST"
@@ -557,6 +665,7 @@ unset($grupo);
                             Forma de recebimento
                         </h2>
 
+
                         <p>
                             Escolha entre receber em seu endereço
                             ou retirar seu pedido.
@@ -568,6 +677,8 @@ unset($grupo);
 
 
                 <div class="checkout-pagamentos">
+
+                    <!-- ENTREGA -->
 
                     <label
                         class="checkout-pagamento-option"
@@ -590,15 +701,18 @@ unset($grupo);
                                 Entrega
                             </strong>
 
+
                             <small>
-                                Receba seu pedido no endereço
-                                cadastrado.
+                                Receba seu pedido
+                                no endereço cadastrado.
                             </small>
 
                         </div>
 
                     </label>
 
+
+                    <!-- RETIRADA -->
 
                     <label
                         class="checkout-pagamento-option"
@@ -621,8 +735,10 @@ unset($grupo);
                                 Retirada
                             </strong>
 
+
                             <small>
-                                Retire seu pedido no local de produção.
+                                Retire seu pedido
+                                no local de produção.
                             </small>
 
                         </div>
@@ -631,6 +747,8 @@ unset($grupo);
 
                 </div>
 
+
+                <!-- LOCAL DE RETIRADA -->
 
                 <?php if (
                     $modalidadeRecebimento ===
@@ -655,6 +773,7 @@ unset($grupo);
                             Local de retirada
                         </strong>
 
+
                         <span>
 
                             <?= htmlspecialchars(
@@ -664,6 +783,7 @@ unset($grupo);
                             ) ?>
 
                         </span>
+
 
                         <span>
                             Taxa de entrega:
@@ -681,13 +801,17 @@ unset($grupo);
 
 
                 <!-- =================================
-                     ENDEREÇO
+                     ENDEREÇO / RETIRADA
                 ================================== -->
 
                 <?php if (
                     $modalidadeRecebimento ===
                     'entrega'
                 ): ?>
+
+                    <!-- =============================
+                         ENDEREÇO
+                    ============================== -->
 
                     <section class="checkout-card">
 
@@ -749,10 +873,8 @@ unset($grupo);
 
 
                                 <p>
-
                                     Cadastre um endereço
                                     para receber seu pedido.
-
                                 </p>
 
 
@@ -983,6 +1105,7 @@ unset($grupo);
                                             <span>
 
                                                 Distância aproximada:
+
                                                 <?= number_format(
                                                     (float)
                                                     $distanciaKm,
@@ -990,6 +1113,7 @@ unset($grupo);
                                                     ',',
                                                     '.'
                                                 ) ?>
+
                                                 km
 
                                             </span>
@@ -1000,6 +1124,7 @@ unset($grupo);
                                         <span>
 
                                             Frete:
+
                                             R$
 
                                             <?= number_format(
@@ -1049,12 +1174,12 @@ unset($grupo);
 
                     </section>
 
+
                 <?php else: ?>
 
-
-                    <!-- =================================
+                    <!-- =============================
                          RETIRADA
-                    ================================== -->
+                    ============================== -->
 
                     <section class="checkout-card">
 
@@ -1161,6 +1286,8 @@ unset($grupo);
                         class="checkout-pagamentos"
                     >
 
+                        <!-- PIX -->
+
                         <label
                             class="checkout-pagamento-option"
                         >
@@ -1188,6 +1315,8 @@ unset($grupo);
 
                         </label>
 
+
+                        <!-- CARTÃO -->
 
                         <label
                             class="checkout-pagamento-option"
@@ -1223,6 +1352,220 @@ unset($grupo);
 
 
             <!-- =================================
+                 HORÁRIO
+            ================================== -->
+
+            <section class="checkout-card mt-4">
+
+                <div
+                    class="checkout-card-header"
+                >
+
+                    <span>
+                        4
+                    </span>
+
+
+                    <div>
+
+                        <h2>
+                            Escolha o horário
+                        </h2>
+
+
+                        <p>
+
+                            Selecione quando deseja
+                            <?= $textoTipoHorario ?>
+                            seu pedido.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <?php if (
+                    $horariosPorData === []
+                ): ?>
+
+                    <div
+                        class="checkout-frete-alerta"
+                        role="alert"
+                    >
+
+                        <strong>
+                            Nenhum horário disponível
+                        </strong>
+
+
+                        <span>
+                            Não encontramos horários disponíveis
+                            para este pedido no momento.
+                        </span>
+
+                    </div>
+
+                <?php else: ?>
+
+                    <div
+                        class="checkout-horarios"
+                    >
+
+                        <?php foreach (
+                            $horariosPorData
+                            as $data => $horarios
+                        ): ?>
+
+                            <?php
+
+                            $primeiroHorario =
+                                $horarios[0];
+
+                            ?>
+
+
+                            <div
+                                class="checkout-horario-dia"
+                            >
+
+                                <h3>
+
+                                    <?= htmlspecialchars(
+                                        (string)
+                                        $primeiroHorario[
+                                            'data_formatada'
+                                        ],
+                                        ENT_QUOTES,
+                                        'UTF-8'
+                                    ) ?>
+
+                                </h3>
+
+
+                                <div
+                                    class="checkout-horario-lista"
+                                >
+
+                                    <?php foreach (
+                                        $horarios
+                                        as $horario
+                                    ): ?>
+
+                                        <label
+                                            class="checkout-horario-opcao"
+                                        >
+
+                                            <input
+                                                type="radio"
+                                                name="data_hora_agendada"
+                                                value="<?= htmlspecialchars(
+                                                    (string)
+                                                    $horario[
+                                                        'datetime'
+                                                    ],
+                                                    ENT_QUOTES,
+                                                    'UTF-8'
+                                                ) ?>"
+                                                required
+                                            >
+
+
+                                            <span>
+
+                                                <?php if (
+                                                    $modalidadeRecebimento ===
+                                                    'entrega'
+                                                ): ?>
+
+                                                    <?= htmlspecialchars(
+                                                        (string)
+                                                        $horario[
+                                                            'hora'
+                                                        ],
+                                                        ENT_QUOTES,
+                                                        'UTF-8'
+                                                    ) ?>
+
+                                                    -
+
+                                                    <?= htmlspecialchars(
+                                                        (string)
+                                                        $horario[
+                                                            'hora_fim'
+                                                        ],
+                                                        ENT_QUOTES,
+                                                        'UTF-8'
+                                                    ) ?>
+
+                                                <?php else: ?>
+
+                                                    <?= htmlspecialchars(
+                                                        (string)
+                                                        $horario[
+                                                            'hora'
+                                                        ],
+                                                        ENT_QUOTES,
+                                                        'UTF-8'
+                                                    ) ?>
+
+                                                <?php endif; ?>
+
+                                            </span>
+
+                                        </label>
+
+                                    <?php endforeach; ?>
+
+                                </div>
+
+                            </div>
+
+                        <?php endforeach; ?>
+
+                    </div>
+
+
+                    <div
+                        class="checkout-frete-alerta"
+                        style="
+                            border-color:
+                                rgba(245, 124, 0, 0.18);
+
+                            background:
+                                #fffaf4;
+
+                            color:
+                                var(--marrom);
+                        "
+                    >
+
+                        <strong>
+                            Horário de funcionamento
+                        </strong>
+
+
+                        <span>
+                            Atendimento e produção:
+                            todos os dias, das 08:00 às 17:00.
+                        </span>
+
+
+                        <span>
+                            Os horários exibidos já consideram
+                            o prazo mínimo necessário para preparar
+                            seu pedido.
+                        </span>
+
+                    </div>
+
+                <?php endif; ?>
+
+            </section>
+
+
+            <!-- =================================
                  RESUMO
             ================================== -->
 
@@ -1235,7 +1578,7 @@ unset($grupo);
                 >
 
                     <span>
-                        4
+                        5
                     </span>
 
 
@@ -1255,6 +1598,10 @@ unset($grupo);
 
                 </div>
 
+
+                <!-- =================================
+                     PRODUTOS
+                ================================== -->
 
                 <div
                     class="checkout-produtos"
@@ -1311,13 +1658,19 @@ unset($grupo);
                             </div>
 
 
+                            <!-- =================================
+                                 CENTOS
+                            ================================== -->
+
                             <?php if (
                                 $grupo[
                                     'tipo_categoria'
                                 ]
                                 ===
                                 'cento_tradicionais'
+
                                 ||
+
                                 $grupo[
                                     'tipo_categoria'
                                 ]
@@ -1348,7 +1701,8 @@ unset($grupo);
                                                 $grupo[
                                                     'quantidade_centos'
                                                 ]
-                                                === 1
+                                                ===
+                                                1
                                             )
                                                 ? 'cento'
                                                 : 'centos'
@@ -1388,6 +1742,10 @@ unset($grupo);
 
                                 </div>
 
+
+                            <!-- =================================
+                                 GRANDES
+                            ================================== -->
 
                             <?php elseif (
                                 $grupo[
@@ -1449,6 +1807,10 @@ unset($grupo);
 
                                 </div>
 
+
+                            <!-- =================================
+                                 EMPADÃO
+                            ================================== -->
 
                             <?php elseif (
                                 $grupo[
@@ -1513,6 +1875,8 @@ unset($grupo);
                             <?php endif; ?>
 
 
+                            <!-- SUBTOTAL -->
+
                             <div
                                 class="checkout-produto-subtotal"
                             >
@@ -1547,9 +1911,15 @@ unset($grupo);
                 </div>
 
 
+                <!-- =================================
+                     VALORES
+                ================================== -->
+
                 <div
                     class="checkout-valores"
                 >
+
+                    <!-- SUBTOTAL -->
 
                     <div>
 
@@ -1574,6 +1944,8 @@ unset($grupo);
                     </div>
 
 
+                    <!-- ENTREGA -->
+
                     <div>
 
                         <span>
@@ -1584,17 +1956,22 @@ unset($grupo);
                         <strong>
 
                             <?= $modalidadeRecebimento === 'retirada'
+
                                 ? 'R$ 0,00'
+
                                 : (
+
                                     $freteDisponivel
-                                        ? 'R$ '
-                                            . number_format(
-                                                $frete,
-                                                2,
-                                                ',',
-                                                '.'
-                                            )
-                                        : 'A calcular'
+
+                                    ? 'R$ '
+                                        . number_format(
+                                            $frete,
+                                            2,
+                                            ',',
+                                            '.'
+                                        )
+
+                                    : 'A calcular'
                                 )
                             ?>
 
@@ -1603,10 +1980,13 @@ unset($grupo);
                     </div>
 
 
+                    <!-- DISTÂNCIA -->
+
                     <?php if (
                         $distanciaKm !== null
                         &&
-                        $modalidadeRecebimento === 'entrega'
+                        $modalidadeRecebimento ===
+                        'entrega'
                     ): ?>
 
                         <div>
@@ -1634,6 +2014,8 @@ unset($grupo);
 
                     <?php endif; ?>
 
+
+                    <!-- DESCONTO -->
 
                     <?php if (
                         $desconto > 0
@@ -1664,6 +2046,8 @@ unset($grupo);
                     <?php endif; ?>
 
 
+                    <!-- TOTAL -->
+
                     <div
                         class="checkout-total"
                     >
@@ -1690,6 +2074,10 @@ unset($grupo);
 
                 </div>
 
+
+                <!-- =================================
+                     AÇÕES
+                ================================== -->
 
                 <div
                     class="checkout-acoes"
@@ -1819,6 +2207,56 @@ document.addEventListener(
                 );
             }
         );
+
+
+        /*
+        =================================
+        HORÁRIO
+        =================================
+        */
+
+        const horarios =
+            document.querySelectorAll(
+                'input[name="data_hora_agendada"]'
+            );
+
+
+        horarios.forEach(
+            function (radio) {
+
+                radio.addEventListener(
+                    'change',
+                    function () {
+
+                        horarios.forEach(
+                            function (outroHorario) {
+
+                                outroHorario
+                                    .closest(
+                                        '.checkout-horario-opcao'
+                                    )
+                                    ?.classList
+                                    .remove(
+                                        'selecionado'
+                                    );
+                            }
+                        );
+
+
+                        this
+                            .closest(
+                                '.checkout-horario-opcao'
+                            )
+                            ?.classList
+                            .add(
+                                'selecionado'
+                            );
+                    }
+                );
+
+            }
+        );
+
     }
 );
 </script>

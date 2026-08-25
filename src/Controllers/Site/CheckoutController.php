@@ -10,8 +10,10 @@ use App\Repositories\CarrinhoRepository;
 use App\Repositories\EnderecoRepository;
 use App\Repositories\PedidoRepository;
 use App\Services\EntregaService;
-use RuntimeException;
 use App\Services\PedidoAgendaService;
+use DateTimeImmutable;
+use DateTimeZone;
+use RuntimeException;
 
 final class CheckoutController extends Controller
 {
@@ -22,7 +24,17 @@ final class CheckoutController extends Controller
     */
 
     private const ENDERECO_RETIRADA =
-    'Rua Dragão do Mar, 608, Praia de Iracema, Fortaleza - CE';
+        'Rua Dragão do Mar, 608, Praia de Iracema, Fortaleza - CE';
+
+
+    /*
+    =================================
+    FUSO HORÁRIO
+    =================================
+    */
+
+    private const TIMEZONE =
+        'America/Fortaleza';
 
 
     /*
@@ -42,8 +54,11 @@ final class CheckoutController extends Controller
 
 
         if (
-            empty($_SESSION['carrinho_token'])
+            empty(
+                $_SESSION['carrinho_token']
+            )
         ) {
+
             $_SESSION['carrinho_token'] =
                 bin2hex(
                     random_bytes(32)
@@ -74,10 +89,13 @@ final class CheckoutController extends Controller
 
 
         if (
-            empty($_SESSION['cliente_id'])
+            empty(
+                $_SESSION['cliente_id']
+            )
         ) {
+
             $this->redirecionar(
-                '/login'
+                '/cadastro?retorno=carrinho'
             );
 
             exit;
@@ -98,9 +116,21 @@ final class CheckoutController extends Controller
 
     public function index(): void
     {
+        /*
+        =================================
+        CLIENTE
+        =================================
+        */
+
         $clienteId =
             $this->obterClienteId();
 
+
+        /*
+        =================================
+        TOKEN
+        =================================
+        */
 
         $tokenSessao =
             $this->obterTokenSessao();
@@ -142,7 +172,7 @@ final class CheckoutController extends Controller
 
         /*
         =================================
-        CARRINHO
+        REPOSITORIES / SERVICES
         =================================
         */
 
@@ -151,6 +181,22 @@ final class CheckoutController extends Controller
                 $this->pdo
             );
 
+
+        $enderecoRepository =
+            new EnderecoRepository(
+                $this->pdo
+            );
+
+
+        $pedidoAgendaService =
+            new PedidoAgendaService();
+
+
+        /*
+        =================================
+        CARRINHO
+        =================================
+        */
 
         $carrinho =
             $carrinhoRepository
@@ -162,6 +208,7 @@ final class CheckoutController extends Controller
         if (
             $carrinho === null
         ) {
+
             $this->redirecionar(
                 '/carrinho'
             );
@@ -183,13 +230,11 @@ final class CheckoutController extends Controller
                 $carrinho['id']
             );
 
-        $pedidoAgendaService =
-            new PedidoAgendaService();
-
 
         if (
             $itens === []
         ) {
+
             $this->redirecionar(
                 '/carrinho'
             );
@@ -200,7 +245,7 @@ final class CheckoutController extends Controller
 
         /*
         =================================
-        ASSOCIA CLIENTE
+        ASSOCIA CLIENTE AO CARRINHO
         =================================
         */
 
@@ -246,12 +291,6 @@ final class CheckoutController extends Controller
         =================================
         */
 
-        $enderecoRepository =
-            new EnderecoRepository(
-                $this->pdo
-            );
-
-
         $enderecos =
             $enderecoRepository
             ->buscarPorCliente(
@@ -276,7 +315,7 @@ final class CheckoutController extends Controller
 
             /*
             ==============================
-            ENDEREÇO DA URL
+            ENDEREÇO INFORMADO NA URL
             ==============================
             */
 
@@ -328,7 +367,8 @@ final class CheckoutController extends Controller
                     if (
                         (int)
                         $endereco['principal']
-                        === 1
+                        ===
+                        1
                     ) {
 
                         $enderecoSelecionado =
@@ -374,12 +414,6 @@ final class CheckoutController extends Controller
             true;
 
 
-        /*
-        =================================
-        CALCULA SOMENTE SE FOR ENTREGA
-        =================================
-        */
-
         if (
             $modalidadeRecebimento ===
             'entrega'
@@ -391,6 +425,7 @@ final class CheckoutController extends Controller
 
                 $freteDisponivel =
                     false;
+
             } else {
 
                 try {
@@ -414,6 +449,7 @@ final class CheckoutController extends Controller
                     $distanciaKm =
                         (float)
                         $entrega['distancia_km'];
+
                 } catch (
                     RuntimeException $erroFrete
                 ) {
@@ -458,10 +494,10 @@ final class CheckoutController extends Controller
 
 
         /*
-=================================
-HORÁRIOS DISPONÍVEIS
-=================================
-*/
+        =================================
+        HORÁRIOS DISPONÍVEIS
+        =================================
+        */
 
         $horariosDisponiveis =
             [];
@@ -477,10 +513,14 @@ HORÁRIOS DISPONÍVEIS
                 ->gerarHorariosRetirada(
                     $itens
                 );
+
         } elseif (
-            $freteDisponivel
+            $modalidadeRecebimento ===
+            'entrega'
             &&
             $enderecoSelecionado !== null
+            &&
+            $freteDisponivel
         ) {
 
             $horariosDisponiveis =
@@ -522,16 +562,24 @@ HORÁRIOS DISPONÍVEIS
         */
 
         $podeFinalizar =
-            $modalidadeRecebimento ===
-            'retirada'
-            ||
+            $horariosDisponiveis !== []
+            &&
             (
                 $modalidadeRecebimento ===
-                'entrega'
-                &&
-                $enderecoSelecionado !== null
-                &&
-                $freteDisponivel
+                'retirada'
+
+                ||
+
+                (
+                    $modalidadeRecebimento ===
+                    'entrega'
+
+                    &&
+                    $enderecoSelecionado !== null
+
+                    &&
+                    $freteDisponivel
+                )
             );
 
 
@@ -545,49 +593,52 @@ HORÁRIOS DISPONÍVEIS
             'site/checkout',
             [
                 'tituloPagina' =>
-                'Finalizar pedido',
+                    'Finalizar pedido',
 
                 'rotaAtual' =>
-                'checkout',
+                    'checkout',
 
                 'itens' =>
-                $itens,
+                    $itens,
 
                 'enderecos' =>
-                $enderecos,
+                    $enderecos,
 
                 'enderecoSelecionado' =>
-                $enderecoSelecionado,
+                    $enderecoSelecionado,
 
                 'modalidadeRecebimento' =>
-                $modalidadeRecebimento,
+                    $modalidadeRecebimento,
 
                 'enderecoRetirada' =>
-                self::ENDERECO_RETIRADA,
+                    self::ENDERECO_RETIRADA,
 
                 'subtotal' =>
-                $subtotal,
+                    $subtotal,
 
                 'frete' =>
-                $frete,
+                    $frete,
 
                 'distanciaKm' =>
-                $distanciaKm,
+                    $distanciaKm,
 
                 'freteDisponivel' =>
-                $freteDisponivel,
+                    $freteDisponivel,
+
+                'horariosDisponiveis' =>
+                    $horariosDisponiveis,
 
                 'podeFinalizar' =>
-                $podeFinalizar,
+                    $podeFinalizar,
 
                 'desconto' =>
-                $desconto,
+                    $desconto,
 
                 'total' =>
-                $total,
+                    $total,
 
                 'csrfToken' =>
-                Csrf::gerarCliente(),
+                    Csrf::gerarCliente(),
             ]
         );
     }
@@ -601,9 +652,21 @@ HORÁRIOS DISPONÍVEIS
 
     public function finalizar(): void
     {
+        /*
+        =================================
+        CLIENTE
+        =================================
+        */
+
         $clienteId =
             $this->obterClienteId();
 
+
+        /*
+        =================================
+        TOKEN
+        =================================
+        */
 
         $tokenSessao =
             $this->obterTokenSessao();
@@ -619,9 +682,9 @@ HORÁRIOS DISPONÍVEIS
             isset(
                 $_POST['_csrf']
             )
-            ? (string)
-            $_POST['_csrf']
-            : null;
+                ? (string)
+                    $_POST['_csrf']
+                : null;
 
 
         if (
@@ -632,7 +695,9 @@ HORÁRIOS DISPONÍVEIS
 
             http_response_code(403);
 
-            exit('Token CSRF inválido.');
+            exit(
+                'Token CSRF inválido.'
+            );
         }
 
 
@@ -647,7 +712,9 @@ HORÁRIOS DISPONÍVEIS
                 trim(
                     (string)
                     (
-                        $_POST['modalidade_recebimento']
+                        $_POST[
+                            'modalidade_recebimento'
+                        ]
                         ?? ''
                     )
                 )
@@ -667,9 +734,9 @@ HORÁRIOS DISPONÍVEIS
 
             $this->redirecionar(
                 '/checkout?erro='
-                    . rawurlencode(
-                        'Selecione a forma de recebimento.'
-                    )
+                . rawurlencode(
+                    'Selecione a forma de recebimento.'
+                )
             );
 
             return;
@@ -678,7 +745,44 @@ HORÁRIOS DISPONÍVEIS
 
         /*
         =================================
-        ENDEREÇO
+        HORÁRIO ESCOLHIDO
+        =================================
+        */
+
+        $dataHoraAgendada =
+            trim(
+                (string)
+                (
+                    $_POST[
+                        'data_hora_agendada'
+                    ]
+                    ?? ''
+                )
+            );
+
+
+        if (
+            $dataHoraAgendada === ''
+        ) {
+
+            $this->redirecionar(
+                '/checkout?recebimento='
+                . urlencode(
+                    $modalidadeRecebimento
+                )
+                . '&erro='
+                . rawurlencode(
+                    'Selecione um horário para receber ou retirar o pedido.'
+                )
+            );
+
+            return;
+        }
+
+
+        /*
+        =================================
+        ENDEREÇO ID
         =================================
         */
 
@@ -701,18 +805,14 @@ HORÁRIOS DISPONÍVEIS
                 trim(
                     (string)
                     (
-                        $_POST['metodo_pagamento']
+                        $_POST[
+                            'metodo_pagamento'
+                        ]
                         ?? ''
                     )
                 )
             );
 
-
-        /*
-        =================================
-        VALIDA PAGAMENTO
-        =================================
-        */
 
         if (
             !in_array(
@@ -726,10 +826,14 @@ HORÁRIOS DISPONÍVEIS
         ) {
 
             $this->redirecionar(
-                '/checkout?erro='
-                    . rawurlencode(
-                        'Selecione uma forma de pagamento.'
-                    )
+                '/checkout?recebimento='
+                . urlencode(
+                    $modalidadeRecebimento
+                )
+                . '&erro='
+                . rawurlencode(
+                    'Selecione uma forma de pagamento.'
+                )
             );
 
             return;
@@ -738,7 +842,7 @@ HORÁRIOS DISPONÍVEIS
 
         /*
         =================================
-        ENTREGA
+        ENDEREÇO
         =================================
         */
 
@@ -757,9 +861,9 @@ HORÁRIOS DISPONÍVEIS
 
                 $this->redirecionar(
                     '/checkout?recebimento=entrega&erro='
-                        . rawurlencode(
-                            'Selecione um endereço de entrega.'
-                        )
+                    . rawurlencode(
+                        'Selecione um endereço de entrega.'
+                    )
                 );
 
                 return;
@@ -788,9 +892,9 @@ HORÁRIOS DISPONÍVEIS
 
                 $this->redirecionar(
                     '/checkout?recebimento=entrega&erro='
-                        . rawurlencode(
-                            'O endereço selecionado não é válido.'
-                        )
+                    . rawurlencode(
+                        'O endereço selecionado não é válido.'
+                    )
                 );
 
                 return;
@@ -872,6 +976,74 @@ HORÁRIOS DISPONÍVEIS
 
         /*
         =================================
+        VALIDA HORÁRIO
+        =================================
+        */
+
+        $pedidoAgendaService =
+            new PedidoAgendaService();
+
+
+        try {
+
+            $horarioAgendado =
+                new DateTimeImmutable(
+                    $dataHoraAgendada,
+                    new DateTimeZone(
+                        self::TIMEZONE
+                    )
+                );
+
+
+            $agendaEscolhida =
+                $pedidoAgendaService
+                ->calcularAgendaEscolhida(
+                    $itens,
+                    $horarioAgendado
+                );
+
+        } catch (
+            \Throwable $erroAgenda
+        ) {
+
+            $url =
+                '/checkout?recebimento='
+                . urlencode(
+                    $modalidadeRecebimento
+                );
+
+
+            if (
+                $modalidadeRecebimento ===
+                'entrega'
+                &&
+                $enderecoId
+            ) {
+
+                $url .=
+                    '&endereco='
+                    . (int)
+                    $enderecoId;
+            }
+
+
+            $url .=
+                '&erro='
+                . rawurlencode(
+                    $erroAgenda->getMessage()
+                );
+
+
+            $this->redirecionar(
+                $url
+            );
+
+            return;
+        }
+
+
+        /*
+        =================================
         SUBTOTAL
         =================================
         */
@@ -887,12 +1059,16 @@ HORÁRIOS DISPONÍVEIS
             $subtotal +=
                 (
                     (float)
-                    $item['preco_unitario']
+                    $item[
+                        'preco_unitario'
+                    ]
                 )
                 *
                 (
                     (int)
-                    $item['quantidade']
+                    $item[
+                        'quantidade'
+                    ]
                 );
         }
 
@@ -931,24 +1107,29 @@ HORÁRIOS DISPONÍVEIS
 
                 $frete =
                     (float)
-                    $entrega['frete'];
+                    $entrega[
+                        'frete'
+                    ];
 
 
                 $distanciaKm =
                     (float)
-                    $entrega['distancia_km'];
+                    $entrega[
+                        'distancia_km'
+                    ];
+
             } catch (
                 RuntimeException $erroFrete
             ) {
 
                 $this->redirecionar(
                     '/checkout?recebimento=entrega&endereco='
-                        . (int)
-                        $enderecoId
-                        . '&erro='
-                        . rawurlencode(
-                            'Não foi possível calcular o frete. Tente novamente.'
-                        )
+                    . (int)
+                    $enderecoId
+                    . '&erro='
+                    . rawurlencode(
+                        'Não foi possível calcular o frete. Tente novamente.'
+                    )
                 );
 
                 return;
@@ -1024,6 +1205,36 @@ HORÁRIOS DISPONÍVEIS
 
         /*
         =================================
+        CONVERTE DATAS
+        =================================
+        */
+
+        $dataHoraAgendadaBanco =
+            $agendaEscolhida[
+                'data_hora_agendada'
+            ]->format(
+                'Y-m-d H:i:s'
+            );
+
+
+        $inicioPreparoBanco =
+            $agendaEscolhida[
+                'inicio_preparo'
+            ]->format(
+                'Y-m-d H:i:s'
+            );
+
+
+        $fimPreparoBanco =
+            $agendaEscolhida[
+                'fim_preparo_previsto'
+            ]->format(
+                'Y-m-d H:i:s'
+            );
+
+
+        /*
+        =================================
         TRANSAÇÃO
         =================================
         */
@@ -1064,6 +1275,12 @@ HORÁRIOS DISPONÍVEIS
 
                     $modalidadeRecebimento,
 
+                    $dataHoraAgendadaBanco,
+
+                    $inicioPreparoBanco,
+
+                    $fimPreparoBanco,
+
                     $subtotal,
 
                     $frete,
@@ -1088,12 +1305,16 @@ HORÁRIOS DISPONÍVEIS
 
                 $quantidade =
                     (int)
-                    $item['quantidade'];
+                    $item[
+                        'quantidade'
+                    ];
 
 
                 $precoUnitario =
                     (float)
-                    $item['preco_unitario'];
+                    $item[
+                        'preco_unitario'
+                    ];
 
 
                 $subtotalItem =
@@ -1107,10 +1328,14 @@ HORÁRIOS DISPONÍVEIS
                         $pedidoId,
 
                         (int)
-                        $item['produto_id'],
+                        $item[
+                            'produto_id'
+                        ],
 
                         (string)
-                        $item['nome'],
+                        $item[
+                            'nome'
+                        ],
 
                         $quantidade,
 
@@ -1182,6 +1407,7 @@ HORÁRIOS DISPONÍVEIS
 
             $this->pdo
                 ->commit();
+
         } catch (
             \Throwable $erro
         ) {
@@ -1208,7 +1434,7 @@ HORÁRIOS DISPONÍVEIS
 
         $this->redirecionar(
             '/checkout/sucesso/'
-                . $pedidoId
+            . $pedidoId
         );
     }
 
@@ -1248,9 +1474,11 @@ HORÁRIOS DISPONÍVEIS
 
             http_response_code(404);
 
+
             require
                 APP_ROOT
                 . '/views/erros/404.php';
+
 
             return;
         }
@@ -1260,13 +1488,13 @@ HORÁRIOS DISPONÍVEIS
             'site/checkout-sucesso',
             [
                 'tituloPagina' =>
-                'Pedido realizado',
+                    'Pedido realizado',
 
                 'rotaAtual' =>
-                'checkout',
+                    'checkout',
 
                 'pedido' =>
-                $pedido,
+                    $pedido,
             ]
         );
     }
@@ -1307,12 +1535,13 @@ HORÁRIOS DISPONÍVEIS
 
             $stmt->execute([
                 ':codigo' =>
-                $codigo,
+                    $codigo,
             ]);
 
 
             $existe =
                 $stmt->fetch();
+
         } while (
             $existe !== false
         );
