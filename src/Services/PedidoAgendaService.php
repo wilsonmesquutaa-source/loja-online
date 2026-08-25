@@ -45,9 +45,6 @@ final class PedidoAgendaService
     =================================
     ANALISA O PEDIDO
     =================================
-
-    Retorna as regras que serão usadas
-    para calcular os horários disponíveis.
     */
 
     public function analisarPedido(
@@ -73,26 +70,27 @@ final class PedidoAgendaService
         $quantidadeTradicionaisFritos =
             0;
 
-
         $quantidadeTradicionaisForno =
             0;
-
 
         $quantidadeGrandesFritos =
             0;
 
-
         $quantidadeGrandesForno =
             0;
-
 
         $quantidadeFolhados =
             0;
 
-
         $quantidadeEmpadoes =
             0;
 
+
+        /*
+        =================================
+        ANALISA CADA ITEM
+        =================================
+        */
 
         foreach (
             $itens as $item
@@ -101,9 +99,7 @@ final class PedidoAgendaService
             $categoriaId =
                 (int)
                 (
-                    $item[
-                        'categoria_id'
-                    ]
+                    $item['categoria_id']
                     ?? 0
                 );
 
@@ -111,9 +107,7 @@ final class PedidoAgendaService
             $quantidade =
                 (int)
                 (
-                    $item[
-                        'quantidade'
-                    ]
+                    $item['quantidade']
                     ?? 0
                 );
 
@@ -123,9 +117,7 @@ final class PedidoAgendaService
                     trim(
                         (string)
                         (
-                            $item[
-                                'tipo_preparo'
-                            ]
+                            $item['tipo_preparo']
                             ?? ''
                         )
                     )
@@ -142,6 +134,7 @@ final class PedidoAgendaService
 
             /*
             =================================
+            CATEGORIA 1
             CENTO TRADICIONAL
             =================================
             */
@@ -160,12 +153,6 @@ final class PedidoAgendaService
 
                 } else {
 
-                    /*
-                    Todos os tradicionais
-                    classificados como forno
-                    exigem 24h.
-                    */
-
                     $quantidadeTradicionaisForno +=
                         $quantidade;
                 }
@@ -177,6 +164,7 @@ final class PedidoAgendaService
 
             /*
             =================================
+            CATEGORIA 2
             CENTO FOLHADO
             =================================
             */
@@ -194,6 +182,7 @@ final class PedidoAgendaService
 
             /*
             =================================
+            CATEGORIA 3
             SALGADOS GRANDES
             =================================
             */
@@ -223,6 +212,7 @@ final class PedidoAgendaService
 
             /*
             =================================
+            CATEGORIA 4
             EMPADÕES
             =================================
             */
@@ -239,15 +229,18 @@ final class PedidoAgendaService
 
         /*
         =================================
-        CENTOS FRITOS TRADICIONAIS
+        CENTOS TRADICIONAIS FRITOS
         =================================
 
-        Cada cento permite 4 sabores/partes.
+        Cada 4 partes formam 1 cento.
 
-        Exemplo:
+        Exemplos:
 
-        1 + 1 + 1 + 1 = 1 cento
-        2 + 1 + 1 + 2 = 2 centos
+        4 partes  = 1 cento
+        8 partes  = 2 centos
+        12 partes = 3 centos
+        16 partes = 4 centos
+        20 partes = 5 centos
         */
 
         $centosTradicionaisFritos =
@@ -259,7 +252,7 @@ final class PedidoAgendaService
 
         /*
         =================================
-        CALCULA TEMPO DOS TRADICIONAIS
+        TEMPO DOS TRADICIONAIS FRITOS
         =================================
         */
 
@@ -271,7 +264,7 @@ final class PedidoAgendaService
 
         /*
         =================================
-        24 HORAS
+        REGRA DE 24 HORAS
         =================================
         */
 
@@ -289,35 +282,33 @@ final class PedidoAgendaService
 
         $antecedenciaMinima =
             $exige24Horas
-                ? 1440
-                : 0;
+            ? 1440
+            : 0;
 
 
         /*
         =================================
         TEMPO DE PRODUÇÃO
         =================================
-
-        Tradicionais fritos:
-        conforme número de centos.
-
-        Grandes fritos:
-        30 minutos.
-
-        Produtos de 24h:
-        a regra comercial é antecedência,
-        e não 24h de produção contínua.
         */
 
         $tempoProducao =
             $tempoTradicionaisFritos;
 
 
+        /*
+        =================================
+        GRANDES FRITOS
+        =================================
+
+        Qualquer quantidade de salgados
+        grandes fritos exige 30 minutos.
+        */
+
         if (
             $quantidadeGrandesFritos > 0
             &&
-            30 >
-            $tempoProducao
+            $tempoProducao < 30
         ) {
 
             $tempoProducao =
@@ -327,7 +318,7 @@ final class PedidoAgendaService
 
         /*
         =================================
-        DESCRIÇÃO
+        REGRAS DESCRITIVAS
         =================================
         */
 
@@ -404,6 +395,12 @@ final class PedidoAgendaService
         }
 
 
+        /*
+        =================================
+        RESULTADO
+        =================================
+        */
+
         return [
 
             'centos_tradicionais_fritos' =>
@@ -466,7 +463,7 @@ final class PedidoAgendaService
 
         /*
         =================================
-        PRAZO DE PRODUÇÃO
+        FIM MÍNIMO DA PRODUÇÃO
         =================================
         */
 
@@ -481,7 +478,7 @@ final class PedidoAgendaService
 
         /*
         =================================
-        ANTECEDÊNCIA
+        LIMITE DE ANTECEDÊNCIA
         =================================
         */
 
@@ -499,7 +496,7 @@ final class PedidoAgendaService
 
         /*
         =================================
-        PRIMEIRO MOMENTO
+        PEGA O MAIS TARDIO
         =================================
         */
 
@@ -512,7 +509,7 @@ final class PedidoAgendaService
 
         /*
         =================================
-        AJUSTE DE EXPEDIENTE
+        AJUSTA EXPEDIENTE
         =================================
         */
 
@@ -524,7 +521,7 @@ final class PedidoAgendaService
 
         /*
         =================================
-        REGRA DE FIM DE SEMANA
+        APLICA REGRA DE SÁBADO/DOMINGO
         =================================
         */
 
@@ -534,6 +531,12 @@ final class PedidoAgendaService
                 $primeiroMomento
             );
 
+
+        /*
+        =================================
+        RESULTADO
+        =================================
+        */
 
         return [
 
@@ -628,6 +631,243 @@ final class PedidoAgendaService
 
     /*
     =================================
+    AGENDA DO HORÁRIO ESCOLHIDO
+    =================================
+    */
+
+    public function calcularAgendaEscolhida(
+        array $itens,
+        DateTimeImmutable $horarioAgendado,
+        ?DateTimeImmutable $agora = null
+    ): array {
+
+        $agora =
+            $agora
+            ?? $this->agora();
+
+
+        /*
+        =================================
+        HORÁRIO NÃO PODE ESTAR NO PASSADO
+        =================================
+        */
+
+        if (
+            $horarioAgendado <=
+            $agora
+        ) {
+
+            throw new InvalidArgumentException(
+                'O horário escolhido já passou.'
+            );
+        }
+
+
+        /*
+        =================================
+        MINUTO DEVE SER 00 OU 30
+        =================================
+        */
+
+        $minuto =
+            (int)
+            $horarioAgendado->format(
+                'i'
+            );
+
+
+        if (
+            !in_array(
+                $minuto,
+                [
+                    0,
+                    30,
+                ],
+                true
+            )
+        ) {
+
+            throw new InvalidArgumentException(
+                'O horário escolhido não está disponível.'
+            );
+        }
+
+
+        /*
+        =================================
+        HORÁRIO DENTRO DO EXPEDIENTE
+        =================================
+        */
+
+        if (
+            !$this->estaDentroDoExpediente(
+                $horarioAgendado
+            )
+        ) {
+
+            throw new InvalidArgumentException(
+                'O horário escolhido está fora do horário de funcionamento.'
+            );
+        }
+
+
+        /*
+        =================================
+        REGRA DE FIM DE SEMANA
+        =================================
+        */
+
+        if (
+            !$this->horarioPermitidoNoFimDeSemana(
+                $agora,
+                $horarioAgendado
+            )
+        ) {
+
+            throw new InvalidArgumentException(
+                'O horário escolhido não está disponível para este dia.'
+            );
+        }
+
+
+        /*
+        =================================
+        ANALISA O PEDIDO
+        =================================
+        */
+
+        $analise =
+            $this->analisarPedido(
+                $itens
+            );
+
+
+        $tempoProducao =
+            (int)
+            $analise[
+                'tempo_producao_minutos'
+            ];
+
+
+        $antecedencia =
+            (int)
+            $analise[
+                'antecedencia_minima_minutos'
+            ];
+
+
+        /*
+        =================================
+        LIMITE DE ANTECEDÊNCIA
+        =================================
+        */
+
+        if (
+            $horarioAgendado <
+            $agora->add(
+                new DateInterval(
+                    'PT'
+                    . $antecedencia
+                    . 'M'
+                )
+            )
+        ) {
+
+            throw new InvalidArgumentException(
+                'O horário escolhido não respeita o prazo mínimo de antecedência.'
+            );
+        }
+
+
+        /*
+        =================================
+        FIM MÍNIMO DA PRODUÇÃO
+        =================================
+        */
+
+        $fimMinimoProducao =
+            $this->calcularFimDaProducao(
+                $agora,
+                $tempoProducao
+            );
+
+
+        if (
+            $horarioAgendado <
+            $fimMinimoProducao
+        ) {
+
+            throw new InvalidArgumentException(
+                'O horário escolhido não oferece tempo suficiente para preparar o pedido.'
+            );
+        }
+
+
+        /*
+        =================================
+        INÍCIO DE PREPARO
+        =================================
+        */
+
+        $tempoAnterior =
+            max(
+                $tempoProducao,
+                $antecedencia
+            );
+
+
+        $inicioPreparo =
+            $horarioAgendado;
+
+
+        if (
+            $tempoAnterior > 0
+        ) {
+
+            $inicioPreparo =
+                $horarioAgendado->sub(
+                    new DateInterval(
+                        'PT'
+                        . $tempoAnterior
+                        . 'M'
+                    )
+                );
+        }
+
+
+        /*
+        =================================
+        RETORNO
+        =================================
+        */
+
+        return [
+
+            'data_hora_agendada' =>
+                $horarioAgendado,
+
+            'inicio_preparo' =>
+                $inicioPreparo,
+
+            'fim_preparo_previsto' =>
+                $horarioAgendado,
+
+            'tempo_producao_minutos' =>
+                $tempoProducao,
+
+            'antecedencia_minima_minutos' =>
+                $antecedencia,
+
+            'exige_24h' =>
+                $analise[
+                    'exige_24h'
+                ],
+        ];
+    }
+
+
+    /*
+    =================================
     GERA HORÁRIOS
     =================================
     */
@@ -642,6 +882,14 @@ final class PedidoAgendaService
         $agora =
             $agora
             ?? $this->agora();
+
+
+        if (
+            $dias <= 0
+        ) {
+
+            return [];
+        }
 
 
         $primeiro =
@@ -677,7 +925,7 @@ final class PedidoAgendaService
 
         /*
         =================================
-        DIAS
+        PERCORRE OS DIAS
         =================================
         */
 
@@ -698,7 +946,7 @@ final class PedidoAgendaService
 
             /*
             =================================
-            HORÁRIO INICIAL
+            MINUTO FINAL
             =================================
             */
 
@@ -707,25 +955,14 @@ final class PedidoAgendaService
                 * 60;
 
 
-            /*
-            =================================
-            HORÁRIO FINAL
-            =================================
-            */
-
             $fimMinutos =
                 self::HORA_FECHAMENTO
                 * 60;
 
 
             /*
-            =================================
-            ENTREGA
-            =================================
-
-            Última janela:
-
-            16:30 → 17:00
+            Para entrega, o último slot
+            é 16:30 → 17:00.
             */
 
             if (
@@ -736,6 +973,12 @@ final class PedidoAgendaService
                     self::INTERVALO_MINUTOS;
             }
 
+
+            /*
+            =================================
+            SLOTS DE 30 MINUTOS
+            =================================
+            */
 
             for (
                 $minuto = $inicioMinutos;
@@ -765,7 +1008,7 @@ final class PedidoAgendaService
 
                 /*
                 =================================
-                IGNORA HORÁRIO ANTERIOR
+                NÃO PODE SER ANTES DO PRIMEIRO
                 =================================
                 */
 
@@ -780,7 +1023,7 @@ final class PedidoAgendaService
 
                 /*
                 =================================
-                VALIDA FIM DE SEMANA
+                FIM DE SEMANA
                 =================================
                 */
 
@@ -864,7 +1107,7 @@ final class PedidoAgendaService
 
     /*
     =================================
-    CENTOS
+    CALCULA CENTOS
     =================================
     */
 
@@ -907,7 +1150,7 @@ final class PedidoAgendaService
     5 centos:
     2h30
 
-    etc.
+    E assim por diante.
     */
 
     private function calcularTempoTradicionaisFritos(
@@ -947,20 +1190,18 @@ final class PedidoAgendaService
     CALCULA FIM DA PRODUÇÃO
     =================================
 
-    Consome somente minutos dentro
-    do expediente da loja.
+    O cálculo respeita o expediente
+    da loja.
 
     Exemplo:
 
-    16:30 + 90min
+    16:30 + 90 minutos
 
-    → 17:00
-    → próximo dia 08:00
-    → 08:30
-    → 09:00
+    16:30 → 17:00 = 30 min
+    dia seguinte 08:00 → 09:00 = 60 min
 
     Resultado:
-    09:00
+    09:00 do dia seguinte.
     */
 
     private function calcularFimDaProducao(
@@ -1084,7 +1325,7 @@ final class PedidoAgendaService
 
     /*
     =================================
-    AJUSTA EXPEDIENTE
+    AJUSTA PARA O EXPEDIENTE
     =================================
     */
 
@@ -1152,7 +1393,7 @@ final class PedidoAgendaService
 
         /*
         =================================
-        ARREDONDA PARA 30 MINUTOS
+        HORÁRIO EXATO
         =================================
         */
 
@@ -1171,6 +1412,12 @@ final class PedidoAgendaService
         }
 
 
+        /*
+        =================================
+        ATÉ XX:29
+        =================================
+        */
+
         if (
             $minuto < 30
         ) {
@@ -1185,11 +1432,9 @@ final class PedidoAgendaService
 
 
         /*
-        Exemplo:
-
-        14:45
-        ↓
-        15:00
+        =================================
+        XX:31 ATÉ XX:59
+        =================================
         */
 
         $proximaHora =
@@ -1239,8 +1484,7 @@ final class PedidoAgendaService
         SÁBADO
         =================================
 
-        Para receber sábado, o pedido
-        precisa respeitar 24h.
+        O sábado exige 24 horas.
         */
 
         if (
@@ -1275,13 +1519,39 @@ final class PedidoAgendaService
         DOMINGO
         =================================
 
-        Pedidos para domingo precisam
-        ter sido feitos até sábado às 17h.
-
-        Se o momento atual já passou esse
-        limite, domingo deixa de ser
-        uma opção.
+        Domingo só pode ser escolhido
+        quando ainda estamos dentro do
+        limite comercial de sábado,
+        ou quando o horário já respeita
+        naturalmente as 24 horas.
         */
+
+        if (
+            (int)
+            $horario->format('N')
+            === 7
+        ) {
+
+            $limite =
+                $agora->add(
+                    new DateInterval(
+                        'PT1440M'
+                    )
+                );
+
+
+            if (
+                $horario <
+                $limite
+            ) {
+
+                return
+                    $this->ajustarParaExpediente(
+                        $limite
+                    );
+            }
+        }
+
 
         return $horario;
     }
@@ -1340,30 +1610,21 @@ final class PedidoAgendaService
         ) {
 
             /*
-            O limite comercial para
-            pedidos destinados ao domingo
-            é sábado às 17:00.
-
-            Se o pedido atual já passou
-            desse momento, domingo não
-            pode mais ser escolhido.
+            A regra continua sendo
+            de 24 horas de antecedência.
             */
 
-            $sabado =
-                $horario
-                ->modify(
-                    '-1 day'
-                )
-                ->setTime(
-                    17,
-                    0,
-                    0
+            $limite =
+                $agora->add(
+                    new DateInterval(
+                        'PT1440M'
+                    )
                 );
 
 
             return
-                $agora <=
-                $sabado;
+                $horario >=
+                $limite;
         }
 
 
@@ -1374,6 +1635,55 @@ final class PedidoAgendaService
         */
 
         return true;
+    }
+
+
+    /*
+    =================================
+    VERIFICA EXPEDIENTE
+    =================================
+    */
+
+    private function estaDentroDoExpediente(
+        DateTimeImmutable $data
+    ): bool {
+
+        $hora =
+            (int)
+            $data->format(
+                'H'
+            );
+
+
+        $minuto =
+            (int)
+            $data->format(
+                'i'
+            );
+
+
+        $minutos =
+            (
+                $hora * 60
+            )
+            +
+            $minuto;
+
+
+        $inicio =
+            self::HORA_ABERTURA
+            * 60;
+
+
+        $fim =
+            self::HORA_FECHAMENTO
+            * 60;
+
+
+        return
+            $minutos >= $inicio
+            &&
+            $minutos <= $fim;
     }
 
 
@@ -1390,8 +1700,8 @@ final class PedidoAgendaService
 
         return
             $a >= $b
-                ? $a
-                : $b;
+            ? $a
+            : $b;
     }
 
 
