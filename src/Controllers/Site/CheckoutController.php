@@ -11,6 +11,7 @@ use App\Repositories\EnderecoRepository;
 use App\Repositories\PedidoRepository;
 use App\Services\EntregaService;
 use RuntimeException;
+use App\Services\PedidoAgendaService;
 
 final class CheckoutController extends Controller
 {
@@ -21,7 +22,7 @@ final class CheckoutController extends Controller
     */
 
     private const ENDERECO_RETIRADA =
-        'Rua Dragão do Mar, 608, Praia de Iracema, Fortaleza - CE';
+    'Rua Dragão do Mar, 608, Praia de Iracema, Fortaleza - CE';
 
 
     /*
@@ -41,9 +42,7 @@ final class CheckoutController extends Controller
 
 
         if (
-            empty(
-                $_SESSION['carrinho_token']
-            )
+            empty($_SESSION['carrinho_token'])
         ) {
             $_SESSION['carrinho_token'] =
                 bin2hex(
@@ -75,9 +74,7 @@ final class CheckoutController extends Controller
 
 
         if (
-            empty(
-                $_SESSION['cliente_id']
-            )
+            empty($_SESSION['cliente_id'])
         ) {
             $this->redirecionar(
                 '/login'
@@ -120,9 +117,7 @@ final class CheckoutController extends Controller
                 trim(
                     (string)
                     (
-                        $_GET[
-                            'recebimento'
-                        ]
+                        $_GET['recebimento']
                         ?? 'entrega'
                     )
                 )
@@ -187,6 +182,9 @@ final class CheckoutController extends Controller
                 (int)
                 $carrinho['id']
             );
+
+        $pedidoAgendaService =
+            new PedidoAgendaService();
 
 
         if (
@@ -290,9 +288,7 @@ final class CheckoutController extends Controller
 
                 $enderecoId =
                     filter_var(
-                        $_GET[
-                            'endereco'
-                        ],
+                        $_GET['endereco'],
                         FILTER_VALIDATE_INT
                     );
 
@@ -395,7 +391,6 @@ final class CheckoutController extends Controller
 
                 $freteDisponivel =
                     false;
-
             } else {
 
                 try {
@@ -413,17 +408,12 @@ final class CheckoutController extends Controller
 
                     $frete =
                         (float)
-                        $entrega[
-                            'frete'
-                        ];
+                        $entrega['frete'];
 
 
                     $distanciaKm =
                         (float)
-                        $entrega[
-                            'distancia_km'
-                        ];
-
+                        $entrega['distancia_km'];
                 } catch (
                     RuntimeException $erroFrete
                 ) {
@@ -464,6 +454,40 @@ final class CheckoutController extends Controller
 
             $distanciaKm =
                 null;
+        }
+
+
+        /*
+=================================
+HORÁRIOS DISPONÍVEIS
+=================================
+*/
+
+        $horariosDisponiveis =
+            [];
+
+
+        if (
+            $modalidadeRecebimento ===
+            'retirada'
+        ) {
+
+            $horariosDisponiveis =
+                $pedidoAgendaService
+                ->gerarHorariosRetirada(
+                    $itens
+                );
+        } elseif (
+            $freteDisponivel
+            &&
+            $enderecoSelecionado !== null
+        ) {
+
+            $horariosDisponiveis =
+                $pedidoAgendaService
+                ->gerarHorariosEntrega(
+                    $itens
+                );
         }
 
 
@@ -521,49 +545,49 @@ final class CheckoutController extends Controller
             'site/checkout',
             [
                 'tituloPagina' =>
-                    'Finalizar pedido',
+                'Finalizar pedido',
 
                 'rotaAtual' =>
-                    'checkout',
+                'checkout',
 
                 'itens' =>
-                    $itens,
+                $itens,
 
                 'enderecos' =>
-                    $enderecos,
+                $enderecos,
 
                 'enderecoSelecionado' =>
-                    $enderecoSelecionado,
+                $enderecoSelecionado,
 
                 'modalidadeRecebimento' =>
-                    $modalidadeRecebimento,
+                $modalidadeRecebimento,
 
                 'enderecoRetirada' =>
-                    self::ENDERECO_RETIRADA,
+                self::ENDERECO_RETIRADA,
 
                 'subtotal' =>
-                    $subtotal,
+                $subtotal,
 
                 'frete' =>
-                    $frete,
+                $frete,
 
                 'distanciaKm' =>
-                    $distanciaKm,
+                $distanciaKm,
 
                 'freteDisponivel' =>
-                    $freteDisponivel,
+                $freteDisponivel,
 
                 'podeFinalizar' =>
-                    $podeFinalizar,
+                $podeFinalizar,
 
                 'desconto' =>
-                    $desconto,
+                $desconto,
 
                 'total' =>
-                    $total,
+                $total,
 
                 'csrfToken' =>
-                    Csrf::gerarCliente(),
+                Csrf::gerarCliente(),
             ]
         );
     }
@@ -595,9 +619,9 @@ final class CheckoutController extends Controller
             isset(
                 $_POST['_csrf']
             )
-                ? (string)
-                    $_POST['_csrf']
-                : null;
+            ? (string)
+            $_POST['_csrf']
+            : null;
 
 
         if (
@@ -608,9 +632,7 @@ final class CheckoutController extends Controller
 
             http_response_code(403);
 
-            exit(
-                'Token CSRF inválido.'
-            );
+            exit('Token CSRF inválido.');
         }
 
 
@@ -625,9 +647,7 @@ final class CheckoutController extends Controller
                 trim(
                     (string)
                     (
-                        $_POST[
-                            'modalidade_recebimento'
-                        ]
+                        $_POST['modalidade_recebimento']
                         ?? ''
                     )
                 )
@@ -647,9 +667,9 @@ final class CheckoutController extends Controller
 
             $this->redirecionar(
                 '/checkout?erro='
-                . rawurlencode(
-                    'Selecione a forma de recebimento.'
-                )
+                    . rawurlencode(
+                        'Selecione a forma de recebimento.'
+                    )
             );
 
             return;
@@ -681,9 +701,7 @@ final class CheckoutController extends Controller
                 trim(
                     (string)
                     (
-                        $_POST[
-                            'metodo_pagamento'
-                        ]
+                        $_POST['metodo_pagamento']
                         ?? ''
                     )
                 )
@@ -709,9 +727,9 @@ final class CheckoutController extends Controller
 
             $this->redirecionar(
                 '/checkout?erro='
-                . rawurlencode(
-                    'Selecione uma forma de pagamento.'
-                )
+                    . rawurlencode(
+                        'Selecione uma forma de pagamento.'
+                    )
             );
 
             return;
@@ -739,9 +757,9 @@ final class CheckoutController extends Controller
 
                 $this->redirecionar(
                     '/checkout?recebimento=entrega&erro='
-                    . rawurlencode(
-                        'Selecione um endereço de entrega.'
-                    )
+                        . rawurlencode(
+                            'Selecione um endereço de entrega.'
+                        )
                 );
 
                 return;
@@ -770,9 +788,9 @@ final class CheckoutController extends Controller
 
                 $this->redirecionar(
                     '/checkout?recebimento=entrega&erro='
-                    . rawurlencode(
-                        'O endereço selecionado não é válido.'
-                    )
+                        . rawurlencode(
+                            'O endereço selecionado não é válido.'
+                        )
                 );
 
                 return;
@@ -869,16 +887,12 @@ final class CheckoutController extends Controller
             $subtotal +=
                 (
                     (float)
-                    $item[
-                        'preco_unitario'
-                    ]
+                    $item['preco_unitario']
                 )
                 *
                 (
                     (int)
-                    $item[
-                        'quantidade'
-                    ]
+                    $item['quantidade']
                 );
         }
 
@@ -917,29 +931,24 @@ final class CheckoutController extends Controller
 
                 $frete =
                     (float)
-                    $entrega[
-                        'frete'
-                    ];
+                    $entrega['frete'];
 
 
                 $distanciaKm =
                     (float)
-                    $entrega[
-                        'distancia_km'
-                    ];
-
+                    $entrega['distancia_km'];
             } catch (
                 RuntimeException $erroFrete
             ) {
 
                 $this->redirecionar(
                     '/checkout?recebimento=entrega&endereco='
-                    . (int)
-                    $enderecoId
-                    . '&erro='
-                    . rawurlencode(
-                        'Não foi possível calcular o frete. Tente novamente.'
-                    )
+                        . (int)
+                        $enderecoId
+                        . '&erro='
+                        . rawurlencode(
+                            'Não foi possível calcular o frete. Tente novamente.'
+                        )
                 );
 
                 return;
@@ -1079,16 +1088,12 @@ final class CheckoutController extends Controller
 
                 $quantidade =
                     (int)
-                    $item[
-                        'quantidade'
-                    ];
+                    $item['quantidade'];
 
 
                 $precoUnitario =
                     (float)
-                    $item[
-                        'preco_unitario'
-                    ];
+                    $item['preco_unitario'];
 
 
                 $subtotalItem =
@@ -1102,14 +1107,10 @@ final class CheckoutController extends Controller
                         $pedidoId,
 
                         (int)
-                        $item[
-                            'produto_id'
-                        ],
+                        $item['produto_id'],
 
                         (string)
-                        $item[
-                            'nome'
-                        ],
+                        $item['nome'],
 
                         $quantidade,
 
@@ -1181,7 +1182,6 @@ final class CheckoutController extends Controller
 
             $this->pdo
                 ->commit();
-
         } catch (
             \Throwable $erro
         ) {
@@ -1208,7 +1208,7 @@ final class CheckoutController extends Controller
 
         $this->redirecionar(
             '/checkout/sucesso/'
-            . $pedidoId
+                . $pedidoId
         );
     }
 
@@ -1260,13 +1260,13 @@ final class CheckoutController extends Controller
             'site/checkout-sucesso',
             [
                 'tituloPagina' =>
-                    'Pedido realizado',
+                'Pedido realizado',
 
                 'rotaAtual' =>
-                    'checkout',
+                'checkout',
 
                 'pedido' =>
-                    $pedido,
+                $pedido,
             ]
         );
     }
@@ -1307,13 +1307,12 @@ final class CheckoutController extends Controller
 
             $stmt->execute([
                 ':codigo' =>
-                    $codigo,
+                $codigo,
             ]);
 
 
             $existe =
                 $stmt->fetch();
-
         } while (
             $existe !== false
         );
