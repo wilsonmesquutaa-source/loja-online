@@ -332,8 +332,8 @@ DESCRIÇÃO
 .produto-card-descricao {
     width: 100%;
 
-    min-height: 42px;
-    max-height: 42px;
+    min-height: 55px;
+    max-height: 55px;
 
     margin:
         0;
@@ -357,7 +357,7 @@ DESCRIÇÃO
         -webkit-box;
 
     -webkit-line-clamp:
-        2;
+        4;
 
     -webkit-box-orient:
         vertical;

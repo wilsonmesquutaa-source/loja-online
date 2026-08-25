@@ -501,7 +501,114 @@ ATUALIZA FOTO DO CLIENTE
         }
     }
 
+    /*
+=================================
+CRIA TOKEN DE VERIFICAÇÃO
+=================================
+*/
 
+    public function criarTokenVerificacao(
+        int $clienteId,
+        string $tokenHash
+    ): void {
+
+        $stmt =
+            $this->pdo->prepare("
+            UPDATE clientes
+            SET
+                token_verificacao_email = :token,
+                token_verificacao_expira_em =
+                    DATE_ADD(
+                        NOW(),
+                        INTERVAL 1 HOUR
+                    )
+            WHERE id = :id
+        ");
+
+        $stmt->execute([
+            ':token' =>
+            $tokenHash,
+
+            ':id' =>
+            $clienteId,
+        ]);
+    }
+
+
+    /*
+=================================
+BUSCA CLIENTE PELO TOKEN
+=================================
+*/
+
+    public function buscarPorTokenVerificacao(
+        string $tokenHash
+    ): ?array {
+
+        $sql = "
+        SELECT
+            id,
+            nome,
+            email,
+            email_verificado,
+            token_verificacao_expira_em
+        FROM clientes
+        WHERE token_verificacao_email = :token
+        LIMIT 1
+    ";
+
+        $stmt =
+            $this->pdo->prepare(
+                $sql
+            );
+
+        $stmt->execute([
+            ':token' =>
+            $tokenHash,
+        ]);
+
+        $cliente =
+            $stmt->fetch(
+                PDO::FETCH_ASSOC
+            );
+
+        return
+            $cliente !== false
+            ? $cliente
+            : null;
+    }
+
+
+    /*
+=================================
+CONFIRMA E-MAIL
+=================================
+*/
+
+    public function verificarEmail(
+        int $clienteId
+    ): void {
+
+        $sql = "
+        UPDATE clientes
+        SET
+            email_verificado = 1,
+            token_verificacao_email = NULL,
+            token_verificacao_expira_em = NULL,
+            ultimo_acesso = NOW()
+        WHERE id = :id
+    ";
+
+        $stmt =
+            $this->pdo->prepare(
+                $sql
+            );
+
+        $stmt->execute([
+            ':id' =>
+            $clienteId,
+        ]);
+    }
     /*
 =================================
 ATUALIZA E-MAIL

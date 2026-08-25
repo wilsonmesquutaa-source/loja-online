@@ -27,12 +27,16 @@ final class PedidoRepository
     public function buscarPorCliente(
         int $clienteId
     ): array {
+
         $sql = "
             SELECT
                 id,
                 codigo,
                 cliente_id,
                 modalidade_recebimento,
+                data_hora_agendada,
+                inicio_preparo,
+                fim_preparo_previsto,
                 status,
                 subtotal,
                 frete,
@@ -81,12 +85,16 @@ final class PedidoRepository
         int $pedidoId,
         int $clienteId
     ): ?array {
+
         $sql = "
             SELECT
                 id,
                 codigo,
                 cliente_id,
                 modalidade_recebimento,
+                data_hora_agendada,
+                inicio_preparo,
+                fim_preparo_previsto,
                 status,
                 subtotal,
                 frete,
@@ -144,6 +152,9 @@ final class PedidoRepository
         string $codigo,
         int $clienteId,
         string $modalidadeRecebimento,
+        string $dataHoraAgendada,
+        string $inicioPreparo,
+        string $fimPreparoPrevisto,
         float $subtotal,
         float $frete,
         float $desconto,
@@ -153,26 +164,56 @@ final class PedidoRepository
 
         $sql = "
             INSERT INTO pedidos (
+
                 codigo,
+
                 cliente_id,
+
                 modalidade_recebimento,
+
+                data_hora_agendada,
+
+                inicio_preparo,
+
+                fim_preparo_previsto,
+
                 status,
+
                 subtotal,
+
                 frete,
+
                 desconto,
+
                 total,
+
                 observacao
             )
 
             VALUES (
+
                 :codigo,
+
                 :cliente_id,
+
                 :modalidade_recebimento,
+
+                :data_hora_agendada,
+
+                :inicio_preparo,
+
+                :fim_preparo_previsto,
+
                 :status,
+
                 :subtotal,
+
                 :frete,
+
                 :desconto,
+
                 :total,
+
                 :observacao
             )
         ";
@@ -183,6 +224,12 @@ final class PedidoRepository
                 $sql
             );
 
+
+        /*
+        =================================
+        DADOS BÁSICOS
+        =================================
+        */
 
         $stmt->bindValue(
             ':codigo',
@@ -205,12 +252,51 @@ final class PedidoRepository
         );
 
 
+        /*
+        =================================
+        AGENDA
+        =================================
+        */
+
+        $stmt->bindValue(
+            ':data_hora_agendada',
+            $dataHoraAgendada,
+            PDO::PARAM_STR
+        );
+
+
+        $stmt->bindValue(
+            ':inicio_preparo',
+            $inicioPreparo,
+            PDO::PARAM_STR
+        );
+
+
+        $stmt->bindValue(
+            ':fim_preparo_previsto',
+            $fimPreparoPrevisto,
+            PDO::PARAM_STR
+        );
+
+
+        /*
+        =================================
+        STATUS
+        =================================
+        */
+
         $stmt->bindValue(
             ':status',
             'aguardando_pagamento',
             PDO::PARAM_STR
         );
 
+
+        /*
+        =================================
+        VALORES
+        =================================
+        */
 
         $stmt->bindValue(
             ':subtotal',
@@ -260,6 +346,12 @@ final class PedidoRepository
         );
 
 
+        /*
+        =================================
+        OBSERVAÇÃO
+        =================================
+        */
+
         if (
             $observacao === null
         ) {
@@ -279,6 +371,12 @@ final class PedidoRepository
             );
         }
 
+
+        /*
+        =================================
+        EXECUTA
+        =================================
+        */
 
         $stmt->execute();
 

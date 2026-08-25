@@ -36,8 +36,7 @@ CARD
 =================================
 */
 
-main.cliente-cadastro
-.cliente-cadastro-card {
+main.cliente-cadastro .cliente-cadastro-card {
 
     width: 100%;
 
@@ -55,15 +54,13 @@ main.cliente-cadastro
         var(--branco);
 
     border:
-        1px solid
-        rgba(93, 64, 55, 0.12);
+        1px solid rgba(93, 64, 55, 0.12);
 
     border-radius:
         18px;
 
     box-shadow:
-        0 8px 30px
-        rgba(93, 64, 55, 0.10);
+        0 8px 30px rgba(93, 64, 55, 0.10);
 
     visibility:
         visible;
@@ -82,8 +79,7 @@ CABEÇALHO
 =================================
 */
 
-main.cliente-cadastro
-.cliente-cadastro-cabecalho {
+main.cliente-cadastro .cliente-cadastro-cabecalho {
 
     display:
         block;
@@ -102,8 +98,7 @@ main.cliente-cadastro
 }
 
 
-main.cliente-cadastro
-.cliente-cadastro-icone {
+main.cliente-cadastro .cliente-cadastro-icone {
 
     width:
         64px;
@@ -137,8 +132,7 @@ main.cliente-cadastro
 }
 
 
-main.cliente-cadastro
-.cliente-cadastro-cabecalho h1 {
+main.cliente-cadastro .cliente-cadastro-cabecalho h1 {
 
     display:
         block;
@@ -157,8 +151,7 @@ main.cliente-cadastro
 }
 
 
-main.cliente-cadastro
-.cliente-cadastro-cabecalho p {
+main.cliente-cadastro .cliente-cadastro-cabecalho p {
 
     display:
         block;
@@ -183,8 +176,7 @@ ERRO
 =================================
 */
 
-main.cliente-cadastro
-.cliente-cadastro-erro {
+main.cliente-cadastro .cliente-cadastro-erro {
 
     display:
         block;
@@ -196,8 +188,7 @@ main.cliente-cadastro
         12px 14px;
 
     border:
-        1px solid
-        #f1b0b7;
+        1px solid #f1b0b7;
 
     border-radius:
         8px;
@@ -222,8 +213,7 @@ FORMULÁRIO
 =================================
 */
 
-main.cliente-cadastro
-form.cliente-cadastro-formulario {
+main.cliente-cadastro form.cliente-cadastro-formulario {
 
     width:
         100%;
@@ -263,8 +253,7 @@ CAMPOS
 =================================
 */
 
-main.cliente-cadastro
-.cliente-cadastro-campo {
+main.cliente-cadastro .cliente-cadastro-campo {
 
     width:
         100%;
@@ -289,8 +278,7 @@ main.cliente-cadastro
 }
 
 
-main.cliente-cadastro
-.cliente-cadastro-campo label {
+main.cliente-cadastro .cliente-cadastro-campo label {
 
     display:
         block;
@@ -306,8 +294,7 @@ main.cliente-cadastro
 }
 
 
-main.cliente-cadastro
-.cliente-cadastro-campo input {
+main.cliente-cadastro .cliente-cadastro-campo input {
 
     width:
         100%;
@@ -325,8 +312,7 @@ main.cliente-cadastro
         0 14px;
 
     border:
-        1px solid
-        #d6d3d1;
+        1px solid #d6d3d1;
 
     border-radius:
         9px;
@@ -358,23 +344,20 @@ main.cliente-cadastro
 }
 
 
-main.cliente-cadastro
-.cliente-cadastro-campo input::placeholder {
+main.cliente-cadastro .cliente-cadastro-campo input::placeholder {
 
     color:
         #9ca3af;
 }
 
 
-main.cliente-cadastro
-.cliente-cadastro-campo input:focus {
+main.cliente-cadastro .cliente-cadastro-campo input:focus {
 
     border-color:
         var(--cor-destaque);
 
     box-shadow:
-        0 0 0 3px
-        rgba(245, 158, 11, 0.15);
+        0 0 0 3px rgba(245, 158, 11, 0.15);
 }
 
 
@@ -384,8 +367,7 @@ INFORMAÇÃO DA SENHA
 =================================
 */
 
-main.cliente-cadastro
-.cliente-cadastro-senha-info {
+main.cliente-cadastro .cliente-cadastro-senha-info {
 
     display:
         block;
@@ -410,8 +392,7 @@ BOTÃO CRIAR CONTA
 =================================
 */
 
-main.cliente-cadastro
-.cliente-cadastro-botao {
+main.cliente-cadastro .cliente-cadastro-botao {
 
     width:
         100%;
@@ -438,8 +419,7 @@ main.cliente-cadastro
         border-box;
 
     border:
-        1px solid
-        var(--cor-destaque);
+        1px solid var(--cor-destaque);
 
     border-radius:
         9px;
@@ -476,8 +456,7 @@ main.cliente-cadastro
 }
 
 
-main.cliente-cadastro
-.cliente-cadastro-botao:hover {
+main.cliente-cadastro .cliente-cadastro-botao:hover {
 
     background:
         var(--laranja-hover);
@@ -492,13 +471,11 @@ main.cliente-cadastro
         translateY(-1px);
 
     box-shadow:
-        0 4px 10px
-        rgba(239, 108, 0, 0.20);
+        0 4px 10px rgba(239, 108, 0, 0.20);
 }
 
 
-main.cliente-cadastro
-.cliente-cadastro-botao:active {
+main.cliente-cadastro .cliente-cadastro-botao:active {
 
     transform:
         translateY(0);
@@ -511,8 +488,7 @@ DIVISOR
 =================================
 */
 
-main.cliente-cadastro
-.cliente-cadastro-divisor {
+main.cliente-cadastro .cliente-cadastro-divisor {
 
     width:
         100%;
@@ -531,10 +507,8 @@ main.cliente-cadastro
 }
 
 
-main.cliente-cadastro
-.cliente-cadastro-divisor::before,
-main.cliente-cadastro
-.cliente-cadastro-divisor::after {
+main.cliente-cadastro .cliente-cadastro-divisor::before,
+main.cliente-cadastro .cliente-cadastro-divisor::after {
 
     content:
         "";
@@ -550,8 +524,7 @@ main.cliente-cadastro
 }
 
 
-main.cliente-cadastro
-.cliente-cadastro-divisor span {
+main.cliente-cadastro .cliente-cadastro-divisor span {
 
     display:
         block;
@@ -573,8 +546,7 @@ GOOGLE
 =================================
 */
 
-main.cliente-cadastro
-.cliente-cadastro-google {
+main.cliente-cadastro .cliente-cadastro-google {
 
     width:
         100%;
@@ -601,8 +573,7 @@ main.cliente-cadastro
         border-box;
 
     border:
-        1px solid
-        #d6d3d1;
+        1px solid #d6d3d1;
 
     border-radius:
         9px;
@@ -635,8 +606,7 @@ main.cliente-cadastro
 }
 
 
-main.cliente-cadastro
-.cliente-cadastro-google:hover {
+main.cliente-cadastro .cliente-cadastro-google:hover {
 
     background:
         var(--cor-clara);
@@ -648,13 +618,11 @@ main.cliente-cadastro
         var(--cor-secundaria);
 
     box-shadow:
-        0 3px 10px
-        rgba(0, 0, 0, 0.06);
+        0 3px 10px rgba(0, 0, 0, 0.06);
 }
 
 
-main.cliente-cadastro
-.cliente-cadastro-google i {
+main.cliente-cadastro .cliente-cadastro-google i {
 
     font-size:
         18px;
@@ -667,8 +635,7 @@ LINK PARA LOGIN
 =================================
 */
 
-main.cliente-cadastro
-.cliente-cadastro-login {
+main.cliente-cadastro .cliente-cadastro-login {
 
     display:
         block;
@@ -687,8 +654,7 @@ main.cliente-cadastro
 }
 
 
-main.cliente-cadastro
-.cliente-cadastro-login a {
+main.cliente-cadastro .cliente-cadastro-login a {
 
     color:
         var(--laranja-hover);
@@ -701,8 +667,7 @@ main.cliente-cadastro
 }
 
 
-main.cliente-cadastro
-.cliente-cadastro-login a:hover {
+main.cliente-cadastro .cliente-cadastro-login a:hover {
 
     color:
         var(--marrom);
@@ -733,8 +698,7 @@ RESPONSIVO
     }
 
 
-    main.cliente-cadastro
-    .cliente-cadastro-card {
+    main.cliente-cadastro .cliente-cadastro-card {
 
         padding:
             28px 22px;
@@ -744,27 +708,90 @@ RESPONSIVO
     }
 
 
-    main.cliente-cadastro
-    .cliente-cadastro-cabecalho {
+    main.cliente-cadastro .cliente-cadastro-cabecalho {
 
         margin-bottom:
             25px;
     }
 
 
-    main.cliente-cadastro
-    .cliente-cadastro-cabecalho h1 {
+    main.cliente-cadastro .cliente-cadastro-cabecalho h1 {
 
         font-size:
             24px;
     }
 
 
-    main.cliente-cadastro
-    .cliente-cadastro-cabecalho p {
+    main.cliente-cadastro .cliente-cadastro-cabecalho p {
 
         font-size:
             14px;
     }
 
+}
+
+/* =========================================================
+   SEÇÕES DO CADASTRO
+========================================================= */
+
+.cliente-cadastro-secao {
+    padding:
+        20px 0;
+
+    border-top:
+        1px solid rgba(93,
+            64,
+            55,
+            0.08);
+}
+
+
+.cliente-cadastro-secao:first-of-type {
+    border-top:
+        none;
+
+    padding-top:
+        0;
+}
+
+
+.cliente-cadastro-secao-cabecalho {
+    margin-bottom:
+        20px;
+}
+
+
+.cliente-cadastro-secao-cabecalho h2 {
+    margin:
+        0;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        1.15rem;
+
+    font-weight:
+        800;
+}
+
+
+.cliente-cadastro-secao-cabecalho p {
+    margin:
+        5px 0 0;
+
+    color:
+        var(--cor-texto);
+
+    font-size:
+        0.88rem;
+
+    line-height:
+        1.5;
+}
+
+
+.cliente-cadastro-secao .cliente-cadastro-campo+.cliente-cadastro-campo {
+    margin-top:
+        15px;
 }
