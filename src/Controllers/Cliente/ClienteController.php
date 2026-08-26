@@ -25,6 +25,7 @@ final class ClienteController extends Controller
             session_status() !==
             PHP_SESSION_ACTIVE
         ) {
+
             session_start();
         }
 
@@ -160,6 +161,22 @@ final class ClienteController extends Controller
 
             $this->mostrarLoginComErro(
                 'E-mail ou senha inválidos.',
+                $email
+            );
+        }
+
+
+        if (
+            (int)
+            (
+                $cliente['email_verificado']
+                ?? 0
+            )
+            !== 1
+        ) {
+
+            $this->mostrarLoginComErro(
+                'Seu e-mail ainda não foi confirmado. Verifique sua caixa de entrada e clique no link de confirmação.',
                 $email
             );
         }
@@ -393,6 +410,586 @@ final class ClienteController extends Controller
 
     /*
     =================================
+    VERIFICA E-MAIL
+    =================================
+    */
+
+    public function verificarEmail(): void
+    {
+        if (
+            session_status() !==
+            PHP_SESSION_ACTIVE
+        ) {
+
+            session_start();
+        }
+
+
+        $token =
+            trim(
+                (string)
+                (
+                    $_GET['token']
+                    ?? ''
+                )
+            );
+
+
+        /*
+        =================================
+        VALIDA TOKEN
+        =================================
+        */
+
+        if (
+            $token === ''
+            ||
+            !preg_match(
+                '/^[a-f0-9]{64}$/i',
+                $token
+            )
+        ) {
+
+            $this->mostrarVerificacaoComErro(
+                'O link de confirmação é inválido.'
+            );
+        }
+
+
+        /*
+        =================================
+        GERA HASH
+        =================================
+        */
+
+        $tokenHash =
+            hash(
+                'sha256',
+                $token
+            );
+
+
+        /*
+        =================================
+        REPOSITORY
+        =================================
+        */
+
+        $repository =
+            new ClienteRepository(
+                $this->pdo
+            );
+
+
+        /*
+        =================================
+        BUSCA PELO HASH
+        =================================
+        */
+
+        $cliente =
+            $repository
+            ->buscarPorTokenVerificacao(
+                $tokenHash
+            );
+
+
+        /*
+        =================================
+        TOKEN NÃO ENCONTRADO
+        =================================
+        */
+
+        if (
+            $cliente === null
+        ) {
+
+            $this->mostrarVerificacaoComErro(
+                'O link de confirmação não é válido. Solicite um novo e-mail de confirmação.'
+            );
+        }
+
+
+        /*
+        =================================
+        VERIFICA EXPIRAÇÃO
+        =================================
+        */
+
+        $expiraEm =
+            trim(
+                (string)
+                (
+                    $cliente['token_verificacao_expira_em']
+                    ?? ''
+                )
+            );
+
+
+        if (
+            $expiraEm === ''
+        ) {
+
+            $this->mostrarVerificacaoComErro(
+                'O link de confirmação expirou. Solicite um novo e-mail de confirmação.'
+            );
+        }
+
+
+        /*
+        =================================
+        INTERPRETA DATA COMO UTC
+        =================================
+        */
+
+        $dataExpiracao =
+            \DateTimeImmutable::createFromFormat(
+                'Y-m-d H:i:s',
+                $expiraEm,
+                new \DateTimeZone('UTC')
+            );
+
+
+        if (
+            $dataExpiracao === false
+        ) {
+
+            $this->mostrarVerificacaoComErro(
+                'Não foi possível validar a validade do link de confirmação.'
+            );
+        }
+
+
+        /*
+        =================================
+        COMPARA COM UTC ATUAL
+        =================================
+        */
+
+        $agoraUtc =
+            new \DateTimeImmutable(
+                'now',
+                new \DateTimeZone('UTC')
+            );
+
+
+        if (
+            $dataExpiracao <= $agoraUtc
+        ) {
+
+            $this->mostrarVerificacaoComErro(
+                'O link de confirmação expirou. Solicite um novo e-mail de confirmação.'
+            );
+        }
+
+
+        /*
+        =================================
+        JÁ CONFIRMADO
+        =================================
+        */
+
+        if (
+            (int)
+            (
+                $cliente['email_verificado']
+                ?? 0
+            )
+            === 1
+        ) {
+
+            $this->finalizarLoginAposVerificacao(
+                $cliente
+            );
+
+            return;
+        }
+
+
+        /*
+        =================================
+        CONFIRMA E-MAIL
+        =================================
+        */
+
+        $repository
+            ->verificarEmail(
+                (int)
+                $cliente['id']
+            );
+
+
+        /*
+        =================================
+        ATUALIZA ÚLTIMO ACESSO
+        =================================
+        */
+
+        $repository
+            ->atualizarUltimoAcesso(
+                (int)
+                $cliente['id']
+            );
+
+
+        /*
+        =================================
+        LOGIN
+        =================================
+        */
+
+        $this->finalizarLoginAposVerificacao(
+            $cliente
+        );
+    }
+
+
+    /*
+    =================================
+    LOGIN APÓS VERIFICAÇÃO
+    =================================
+    */
+
+    private function finalizarLoginAposVerificacao(
+        array $cliente
+    ): void {
+
+        if (
+            session_status() !==
+            PHP_SESSION_ACTIVE
+        ) {
+
+            session_start();
+        }
+
+
+        /*
+        =================================
+        INICIA SESSÃO
+        =================================
+        */
+
+        $this->iniciarSessaoCliente(
+            (int)
+            $cliente['id'],
+
+            (string)
+            $cliente['nome'],
+
+            (string)
+            $cliente['email'],
+
+            !empty($cliente['foto_url'])
+                ? (string)
+                $cliente['foto_url']
+                : null
+        );
+
+
+        Csrf::renovarCliente();
+
+
+        /*
+        =================================
+        DESTINO APÓS CONFIRMAÇÃO
+        =================================
+        */
+
+        $retorno =
+            isset(
+                $_SESSION['cadastro_retorno']
+            )
+            ? (string)
+            $_SESSION['cadastro_retorno']
+            : '';
+
+
+        unset(
+            $_SESSION['cadastro_retorno']
+        );
+
+
+        /*
+        =================================
+        DEFINE DESTINO
+        =================================
+        */
+
+        $destino =
+            $retorno === 'carrinho'
+                ? BASE_URL . '/carrinho'
+                : BASE_URL . '/';
+
+
+        /*
+        =================================
+        PROTEGE DADOS PARA HTML
+        =================================
+        */
+
+        $nomeSeguro =
+            htmlspecialchars(
+                (string)
+                $cliente['nome'],
+                ENT_QUOTES |
+                ENT_SUBSTITUTE |
+                ENT_HTML5,
+                'UTF-8'
+            );
+
+
+        $destinoSeguro =
+            htmlspecialchars(
+                $destino,
+                ENT_QUOTES |
+                ENT_SUBSTITUTE |
+                ENT_HTML5,
+                'UTF-8'
+            );
+
+
+        /*
+        =================================
+        MENSAGEM DE CONFIRMAÇÃO
+        =================================
+        */
+
+        echo '
+            <!DOCTYPE html>
+
+            <html lang="pt-BR">
+
+            <head>
+
+                <meta charset="UTF-8">
+
+                <meta
+                    name="viewport"
+                    content="width=device-width, initial-scale=1.0"
+                >
+
+                <title>
+                    E-mail confirmado - Cantim do Lanche
+                </title>
+
+                <style>
+
+                    * {
+                        box-sizing:
+                            border-box;
+                    }
+
+                    body {
+                        margin:
+                            0;
+
+                        min-height:
+                            100vh;
+
+                        display:
+                            flex;
+
+                        align-items:
+                            center;
+
+                        justify-content:
+                            center;
+
+                        padding:
+                            20px;
+
+                        background:
+                            #f8f5f0;
+
+                        font-family:
+                            Arial,
+                            Helvetica,
+                            sans-serif;
+                    }
+
+                    .confirmacao {
+                        width:
+                            100%;
+
+                        max-width:
+                            500px;
+
+                        padding:
+                            40px 30px;
+
+                        background:
+                            #ffffff;
+
+                        border-radius:
+                            20px;
+
+                        text-align:
+                            center;
+
+                        box-shadow:
+                            0 10px 30px
+                            rgba(
+                                0,
+                                0,
+                                0,
+                                0.08
+                            );
+                    }
+
+                    .icone {
+                        width:
+                            70px;
+
+                        height:
+                            70px;
+
+                        margin:
+                            0 auto 20px;
+
+                        display:
+                            flex;
+
+                        align-items:
+                            center;
+
+                        justify-content:
+                            center;
+
+                        border-radius:
+                            50%;
+
+                        background:
+                            #f57c00;
+
+                        color:
+                            #ffffff;
+
+                        font-size:
+                            34px;
+
+                        font-weight:
+                            bold;
+                    }
+
+                    h1 {
+                        margin:
+                            0 0 15px;
+
+                        color:
+                            #3e2723;
+
+                        font-size:
+                            26px;
+                    }
+
+                    p {
+                        margin:
+                            0 0 25px;
+
+                        color:
+                            #666666;
+
+                        font-size:
+                            16px;
+
+                        line-height:
+                            1.6;
+                    }
+
+                    .confirmacao strong {
+                        color:
+                            #3e2723;
+                    }
+
+                    button {
+                        border:
+                            0;
+
+                        padding:
+                            13px 35px;
+
+                        background:
+                            #f57c00;
+
+                        color:
+                            #ffffff;
+
+                        border-radius:
+                            30px;
+
+                        font-size:
+                            16px;
+
+                        font-weight:
+                            bold;
+
+                        cursor:
+                            pointer;
+                    }
+
+                    button:hover {
+                        opacity:
+                            0.9;
+                    }
+
+                </style>
+
+            </head>
+
+
+            <body>
+
+                <div class="confirmacao">
+
+                    <div class="icone">
+                        ✓
+                    </div>
+
+
+                    <h1>
+                        E-mail confirmado!
+                    </h1>
+
+
+                    <p>
+
+                        Olá,
+                        <strong>
+                            ' . $nomeSeguro . '
+                        </strong>!
+
+                        <br><br>
+
+                        Seu e-mail foi verificado
+                        com sucesso e sua conta
+                        já está ativa.
+
+                    </p>
+
+
+                    <button
+                        type="button"
+                        onclick="window.location.href=\'' .
+                        $destinoSeguro .
+                        '\'"
+                    >
+                        OK
+                    </button>
+
+                </div>
+
+            </body>
+
+            </html>
+        ';
+
+
+        exit;
+    }
+
+
+    /*
+    =================================
     CADASTRO TRADICIONAL
     =================================
     */
@@ -424,12 +1021,6 @@ final class ClienteController extends Controller
         }
 
 
-        /*
-        =================================
-        RETORNO
-        =================================
-        */
-
         $retorno =
             trim(
                 (string)
@@ -449,12 +1040,6 @@ final class ClienteController extends Controller
                 '';
         }
 
-
-        /*
-        =================================
-        DADOS DA CONTA
-        =================================
-        */
 
         $nome =
             trim(
@@ -489,12 +1074,6 @@ final class ClienteController extends Controller
                 ?? ''
             );
 
-
-        /*
-        =================================
-        DADOS DO ENDEREÇO
-        =================================
-        */
 
         $identificacao =
             trim(
@@ -581,12 +1160,6 @@ final class ClienteController extends Controller
             );
 
 
-        /*
-        =================================
-        VALIDA NOME
-        =================================
-        */
-
         if (
             $nome === ''
         ) {
@@ -637,12 +1210,6 @@ final class ClienteController extends Controller
             );
         }
 
-
-        /*
-        =================================
-        VALIDA E-MAIL
-        =================================
-        */
 
         if (
             !filter_var(
@@ -695,12 +1262,6 @@ final class ClienteController extends Controller
         }
 
 
-        /*
-        =================================
-        VALIDA SENHA
-        =================================
-        */
-
         if (
             strlen($senha) < 8
         ) {
@@ -749,12 +1310,6 @@ final class ClienteController extends Controller
             );
         }
 
-
-        /*
-        =================================
-        VALIDA ENDEREÇO
-        =================================
-        */
 
         if (
             $identificacao === ''
@@ -951,12 +1506,6 @@ final class ClienteController extends Controller
         }
 
 
-        /*
-        =================================
-        REPOSITORIES
-        =================================
-        */
-
         $clienteRepository =
             new ClienteRepository(
                 $this->pdo
@@ -968,12 +1517,6 @@ final class ClienteController extends Controller
                 $this->pdo
             );
 
-
-        /*
-        =================================
-        E-MAIL EXISTENTE
-        =================================
-        */
 
         if (
             $clienteRepository->emailExiste(
@@ -1000,12 +1543,6 @@ final class ClienteController extends Controller
             );
         }
 
-
-        /*
-        =================================
-        HASH DA SENHA
-        =================================
-        */
 
         $senhaHash =
             password_hash(
@@ -1037,11 +1574,6 @@ final class ClienteController extends Controller
             );
         }
 
-        /*
-        =================================
-        TOKEN DE VERIFICAÇÃO
-        =================================
-        */
 
         $tokenVerificacao =
             bin2hex(
@@ -1056,11 +1588,18 @@ final class ClienteController extends Controller
             );
 
 
-        /*
-        =================================
-        TRANSAÇÃO
-        =================================
-        */
+        if (
+            session_status() !==
+            PHP_SESSION_ACTIVE
+        ) {
+
+            session_start();
+        }
+
+
+        $_SESSION['cadastro_retorno'] =
+            $retorno;
+
 
         $this->pdo
             ->beginTransaction();
@@ -1068,68 +1607,49 @@ final class ClienteController extends Controller
 
         try {
 
-            /*
-            ==============================
-            CRIA CLIENTE
-            ==============================
-            */
-
             $clienteId =
-                $clienteRepository->criar(
+                $clienteRepository
+                ->criar(
                     $nome,
                     $email,
                     $senhaHash
                 );
 
-            /*
-            ==============================
-            CRIA TOKEN DE VERIFICAÇÃO
-            ==============================
-            */
 
             $clienteRepository
                 ->criarTokenVerificacao(
                     $clienteId,
                     $tokenVerificacaoHash
                 );
-            /*
-            ==============================
-            CRIA ENDEREÇO PRINCIPAL
-            ==============================
-            */
-
-            $enderecoRepository->criar(
-                $clienteId,
-                $identificacao,
-                $destinatario,
-                $cep,
-                $logradouro,
-                $numero,
-                $complemento !== ''
-                    ? $complemento
-                    : null,
-                $bairro,
-                $cidade,
-                $estado,
-                true
-            );
 
 
-            /*
-            ==============================
-            COMMIT
-            ==============================
-            */
+            $enderecoRepository
+                ->criar(
+                    $clienteId,
+                    $identificacao,
+                    $destinatario,
+                    $cep,
+                    $logradouro,
+                    $numero,
+                    $complemento !== ''
+                        ? $complemento
+                        : null,
+                    $bairro,
+                    $cidade,
+                    $estado,
+                    true
+                );
+
 
             $this->pdo
                 ->commit();
+
         } catch (
             \Throwable $erro
         ) {
 
             if (
-                $this->pdo
-                ->inTransaction()
+                $this->pdo->inTransaction()
             ) {
 
                 $this->pdo
@@ -1140,19 +1660,48 @@ final class ClienteController extends Controller
             throw $erro;
         }
 
+
         /*
-=================================
-ENVIA E-MAIL DE VERIFICAÇÃO
-=================================
-*/
+        =================================
+        URL DE VERIFICAÇÃO
+        =================================
+        */
+
+        $appUrl =
+            trim(
+                (string)
+                (
+                    $_ENV['APP_URL']
+                    ?? ''
+                )
+            );
+
+
+        if (
+            $appUrl === ''
+        ) {
+
+            $appUrl =
+                'http://localhost/loja-online';
+        }
+
 
         $urlVerificacao =
-            BASE_URL
+            rtrim(
+                $appUrl,
+                '/'
+            )
             . '/cadastro/verificar-email?token='
-            . urlencode(
+            . rawurlencode(
                 $tokenVerificacao
             );
 
+
+        /*
+        =================================
+        ENVIA E-MAIL
+        =================================
+        */
 
         try {
 
@@ -1166,14 +1715,10 @@ ENVIA E-MAIL DE VERIFICAÇÃO
                     $nome,
                     $urlVerificacao
                 );
+
         } catch (
             \Throwable $erro
         ) {
-
-            /*
-    A conta já foi criada.
-    O cliente não será autenticado.
-    */
 
             $this->view(
                 'site/cliente_verificacao_pendente',
@@ -1197,54 +1742,32 @@ ENVIA E-MAIL DE VERIFICAÇÃO
 
             exit;
         }
-        /*
-        =================================
-        SESSÃO
-        =================================
-        */
-
-        $this->iniciarSessaoCliente(
-            $clienteId,
-            $nome,
-            $email,
-            null
-        );
-
-
-        Csrf::renovarCliente();
 
 
         /*
         =================================
-        RETORNO
+        AGUARDA CONFIRMAÇÃO
         =================================
         */
 
-        if (
-            $retorno ===
-            'carrinho'
-        ) {
+        $this->view(
+            'site/cliente_verificacao_pendente',
+            [
+                'tituloPagina' =>
+                'Confirme seu e-mail',
 
-            header(
-                'Location: '
-                    . BASE_URL
-                    . '/carrinho'
-            );
+                'rotaAtual' =>
+                'cadastro',
 
-            exit;
-        }
+                'nome' =>
+                $nome,
 
+                'email' =>
+                $email,
 
-        /*
-        =================================
-        CADASTRO NORMAL
-        =================================
-        */
-
-        header(
-            'Location: '
-                . BASE_URL
-                . '/'
+                'erroEnvio' =>
+                null,
+            ]
         );
 
         exit;
@@ -1336,7 +1859,8 @@ ENVIA E-MAIL DE VERIFICAÇÃO
 
 
         $url =
-            $google->criarUrlAutorizacao(
+            $google
+            ->criarUrlAutorizacao(
                 $state
             );
 
@@ -1386,7 +1910,8 @@ ENVIA E-MAIL DE VERIFICAÇÃO
 
 
         $url =
-            $google->criarUrlAutorizacao(
+            $google
+            ->criarUrlAutorizacao(
                 $state
             );
 
@@ -1511,16 +2036,19 @@ ENVIA E-MAIL DE VERIFICAÇÃO
 
 
             $token =
-                $google->trocarCodigoPorToken(
+                $google
+                ->trocarCodigoPorToken(
                     $code
                 );
 
 
             $dadosGoogle =
-                $google->buscarUsuario(
+                $google
+                ->buscarUsuario(
                     (string)
                     $token['access_token']
                 );
+
         } catch (
             \RuntimeException $erro
         ) {
@@ -1565,7 +2093,8 @@ ENVIA E-MAIL DE VERIFICAÇÃO
 
 
         $cliente =
-            $repository->buscarPorGoogleSub(
+            $repository
+            ->buscarPorGoogleSub(
                 $googleSub
             );
 
@@ -1585,7 +2114,8 @@ ENVIA E-MAIL DE VERIFICAÇÃO
             ) {
 
                 $clientePorEmail =
-                    $repository->buscarPorEmail(
+                    $repository
+                    ->buscarPorEmail(
                         $email
                     );
 
@@ -1606,10 +2136,11 @@ ENVIA E-MAIL DE VERIFICAÇÃO
             }
 
 
-            $repository->atualizarUltimoAcesso(
-                (int)
-                $cliente['id']
-            );
+            $repository
+                ->atualizarUltimoAcesso(
+                    (int)
+                    $cliente['id']
+                );
 
 
             $this->iniciarSessaoCliente(
@@ -1652,10 +2183,11 @@ ENVIA E-MAIL DE VERIFICAÇÃO
             $cliente !== null
         ) {
 
-            $repository->atualizarUltimoAcesso(
-                (int)
-                $cliente['id']
-            );
+            $repository
+                ->atualizarUltimoAcesso(
+                    (int)
+                    $cliente['id']
+                );
 
 
             $this->iniciarSessaoCliente(
@@ -1695,7 +2227,8 @@ ENVIA E-MAIL DE VERIFICAÇÃO
         */
 
         $clientePorEmail =
-            $repository->buscarPorEmail(
+            $repository
+            ->buscarPorEmail(
                 $email
             );
 
@@ -1714,16 +2247,17 @@ ENVIA E-MAIL DE VERIFICAÇÃO
             }
 
 
-            $repository->vincularGoogle(
-                (int)
-                $clientePorEmail['id'],
+            $repository
+                ->vincularGoogle(
+                    (int)
+                    $clientePorEmail['id'],
 
-                $googleSub,
+                    $googleSub,
 
-                $fotoUrl,
+                    $fotoUrl,
 
-                $emailVerificado
-            );
+                    $emailVerificado
+                );
 
 
             $this->iniciarSessaoCliente(
@@ -1760,7 +2294,8 @@ ENVIA E-MAIL DE VERIFICAÇÃO
         */
 
         $clienteId =
-            $repository->criarComGoogle(
+            $repository
+            ->criarComGoogle(
                 $googleSub,
                 $nome,
                 $email,
@@ -1935,6 +2470,40 @@ ENVIA E-MAIL DE VERIFICAÇÃO
                 'estado' =>
                 $endereco['estado']
                     ?? 'CE',
+            ]
+        );
+
+        exit;
+    }
+
+
+    /*
+    =================================
+    ERRO DE VERIFICAÇÃO
+    =================================
+    */
+
+    private function mostrarVerificacaoComErro(
+        string $mensagem
+    ): never {
+
+        $this->view(
+            'site/cliente_verificacao_pendente',
+            [
+                'tituloPagina' =>
+                'Confirme seu e-mail',
+
+                'rotaAtual' =>
+                'cadastro',
+
+                'nome' =>
+                '',
+
+                'email' =>
+                '',
+
+                'erroEnvio' =>
+                $mensagem,
             ]
         );
 
