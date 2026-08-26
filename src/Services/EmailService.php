@@ -22,38 +22,68 @@ final class EmailService
         try {
 
             $host =
-                getenv('MAIL_HOST')
-                ?: ($_ENV['MAIL_HOST'] ?? '');
+                (string)
+                (
+                    $_ENV['MAIL_HOST']
+                    ?? getenv('MAIL_HOST')
+                    ?? ''
+                );
 
 
             $port =
-                getenv('MAIL_PORT')
-                ?: ($_ENV['MAIL_PORT'] ?? '587');
+                (int)
+                (
+                    $_ENV['MAIL_PORT']
+                    ?? getenv('MAIL_PORT')
+                    ?? 587
+                );
 
 
             $username =
-                getenv('MAIL_USERNAME')
-                ?: ($_ENV['MAIL_USERNAME'] ?? '');
+                (string)
+                (
+                    $_ENV['MAIL_USERNAME']
+                    ?? getenv('MAIL_USERNAME')
+                    ?? ''
+                );
 
 
             $password =
-                getenv('MAIL_PASSWORD')
-                ?: ($_ENV['MAIL_PASSWORD'] ?? '');
+                (string)
+                (
+                    $_ENV['MAIL_PASSWORD']
+                    ?? getenv('MAIL_PASSWORD')
+                    ?? ''
+                );
 
 
             $encryption =
-                getenv('MAIL_ENCRYPTION')
-                ?: ($_ENV['MAIL_ENCRYPTION'] ?? 'tls');
+                strtolower(
+                    (string)
+                    (
+                        $_ENV['MAIL_ENCRYPTION']
+                        ?? getenv('MAIL_ENCRYPTION')
+                        ?? 'tls'
+                    )
+                );
 
 
             $fromAddress =
-                getenv('MAIL_FROM_ADDRESS')
-                ?: ($_ENV['MAIL_FROM_ADDRESS'] ?? '');
+                (string)
+                (
+                    $_ENV['MAIL_FROM_ADDRESS']
+                    ?? getenv('MAIL_FROM_ADDRESS')
+                    ?? ''
+                );
 
 
             $fromName =
-                getenv('MAIL_FROM_NAME')
-                ?: ($_ENV['MAIL_FROM_NAME'] ?? 'Cantim do Lanche');
+                (string)
+                (
+                    $_ENV['MAIL_FROM_NAME']
+                    ?? getenv('MAIL_FROM_NAME')
+                    ?? 'Cantim do Lanche'
+                );
 
 
             if (
@@ -92,13 +122,12 @@ final class EmailService
 
 
             if (
-                strtolower(
-                    $encryption
-                ) === 'ssl'
+                $encryption === 'ssl'
             ) {
 
                 $this->mailer->SMTPSecure =
                     PHPMailer::ENCRYPTION_SMTPS;
+
             } else {
 
                 $this->mailer->SMTPSecure =
@@ -107,7 +136,6 @@ final class EmailService
 
 
             $this->mailer->Port =
-                (int)
                 $port;
 
 
@@ -119,19 +147,32 @@ final class EmailService
                 $fromAddress,
                 $fromName
             );
+
+
+            $this->mailer->addReplyTo(
+                $fromAddress,
+                $fromName
+            );
+
         } catch (
             Exception $erro
         ) {
 
             throw new RuntimeException(
                 'Erro ao configurar e-mail: '
-                    . $erro->getMessage(),
+                . $erro->getMessage(),
                 0,
                 $erro
             );
         }
     }
 
+
+    /*
+    =================================
+    ENVIA TESTE
+    =================================
+    */
 
     public function enviarTeste(
         string $destinatario
@@ -170,8 +211,8 @@ final class EmailService
                     </h1>
 
                     <p>
-                        Este é um teste do sistema de envio
-                        de e-mails.
+                        Este é um teste do sistema
+                        de envio de e-mails.
                     </p>
 
                     <p>
@@ -189,25 +230,28 @@ final class EmailService
                 . 'o SMTP está funcionando corretamente.';
 
 
-            $this->mailer->send();
+            $this->mailer
+                ->send();
+
         } catch (
             Exception $erro
         ) {
 
             throw new RuntimeException(
                 'Não foi possível enviar o e-mail: '
-                    . $erro->getMessage(),
+                . $erro->getMessage(),
                 0,
                 $erro
             );
         }
     }
 
+
     /*
-=================================
-ENVIA E-MAIL DE VERIFICAÇÃO
-=================================
-*/
+    =================================
+    ENVIA VERIFICAÇÃO
+    =================================
+    */
 
     public function enviarVerificacao(
         string $destinatario,
@@ -239,7 +283,9 @@ ENVIA E-MAIL DE VERIFICAÇÃO
             $nomeSeguro =
                 htmlspecialchars(
                     $nome,
-                    ENT_QUOTES,
+                    ENT_QUOTES |
+                    ENT_SUBSTITUTE |
+                    ENT_HTML5,
                     'UTF-8'
                 );
 
@@ -247,150 +293,193 @@ ENVIA E-MAIL DE VERIFICAÇÃO
             $urlSegura =
                 htmlspecialchars(
                     $urlVerificacao,
-                    ENT_QUOTES,
+                    ENT_QUOTES |
+                    ENT_SUBSTITUTE |
+                    ENT_HTML5,
                     'UTF-8'
                 );
 
 
             $this->mailer->Body = '
 
-            <div style="
-                font-family:
-                    Arial,
-                    Helvetica,
-                    sans-serif;
+                <!DOCTYPE html>
 
-                background:
-                    #f8f5f0;
+                <html lang="pt-BR">
 
-                padding:
-                    40px 20px;
-            ">
+                <head>
 
-                <div style="
-                    max-width:
-                        600px;
+                    <meta charset="UTF-8">
 
-                    margin:
-                        0 auto;
+                    <meta
+                        name="viewport"
+                        content="width=device-width, initial-scale=1.0"
+                    >
 
-                    background:
-                        #ffffff;
+                    <title>
+                        Confirme seu e-mail
+                    </title>
 
-                    border-radius:
-                        18px;
+                </head>
 
-                    padding:
-                        35px;
+
+                <body style="
+                    margin: 0;
+                    padding: 0;
+                    background: #f8f5f0;
+                    font-family: Arial, Helvetica, sans-serif;
                 ">
 
-                    <h1 style="
-                        color:
-                            #f57c00;
-
-                        margin-top:
-                            0;
+                    <div style="
+                        padding: 40px 20px;
                     ">
 
-                        Cantim do Lanche
+                        <div style="
+                            width: 100%;
+                            max-width: 600px;
+                            margin: 0 auto;
+                            background: #ffffff;
+                            border-radius: 18px;
+                            padding: 35px;
+                            box-sizing: border-box;
+                            border: 1px solid #eee5dc;
+                        ">
 
-                    </h1>
+                            <h1 style="
+                                margin: 0 0 25px;
+                                color: #f57c00;
+                                font-size: 28px;
+                            ">
 
+                                Cantim do Lanche
 
-                    <p>
-
-                        Olá,
-                        ' . $nomeSeguro . '!
-
-                    </p>
-
-
-                    <p>
-
-                        Sua conta foi criada
-                        com sucesso.
-
-                    </p>
-
-
-                    <p>
-
-                        Para confirmar
-                        seu endereço de e-mail,
-                        clique no botão abaixo:
-
-                    </p>
+                            </h1>
 
 
-                    <p style="
-                        text-align:
-                            center;
+                            <p style="
+                                color: #3e2723;
+                                font-size: 16px;
+                                line-height: 1.6;
+                            ">
 
-                        margin:
-                            30px 0;
-                    ">
+                                Olá,
+                                ' . $nomeSeguro . '!
 
-                        <a
-                            href="' . $urlSegura . '"
-                            style="
-                                display:
-                                    inline-block;
-
-                                padding:
-                                    14px 28px;
-
-                                background:
-                                    #f57c00;
-
-                                color:
-                                    #ffffff;
-
-                                text-decoration:
-                                    none;
-
-                                border-radius:
-                                    30px;
-
-                                font-weight:
-                                    bold;
-                            "
-                        >
-
-                            Confirmar meu e-mail
-
-                        </a>
-
-                    </p>
+                            </p>
 
 
-                    <p>
+                            <p style="
+                                color: #4e342e;
+                                font-size: 15px;
+                                line-height: 1.6;
+                            ">
 
-                        Este link é válido por
-                        <strong>
-                            1 hora
-                        </strong>.
+                                Sua conta foi criada
+                                com sucesso no
+                                Cantim do Lanche.
 
-                    </p>
+                            </p>
 
 
-                    <p style="
-                        color:
-                            #666666;
+                            <p style="
+                                color: #4e342e;
+                                font-size: 15px;
+                                line-height: 1.6;
+                            ">
 
-                        font-size:
-                            13px;
-                    ">
+                                Para confirmar seu
+                                endereço de e-mail,
+                                clique no botão abaixo:
 
-                        Se você não criou uma
-                        conta no Cantim do Lanche,
-                        ignore esta mensagem.
+                            </p>
 
-                    </p>
 
-                </div>
+                            <div style="
+                                text-align: center;
+                                margin: 30px 0;
+                            ">
 
-            </div>
-        ';
+                                <a
+                                    href="' . $urlSegura . '"
+                                    target="_blank"
+                                    style="
+                                        display: inline-block;
+                                        padding: 14px 28px;
+                                        background: #f57c00;
+                                        color: #ffffff;
+                                        text-decoration: none;
+                                        border-radius: 30px;
+                                        font-size: 16px;
+                                        font-weight: bold;
+                                    "
+                                >
+
+                                    Confirmar meu e-mail
+
+                                </a>
+
+                            </div>
+
+
+                            <p style="
+                                color: #4e342e;
+                                font-size: 14px;
+                                line-height: 1.6;
+                            ">
+
+                                Este link é válido por
+                                <strong>1 hora</strong>.
+
+                            </p>
+
+
+                            <p style="
+                                color: #777777;
+                                font-size: 13px;
+                                line-height: 1.6;
+                            ">
+
+                                Se o botão não funcionar,
+                                copie e cole o endereço
+                                abaixo no navegador:
+
+                            </p>
+
+
+                            <p style="
+                                padding: 12px;
+                                background: #f8f5f0;
+                                border-radius: 8px;
+                                word-break: break-all;
+                                color: #555555;
+                                font-size: 12px;
+                            ">
+
+                                ' . $urlSegura . '
+
+                            </p>
+
+
+                            <p style="
+                                color: #888888;
+                                font-size: 12px;
+                                line-height: 1.6;
+                            ">
+
+                                Se você não criou uma conta
+                                no Cantim do Lanche,
+                                ignore esta mensagem.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </body>
+
+                </html>
+
+            ';
 
 
             $this->mailer->AltBody =
@@ -399,22 +488,35 @@ ENVIA E-MAIL DE VERIFICAÇÃO
                 . '!'
                 . PHP_EOL
                 . PHP_EOL
-                . 'Confirme seu e-mail no Cantim do Lanche: '
+                . 'Sua conta foi criada com sucesso '
+                . 'no Cantim do Lanche.'
+                . PHP_EOL
+                . PHP_EOL
+                . 'Para confirmar seu endereço de e-mail, '
+                . 'acesse o link abaixo:'
+                . PHP_EOL
+                . PHP_EOL
                 . $urlVerificacao
                 . PHP_EOL
                 . PHP_EOL
-                . 'Este link é válido por 1 hora.';
+                . 'Este link é válido por 1 hora.'
+                . PHP_EOL
+                . PHP_EOL
+                . 'Se você não criou uma conta '
+                . 'no Cantim do Lanche, '
+                . 'ignore esta mensagem.';
 
 
             $this->mailer
                 ->send();
+
         } catch (
             Exception $erro
         ) {
 
             throw new RuntimeException(
                 'Não foi possível enviar o e-mail de verificação: '
-                    . $erro->getMessage(),
+                . $erro->getMessage(),
                 0,
                 $erro
             );

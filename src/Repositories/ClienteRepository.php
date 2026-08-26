@@ -37,15 +37,18 @@ final class ClienteRepository
             LIMIT 1
         ";
 
+
         $stmt =
             $this->pdo->prepare(
                 $sql
             );
 
+
         $stmt->execute([
             ':email' =>
-            $email,
+                $email,
         ]);
+
 
         return
             $stmt->fetch(
@@ -53,42 +56,49 @@ final class ClienteRepository
             ) !== false;
     }
 
+
     /*
-=================================
-VERIFICA E-MAIL DE OUTRO CLIENTE
-=================================
-*/
+    =================================
+    VERIFICA E-MAIL DE OUTRO CLIENTE
+    =================================
+    */
 
     public function emailExisteParaOutroCliente(
         string $email,
         int $clienteId
     ): bool {
+
         $sql = "
-        SELECT id
-        FROM clientes
-        WHERE email = :email
-        AND id <> :id
-        LIMIT 1
-    ";
+            SELECT id
+            FROM clientes
+            WHERE email = :email
+            AND id <> :id
+            LIMIT 1
+        ";
+
 
         $stmt =
             $this->pdo->prepare(
                 $sql
             );
 
+
         $stmt->execute([
             ':email' =>
-            $email,
+                $email,
 
             ':id' =>
-            $clienteId,
+                $clienteId,
         ]);
+
 
         return
             $stmt->fetch(
                 PDO::FETCH_ASSOC
             ) !== false;
     }
+
+
     /*
     =================================
     BUSCA POR E-MAIL
@@ -116,26 +126,32 @@ VERIFICA E-MAIL DE OUTRO CLIENTE
             LIMIT 1
         ";
 
+
         $stmt =
             $this->pdo->prepare(
                 $sql
             );
 
+
         $stmt->execute([
             ':email' =>
-            $email,
+                $email,
         ]);
+
 
         $cliente =
             $stmt->fetch(
                 PDO::FETCH_ASSOC
             );
 
+
         if (
             $cliente === false
         ) {
+
             return null;
         }
+
 
         return $cliente;
     }
@@ -168,26 +184,32 @@ VERIFICA E-MAIL DE OUTRO CLIENTE
             LIMIT 1
         ";
 
+
         $stmt =
             $this->pdo->prepare(
                 $sql
             );
 
+
         $stmt->execute([
             ':google_sub' =>
-            $googleSub,
+                $googleSub,
         ]);
+
 
         $cliente =
             $stmt->fetch(
                 PDO::FETCH_ASSOC
             );
 
+
         if (
             $cliente === false
         ) {
+
             return null;
         }
+
 
         return $cliente;
     }
@@ -220,94 +242,108 @@ VERIFICA E-MAIL DE OUTRO CLIENTE
             LIMIT 1
         ";
 
+
         $stmt =
             $this->pdo->prepare(
                 $sql
             );
 
+
         $stmt->execute([
             ':id' =>
-            $id,
+                $id,
         ]);
+
 
         $cliente =
             $stmt->fetch(
                 PDO::FETCH_ASSOC
             );
 
+
         if (
             $cliente === false
         ) {
+
             return null;
         }
+
 
         return $cliente;
     }
 
+
     /*
-=================================
-ATUALIZA DADOS DO CLIENTE
-=================================
-*/
+    =================================
+    ATUALIZA DADOS DO CLIENTE
+    =================================
+    */
 
     public function atualizarDados(
         int $clienteId,
         string $nome,
         string $email
     ): void {
+
         $sql = "
-        UPDATE clientes
-        SET
-            nome = :nome,
-            email = :email
-        WHERE id = :id
-    ";
+            UPDATE clientes
+            SET
+                nome = :nome,
+                email = :email
+            WHERE id = :id
+        ";
+
 
         $stmt =
             $this->pdo->prepare(
                 $sql
             );
 
+
         $stmt->execute([
             ':nome' =>
-            $nome,
+                $nome,
 
             ':email' =>
-            $email,
+                $email,
 
             ':id' =>
-            $clienteId,
+                $clienteId,
         ]);
     }
 
+
     /*
-=================================
-ATUALIZA FOTO DO CLIENTE
-=================================
-*/
+    =================================
+    ATUALIZA FOTO DO CLIENTE
+    =================================
+    */
 
     public function atualizarFoto(
         int $clienteId,
         ?string $fotoUrl
     ): void {
+
         $sql = "
-        UPDATE clientes
-        SET
-            foto_url = :foto_url
-        WHERE id = :id
-    ";
+            UPDATE clientes
+            SET
+                foto_url = :foto_url
+            WHERE id = :id
+        ";
+
 
         $stmt =
             $this->pdo->prepare(
                 $sql
             );
 
+
         $stmt->execute([
             ':foto_url' =>
-            $fotoUrl,
+                $fotoUrl,
 
             ':id' =>
-            $clienteId,
+                $clienteId,
         ]);
     }
 
@@ -345,21 +381,24 @@ ATUALIZA FOTO DO CLIENTE
             )
         ";
 
+
         $stmt =
             $this->pdo->prepare(
                 $sql
             );
 
+
         $stmt->execute([
             ':nome' =>
-            $nome,
+                $nome,
 
             ':email' =>
-            $email,
+                $email,
 
             ':senha_hash' =>
-            $senhaHash,
+                $senhaHash,
         ]);
+
 
         return
             (int)
@@ -402,31 +441,34 @@ ATUALIZA FOTO DO CLIENTE
             )
         ";
 
+
         $stmt =
             $this->pdo->prepare(
                 $sql
             );
 
+
         try {
 
             $stmt->execute([
                 ':google_sub' =>
-                $googleSub,
+                    $googleSub,
 
                 ':nome' =>
-                $nome,
+                    $nome,
 
                 ':email' =>
-                $email,
+                    $email,
 
                 ':foto_url' =>
-                $fotoUrl,
+                    $fotoUrl,
 
                 ':email_verificado' =>
-                $emailVerificado
-                    ? 1
-                    : 0,
+                    $emailVerificado
+                        ? 1
+                        : 0,
             ]);
+
         } catch (
             PDOException $erro
         ) {
@@ -437,6 +479,7 @@ ATUALIZA FOTO DO CLIENTE
                 $erro
             );
         }
+
 
         return
             (int)
@@ -467,28 +510,31 @@ ATUALIZA FOTO DO CLIENTE
             WHERE id = :id
         ";
 
+
         $stmt =
             $this->pdo->prepare(
                 $sql
             );
 
+
         try {
 
             $stmt->execute([
                 ':google_sub' =>
-                $googleSub,
+                    $googleSub,
 
                 ':foto_url' =>
-                $fotoUrl,
+                    $fotoUrl,
 
                 ':email_verificado' =>
-                $emailVerificado
-                    ? 1
-                    : 0,
+                    $emailVerificado
+                        ? 1
+                        : 0,
 
                 ':id' =>
-                $clienteId,
+                    $clienteId,
             ]);
+
         } catch (
             PDOException $erro
         ) {
@@ -501,203 +547,238 @@ ATUALIZA FOTO DO CLIENTE
         }
     }
 
+
     /*
-=================================
-CRIA TOKEN DE VERIFICAÇÃO
-=================================
-*/
+    =================================
+    CRIA TOKEN DE VERIFICAÇÃO
+    =================================
+    */
 
     public function criarTokenVerificacao(
         int $clienteId,
         string $tokenHash
     ): void {
 
-        $stmt =
-            $this->pdo->prepare("
+        $sql = "
             UPDATE clientes
             SET
                 token_verificacao_email = :token,
                 token_verificacao_expira_em =
                     DATE_ADD(
-                        NOW(),
+                        UTC_TIMESTAMP(),
                         INTERVAL 1 HOUR
                     )
             WHERE id = :id
-        ");
+        ";
+
+
+        $stmt =
+            $this->pdo->prepare(
+                $sql
+            );
+
 
         $stmt->execute([
             ':token' =>
-            $tokenHash,
+                $tokenHash,
 
             ':id' =>
-            $clienteId,
+                $clienteId,
         ]);
     }
 
 
     /*
-=================================
-BUSCA CLIENTE PELO TOKEN
-=================================
-*/
+    =================================
+    BUSCA CLIENTE PELO TOKEN
+    =================================
+
+    Aqui procuramos somente pelo hash.
+    A validade é verificada separadamente
+    pelo Controller.
+    */
 
     public function buscarPorTokenVerificacao(
         string $tokenHash
     ): ?array {
 
         $sql = "
-        SELECT
-            id,
-            nome,
-            email,
-            email_verificado,
-            token_verificacao_expira_em
-        FROM clientes
-        WHERE token_verificacao_email = :token
-        LIMIT 1
-    ";
+            SELECT
+                id,
+                nome,
+                email,
+                foto_url,
+                email_verificado,
+                token_verificacao_expira_em
+            FROM clientes
+            WHERE token_verificacao_email = :token
+            LIMIT 1
+        ";
+
 
         $stmt =
             $this->pdo->prepare(
                 $sql
             );
 
+
         $stmt->execute([
             ':token' =>
-            $tokenHash,
+                $tokenHash,
         ]);
+
 
         $cliente =
             $stmt->fetch(
                 PDO::FETCH_ASSOC
             );
 
-        return
-            $cliente !== false
-            ? $cliente
-            : null;
+
+        if (
+            $cliente === false
+        ) {
+
+            return null;
+        }
+
+
+        return $cliente;
     }
 
 
     /*
-=================================
-CONFIRMA E-MAIL
-=================================
-*/
+    =================================
+    CONFIRMA E-MAIL
+    =================================
+    */
 
     public function verificarEmail(
         int $clienteId
     ): void {
 
         $sql = "
-        UPDATE clientes
-        SET
-            email_verificado = 1,
-            token_verificacao_email = NULL,
-            token_verificacao_expira_em = NULL,
-            ultimo_acesso = NOW()
-        WHERE id = :id
-    ";
+            UPDATE clientes
+            SET
+                email_verificado = 1,
+                token_verificacao_email = NULL,
+                token_verificacao_expira_em = NULL,
+                ultimo_acesso = NOW()
+            WHERE id = :id
+        ";
+
 
         $stmt =
             $this->pdo->prepare(
                 $sql
             );
 
+
         $stmt->execute([
             ':id' =>
-            $clienteId,
+                $clienteId,
         ]);
     }
+
+
     /*
-=================================
-ATUALIZA E-MAIL
-=================================
-*/
+    =================================
+    ATUALIZA E-MAIL
+    =================================
+    */
 
     public function atualizarEmail(
         int $clienteId,
         string $email
     ): void {
+
         $sql = "
-        UPDATE clientes
-        SET
-            email = :email
-        WHERE id = :id
-    ";
+            UPDATE clientes
+            SET
+                email = :email
+            WHERE id = :id
+        ";
+
 
         $stmt =
             $this->pdo->prepare(
                 $sql
             );
 
+
         $stmt->execute([
             ':email' =>
-            $email,
+                $email,
 
             ':id' =>
-            $clienteId,
+                $clienteId,
         ]);
     }
 
 
     /*
-=================================
-ATUALIZA SENHA
-=================================
-*/
+    =================================
+    ATUALIZA SENHA
+    =================================
+    */
 
     public function atualizarSenha(
         int $clienteId,
         string $senhaHash
     ): void {
+
         $sql = "
-        UPDATE clientes
-        SET
-            senha_hash = :senha_hash
-        WHERE id = :id
-    ";
+            UPDATE clientes
+            SET
+                senha_hash = :senha_hash
+            WHERE id = :id
+        ";
+
 
         $stmt =
             $this->pdo->prepare(
                 $sql
             );
 
+
         $stmt->execute([
             ':senha_hash' =>
-            $senhaHash,
+                $senhaHash,
 
             ':id' =>
-            $clienteId,
+                $clienteId,
         ]);
     }
 
 
     /*
-=================================
-VERIFICA PEDIDOS
-=================================
-*/
+    =================================
+    VERIFICA PEDIDOS
+    =================================
+    */
 
     public function possuiPedidos(
         int $clienteId
     ): bool {
+
         $sql = "
-        SELECT id
-        FROM pedidos
-        WHERE cliente_id = :cliente_id
-        LIMIT 1
-    ";
+            SELECT id
+            FROM pedidos
+            WHERE cliente_id = :cliente_id
+            LIMIT 1
+        ";
+
 
         $stmt =
             $this->pdo->prepare(
                 $sql
             );
 
+
         $stmt->execute([
             ':cliente_id' =>
-            $clienteId,
+                $clienteId,
         ]);
+
 
         return
             $stmt->fetch(
@@ -707,74 +788,93 @@ VERIFICA PEDIDOS
 
 
     /*
-=================================
-EXCLUI CONTA SEM PEDIDOS
-=================================
-*/
+    =================================
+    EXCLUI CONTA SEM PEDIDOS
+    =================================
+    */
 
     public function excluirConta(
         int $clienteId
     ): void {
+
         $this->pdo->beginTransaction();
+
 
         try {
 
             $stmt =
-                $this->pdo->prepare("
-                DELETE FROM dispositivos_notificacao
-                WHERE cliente_id = :cliente_id
-            ");
+                $this->pdo->prepare(
+                    "
+                    DELETE FROM dispositivos_notificacao
+                    WHERE cliente_id = :cliente_id
+                    "
+                );
+
 
             $stmt->execute([
                 ':cliente_id' =>
-                $clienteId,
+                    $clienteId,
             ]);
 
 
             $stmt =
-                $this->pdo->prepare("
-                DELETE FROM enderecos
-                WHERE cliente_id = :cliente_id
-            ");
+                $this->pdo->prepare(
+                    "
+                    DELETE FROM enderecos
+                    WHERE cliente_id = :cliente_id
+                    "
+                );
+
 
             $stmt->execute([
                 ':cliente_id' =>
-                $clienteId,
+                    $clienteId,
             ]);
 
 
             $stmt =
-                $this->pdo->prepare("
-                DELETE FROM carrinhos
-                WHERE cliente_id = :cliente_id
-            ");
+                $this->pdo->prepare(
+                    "
+                    DELETE FROM carrinhos
+                    WHERE cliente_id = :cliente_id
+                    "
+                );
+
 
             $stmt->execute([
                 ':cliente_id' =>
-                $clienteId,
+                    $clienteId,
             ]);
 
 
             $stmt =
-                $this->pdo->prepare("
-                DELETE FROM clientes
-                WHERE id = :cliente_id
-            ");
+                $this->pdo->prepare(
+                    "
+                    DELETE FROM clientes
+                    WHERE id = :cliente_id
+                    "
+                );
+
 
             $stmt->execute([
                 ':cliente_id' =>
-                $clienteId,
+                    $clienteId,
             ]);
 
 
             $this->pdo->commit();
-        } catch (\Throwable $erro) {
+
+        } catch (
+            \Throwable $erro
+        ) {
 
             if (
                 $this->pdo->inTransaction()
             ) {
+
                 $this->pdo->rollBack();
             }
+
 
             throw $erro;
         }
@@ -782,15 +882,17 @@ EXCLUI CONTA SEM PEDIDOS
 
 
     /*
-=================================
-ENCERRA CONTA COM PEDIDOS
-=================================
-*/
+    =================================
+    ENCERRA CONTA COM PEDIDOS
+    =================================
+    */
 
     public function anonimizarConta(
         int $clienteId
     ): void {
+
         $this->pdo->beginTransaction();
+
 
         try {
 
@@ -801,71 +903,90 @@ ENCERRA CONTA COM PEDIDOS
 
 
             $stmt =
-                $this->pdo->prepare("
-                UPDATE clientes
-                SET
-                    google_sub = NULL,
-                    nome = 'Conta excluída',
-                    email = :email,
-                    senha_hash = NULL,
-                    foto_url = NULL,
-                    email_verificado = 0
-                WHERE id = :id
-            ");
+                $this->pdo->prepare(
+                    "
+                    UPDATE clientes
+                    SET
+                        google_sub = NULL,
+                        nome = 'Conta excluída',
+                        email = :email,
+                        senha_hash = NULL,
+                        foto_url = NULL,
+                        email_verificado = 0,
+                        token_verificacao_email = NULL,
+                        token_verificacao_expira_em = NULL
+                    WHERE id = :id
+                    "
+                );
+
 
             $stmt->execute([
                 ':email' =>
-                $emailAnonimo,
+                    $emailAnonimo,
 
                 ':id' =>
-                $clienteId,
+                    $clienteId,
             ]);
 
 
             $stmt =
-                $this->pdo->prepare("
-                DELETE FROM dispositivos_notificacao
-                WHERE cliente_id = :cliente_id
-            ");
+                $this->pdo->prepare(
+                    "
+                    DELETE FROM dispositivos_notificacao
+                    WHERE cliente_id = :cliente_id
+                    "
+                );
+
 
             $stmt->execute([
                 ':cliente_id' =>
-                $clienteId,
+                    $clienteId,
             ]);
 
 
             $stmt =
-                $this->pdo->prepare("
-                DELETE FROM enderecos
-                WHERE cliente_id = :cliente_id
-            ");
+                $this->pdo->prepare(
+                    "
+                    DELETE FROM enderecos
+                    WHERE cliente_id = :cliente_id
+                    "
+                );
+
 
             $stmt->execute([
                 ':cliente_id' =>
-                $clienteId,
+                    $clienteId,
             ]);
 
 
             $stmt =
-                $this->pdo->prepare("
-                DELETE FROM carrinhos
-                WHERE cliente_id = :cliente_id
-            ");
+                $this->pdo->prepare(
+                    "
+                    DELETE FROM carrinhos
+                    WHERE cliente_id = :cliente_id
+                    "
+                );
+
 
             $stmt->execute([
                 ':cliente_id' =>
-                $clienteId,
+                    $clienteId,
             ]);
 
 
             $this->pdo->commit();
-        } catch (\Throwable $erro) {
+
+        } catch (
+            \Throwable $erro
+        ) {
 
             if (
                 $this->pdo->inTransaction()
             ) {
+
                 $this->pdo->rollBack();
             }
+
 
             throw $erro;
         }
@@ -884,18 +1005,21 @@ ENCERRA CONTA COM PEDIDOS
 
         $sql = "
             UPDATE clientes
-            SET ultimo_acesso = NOW()
+            SET
+                ultimo_acesso = NOW()
             WHERE id = :id
         ";
+
 
         $stmt =
             $this->pdo->prepare(
                 $sql
             );
 
+
         $stmt->execute([
             ':id' =>
-            $clienteId,
+                $clienteId,
         ]);
     }
 }
