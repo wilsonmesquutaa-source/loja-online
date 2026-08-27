@@ -48,12 +48,16 @@ $etiquetaProdutos =
         <div class="row g-4">
 
 
-            <?php if ($categorias === []): ?>
+            <?php if (
+                $categorias === []
+            ): ?>
 
                 <div class="col-12">
 
                     <div class="alert alert-info">
+
                         Nenhuma categoria encontrada.
+
                     </div>
 
                 </div>
@@ -61,9 +65,13 @@ $etiquetaProdutos =
             <?php endif; ?>
 
 
-            <?php foreach ($categorias as $categoria): ?>
+            <?php foreach (
+                $categorias
+                as $categoria
+            ): ?>
 
                 <div class="col-md-6 col-lg-3">
+
 
                     <article
                         class="
@@ -72,8 +80,77 @@ $etiquetaProdutos =
                             border-0
                             shadow-sm
                             h-100
+                            overflow-hidden
                         "
                     >
+
+
+                        <!-- =================================
+                             IMAGEM DA CATEGORIA
+                        ================================== -->
+
+                        <div
+                            class="cardapio-categoria-imagem"
+                        >
+
+                            <?php if (
+                                !empty(
+                                    $categoria['imagem_url']
+                                )
+                            ): ?>
+
+                                <img
+                                    src="<?= BASE_URL . $categoria['imagem_url'] ?>"
+                                    alt="<?= htmlspecialchars(
+                                        'Imagem de ' . $categoria['nome'],
+                                        ENT_QUOTES,
+                                        'UTF-8'
+                                    ) ?>"
+                                    style="
+                                        object-position:
+                                            <?= isset(
+                                                $categoria['imagem_posicao_x']
+                                            )
+                                                ? (float)
+                                                    $categoria['imagem_posicao_x']
+                                                : 50
+                                            ?>%
+                                            <?= isset(
+                                                $categoria['imagem_posicao_y']
+                                            )
+                                                ? (float)
+                                                    $categoria['imagem_posicao_y']
+                                                : 50
+                                            ?>%;
+                                    "
+                                >
+
+                            <?php else: ?>
+
+                                <div
+                                    class="
+                                        cardapio-categoria-imagem-placeholder
+                                    "
+                                >
+
+                                    <i
+                                        class="
+                                            bi
+                                            bi-image
+                                        "
+                                        aria-hidden="true"
+                                    ></i>
+
+                                </div>
+
+                            <?php endif; ?>
+
+                        </div>
+
+
+                        <!-- =================================
+                             CONTEÚDO
+                        ================================== -->
 
                         <div
                             class="
@@ -82,6 +159,9 @@ $etiquetaProdutos =
                                 flex-column
                             "
                         >
+
+
+                            <!-- ETIQUETA -->
 
                             <span
                                 class="
@@ -102,7 +182,14 @@ $etiquetaProdutos =
                             </span>
 
 
-                            <h3 class="h5 fw-bold">
+                            <!-- NOME -->
+
+                            <h3
+                                class="
+                                    h5
+                                    fw-bold
+                                "
+                            >
 
                                 <?= htmlspecialchars(
                                     $categoria['nome'],
@@ -113,10 +200,17 @@ $etiquetaProdutos =
                             </h3>
 
 
-                            <p class="text-secondary">
+                            <!-- DESCRIÇÃO -->
+
+                            <p
+                                class="
+                                    text-secondary
+                                "
+                            >
 
                                 <?= htmlspecialchars(
-                                    $categoria['descricao'] ?? '',
+                                    $categoria['descricao']
+                                    ?? '',
                                     ENT_QUOTES,
                                     'UTF-8'
                                 ) ?>
@@ -124,7 +218,10 @@ $etiquetaProdutos =
                             </p>
 
 
+                            <!-- PREÇO E BOTÃO -->
+
                             <div class="mt-auto">
+
 
                                 <p
                                     class="
@@ -162,11 +259,15 @@ $etiquetaProdutos =
 
                                 </a>
 
+
                             </div>
+
 
                         </div>
 
+
                     </article>
+
 
                 </div>
 
@@ -178,3 +279,102 @@ $etiquetaProdutos =
     </div>
 
 </section>
+
+
+<style>
+
+/*
+=================================
+IMAGEM DA CATEGORIA
+=================================
+*/
+
+.cardapio-categoria-imagem {
+
+    width:
+        100%;
+
+    height:
+        190px;
+
+    overflow:
+        hidden;
+
+    background:
+        #f8f5f0;
+}
+
+
+/*
+=================================
+IMAGEM REAL
+=================================
+*/
+
+.cardapio-categoria-imagem img {
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    display:
+        block;
+
+    object-fit:
+        cover;
+
+    transition:
+        transform 0.4s ease;
+}
+
+
+/*
+=================================
+EFEITO HOVER
+=================================
+*/
+
+.produto-card:hover
+.cardapio-categoria-imagem img {
+
+    transform:
+        scale(1.05);
+}
+
+
+/*
+=================================
+PLACEHOLDER
+=================================
+*/
+
+.cardapio-categoria-imagem-placeholder {
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    background:
+        #f8f5f0;
+
+    color:
+        #9ca3af;
+
+    font-size:
+        3rem;
+}
+
+</style>
