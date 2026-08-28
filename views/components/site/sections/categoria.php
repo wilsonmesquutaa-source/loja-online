@@ -191,10 +191,13 @@ if (
     <div class="alert alert-warning categoria-alerta">
 
 
-        <div class="
-            d-flex
-            align-items-center
-            gap-2">
+        <div
+            class="
+                d-flex
+                align-items-center
+                gap-2
+            "
+        >
 
 
             <i class="bi bi-info-circle"></i>
@@ -299,13 +302,15 @@ if (
     <form
         action="<?= BASE_URL ?>/carrinho/adicionar"
         method="POST"
-        data-form-carrinho>
+        data-form-carrinho
+    >
 
 
         <input
             type="hidden"
             name="categoria_id"
-            value="<?= (int) $categoria['id'] ?>">
+            value="<?= (int) $categoria['id'] ?>"
+        >
 
 
         <?php if (
@@ -315,7 +320,8 @@ if (
             <input
                 type="hidden"
                 name="editar_categoria_id"
-                value="<?= (int) $editarCategoriaId ?>">
+                value="<?= (int) $editarCategoriaId ?>"
+            >
 
         <?php endif; ?>
 
@@ -370,7 +376,10 @@ if (
 
                                 $quantidadeInicial =
                                     (int) (
-                                        $quantidadesIniciais[$produtoId] ?? 0
+                                        $quantidadesIniciais[
+                                            $produtoId
+                                        ]
+                                        ?? 0
                                     );
 
                                 ?>
@@ -378,41 +387,105 @@ if (
 
                                 <div
                                     class="produto-wrapper"
-                                    data-produto-wrapper>
+                                    data-produto-wrapper
+                                >
 
 
                                     <div
                                         class="produto-selecao-card"
-                                        data-produto-id="<?= $produtoId ?>">
+                                        data-produto-id="<?= $produtoId ?>"
+                                    >
 
 
                                         <div
-                                            class="produto-card-conteudo">
+                                            class="produto-card-conteudo"
+                                        >
 
 
-                                            <!-- IMAGEM -->
+                                            <!-- =================================
+                                                 IMAGEM
+                                            ================================== -->
 
-                                            <div
-                                                class="
-                                                produto-imagem-placeholder">
+                                            <?php if (
+                                                !empty(
+                                                    $produto[
+                                                        'imagem_url'
+                                                    ]
+                                                )
+                                            ): ?>
 
-
-                                                <i
+                                                <div
                                                     class="
-                                                    bi
-                                                    bi-image">
-                                                </i>
+                                                        produto-imagem-placeholder
+                                                    "
+                                                >
+
+                                                    <img
+                                                        src="<?= BASE_URL . $produto['imagem_url'] ?>"
+                                                        alt="<?= htmlspecialchars(
+                                                            'Imagem de '
+                                                            . $produto['nome'],
+                                                            ENT_QUOTES,
+                                                            'UTF-8'
+                                                        ) ?>"
+                                                        style="
+                                                            object-position:
+                                                                <?= isset(
+                                                                    $produto[
+                                                                        'imagem_posicao_x'
+                                                                    ]
+                                                                )
+                                                                    ? (float)
+                                                                        $produto[
+                                                                            'imagem_posicao_x'
+                                                                        ]
+                                                                    : 50
+                                                                ?>%
+                                                                <?= isset(
+                                                                    $produto[
+                                                                        'imagem_posicao_y'
+                                                                    ]
+                                                                )
+                                                                    ? (float)
+                                                                        $produto[
+                                                                            'imagem_posicao_y'
+                                                                        ]
+                                                                    : 50
+                                                                ?>%;
+                                                        "
+                                                    >
+
+                                                </div>
+
+                                            <?php else: ?>
+
+                                                <div
+                                                    class="
+                                                        produto-imagem-placeholder
+                                                    "
+                                                >
+
+                                                    <i
+                                                        class="
+                                                            bi
+                                                            bi-image
+                                                        "
+                                                    ></i>
+
+                                                </div>
+
+                                            <?php endif; ?>
 
 
-                                            </div>
-
-
-                                            <!-- NOME -->
+                                            <!-- =================================
+                                                 NOME
+                                            ================================== -->
 
                                             <h4
                                                 class="
-                                                produto-card-titulo">
-
+                                                    produto-card-titulo
+                                                "
+                                            >
 
                                                 <?= htmlspecialchars(
                                                     $produto['nome'],
@@ -420,24 +493,33 @@ if (
                                                     'UTF-8'
                                                 ) ?>
 
-
                                             </h4>
 
 
-                                            <!-- DESCRIÇÃO -->
+                                            <!-- =================================
+                                                 DESCRIÇÃO
+                                            ================================== -->
 
                                             <div
                                                 class="
-                                                produto-card-descricao">
+                                                    produto-card-descricao
+                                                "
+                                            >
 
 
                                                 <?php if (
-                                                    !empty($produto['descricao'])
+                                                    !empty(
+                                                        $produto[
+                                                            'descricao'
+                                                        ]
+                                                    )
                                                 ): ?>
 
 
                                                     <?= htmlspecialchars(
-                                                        $produto['descricao'],
+                                                        $produto[
+                                                            'descricao'
+                                                        ],
                                                         ENT_QUOTES,
                                                         'UTF-8'
                                                     ) ?>
@@ -449,11 +531,15 @@ if (
                                             </div>
 
 
-                                            <!-- CONTADOR -->
+                                            <!-- =================================
+                                                 CONTADOR
+                                            ================================== -->
 
                                             <div
                                                 class="
-                                                contador-produto">
+                                                    contador-produto
+                                                "
+                                            >
 
 
                                                 <!-- DIMINUIR -->
@@ -461,22 +547,25 @@ if (
                                                 <button
                                                     type="button"
                                                     class="
-                                                    contador-botao
-                                                    contador-botao-menos"
+                                                        contador-botao
+                                                        contador-botao-menos
+                                                    "
                                                     data-diminuir
                                                     <?= (
                                                         $quantidadeInicial <= 0
                                                     )
                                                         ? 'disabled'
                                                         : ''
-                                                    ?>>
+                                                    ?>
+                                                >
 
 
                                                     <i
                                                         class="
-                                                        bi
-                                                        bi-dash">
-                                                    </i>
+                                                            bi
+                                                            bi-dash
+                                                        "
+                                                    ></i>
 
 
                                                 </button>
@@ -486,12 +575,12 @@ if (
 
                                                 <span
                                                     class="
-                                                    contador-quantidade"
-                                                    data-quantidade>
-
+                                                        contador-quantidade
+                                                    "
+                                                    data-quantidade
+                                                >
 
                                                     <?= $quantidadeInicial ?>
-
 
                                                 </span>
 
@@ -501,16 +590,19 @@ if (
                                                 <button
                                                     type="button"
                                                     class="
-                                                    contador-botao
-                                                    contador-botao-mais"
-                                                    data-aumentar>
+                                                        contador-botao
+                                                        contador-botao-mais
+                                                    "
+                                                    data-aumentar
+                                                >
 
 
                                                     <i
                                                         class="
-                                                        bi
-                                                        bi-plus">
-                                                    </i>
+                                                            bi
+                                                            bi-plus
+                                                        "
+                                                    ></i>
 
 
                                                 </button>
@@ -525,7 +617,8 @@ if (
                                                 type="hidden"
                                                 name="quantidades[<?= $produtoId ?>]"
                                                 value="<?= $quantidadeInicial ?>"
-                                                data-input-quantidade>
+                                                data-input-quantidade
+                                            >
 
 
                                         </div>
@@ -569,8 +662,9 @@ if (
 
                                 <h4
                                     class="
-                                    cento-preview-titulo">
-
+                                        cento-preview-titulo
+                                    "
+                                >
 
                                     <?= $ehTradicionais
                                         ? 'Cento Tradicional'
@@ -588,7 +682,8 @@ if (
 
                             <div
                                 class="cento-circulo"
-                                data-partes="<?= $partesCento ?>">
+                                data-partes="<?= $partesCento ?>"
+                            >
 
 
                                 <?php for (
@@ -601,13 +696,16 @@ if (
                                     <div
                                         class="cento-setor"
                                         data-cento-setor="<?= $parte ?>"
-                                        data-parte="<?= $parte ?>">
+                                        data-parte="<?= $parte ?>"
+                                    >
 
 
                                         <span
                                             class="
-                                            cento-setor-texto"
-                                            data-cento-texto>
+                                                cento-setor-texto
+                                            "
+                                            data-cento-texto
+                                        >
                                         </span>
 
 
@@ -624,15 +722,19 @@ if (
 
                                     <div
                                         class="
-                                        cento-divisao
-                                        cento-divisao-vertical">
+                                            cento-divisao
+                                            cento-divisao-vertical
+                                        "
+                                    >
                                     </div>
 
 
                                     <div
                                         class="
-                                        cento-divisao
-                                        cento-divisao-horizontal">
+                                            cento-divisao
+                                            cento-divisao-horizontal
+                                        "
+                                    >
                                     </div>
 
 
@@ -641,8 +743,10 @@ if (
 
                                     <div
                                         class="
-                                        cento-divisao
-                                        cento-divisao-vertical">
+                                            cento-divisao
+                                            cento-divisao-vertical
+                                        "
+                                    >
                                     </div>
 
 
@@ -652,7 +756,8 @@ if (
                                 <!-- CENTRO -->
 
                                 <div
-                                    class="cento-centro">
+                                    class="cento-centro"
+                                >
 
 
                                     <strong>
@@ -679,7 +784,8 @@ if (
 
                             <div
                                 class="cento-preview-status"
-                                data-cento-status>
+                                data-cento-status
+                            >
 
 
                                 <small>
@@ -697,15 +803,18 @@ if (
                             <button
                                 type="button"
                                 class="
-                                cento-botao-limpar"
-                                data-limpar-cento>
+                                    cento-botao-limpar
+                                "
+                                data-limpar-cento
+                            >
 
 
                                 <i
                                     class="
-                                    bi
-                                    bi-arrow-counterclockwise">
-                                </i>
+                                        bi
+                                        bi-arrow-counterclockwise
+                                    "
+                                ></i>
 
 
                                 Limpar seleção
@@ -719,15 +828,18 @@ if (
                             <button
                                 type="submit"
                                 class="
-                                cento-botao-carrinho"
-                                data-adicionar-carrinho>
+                                    cento-botao-carrinho
+                                "
+                                data-adicionar-carrinho
+                            >
 
 
                                 <i
                                     class="
-                                    bi
-                                    bi-cart-plus">
-                                </i>
+                                        bi
+                                        bi-cart-plus
+                                    "
+                                ></i>
 
 
                                 <?= $estaEditando
@@ -794,7 +906,10 @@ if (
 
                             $quantidadeInicial =
                                 (int) (
-                                    $quantidadesIniciais[$produtoId] ?? 0
+                                    $quantidadesIniciais[
+                                        $produtoId
+                                    ]
+                                    ?? 0
                                 );
 
                             ?>
@@ -802,37 +917,105 @@ if (
 
                             <div
                                 class="produto-wrapper"
-                                data-produto-wrapper>
+                                data-produto-wrapper
+                            >
 
 
                                 <div
                                     class="produto-selecao-card"
-                                    data-produto-id="<?= $produtoId ?>">
+                                    data-produto-id="<?= $produtoId ?>"
+                                >
 
 
                                     <div
-                                        class="produto-card-conteudo">
+                                        class="produto-card-conteudo"
+                                    >
 
 
-                                        <div
-                                            class="
-                                            produto-imagem-placeholder">
+                                        <!-- =================================
+                                             IMAGEM
+                                        ================================== -->
 
+                                        <?php if (
+                                            !empty(
+                                                $produto[
+                                                    'imagem_url'
+                                                ]
+                                            )
+                                        ): ?>
 
-                                            <i
+                                            <div
                                                 class="
-                                                bi
-                                                bi-image">
-                                            </i>
+                                                    produto-imagem-placeholder
+                                                "
+                                            >
+
+                                                <img
+                                                    src="<?= BASE_URL . $produto['imagem_url'] ?>"
+                                                    alt="<?= htmlspecialchars(
+                                                        'Imagem de '
+                                                        . $produto['nome'],
+                                                        ENT_QUOTES,
+                                                        'UTF-8'
+                                                    ) ?>"
+                                                    style="
+                                                        object-position:
+                                                            <?= isset(
+                                                                $produto[
+                                                                    'imagem_posicao_x'
+                                                                ]
+                                                            )
+                                                                ? (float)
+                                                                    $produto[
+                                                                        'imagem_posicao_x'
+                                                                    ]
+                                                                : 50
+                                                            ?>%
+                                                            <?= isset(
+                                                                $produto[
+                                                                    'imagem_posicao_y'
+                                                                ]
+                                                            )
+                                                                ? (float)
+                                                                    $produto[
+                                                                        'imagem_posicao_y'
+                                                                    ]
+                                                                : 50
+                                                            ?>%;
+                                                    "
+                                                >
+
+                                            </div>
+
+                                        <?php else: ?>
+
+                                            <div
+                                                class="
+                                                    produto-imagem-placeholder
+                                                "
+                                            >
+
+                                                <i
+                                                    class="
+                                                        bi
+                                                        bi-image
+                                                    "
+                                                ></i>
+
+                                            </div>
+
+                                        <?php endif; ?>
 
 
-                                        </div>
-
+                                        <!-- =================================
+                                             NOME
+                                        ================================== -->
 
                                         <h4
                                             class="
-                                            produto-card-titulo">
-
+                                                produto-card-titulo
+                                            "
+                                        >
 
                                             <?= htmlspecialchars(
                                                 $produto['nome'],
@@ -844,18 +1027,30 @@ if (
                                         </h4>
 
 
+                                        <!-- =================================
+                                             DESCRIÇÃO
+                                        ================================== -->
+
                                         <div
                                             class="
-                                            produto-card-descricao">
+                                                produto-card-descricao
+                                            "
+                                        >
 
 
                                             <?php if (
-                                                !empty($produto['descricao'])
+                                                !empty(
+                                                    $produto[
+                                                        'descricao'
+                                                    ]
+                                                )
                                             ): ?>
 
 
                                                 <?= htmlspecialchars(
-                                                    $produto['descricao'],
+                                                    $produto[
+                                                        'descricao'
+                                                    ],
                                                     ENT_QUOTES,
                                                     'UTF-8'
                                                 ) ?>
@@ -867,40 +1062,54 @@ if (
                                         </div>
 
 
+                                        <!-- =================================
+                                             CONTADOR
+                                        ================================== -->
+
                                         <div
                                             class="
-                                            contador-produto">
+                                                contador-produto
+                                            "
+                                        >
 
+
+                                            <!-- DIMINUIR -->
 
                                             <button
                                                 type="button"
                                                 class="
-                                                contador-botao
-                                                contador-botao-menos"
+                                                    contador-botao
+                                                    contador-botao-menos
+                                                "
                                                 data-diminuir
                                                 <?= (
                                                     $quantidadeInicial <= 0
                                                 )
                                                     ? 'disabled'
                                                     : ''
-                                                ?>>
+                                                ?>
+                                            >
 
 
                                                 <i
                                                     class="
-                                                    bi
-                                                    bi-dash">
-                                                </i>
+                                                        bi
+                                                        bi-dash
+                                                    "
+                                                ></i>
 
 
                                             </button>
 
 
+                                            <!-- QUANTIDADE -->
+
                                             <span
                                                 class="
-                                                contador-quantidade"
-                                                data-quantidade>
-
+                                                    contador-quantidade
+                                                "
+                                                data-quantidade
+                                            >
 
                                                 <?= $quantidadeInicial ?>
 
@@ -908,19 +1117,24 @@ if (
                                             </span>
 
 
+                                            <!-- AUMENTAR -->
+
                                             <button
                                                 type="button"
                                                 class="
-                                                contador-botao
-                                                contador-botao-mais"
-                                                data-aumentar>
+                                                    contador-botao
+                                                    contador-botao-mais
+                                                "
+                                                data-aumentar
+                                            >
 
 
                                                 <i
                                                     class="
-                                                    bi
-                                                    bi-plus">
-                                                </i>
+                                                        bi
+                                                        bi-plus
+                                                    "
+                                                ></i>
 
 
                                             </button>
@@ -929,11 +1143,14 @@ if (
                                         </div>
 
 
+                                        <!-- INPUT OCULTO -->
+
                                         <input
                                             type="hidden"
                                             name="quantidades[<?= $produtoId ?>]"
                                             value="<?= $quantidadeInicial ?>"
-                                            data-input-quantidade>
+                                            data-input-quantidade
+                                        >
 
 
                                     </div>
@@ -964,18 +1181,26 @@ if (
              PAINEL SALGADOS GRANDES / EMPADÃO
         ================================== -->
 
-        <?php if (!$ehCento): ?>
+        <?php if (
+            !$ehCento
+        ): ?>
 
 
-            <div class="categoria-acao-sticky">
+            <div
+                class="categoria-acao-sticky"
+            >
 
 
-                <div class="categoria-acao-card">
+                <div
+                    class="categoria-acao-card"
+                >
 
 
                     <h4
                         class="
-                        categoria-acao-titulo">
+                            categoria-acao-titulo
+                        "
+                    >
 
 
                         <?= $ehSalgadosGrandes
@@ -989,7 +1214,9 @@ if (
 
                     <p
                         class="
-                        categoria-acao-texto">
+                            categoria-acao-texto
+                        "
+                    >
 
 
                         <?= $ehSalgadosGrandes
@@ -1003,12 +1230,16 @@ if (
 
                     <div
                         class="
-                        categoria-acao-contador">
+                            categoria-acao-contador
+                        "
+                    >
 
 
                         <span
                             class="
-                            categoria-acao-contador-label">
+                                categoria-acao-contador-label
+                            "
+                        >
 
 
                             Quantidade selecionada
@@ -1019,8 +1250,10 @@ if (
 
                         <strong
                             class="
-                            categoria-acao-contador-valor"
-                            data-contador-quantidade>
+                                categoria-acao-contador-valor
+                            "
+                            data-contador-quantidade
+                        >
 
 
                             <?= $totalInicialUnidades ?>
@@ -1031,7 +1264,9 @@ if (
 
                         <span
                             class="
-                            categoria-acao-contador-unidade">
+                                categoria-acao-contador-unidade
+                            "
+                        >
 
 
                             <?= (
@@ -1051,15 +1286,18 @@ if (
                     <button
                         type="submit"
                         class="
-                        categoria-acao-botao"
-                        data-adicionar-carrinho>
+                            categoria-acao-botao
+                        "
+                        data-adicionar-carrinho
+                    >
 
 
                         <i
                             class="
-                            bi
-                            bi-cart-plus">
-                        </i>
+                                bi
+                                bi-cart-plus
+                            "
+                        ></i>
 
 
                         <?= $estaEditando

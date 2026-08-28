@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 27-Ago-2026 às 18:40
+-- Tempo de geração: 28-Ago-2026 às 21:25
 -- Versão do servidor: 10.4.22-MariaDB
 -- versão do PHP: 7.4.27
 
@@ -109,10 +109,38 @@ CREATE TABLE `categorias` (
 --
 
 INSERT INTO `categorias` (`id`, `nome`, `slug`, `descricao`, `preco`, `preco_revenda`, `quantidade_minima_revenda`, `ativo`, `destaque`, `ordem_destaque`, `criado_em`, `atualizado_em`) VALUES
-(1, 'Cento de Salgados Tradicionais', 'salgados-tradicionais', 'Coxinha, risoles, bolinhas de queijo, pastéis, croquetes e outros salgados clássicos para festas e eventos.', '60.00', NULL, NULL, 1, 1, 1, '2026-07-28 00:09:17', '2026-08-20 16:48:42'),
+(1, 'Cento de Salgados Tradicionais', 'salgados-tradicionais', 'Coxinha, risoles, bolinhas de queijo, pastéis, croquetes e outros salgados clássicos para festas e eventos.', '60.00', NULL, NULL, 1, 1, 0, '2026-07-28 00:09:17', '2026-08-27 19:18:02'),
 (2, 'Cento de Salgado Folhados', 'folhados', 'Croissants e roletes preparados com massa folhada leve e crocante.', '140.00', NULL, NULL, 1, 0, 0, '2026-07-28 00:09:17', '2026-08-07 17:18:18'),
 (3, 'Salgados Grandes', 'salgados-grandes', 'Salgados maiores para consumo individual ou revenda, com opções de sabores variados.', '5.00', '3.00', 10, 1, 0, 0, '2026-07-28 00:09:17', '2026-07-30 11:56:13'),
 (4, 'Empadões', 'empadoes', 'Empadões artesanais preparados com massa delicada e recheios saborosos.', '100.00', NULL, NULL, 1, 0, 0, '2026-07-29 21:37:35', '2026-07-30 11:56:13');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `categoria_imagens`
+--
+
+CREATE TABLE `categoria_imagens` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `categoria_id` int(10) UNSIGNED NOT NULL,
+  `url_imagem` varchar(500) NOT NULL,
+  `texto_alternativo` varchar(255) DEFAULT NULL,
+  `principal` tinyint(1) NOT NULL DEFAULT 0,
+  `ordem` smallint(5) UNSIGNED NOT NULL DEFAULT 1,
+  `posicao_x` decimal(5,2) NOT NULL DEFAULT 50.00,
+  `posicao_y` decimal(5,2) NOT NULL DEFAULT 50.00,
+  `criado_em` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Extraindo dados da tabela `categoria_imagens`
+--
+
+INSERT INTO `categoria_imagens` (`id`, `categoria_id`, `url_imagem`, `texto_alternativo`, `principal`, `ordem`, `posicao_x`, `posicao_y`, `criado_em`) VALUES
+(4, 4, '/assets/uploads/categorias/categoria_4_50032245f729decd.png', 'Imagem de Empadões', 1, 1, '72.44', '36.03', '2026-08-27 19:06:42'),
+(5, 1, '/assets/uploads/categorias/categoria_1_6c1d0e6de2a34ca0.png', 'Imagem de Cento de Salgados Tradicionais', 1, 1, '62.29', '15.92', '2026-08-27 19:11:12'),
+(6, 3, '/assets/uploads/categorias/categoria_3_09154d6e4233e0f5.jpg', 'Imagem de Salgados Grandes', 1, 1, '54.99', '60.56', '2026-08-27 19:16:34'),
+(7, 2, '/assets/uploads/categorias/categoria_2_94f1bdc60a75265d.png', 'Imagem de Cento de Salgado Folhados', 1, 1, '61.40', '85.10', '2026-08-28 16:46:45');
 
 -- --------------------------------------------------------
 
@@ -363,8 +391,33 @@ CREATE TABLE `produto_imagens` (
   `texto_alternativo` varchar(255) DEFAULT NULL,
   `principal` tinyint(1) NOT NULL DEFAULT 0,
   `ordem` smallint(5) UNSIGNED NOT NULL DEFAULT 1,
+  `posicao_x` decimal(5,2) NOT NULL DEFAULT 50.00,
+  `posicao_y` decimal(5,2) NOT NULL DEFAULT 50.00,
   `criado_em` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Extraindo dados da tabela `produto_imagens`
+--
+
+INSERT INTO `produto_imagens` (`id`, `produto_id`, `url_imagem`, `texto_alternativo`, `principal`, `ordem`, `posicao_x`, `posicao_y`, `criado_em`) VALUES
+(1, 1, '/assets/uploads/produtos/produto_1_5912ba00ceb950a0.jpg', 'Imagem de 25-Coxinha de Frango pequena', 1, 1, '43.41', '55.11', '2026-08-28 17:33:20'),
+(2, 69, '/assets/uploads/produtos/produto_69_d5e29243dc64fa4a.jpg', 'Imagem de 25- Croissant Frango Pequeno', 1, 1, '59.62', '59.54', '2026-08-28 17:38:51'),
+(3, 68, '/assets/uploads/produtos/produto_68_976de4bec507adfd.jpg', 'Imagem de 25- Croissant de Queijo Pequeno', 1, 1, '50.00', '50.00', '2026-08-28 17:40:44'),
+(4, 67, '/assets/uploads/produtos/produto_67_d3ed20708a9f4916.jpg', 'Imagem de 25- Croissant Misto Pequeno', 1, 1, '43.59', '65.33', '2026-08-28 18:11:55'),
+(5, 23, '/assets/uploads/produtos/produto_23_ddf040175dfd1a58.jpg', 'Imagem de 25- Romeu e Julieta pequeno', 1, 1, '50.00', '50.00', '2026-08-28 18:17:45'),
+(6, 22, '/assets/uploads/produtos/produto_22_0679d4384878b91b.jpg', 'Imagem de 25- Empada de frango pequena', 1, 1, '50.00', '50.00', '2026-08-28 18:20:49'),
+(7, 21, '/assets/uploads/produtos/produto_21_42b150b5e14c617f.jpg', 'Imagem de 25- Croquete de salsicha pequeno', 1, 1, '50.00', '50.00', '2026-08-28 18:35:32'),
+(8, 11, '/assets/uploads/produtos/produto_11_a2db536b23402a3e.jpg', 'Imagem de 25- Pastel de carne pequeno', 1, 1, '50.00', '50.00', '2026-08-28 18:37:36'),
+(9, 13, '/assets/uploads/produtos/produto_13_c9111a3e4b2b0613.jpg', 'Imagem de 25- Pastel misto pequeno', 1, 1, '50.00', '50.00', '2026-08-28 18:47:34'),
+(10, 12, '/assets/uploads/produtos/produto_12_344d38be1848c4ad.jpg', 'Imagem de 25- Pastel de queijo pequeno', 1, 1, '50.00', '50.00', '2026-08-28 18:51:19'),
+(11, 14, '/assets/uploads/produtos/produto_14_d725e0934cff5881.jpg', 'Imagem de 25- Pastel de frango pequeno', 1, 1, '50.00', '50.00', '2026-08-28 18:56:40'),
+(12, 10, '/assets/uploads/produtos/produto_10_0035866aa1c2da43.jpg', 'Imagem de 25- Risole de frango pequeno', 1, 1, '50.00', '50.00', '2026-08-28 19:00:11'),
+(13, 9, '/assets/uploads/produtos/produto_9_f6df70fd4c383227.jpg', 'Imagem de 25- Risole de carne pequeno', 1, 1, '50.00', '50.00', '2026-08-28 19:01:36'),
+(14, 8, '/assets/uploads/produtos/produto_8_5248c011baacb943.jpg', 'Imagem de 25- Risole de queijo pequeno', 1, 1, '50.00', '50.00', '2026-08-28 19:02:58'),
+(15, 7, '/assets/uploads/produtos/produto_7_28d082169de594e6.jpg', 'Imagem de 25- Risole misto pequeno', 1, 1, '50.00', '50.00', '2026-08-28 19:04:32'),
+(16, 2, '/assets/uploads/produtos/produto_2_95f45069f125ce0e.jpg', 'Imagem de 25-Bolinha de queijo', 1, 1, '50.00', '50.00', '2026-08-28 19:06:32'),
+(17, 24, '/assets/uploads/produtos/produto_24_3dc7c1aab05992eb.jpg', 'Imagem de 25- Canudinho de frango', 1, 1, '50.00', '50.00', '2026-08-28 19:13:57');
 
 -- --------------------------------------------------------
 
@@ -388,7 +441,7 @@ CREATE TABLE `usuarios_admin` (
 --
 
 INSERT INTO `usuarios_admin` (`id`, `nome`, `email`, `senha_hash`, `status`, `ultimo_acesso`, `criado_em`, `atualizado_em`) VALUES
-(2, 'Will Mesquita', 'admin@admin.com', '$2y$10$ncHglzOVOSt.b3ROUZXUzO5kDkukSoyXLNTF8OTXL.yhQbAvYAOcq', 'ativo', '2026-08-25 14:41:14', '2026-08-03 17:59:28', '2026-08-25 17:41:14');
+(2, 'Will Mesquita', 'admin@admin.com', '$2y$10$ncHglzOVOSt.b3ROUZXUzO5kDkukSoyXLNTF8OTXL.yhQbAvYAOcq', 'ativo', '2026-08-28 13:31:00', '2026-08-03 17:59:28', '2026-08-28 16:31:00');
 
 -- --------------------------------------------------------
 
@@ -438,6 +491,13 @@ ALTER TABLE `categorias`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `uq_categorias_nome` (`nome`),
   ADD UNIQUE KEY `uq_categorias_slug` (`slug`);
+
+--
+-- Índices para tabela `categoria_imagens`
+--
+ALTER TABLE `categoria_imagens`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_categoria_imagens_categoria` (`categoria_id`);
 
 --
 -- Índices para tabela `clientes`
@@ -565,6 +625,12 @@ ALTER TABLE `categorias`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT de tabela `categoria_imagens`
+--
+ALTER TABLE `categoria_imagens`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
 -- AUTO_INCREMENT de tabela `clientes`
 --
 ALTER TABLE `clientes`
@@ -622,7 +688,7 @@ ALTER TABLE `produtos`
 -- AUTO_INCREMENT de tabela `produto_imagens`
 --
 ALTER TABLE `produto_imagens`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de tabela `usuarios_admin`
@@ -652,6 +718,12 @@ ALTER TABLE `carrinhos`
 ALTER TABLE `carrinho_itens`
   ADD CONSTRAINT `fk_carrinho_itens_carrinhos` FOREIGN KEY (`carrinho_id`) REFERENCES `carrinhos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_carrinho_itens_produtos` FOREIGN KEY (`produto_id`) REFERENCES `produtos` (`id`) ON UPDATE CASCADE;
+
+--
+-- Limitadores para a tabela `categoria_imagens`
+--
+ALTER TABLE `categoria_imagens`
+  ADD CONSTRAINT `fk_categoria_imagens_categorias` FOREIGN KEY (`categoria_id`) REFERENCES `categorias` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Limitadores para a tabela `dispositivos_notificacao`

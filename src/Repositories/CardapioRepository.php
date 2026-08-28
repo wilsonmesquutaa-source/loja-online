@@ -305,7 +305,33 @@ final class CardapioRepository
                         produto_imagens.ordem ASC,
                         produto_imagens.id ASC
                     LIMIT 1
-                ) AS imagem_url
+                ) AS imagem_url,
+
+                (
+                    SELECT
+                        produto_imagens.posicao_x
+                    FROM produto_imagens
+                    WHERE produto_imagens.produto_id =
+                        produtos.id
+                    AND produto_imagens.principal = 1
+                    ORDER BY
+                        produto_imagens.ordem ASC,
+                        produto_imagens.id ASC
+                    LIMIT 1
+                ) AS imagem_posicao_x,
+
+                (
+                    SELECT
+                        produto_imagens.posicao_y
+                    FROM produto_imagens
+                    WHERE produto_imagens.produto_id =
+                        produtos.id
+                    AND produto_imagens.principal = 1
+                    ORDER BY
+                        produto_imagens.ordem ASC,
+                        produto_imagens.id ASC
+                    LIMIT 1
+                ) AS imagem_posicao_y
 
             FROM produtos
 
