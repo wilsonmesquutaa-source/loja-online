@@ -33,6 +33,96 @@ CATEGORIA - BASE
     line-height: 1.5;
 }
 
+/*
+=================================
+PÁGINA DA CATEGORIA
+=================================
+*/
+
+.categoria-pagina {
+    position: relative;
+    width: 100%;
+    
+}
+
+
+/*
+=================================
+IMAGEM DESTAQUE DA CATEGORIA
+=================================
+*/
+
+.img_destaque_container {
+    position: relative;
+
+    width: 100%;
+    height: 430px;
+
+    overflow: hidden;
+
+    border-radius: 0 0 25px 25px;
+}
+
+
+/*
+=================================
+IMAGEM
+=================================
+*/
+
+.img_destaque_imagem {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background-color: #e8c7a8;
+
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    z-index: 1;
+}
+
+
+/*
+=================================
+CONTEÚDO DA CATEGORIA - container que fica o botão voltar os textos e os cards
+=================================
+*/
+
+.categoria-conteudo {
+    position: relative;
+
+    z-index: 10;
+
+    margin-top: -110px;
+
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+
+    background: var(--creme);
+
+    border-radius: 30px 30px 30px 30px;
+
+    min-height: 500px;
+        box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+
+/*
+=================================
+CATEGORIA
+=================================
+*/
+
+.categoria-conteudo .categoria-selecao {
+    width: 100%;
+}
 
 /*
 =================================
@@ -55,6 +145,7 @@ ALERTA DA CATEGORIA
 .categoria-produtos-area {
     width: 100%;
     min-width: 0;
+    
 }
 
 
@@ -65,13 +156,15 @@ GRADE DOS PRODUTOS
 */
 
 .categoria-produtos-grid {
-    width: 100%;
+    width: 80%;
+    margin: 0 auto;
     display: grid;
     grid-template-columns:
         repeat(3, minmax(0, 1fr));
-    gap: 1rem;
+    gap: 3rem;
     align-items: stretch;
 }
+
 /*
 =================================
 WRAPPER DO PRODUTO
@@ -80,7 +173,7 @@ WRAPPER DO PRODUTO
 .produto-wrapper {
     background: var(--branco);
     border-radius: 20px;
-    padding: 30px;
+    padding: 0px;
     height: 100%;
     transition: 0.3s;
     position: relative;
@@ -93,6 +186,7 @@ WRAPPER DO PRODUTO
     box-shadow:
         0 10px 25px rgba(0, 0, 0, 0.10);
 }
+
 /*
 
 
@@ -150,16 +244,15 @@ FOCO DO CARD
 
 .produto-wrapper:focus-within {
     outline:
-        2px solid
-        var(--laranja-hover);
+        2px solid var(--laranja-hover);
 
     outline-offset:
         0px;
 }
+
 .produto-wrapper.selecionado {
     outline:
-        2px solid
-        var(--cor-destaque);
+        2px solid var(--cor-destaque);
 
     outline-offset:
         0px;
@@ -182,7 +275,7 @@ CONTEÚDO DO CARD
 
     align-items: center;
 
-    padding: 1rem;
+
 }
 
 
@@ -194,7 +287,7 @@ IMAGEM
 
 .produto-imagem-placeholder {
     width: 100%;
-    height: 125px;
+    height: 150px;
 
     flex-shrink: 0;
 
@@ -220,8 +313,7 @@ IMAGEM
 }
 
 
-.produto-selecao-card:hover
-.produto-imagem-placeholder {
+.produto-selecao-card:hover .produto-imagem-placeholder {
     transform:
         scale(1.015);
 
@@ -243,8 +335,7 @@ IMAGEM
 }
 
 
-.produto-selecao-card:hover
-.produto-imagem-placeholder i {
+.produto-selecao-card:hover .produto-imagem-placeholder i {
     transform:
         scale(1.08);
 
@@ -272,8 +363,7 @@ CASO TENHA IMG REAL
 }
 
 
-.produto-selecao-card:hover
-.produto-imagem-placeholder img {
+.produto-selecao-card:hover .produto-imagem-placeholder img {
     transform:
         scale(1.05);
 }
@@ -392,6 +482,7 @@ CONTADOR
 
     flex-shrink:
         0;
+    padding-bottom: 1.5rem;
 }
 
 
@@ -415,8 +506,7 @@ BOTÃO -
     justify-content: center;
 
     border:
-        1px solid
-        var(--marrom);
+        1px solid var(--marrom);
 
     border-radius:
         10px;
@@ -485,8 +575,7 @@ BOTÃO +
     justify-content: center;
 
     border:
-        1px solid
-        var(--cor-destaque);
+        1px solid var(--cor-destaque);
 
     border-radius:
         10px;
@@ -541,8 +630,7 @@ BOTÃO +
         center !important;
 
     border:
-        1px solid
-        var(--cor-destaque) !important;
+        1px solid var(--cor-destaque) !important;
 
     border-radius:
         10px !important;
@@ -735,8 +823,7 @@ PAINEL DO CENTO
         var(--branco);
 
     border:
-        1px solid
-        rgba(93, 64, 55, 0.12);
+        1px solid rgba(93, 64, 55, 0.12);
 
     border-radius:
         0.8rem;
@@ -745,8 +832,7 @@ PAINEL DO CENTO
         1.5rem 0.6rem;
 
     box-shadow:
-        0 0.3rem 0.8rem
-        rgba(0, 0, 0, 0.10);
+        0 0.3rem 0.8rem rgba(0, 0, 0, 0.10);
 }
 
 
@@ -821,8 +907,7 @@ CÍRCULO DO CENTO
         var(--creme);
 
     border:
-        4px solid
-        var(--marrom);
+        4px solid var(--marrom);
 }
 
 
@@ -876,48 +961,36 @@ SETORES
 =================================
 */
 
-.cento-circulo[data-partes="4"]
-.cento-setor[data-parte="1"] {
+.cento-circulo[data-partes="4"] .cento-setor[data-parte="1"] {
     clip-path:
-        polygon(
-            0 0,
+        polygon(0 0,
             50% 0,
             50% 50%,
-            0 50%
-        );
+            0 50%);
 }
 
-.cento-circulo[data-partes="4"]
-.cento-setor[data-parte="2"] {
+.cento-circulo[data-partes="4"] .cento-setor[data-parte="2"] {
     clip-path:
-        polygon(
-            50% 0,
+        polygon(50% 0,
             100% 0,
             100% 50%,
-            50% 50%
-        );
+            50% 50%);
 }
 
-.cento-circulo[data-partes="4"]
-.cento-setor[data-parte="3"] {
+.cento-circulo[data-partes="4"] .cento-setor[data-parte="3"] {
     clip-path:
-        polygon(
-            50% 50%,
+        polygon(50% 50%,
             100% 50%,
             100% 100%,
-            50% 100%
-        );
+            50% 100%);
 }
 
-.cento-circulo[data-partes="4"]
-.cento-setor[data-parte="4"] {
+.cento-circulo[data-partes="4"] .cento-setor[data-parte="4"] {
     clip-path:
-        polygon(
-            0 50%,
+        polygon(0 50%,
             50% 50%,
             50% 100%,
-            0 100%
-        );
+            0 100%);
 }
 
 
@@ -927,26 +1000,20 @@ SETORES
 =================================
 */
 
-.cento-circulo[data-partes="2"]
-.cento-setor[data-parte="1"] {
+.cento-circulo[data-partes="2"] .cento-setor[data-parte="1"] {
     clip-path:
-        polygon(
-            0 0,
+        polygon(0 0,
             50% 0,
             50% 100%,
-            0 100%
-        );
+            0 100%);
 }
 
-.cento-circulo[data-partes="2"]
-.cento-setor[data-parte="2"] {
+.cento-circulo[data-partes="2"] .cento-setor[data-parte="2"] {
     clip-path:
-        polygon(
-            50% 0,
+        polygon(50% 0,
             100% 0,
             100% 100%,
-            50% 100%
-        );
+            50% 100%);
 }
 
 
@@ -1015,9 +1082,7 @@ TEXTOS - 4 PARTES
 =================================
 */
 
-.cento-circulo[data-partes="4"]
-.cento-setor[data-parte="1"]
-.cento-setor-texto {
+.cento-circulo[data-partes="4"] .cento-setor[data-parte="1"] .cento-setor-texto {
     top:
         25%;
 
@@ -1025,9 +1090,7 @@ TEXTOS - 4 PARTES
         25%;
 }
 
-.cento-circulo[data-partes="4"]
-.cento-setor[data-parte="2"]
-.cento-setor-texto {
+.cento-circulo[data-partes="4"] .cento-setor[data-parte="2"] .cento-setor-texto {
     top:
         25%;
 
@@ -1035,9 +1098,7 @@ TEXTOS - 4 PARTES
         75%;
 }
 
-.cento-circulo[data-partes="4"]
-.cento-setor[data-parte="3"]
-.cento-setor-texto {
+.cento-circulo[data-partes="4"] .cento-setor[data-parte="3"] .cento-setor-texto {
     top:
         75%;
 
@@ -1045,9 +1106,7 @@ TEXTOS - 4 PARTES
         75%;
 }
 
-.cento-circulo[data-partes="4"]
-.cento-setor[data-parte="4"]
-.cento-setor-texto {
+.cento-circulo[data-partes="4"] .cento-setor[data-parte="4"] .cento-setor-texto {
     top:
         75%;
 
@@ -1062,9 +1121,7 @@ TEXTOS - 2 PARTES
 =================================
 */
 
-.cento-circulo[data-partes="2"]
-.cento-setor[data-parte="1"]
-.cento-setor-texto {
+.cento-circulo[data-partes="2"] .cento-setor[data-parte="1"] .cento-setor-texto {
     top:
         50%;
 
@@ -1072,9 +1129,7 @@ TEXTOS - 2 PARTES
         25%;
 }
 
-.cento-circulo[data-partes="2"]
-.cento-setor[data-parte="2"]
-.cento-setor-texto {
+.cento-circulo[data-partes="2"] .cento-setor[data-parte="2"] .cento-setor-texto {
     top:
         50%;
 
@@ -1097,12 +1152,10 @@ DIVISÕES
         10;
 
     background:
-        rgba(
-            93,
+        rgba(93,
             64,
             55,
-            0.35
-        );
+            0.35);
 
     pointer-events:
         none;
@@ -1193,8 +1246,7 @@ CENTRO
         var(--marrom);
 
     border:
-        2px solid
-        var(--marrom);
+        2px solid var(--marrom);
 
     text-align:
         center;
@@ -1203,8 +1255,7 @@ CENTRO
         1;
 
     box-shadow:
-        0 0.15rem 0.4rem
-        rgba(0, 0, 0, 0.14);
+        0 0.15rem 0.4rem rgba(0, 0, 0, 0.14);
 
     pointer-events:
         none;
@@ -1241,8 +1292,7 @@ BOTÃO LIMPAR CENTO
         0 0 0.35rem;
 
     border:
-        1px solid
-        var(--marrom);
+        1px solid var(--marrom);
 
     border-radius:
         0.45rem;
@@ -1290,8 +1340,7 @@ BOTÃO ADICIONAR
         0.65rem 0.5rem;
 
     border:
-        1px solid
-        var(--laranja);
+        1px solid var(--laranja);
 
     border-radius:
         0.45rem;
@@ -1361,8 +1410,7 @@ PAINEL SALGADOS GRANDES / EMPADÃO
         var(--branco);
 
     border:
-        1px solid
-        rgba(93, 64, 55, 0.12);
+        1px solid rgba(93, 64, 55, 0.12);
 
     border-radius:
         1rem;
@@ -1371,8 +1419,7 @@ PAINEL SALGADOS GRANDES / EMPADÃO
         1.25rem;
 
     box-shadow:
-        0 0.5rem 1.5rem
-        rgba(0, 0, 0, 0.12);
+        0 0.5rem 1.5rem rgba(0, 0, 0, 0.12);
 }
 
 .categoria-acao-titulo {
@@ -1455,8 +1502,7 @@ PAINEL SALGADOS GRANDES / EMPADÃO
         0.65rem;
 
     border:
-        1px solid
-        var(--cor-destaque);
+        1px solid var(--cor-destaque);
 
     border-radius:
         0.45rem;

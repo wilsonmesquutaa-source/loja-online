@@ -30,107 +30,121 @@ View::componente(
 
 <main>
 
-    <div class="container py-5">
+    <div class="categoria-pagina">
 
-        <?php if (
-            $sucessoCategoria ===
-            'adicionado'
-        ): ?>
+        <!-- =================================
+             IMAGEM DE DESTAQUE
+        ================================== -->
 
-            <div
-                class="alert alert-success alert-dismissible fade show"
-                role="alert">
+        <div class="img_destaque_container">
 
-                <i
-                    class="bi bi-check-circle me-2">
-                </i>
-
-                Produto adicionado ao carrinho
-                com sucesso.
-
-                <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="alert"
-                    aria-label="Fechar">
-                </button>
-
-            </div>
-
-        <?php elseif (
-            $sucessoCategoria ===
-            'atualizado'
-        ): ?>
-
-            <div
-                class="alert alert-success alert-dismissible fade show"
-                role="alert">
-
-                <i
-                    class="bi bi-check-circle me-2">
-                </i>
-
-                Carrinho atualizado
-                com sucesso.
-
-                <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="alert"
-                    aria-label="Fechar">
-                </button>
-
-            </div>
-
-        <?php endif; ?>
-
-
-        <div class="mb-5">
-
-            <a
-                href="<?= BASE_URL ?>/cardapio"
-                class="btn btn-voltar-cardapio">
-
-                <i class="bi bi-arrow-left me-1"></i>
-
-                Voltar
-
-            </a>
+            <div class="img_destaque_imagem"></div>
 
         </div>
 
 
-        <?php
+        <!-- =================================
+             CONTEÚDO DA CATEGORIA
+        ================================== -->
 
-        View::componente(
-            'site/sections/categoria',
-            [
-                'categoria' =>
-                $categoria,
+        <div class="container categoria-conteudo">
 
-                'produtos' =>
-                $produtos,
+            <?php if (
+                $sucessoCategoria ===
+                'adicionado'
+            ): ?>
 
-                'limiteOpcoes' =>
-                $limiteOpcoes,
+                <div
+                    class="alert alert-success alert-dismissible fade show"
+                    role="alert">
 
-                'tipoCategoria' =>
-                $tipoCategoria,
+                    <i class="bi bi-check-circle me-2"></i>
 
-                'quantidadesIniciais' =>
-                $quantidadesIniciais,
+                    Produto adicionado ao carrinho
+                    com sucesso.
 
-                'editarCategoriaId' =>
-                $editarCategoriaId,
-            ]
-        );
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Fechar">
+                    </button>
 
-        ?>
+                </div>
+
+            <?php elseif (
+                $sucessoCategoria ===
+                'atualizado'
+            ): ?>
+
+                <div
+                    class="alert alert-success alert-dismissible fade show"
+                    role="alert">
+
+                    <i class="bi bi-check-circle me-2"></i>
+
+                    Carrinho atualizado
+                    com sucesso.
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Fechar">
+                    </button>
+
+                </div>
+
+            <?php endif; ?>
+
+
+            <div class="mb-5">
+
+                <a
+                    href="<?= BASE_URL ?>/cardapio"
+                    class="btn btn-voltar-cardapio">
+
+                    <i class="bi bi-arrow-left me-1"></i>
+
+                    Voltar
+
+                </a>
+
+            </div>
+
+
+            <?php
+
+            View::componente(
+                'site/sections/categoria',
+                [
+                    'categoria' =>
+                    $categoria,
+
+                    'produtos' =>
+                    $produtos,
+
+                    'limiteOpcoes' =>
+                    $limiteOpcoes,
+
+                    'tipoCategoria' =>
+                    $tipoCategoria,
+
+                    'quantidadesIniciais' =>
+                    $quantidadesIniciais,
+
+                    'editarCategoriaId' =>
+                    $editarCategoriaId,
+                ]
+            );
+
+            ?>
+
+        </div>
 
     </div>
 
 </main>
-
 
 <!--
 =================================

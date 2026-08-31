@@ -139,11 +139,11 @@ $baseUrl = defined('BASE_URL')
             <a href="<?= $baseUrl ?>/admin/categorias">
 
                 <span>
-                    📂
+                    🍽️
                 </span>
 
                 <span class="menu-text">
-                    Categorias
+                    Cardápio
                 </span>
 
             </a>
@@ -160,6 +160,18 @@ $baseUrl = defined('BASE_URL')
 
                 <span class="menu-text">
                     Loja
+                </span>
+
+            </a>
+
+            <a href="<?= $baseUrl ?>/admin/destaques">
+
+                <span>
+                    🖼️
+                </span>
+
+                <span class="menu-text">
+                    Destaques
                 </span>
 
             </a>
