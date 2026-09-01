@@ -271,8 +271,8 @@ final class CardapioRepository
 
         return
             $categoria !== false
-                ? $categoria
-                : null;
+            ? $categoria
+            : null;
     }
 
 
@@ -368,5 +368,60 @@ final class CardapioRepository
 
         return
             $consulta->fetchAll();
+    }
+
+    /*
+    =================================
+    BANNER DA CATEGORIA
+    =================================
+    */
+
+    public function buscarBannerCategoriaPorId(
+        int $categoriaId
+    ): ?array {
+
+        $sql = '
+            SELECT
+                categoria_banners.id,
+                categoria_banners.categoria_id,
+                categoria_banners.url_imagem,
+                categoria_banners.texto_alternativo,
+                categoria_banners.posicao_x,
+                categoria_banners.posicao_y,
+                categoria_banners.ativo
+
+            FROM categoria_banners
+
+            WHERE categoria_banners.categoria_id = :categoria_id
+            AND categoria_banners.ativo = 1
+
+            LIMIT 1
+        ';
+
+
+        $consulta =
+            $this->pdo->prepare(
+                $sql
+            );
+
+
+        $consulta->bindValue(
+            ':categoria_id',
+            $categoriaId,
+            PDO::PARAM_INT
+        );
+
+
+        $consulta->execute();
+
+
+        $banner =
+            $consulta->fetch();
+
+
+        return
+            $banner !== false
+            ? $banner
+            : null;
     }
 }

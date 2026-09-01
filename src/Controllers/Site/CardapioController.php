@@ -25,16 +25,16 @@ final class CardapioController extends Controller
             'site/cardapio',
             [
                 'tituloPagina' =>
-                    'Cardápio',
+                'Cardápio',
 
                 'rotaAtual' =>
-                    'cardapio',
+                'cardapio',
 
                 'categorias' =>
-                    $categorias,
+                $categorias,
 
                 'etiquetaProdutos' =>
-                    'Cardápio',
+                'Cardápio',
             ]
         );
     }
@@ -91,6 +91,18 @@ final class CardapioController extends Controller
 
         /*
         =================================
+        BANNER DA CATEGORIA
+        =================================
+        */
+
+        $bannerCategoria =
+            $cardapioRepository
+            ->buscarBannerCategoriaPorId(
+                $id
+            );
+
+        /*
+        =================================
         IDENTIFICA A CATEGORIA
         =================================
         */
@@ -138,9 +150,7 @@ final class CardapioController extends Controller
         =================================
         FOLHADOS
         =================================
-        */
-
-        elseif (
+        */ elseif (
             str_contains(
                 $nomeCategoria,
                 'folhados'
@@ -157,9 +167,7 @@ final class CardapioController extends Controller
         =================================
         SALGADOS GRANDES
         =================================
-        */
-
-        elseif (
+        */ elseif (
             str_contains(
                 $nomeCategoria,
                 'grandes'
@@ -176,9 +184,7 @@ final class CardapioController extends Controller
         =================================
         EMPADÃO
         =================================
-        */
-
-        elseif (
+        */ elseif (
             str_contains(
                 $nomeCategoria,
                 'empadão'
@@ -271,7 +277,7 @@ final class CardapioController extends Controller
             ) {
                 $this->redirecionar(
                     'cardapio/categoria/'
-                    . $id
+                        . $id
                 );
 
                 return;
@@ -322,10 +328,8 @@ final class CardapioController extends Controller
                 $editarCategoriaId =
                     $id;
 
-                $quantidadesIniciais[
-                    (int)
-                    $item['produto_id']
-                ] =
+                $quantidadesIniciais[(int)
+                    $item['produto_id']] =
                     (int)
                     $item['quantidade'];
             }
@@ -341,7 +345,7 @@ final class CardapioController extends Controller
             ) {
                 $this->redirecionar(
                     'cardapio/categoria/'
-                    . $id
+                        . $id
                 );
 
                 return;
@@ -358,31 +362,33 @@ final class CardapioController extends Controller
             'site/categoria',
             [
                 'tituloPagina' =>
-                    $categoria['nome'],
+                $categoria['nome'],
 
                 'rotaAtual' =>
-                    'cardapio',
+                'cardapio',
 
                 'categoria' =>
-                    $categoria,
+                $categoria,
 
                 'nomeCategoria' =>
-                    $categoria['nome'],
+                $categoria['nome'],
 
                 'produtos' =>
-                    $produtos,
+                $produtos,
 
                 'limiteOpcoes' =>
-                    $limiteOpcoes,
+                $limiteOpcoes,
 
                 'tipoCategoria' =>
-                    $tipoCategoria,
+                $tipoCategoria,
 
                 'quantidadesIniciais' =>
-                    $quantidadesIniciais,
+                $quantidadesIniciais,
 
                 'editarCategoriaId' =>
-                    $editarCategoriaId,
+                $editarCategoriaId,
+                'bannerCategoria' =>
+                $bannerCategoria,
             ]
         );
     }
@@ -403,9 +409,7 @@ final class CardapioController extends Controller
         }
 
         if (
-            empty(
-                $_SESSION['carrinho_token']
-            )
+            empty($_SESSION['carrinho_token'])
         ) {
             $_SESSION['carrinho_token'] =
                 bin2hex(

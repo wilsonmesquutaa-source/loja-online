@@ -166,55 +166,35 @@ final class PedidoRepository
             INSERT INTO pedidos (
 
                 codigo,
-
                 cliente_id,
-
                 modalidade_recebimento,
-
                 data_hora_agendada,
-
                 inicio_preparo,
-
                 fim_preparo_previsto,
-
                 status,
-
                 subtotal,
-
                 frete,
-
                 desconto,
-
                 total,
-
                 observacao
+
             )
 
             VALUES (
 
                 :codigo,
-
                 :cliente_id,
-
                 :modalidade_recebimento,
-
                 :data_hora_agendada,
-
                 :inicio_preparo,
-
                 :fim_preparo_previsto,
-
                 :status,
-
                 :subtotal,
-
                 :frete,
-
                 :desconto,
-
                 :total,
-
                 :observacao
+
             )
         ";
 
@@ -224,12 +204,6 @@ final class PedidoRepository
                 $sql
             );
 
-
-        /*
-        =================================
-        DADOS BÁSICOS
-        =================================
-        */
 
         $stmt->bindValue(
             ':codigo',
@@ -252,12 +226,6 @@ final class PedidoRepository
         );
 
 
-        /*
-        =================================
-        AGENDA
-        =================================
-        */
-
         $stmt->bindValue(
             ':data_hora_agendada',
             $dataHoraAgendada,
@@ -279,24 +247,12 @@ final class PedidoRepository
         );
 
 
-        /*
-        =================================
-        STATUS
-        =================================
-        */
-
         $stmt->bindValue(
             ':status',
             'aguardando_pagamento',
             PDO::PARAM_STR
         );
 
-
-        /*
-        =================================
-        VALORES
-        =================================
-        */
 
         $stmt->bindValue(
             ':subtotal',
@@ -346,12 +302,6 @@ final class PedidoRepository
         );
 
 
-        /*
-        =================================
-        OBSERVAÇÃO
-        =================================
-        */
-
         if (
             $observacao === null
         ) {
@@ -371,12 +321,6 @@ final class PedidoRepository
             );
         }
 
-
-        /*
-        =================================
-        EXECUTA
-        =================================
-        */
 
         $stmt->execute();
 
@@ -539,9 +483,7 @@ final class PedidoRepository
         $stmt->bindValue(
             ':destinatario',
             (string)
-            $endereco[
-                'destinatario'
-            ],
+            $endereco['destinatario'],
             PDO::PARAM_STR
         );
 
@@ -549,9 +491,7 @@ final class PedidoRepository
         $stmt->bindValue(
             ':cep',
             (string)
-            $endereco[
-                'cep'
-            ],
+            $endereco['cep'],
             PDO::PARAM_STR
         );
 
@@ -559,9 +499,7 @@ final class PedidoRepository
         $stmt->bindValue(
             ':logradouro',
             (string)
-            $endereco[
-                'logradouro'
-            ],
+            $endereco['logradouro'],
             PDO::PARAM_STR
         );
 
@@ -569,9 +507,7 @@ final class PedidoRepository
         $stmt->bindValue(
             ':numero',
             (string)
-            $endereco[
-                'numero'
-            ],
+            $endereco['numero'],
             PDO::PARAM_STR
         );
 
@@ -579,9 +515,7 @@ final class PedidoRepository
         $stmt->bindValue(
             ':complemento',
             (
-                $endereco[
-                    'complemento'
-                ]
+                $endereco['complemento']
                 ?? ''
             ),
             PDO::PARAM_STR
@@ -591,9 +525,7 @@ final class PedidoRepository
         $stmt->bindValue(
             ':bairro',
             (string)
-            $endereco[
-                'bairro'
-            ],
+            $endereco['bairro'],
             PDO::PARAM_STR
         );
 
@@ -601,9 +533,7 @@ final class PedidoRepository
         $stmt->bindValue(
             ':cidade',
             (string)
-            $endereco[
-                'cidade'
-            ],
+            $endereco['cidade'],
             PDO::PARAM_STR
         );
 
@@ -611,9 +541,7 @@ final class PedidoRepository
         $stmt->bindValue(
             ':estado',
             (string)
-            $endereco[
-                'estado'
-            ],
+            $endereco['estado'],
             PDO::PARAM_STR
         );
 
@@ -705,6 +633,357 @@ final class PedidoRepository
         return
             (int)
             $this->pdo->lastInsertId();
+    }
+
+
+    /*
+    =================================
+    ATUALIZA DADOS DO PAGAMENTO
+    =================================
+    */
+
+    public function atualizarDadosPagamento(
+        int $pagamentoId,
+        ?string $pagamentoExternoId,
+        ?string $pixCopiaCola,
+        ?string $expiraEm,
+        string $status = 'pendente'
+    ): bool {
+
+        $sql = "
+            UPDATE pagamentos
+
+            SET
+                pagamento_externo_id =
+                    :pagamento_externo_id,
+
+                pix_copia_cola =
+                    :pix_copia_cola,
+
+                expira_em =
+                    :expira_em,
+
+                status =
+                    :status
+
+            WHERE id = :id
+        ";
+
+
+        $stmt =
+            $this->pdo->prepare(
+                $sql
+            );
+
+
+        if (
+            $pagamentoExternoId === null
+        ) {
+
+            $stmt->bindValue(
+                ':pagamento_externo_id',
+                null,
+                PDO::PARAM_NULL
+            );
+
+        } else {
+
+            $stmt->bindValue(
+                ':pagamento_externo_id',
+                $pagamentoExternoId,
+                PDO::PARAM_STR
+            );
+        }
+
+
+        if (
+            $pixCopiaCola === null
+        ) {
+
+            $stmt->bindValue(
+                ':pix_copia_cola',
+                null,
+                PDO::PARAM_NULL
+            );
+
+        } else {
+
+            $stmt->bindValue(
+                ':pix_copia_cola',
+                $pixCopiaCola,
+                PDO::PARAM_STR
+            );
+        }
+
+
+        if (
+            $expiraEm === null
+        ) {
+
+            $stmt->bindValue(
+                ':expira_em',
+                null,
+                PDO::PARAM_NULL
+            );
+
+        } else {
+
+            $stmt->bindValue(
+                ':expira_em',
+                $expiraEm,
+                PDO::PARAM_STR
+            );
+        }
+
+
+        $stmt->bindValue(
+            ':status',
+            $status,
+            PDO::PARAM_STR
+        );
+
+
+        $stmt->bindValue(
+            ':id',
+            $pagamentoId,
+            PDO::PARAM_INT
+        );
+
+
+        return
+            $stmt->execute();
+    }
+
+
+    /*
+    =================================
+    ATUALIZA STATUS DO PAGAMENTO
+    =================================
+    */
+
+    public function atualizarStatusPagamento(
+        int $pagamentoId,
+        string $status,
+        ?string $aprovadoEm = null
+    ): bool {
+
+        $sql = "
+            UPDATE pagamentos
+
+            SET
+                status = :status,
+
+                aprovado_em = :aprovado_em
+
+            WHERE id = :id
+        ";
+
+
+        $stmt =
+            $this->pdo->prepare(
+                $sql
+            );
+
+
+        $stmt->bindValue(
+            ':status',
+            $status,
+            PDO::PARAM_STR
+        );
+
+
+        if (
+            $aprovadoEm === null
+        ) {
+
+            $stmt->bindValue(
+                ':aprovado_em',
+                null,
+                PDO::PARAM_NULL
+            );
+
+        } else {
+
+            $stmt->bindValue(
+                ':aprovado_em',
+                $aprovadoEm,
+                PDO::PARAM_STR
+            );
+        }
+
+
+        $stmt->bindValue(
+            ':id',
+            $pagamentoId,
+            PDO::PARAM_INT
+        );
+
+
+        return
+            $stmt->execute();
+    }
+
+
+    /*
+    =================================
+    BUSCA PAGAMENTO POR ID
+    =================================
+    */
+
+    public function buscarPagamentoPorId(
+        int $pagamentoId
+    ): ?array {
+
+        $sql = "
+            SELECT
+                id,
+                pedido_id,
+                provedor,
+                pagamento_externo_id,
+                metodo,
+                status,
+                valor,
+                pix_copia_cola,
+                expira_em,
+                aprovado_em,
+                criado_em,
+                atualizado_em
+
+            FROM pagamentos
+
+            WHERE id = :id
+
+            LIMIT 1
+        ";
+
+
+        $stmt =
+            $this->pdo->prepare(
+                $sql
+            );
+
+
+        $stmt->execute([
+            ':id' =>
+                $pagamentoId,
+        ]);
+
+
+        $pagamento =
+            $stmt->fetch(
+                PDO::FETCH_ASSOC
+            );
+
+
+        return
+            $pagamento !== false
+                ? $pagamento
+                : null;
+    }
+
+
+    /*
+    =================================
+    BUSCA PAGAMENTO PELO ID EXTERNO
+    =================================
+    */
+
+    public function buscarPagamentoPorExterno(
+        string $pagamentoExternoId
+    ): ?array {
+
+        $sql = "
+            SELECT
+                id,
+                pedido_id,
+                provedor,
+                pagamento_externo_id,
+                metodo,
+                status,
+                valor,
+                pix_copia_cola,
+                expira_em,
+                aprovado_em,
+                criado_em,
+                atualizado_em
+
+            FROM pagamentos
+
+            WHERE pagamento_externo_id =
+                :pagamento_externo_id
+
+            LIMIT 1
+        ";
+
+
+        $stmt =
+            $this->pdo->prepare(
+                $sql
+            );
+
+
+        $stmt->execute([
+            ':pagamento_externo_id' =>
+                $pagamentoExternoId,
+        ]);
+
+
+        $pagamento =
+            $stmt->fetch(
+                PDO::FETCH_ASSOC
+            );
+
+
+        return
+            $pagamento !== false
+                ? $pagamento
+                : null;
+    }
+
+
+    /*
+    =================================
+    ATUALIZA STATUS DO PEDIDO
+    =================================
+    */
+
+    public function atualizarStatus(
+        int $pedidoId,
+        string $status
+    ): bool {
+
+        $sql = "
+            UPDATE pedidos
+
+            SET
+                status = :status
+
+            WHERE id = :id
+        ";
+
+
+        $stmt =
+            $this->pdo->prepare(
+                $sql
+            );
+
+
+        $stmt->bindValue(
+            ':status',
+            $status,
+            PDO::PARAM_STR
+        );
+
+
+        $stmt->bindValue(
+            ':id',
+            $pedidoId,
+            PDO::PARAM_INT
+        );
+
+
+        return
+            $stmt->execute();
     }
 
 
@@ -806,6 +1085,222 @@ final class PedidoRepository
         return
             $endereco !== false
                 ? $endereco
+                : null;
+    }
+
+
+    /*
+    =================================
+    ADMINISTRATIVO
+    LISTAGEM DE PEDIDOS
+    =================================
+    */
+
+    public function buscarTodosAdministrativo(
+        ?string $status = null
+    ): array {
+
+        $sql = "
+            SELECT
+                pedidos.id,
+                pedidos.codigo,
+                pedidos.cliente_id,
+                pedidos.modalidade_recebimento,
+                pedidos.data_hora_agendada,
+                pedidos.inicio_preparo,
+                pedidos.fim_preparo_previsto,
+                pedidos.status,
+                pedidos.subtotal,
+                pedidos.frete,
+                pedidos.desconto,
+                pedidos.total,
+                pedidos.observacao,
+                pedidos.criado_em,
+                pedidos.atualizado_em,
+
+                clientes.nome AS nome_cliente,
+                clientes.email AS email_cliente
+
+            FROM pedidos
+
+            INNER JOIN clientes
+                ON clientes.id =
+                    pedidos.cliente_id
+        ";
+
+
+        $parametros = [];
+
+
+        if (
+            $status !== null
+        ) {
+
+            $sql .= "
+                WHERE pedidos.status =
+                    :status
+            ";
+
+
+            $parametros[
+                ':status'
+            ] =
+                $status;
+        }
+
+
+        $sql .= "
+            ORDER BY
+                pedidos.criado_em DESC,
+                pedidos.id DESC
+        ";
+
+
+        $stmt =
+            $this->pdo->prepare(
+                $sql
+            );
+
+
+        $stmt->execute(
+            $parametros
+        );
+
+
+        return
+            $stmt->fetchAll(
+                PDO::FETCH_ASSOC
+            );
+    }
+
+
+    /*
+    =================================
+    ADMINISTRATIVO
+    PEDIDO POR ID
+    =================================
+    */
+
+    public function buscarPorIdAdministrativo(
+        int $pedidoId
+    ): ?array {
+
+        $sql = "
+            SELECT
+                pedidos.id,
+                pedidos.codigo,
+                pedidos.cliente_id,
+                pedidos.modalidade_recebimento,
+                pedidos.data_hora_agendada,
+                pedidos.inicio_preparo,
+                pedidos.fim_preparo_previsto,
+                pedidos.status,
+                pedidos.subtotal,
+                pedidos.frete,
+                pedidos.desconto,
+                pedidos.total,
+                pedidos.observacao,
+                pedidos.criado_em,
+                pedidos.atualizado_em,
+
+                clientes.nome AS nome_cliente,
+                clientes.email AS email_cliente
+
+            FROM pedidos
+
+            INNER JOIN clientes
+                ON clientes.id =
+                    pedidos.cliente_id
+
+            WHERE pedidos.id = :id
+
+            LIMIT 1
+        ";
+
+
+        $stmt =
+            $this->pdo->prepare(
+                $sql
+            );
+
+
+        $stmt->execute([
+            ':id' =>
+                $pedidoId,
+        ]);
+
+
+        $pedido =
+            $stmt->fetch(
+                PDO::FETCH_ASSOC
+            );
+
+
+        return
+            $pedido !== false
+                ? $pedido
+                : null;
+    }
+
+
+    /*
+    =================================
+    ADMINISTRATIVO
+    PAGAMENTO DO PEDIDO
+    =================================
+    */
+
+    public function buscarPagamento(
+        int $pedidoId
+    ): ?array {
+
+        $sql = "
+            SELECT
+                id,
+                pedido_id,
+                provedor,
+                pagamento_externo_id,
+                metodo,
+                status,
+                valor,
+                pix_copia_cola,
+                expira_em,
+                aprovado_em,
+                criado_em,
+                atualizado_em
+
+            FROM pagamentos
+
+            WHERE pedido_id = :pedido_id
+
+            ORDER BY
+                id DESC
+
+            LIMIT 1
+        ";
+
+
+        $stmt =
+            $this->pdo->prepare(
+                $sql
+            );
+
+
+        $stmt->execute([
+            ':pedido_id' =>
+                $pedidoId,
+        ]);
+
+
+        $pagamento =
+            $stmt->fetch(
+                PDO::FETCH_ASSOC
+            );
+
+
+        return
+            $pagamento !== false
+                ? $pagamento
                 : null;
     }
 }
