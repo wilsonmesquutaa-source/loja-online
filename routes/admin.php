@@ -7,6 +7,7 @@ use App\Controllers\Admin\DashboardController;
 use App\Controllers\Admin\ProdutoController;
 use App\Controllers\Admin\CategoriaController;
 use App\Controllers\Admin\DestaqueController;
+use App\Controllers\Admin\PedidoController;
 
 
 return [
@@ -145,6 +146,40 @@ return [
         'action' => [
             DestaqueController::class,
             'excluir',
+        ],
+    ],
+
+
+    /*
+    =================================
+    PEDIDOS
+    =================================
+    */
+
+    [
+        'method' => 'GET',
+        'path' => '/admin/pedidos',
+        'action' => [
+            PedidoController::class,
+            'index',
+        ],
+    ],
+
+    [
+        'method' => 'GET',
+        'path' => '/admin/pedidos/{id}',
+        'action' => [
+            PedidoController::class,
+            'detalhes',
+        ],
+    ],
+
+    [
+        'method' => 'POST',
+        'path' => '/admin/pedidos/status/{id}',
+        'action' => [
+            PedidoController::class,
+            'atualizarStatus',
         ],
     ],
 

@@ -12,6 +12,9 @@ $sucessoCategoria =
     $_GET['sucesso']
     ?? null;
 
+$bannerCategoria =
+    $bannerCategoria ?? null;
+
 require APP_ROOT
     . '/views/layouts/site/header.php';
 
@@ -38,7 +41,44 @@ View::componente(
 
         <div class="img_destaque_container">
 
-            <div class="img_destaque_imagem"></div>
+            <div
+                class="img_destaque_imagem"
+                <?php if (
+                    $bannerCategoria !== null
+                    &&
+                    !empty($bannerCategoria['url_imagem'])
+                ): ?>
+
+                style="
+                        background-image:
+                            url('<?= BASE_URL
+                                        . $bannerCategoria['url_imagem'] ?>');
+
+                        background-position:
+                            <?= (float)
+                            $bannerCategoria['posicao_x'] ?>%
+                            <?= (float)
+                            $bannerCategoria['posicao_y'] ?>%;
+                    "
+
+                <?php endif; ?>>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         </div>
 
@@ -260,7 +300,139 @@ MODAL CENTO INCOMPLETO
 <?php endif; ?>
 
 
-<?php
+<script>
+    document.addEventListener(
+        'DOMContentLoaded',
+        function() {
 
-require APP_ROOT
-    . '/views/layouts/site/footer.php';
+            const pagina =
+                document.querySelector(
+                    '.categoria-pagina'
+                );
+
+            const imagem =
+                document.querySelector(
+                    '.img_destaque_imagem'
+                );
+
+            if (
+                !pagina ||
+                !imagem
+            ) {
+                return;
+            }
+
+
+            let animacaoPendente =
+                false;
+
+
+            function atualizarParallax() {
+
+                const rect =
+                    pagina.getBoundingClientRect();
+
+
+                const alturaImagem =
+                    document
+                    .querySelector(
+                        '.img_destaque_container'
+                    )
+                    ?.offsetHeight ||
+                    0;
+
+
+                if (
+                    alturaImagem <= 0
+                ) {
+                    return;
+                }
+
+
+                /*
+                =================================
+                DISTÂNCIA DA PÁGINA NO SCROLL
+                =================================
+                */
+
+                const deslocamento =
+                    Math.max(
+                        0,
+                        -rect.top
+                    );
+
+
+                /*
+                =================================
+                VELOCIDADE DA IMAGEM
+                =================================
+
+                A imagem acompanha apenas 35%
+                do movimento da página.
+
+                Isso cria o efeito de profundidade.
+                */
+
+                const movimento =
+                    Math.min(
+                        deslocamento * 0.35,
+                        alturaImagem * 0.35
+                    );
+
+
+                imagem.style.transform =
+                    'translateY(' +
+                    movimento +
+                    'px)';
+            }
+
+
+            function solicitarAtualizacao() {
+
+                if (
+                    animacaoPendente
+                ) {
+                    return;
+                }
+
+
+                animacaoPendente =
+                    true;
+
+
+                requestAnimationFrame(
+                    function() {
+
+                        atualizarParallax();
+
+
+                        animacaoPendente =
+                            false;
+                    }
+                );
+            }
+
+
+            window.addEventListener(
+                'scroll',
+                solicitarAtualizacao, {
+                    passive: true
+                }
+            );
+
+
+            window.addEventListener(
+                'resize',
+                solicitarAtualizacao
+            );
+
+
+            atualizarParallax();
+
+        }
+    );
+</script>
+
+
+<?php require APP_ROOT
+. '/views/layouts/site/footer.php';

@@ -464,6 +464,649 @@
 
 
 /* =========================================================
+   =========================================================
+   DETALHES DO PEDIDO
+   =========================================================
+   ========================================================= */
+
+
+/* =========================================================
+   TOPO DOS DETALHES
+========================================================= */
+
+.cliente-pedido-topo {
+    width:
+        100%;
+
+    margin-bottom:
+        30px;
+}
+
+
+.cliente-pedido-voltar {
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        7px;
+
+    margin-bottom:
+        22px;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        0.9rem;
+
+    font-weight:
+        600;
+
+    text-decoration:
+        none;
+
+    transition:
+        color 0.25s ease,
+        transform 0.25s ease;
+}
+
+
+.cliente-pedido-voltar:hover {
+    color:
+        var(--cor-destaque);
+
+    transform:
+        translateX(-3px);
+}
+
+
+.cliente-pedido-titulo span {
+    display:
+        block;
+
+    margin-bottom:
+        5px;
+
+    color:
+        var(--cor-destaque);
+
+    font-size:
+        0.82rem;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        0.08rem;
+
+    text-transform:
+        uppercase;
+}
+
+
+.cliente-pedido-titulo h1 {
+    margin:
+        0;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        2rem;
+
+    font-weight:
+        800;
+}
+
+
+.cliente-pedido-titulo p {
+    margin:
+        7px 0 0;
+
+    color:
+        #777777;
+
+    font-size:
+        0.9rem;
+}
+
+
+/* =========================================================
+   STATUS DO PEDIDO
+========================================================= */
+
+.cliente-pedido-status-card {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        20px;
+
+    padding:
+        22px 25px;
+
+    margin-bottom:
+        5px;
+
+    background:
+        var(--branco);
+
+    border:
+        1px solid
+        rgba(93, 64, 55, 0.08);
+
+    border-radius:
+        20px;
+
+    box-shadow:
+        0 8px 28px
+        rgba(93, 64, 55, 0.08);
+}
+
+
+.cliente-pedido-status-label {
+    display:
+        block;
+
+    margin-bottom:
+        5px;
+
+    color:
+        #777777;
+
+    font-size:
+        0.8rem;
+
+    font-weight:
+        600;
+}
+
+
+.cliente-pedido-status-card h2 {
+    margin:
+        0;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        1.15rem;
+
+    font-weight:
+        700;
+}
+
+
+.cliente-pedido-status-badge {
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    padding:
+        8px 15px;
+
+    border-radius:
+        30px;
+
+    font-size:
+        0.78rem;
+
+    font-weight:
+        700;
+
+    white-space:
+        nowrap;
+}
+
+
+.pedido-status-neutro {
+    background:
+        #f3f4f6;
+
+    color:
+        #4b5563;
+}
+
+
+.pedido-status-pagamento {
+    background:
+        #fff7ed;
+
+    color:
+        #c2410c;
+}
+
+
+.pedido-status-pago {
+    background:
+        #eff6ff;
+
+    color:
+        #1d4ed8;
+}
+
+
+.pedido-status-preparacao {
+    background:
+        #fefce8;
+
+    color:
+        #a16207;
+}
+
+
+.pedido-status-enviado {
+    background:
+        #f0fdf4;
+
+    color:
+        #15803d;
+}
+
+
+.pedido-status-entregue {
+    background:
+        #ecfdf5;
+
+    color:
+        #047857;
+}
+
+
+.pedido-status-cancelado {
+    background:
+        #fef2f2;
+
+    color:
+        #b91c1c;
+}
+
+
+/* =========================================================
+   CABEÇALHO DOS CARDS DE DETALHES
+========================================================= */
+
+.cliente-pedido-card-header {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        15px;
+
+    padding:
+        20px 23px;
+
+    border-bottom:
+        1px solid
+        rgba(93, 64, 55, 0.08);
+}
+
+
+.cliente-pedido-card-header h2 {
+    margin:
+        0;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        1.05rem;
+
+    font-weight:
+        750;
+}
+
+
+.cliente-pedido-card-header span {
+    color:
+        #777777;
+
+    font-size:
+        0.8rem;
+
+    font-weight:
+        600;
+}
+
+
+/* =========================================================
+   ITENS DO PEDIDO
+========================================================= */
+
+.cliente-pedido-itens {
+    display:
+        flex;
+
+    flex-direction:
+        column;
+}
+
+
+.cliente-pedido-item {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        20px;
+
+    padding:
+        18px 23px;
+
+    border-bottom:
+        1px solid
+        rgba(93, 64, 55, 0.06);
+}
+
+
+.cliente-pedido-item:last-child {
+    border-bottom:
+        none;
+}
+
+
+.cliente-pedido-item-info {
+    min-width:
+        0;
+}
+
+
+.cliente-pedido-item-info h3 {
+    margin:
+        0 0 5px;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        0.92rem;
+
+    font-weight:
+        700;
+
+    line-height:
+        1.35;
+}
+
+
+.cliente-pedido-item-info span {
+    color:
+        #777777;
+
+    font-size:
+        0.8rem;
+}
+
+
+.cliente-pedido-item > strong {
+    flex-shrink:
+        0;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        0.95rem;
+}
+
+
+/* =========================================================
+   OBSERVAÇÃO
+========================================================= */
+
+.cliente-pedido-observacao {
+    padding:
+        20px 23px;
+
+    color:
+        var(--cor-texto);
+
+    font-size:
+        0.9rem;
+
+    line-height:
+        1.6;
+
+    word-break:
+        break-word;
+}
+
+
+/* =========================================================
+   ENDEREÇO
+========================================================= */
+
+.cliente-pedido-endereco {
+    padding:
+        20px 23px;
+
+    color:
+        var(--cor-texto);
+
+    font-size:
+        0.9rem;
+
+    line-height:
+        1.6;
+}
+
+
+.cliente-pedido-endereco strong {
+    display:
+        block;
+
+    margin-bottom:
+        8px;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        0.95rem;
+}
+
+
+.cliente-pedido-endereco p {
+    margin:
+        0 0 5px;
+}
+
+
+/* =========================================================
+   INFORMAÇÕES DE RECEBIMENTO
+========================================================= */
+
+.cliente-pedido-informacoes {
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        18px;
+
+    padding:
+        20px 23px;
+}
+
+
+.cliente-pedido-informacoes div {
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        5px;
+}
+
+
+.cliente-pedido-informacoes span {
+    color:
+        #777777;
+
+    font-size:
+        0.8rem;
+}
+
+
+.cliente-pedido-informacoes strong {
+    color:
+        var(--marrom);
+
+    font-size:
+        0.9rem;
+}
+
+
+/* =========================================================
+   RESUMO DOS DETALHES
+========================================================= */
+
+.cliente-pedido-resumo {
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        12px;
+
+    padding:
+        20px 23px;
+}
+
+
+.cliente-pedido-resumo > div {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        15px;
+}
+
+
+.cliente-pedido-resumo > div > span {
+    color:
+        #777777;
+
+    font-size:
+        0.86rem;
+}
+
+
+.cliente-pedido-resumo > div > strong {
+    color:
+        var(--marrom);
+
+    font-size:
+        0.9rem;
+}
+
+
+.cliente-pedido-resumo hr {
+    width:
+        100%;
+
+    margin:
+        5px 0;
+
+    border:
+        0;
+
+    border-top:
+        1px solid
+        rgba(93, 64, 55, 0.10);
+
+    opacity:
+        1;
+}
+
+
+.cliente-pedido-resumo .cliente-pedido-total {
+    margin-top:
+        2px;
+}
+
+
+.cliente-pedido-resumo .cliente-pedido-total span {
+    color:
+        var(--marrom);
+
+    font-size:
+        1rem;
+
+    font-weight:
+        700;
+}
+
+
+.cliente-pedido-resumo .cliente-pedido-total strong {
+    color:
+        var(--cor-destaque);
+
+    font-size:
+        1.2rem;
+
+    font-weight:
+        800;
+}
+
+
+/* =========================================================
+   ESTADO VAZIO DOS ITENS
+========================================================= */
+
+.cliente-pedido-vazio {
+    padding:
+        35px 20px;
+
+    color:
+        #777777;
+
+    text-align:
+        center;
+
+    font-size:
+        0.9rem;
+}
+
+
+/* =========================================================
    RESPONSIVO
 ========================================================= */
 
@@ -508,6 +1151,130 @@
     .cliente-pedido-btn {
         width:
             100%;
+    }
+
+
+    /* ==============================
+       DETALHES
+    ============================== */
+
+
+    .cliente-pedido-status-card {
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+
+        padding:
+            20px;
+    }
+
+
+    .cliente-pedido-status-badge {
+        align-self:
+            flex-start;
+    }
+
+
+    .cliente-pedido-titulo h1 {
+        font-size:
+            1.7rem;
+    }
+
+
+    .cliente-pedido-card-header {
+        padding:
+            18px 20px;
+    }
+
+
+    .cliente-pedido-item {
+        align-items:
+            flex-start;
+
+        padding:
+            17px 20px;
+    }
+
+
+    .cliente-pedido-item > strong {
+        font-size:
+            0.9rem;
+    }
+
+
+    .cliente-pedido-observacao,
+    .cliente-pedido-endereco,
+    .cliente-pedido-informacoes,
+    .cliente-pedido-resumo {
+        padding:
+            18px 20px;
+    }
+
+}
+
+
+/* =========================================================
+   CELULAR PEQUENO
+========================================================= */
+
+@media (max-width: 575.98px) {
+
+    .cliente-pedidos-page {
+        padding:
+            30px 12px;
+    }
+
+
+    .cliente-pedidos-header h1 {
+        font-size:
+            1.7rem;
+    }
+
+
+    .cliente-pedido-status-card {
+        border-radius:
+            16px;
+    }
+
+
+    .cliente-pedido-card {
+        border-radius:
+            16px;
+    }
+
+
+    .cliente-pedido-titulo h1 {
+        font-size:
+            1.5rem;
+    }
+
+
+    .cliente-pedido-item {
+        flex-direction:
+            column;
+
+        gap:
+            8px;
+    }
+
+
+    .cliente-pedido-item > strong {
+        align-self:
+            flex-end;
+    }
+
+
+    .cliente-pedido-card-header h2 {
+        font-size:
+            0.95rem;
+    }
+
+
+    .cliente-pedido-status-badge {
+        font-size:
+            0.74rem;
     }
 
 }

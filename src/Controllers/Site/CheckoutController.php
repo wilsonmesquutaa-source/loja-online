@@ -10,6 +10,7 @@ use App\Repositories\CarrinhoRepository;
 use App\Repositories\EnderecoRepository;
 use App\Repositories\PedidoRepository;
 use App\Services\EntregaService;
+use App\Services\MercadoPagoService;
 use App\Services\PedidoAgendaService;
 use DateTimeImmutable;
 use DateTimeZone;
@@ -105,6 +106,109 @@ final class CheckoutController extends Controller
         return
             (int)
             $_SESSION['cliente_id'];
+    }
+
+
+    /*
+    =================================
+    E-MAIL DO CLIENTE
+    =================================
+    */
+
+    private function obterEmailCliente(): string
+    {
+        if (
+            session_status() !==
+            PHP_SESSION_ACTIVE
+        ) {
+            session_start();
+        }
+
+
+        $email =
+            trim(
+                (string)
+                (
+                    $_SESSION['cliente_email']
+                    ?? ''
+                )
+            );
+
+
+        if (
+            $email === ''
+            ||
+            !filter_var(
+                $email,
+                FILTER_VALIDATE_EMAIL
+            )
+        ) {
+
+            throw new RuntimeException(
+                'Não foi possível identificar o e-mail do cliente.'
+            );
+        }
+
+
+        return $email;
+    }
+
+
+    /*
+    =================================
+    MAPA STATUS MERCADO PAGO
+    =================================
+    */
+
+    private function mapearStatusPagamento(
+        ?string $status
+    ): string {
+
+        $status =
+            strtolower(
+                trim(
+                    (string)
+                    $status
+                )
+            );
+
+
+        switch (
+            $status
+        ) {
+
+            case 'approved':
+
+                return 'aprovado';
+
+
+            case 'rejected':
+
+                return 'recusado';
+
+
+            case 'cancelled':
+            case 'canceled':
+
+                return 'cancelado';
+
+
+            case 'refunded':
+
+                return 'reembolsado';
+
+
+            case 'pending':
+            case 'in_process':
+            case 'in_process_payment':
+
+                return 'pendente';
+
+
+            default:
+
+                return 'pendente';
+        }
     }
 
 
@@ -245,7 +349,7 @@ final class CheckoutController extends Controller
 
         /*
         =================================
-        ASSOCIA CLIENTE AO CARRINHO
+        ASSOCIA CLIENTE
         =================================
         */
 
@@ -313,12 +417,6 @@ final class CheckoutController extends Controller
             'entrega'
         ) {
 
-            /*
-            ==============================
-            ENDEREÇO INFORMADO NA URL
-            ==============================
-            */
-
             if (
                 isset(
                     $_GET['endereco']
@@ -348,12 +446,6 @@ final class CheckoutController extends Controller
             }
 
 
-            /*
-            ==============================
-            ENDEREÇO PRINCIPAL
-            ==============================
-            */
-
             if (
                 $enderecoSelecionado === null
                 &&
@@ -378,12 +470,6 @@ final class CheckoutController extends Controller
                     }
                 }
 
-
-                /*
-                ==============================
-                PRIMEIRO ENDEREÇO
-                ==============================
-                */
 
                 if (
                     $enderecoSelecionado === null
@@ -495,7 +581,7 @@ final class CheckoutController extends Controller
 
         /*
         =================================
-        HORÁRIOS DISPONÍVEIS
+        HORÁRIOS
         =================================
         */
 
@@ -557,7 +643,7 @@ final class CheckoutController extends Controller
 
         /*
         =================================
-        PODE FINALIZAR?
+        PODE FINALIZAR
         =================================
         */
 
@@ -579,6 +665,20 @@ final class CheckoutController extends Controller
 
                     &&
                     $freteDisponivel
+                )
+            );
+
+
+        /*
+        =================================
+        CHAVE PÚBLICA MERCADO PAGO
+        =================================
+        */
+
+        $mercadoPagoPublicKey =
+            trim(
+                (string) getenv(
+                    'MERCADO_PAGO_PUBLIC_KEY'
                 )
             );
 
@@ -637,6 +737,9 @@ final class CheckoutController extends Controller
                 'total' =>
                     $total,
 
+                'mercadoPagoPublicKey' =>
+                    $mercadoPagoPublicKey,
+
                 'csrfToken' =>
                     Csrf::gerarCliente(),
             ]
@@ -664,6 +767,16 @@ final class CheckoutController extends Controller
 
         /*
         =================================
+        E-MAIL
+        =================================
+        */
+
+        $emailCliente =
+            $this->obterEmailCliente();
+
+
+        /*
+        =================================
         TOKEN
         =================================
         */
@@ -683,7 +796,7 @@ final class CheckoutController extends Controller
                 $_POST['_csrf']
             )
                 ? (string)
-                    $_POST['_csrf']
+                $_POST['_csrf']
                 : null;
 
 
@@ -745,7 +858,7 @@ final class CheckoutController extends Controller
 
         /*
         =================================
-        HORÁRIO ESCOLHIDO
+        HORÁRIO
         =================================
         */
 
@@ -782,7 +895,7 @@ final class CheckoutController extends Controller
 
         /*
         =================================
-        ENDEREÇO ID
+        ENDEREÇO
         =================================
         */
 
@@ -842,7 +955,159 @@ final class CheckoutController extends Controller
 
         /*
         =================================
-        ENDEREÇO
+        DADOS DO CARTÃO
+        =================================
+        */
+
+        $cardToken =
+            trim(
+                (string)
+                (
+                    $_POST[
+                        'card_token'
+                    ]
+                    ?? ''
+                )
+            );
+
+
+        $cardPaymentMethodId =
+            trim(
+                (string)
+                (
+                    $_POST[
+                        'card_payment_method_id'
+                    ]
+                    ?? ''
+                )
+            );
+
+
+        $cardIssuerId =
+            trim(
+                (string)
+                (
+                    $_POST[
+                        'card_issuer_id'
+                    ]
+                    ?? ''
+                )
+            );
+
+
+        $cardInstallments =
+            filter_var(
+                $_POST[
+                    'card_installments'
+                ]
+                ?? null,
+                FILTER_VALIDATE_INT
+            );
+
+
+        $cardholderName =
+            trim(
+                (string)
+                (
+                    $_POST[
+                        'cardholder_name'
+                    ]
+                    ?? ''
+                )
+            );
+
+
+        $cardholderIdentificationType =
+            trim(
+                (string)
+                (
+                    $_POST[
+                        'cardholder_identification_type'
+                    ]
+                    ?? ''
+                )
+            );
+
+
+        $cardholderIdentificationNumber =
+            trim(
+                (string)
+                (
+                    $_POST[
+                        'cardholder_identification_number'
+                    ]
+                    ?? ''
+                )
+            );
+
+
+        if (
+            $metodoPagamento ===
+            'cartao'
+        ) {
+
+            if (
+                $cardToken === ''
+            ) {
+
+                $this->redirecionar(
+                    '/checkout?recebimento='
+                    . urlencode(
+                        $modalidadeRecebimento
+                    )
+                    . '&erro='
+                    . rawurlencode(
+                        'Não foi possível gerar o token do cartão. Tente novamente.'
+                    )
+                );
+
+                return;
+            }
+
+
+            if (
+                $cardPaymentMethodId === ''
+            ) {
+
+                $this->redirecionar(
+                    '/checkout?recebimento='
+                    . urlencode(
+                        $modalidadeRecebimento
+                    )
+                    . '&erro='
+                    . rawurlencode(
+                        'Não foi possível identificar a bandeira do cartão.'
+                    )
+                );
+
+                return;
+            }
+
+
+            if (
+                $cardInstallments === false
+                ||
+                $cardInstallments < 1
+            ) {
+
+                $cardInstallments =
+                    1;
+            }
+
+
+            if (
+                $cardInstallments > 36
+            ) {
+
+                $cardInstallments =
+                    36;
+            }
+        }
+
+
+        /*
+        =================================
+        ENDEREÇO DE ENTREGA
         =================================
         */
 
@@ -1083,10 +1348,6 @@ final class CheckoutController extends Controller
             0.0;
 
 
-        $distanciaKm =
-            null;
-
-
         if (
             $modalidadeRecebimento ===
             'entrega'
@@ -1111,21 +1372,13 @@ final class CheckoutController extends Controller
                         'frete'
                     ];
 
-
-                $distanciaKm =
-                    (float)
-                    $entrega[
-                        'distancia_km'
-                    ];
-
             } catch (
                 RuntimeException $erroFrete
             ) {
 
                 $this->redirecionar(
                     '/checkout?recebimento=entrega&endereco='
-                    . (int)
-                    $enderecoId
+                    . (int) $enderecoId
                     . '&erro='
                     . rawurlencode(
                         'Não foi possível calcular o frete. Tente novamente.'
@@ -1150,10 +1403,6 @@ final class CheckoutController extends Controller
 
             $frete =
                 0.0;
-
-
-            $distanciaKm =
-                null;
         }
 
 
@@ -1181,6 +1430,16 @@ final class CheckoutController extends Controller
             $desconto;
 
 
+        if (
+            $total <= 0
+        ) {
+
+            throw new RuntimeException(
+                'O valor total do pedido deve ser maior que zero.'
+            );
+        }
+
+
         /*
         =================================
         CÓDIGO
@@ -1193,7 +1452,7 @@ final class CheckoutController extends Controller
 
         /*
         =================================
-        REPOSITORY DO PEDIDO
+        REPOSITORY
         =================================
         */
 
@@ -1205,7 +1464,7 @@ final class CheckoutController extends Controller
 
         /*
         =================================
-        CONVERTE DATAS
+        DATAS
         =================================
         */
 
@@ -1244,21 +1503,6 @@ final class CheckoutController extends Controller
 
 
         try {
-
-            /*
-            ==============================
-            ASSOCIA CARRINHO
-            ==============================
-            */
-
-            $carrinhoRepository
-                ->associarCliente(
-                    (int)
-                    $carrinho['id'],
-
-                    $clienteId
-                );
-
 
             /*
             ==============================
@@ -1370,11 +1614,12 @@ final class CheckoutController extends Controller
 
             /*
             ==============================
-            CRIA PAGAMENTO
+            CRIA PAGAMENTO LOCAL
             ==============================
             */
 
-            $pedidoRepository
+            $pagamentoId =
+                $pedidoRepository
                 ->criarPagamento(
                     $pedidoId,
 
@@ -1382,6 +1627,318 @@ final class CheckoutController extends Controller
 
                     $total
                 );
+
+
+            /*
+            ==============================
+            MERCADO PAGO
+            ==============================
+            */
+
+            $mercadoPago =
+                new MercadoPagoService();
+
+
+            /*
+            ==============================
+            PIX
+            ==============================
+            */
+
+            if (
+                $metodoPagamento ===
+                'pix'
+            ) {
+
+                $pagamentoMercadoPago =
+                    $mercadoPago
+                    ->criarPix(
+                        $total,
+
+                        'pedido_' . $pedidoId,
+
+                        $emailCliente
+                    );
+
+            /*
+            ==============================
+            CARTÃO
+            ==============================
+            */
+
+            } else {
+
+                $pagamentoMercadoPago =
+                    $mercadoPago
+                    ->criarCartao(
+                        $total,
+
+                        'pedido_' . $pedidoId,
+
+                        $emailCliente,
+
+                        $cardToken,
+
+                        $cardPaymentMethodId,
+
+                        (int)
+                        $cardInstallments,
+
+                        $cardIssuerId !== ''
+                            ? $cardIssuerId
+                            : null,
+
+                        $cardholderIdentificationType !== ''
+                            ? $cardholderIdentificationType
+                            : null,
+
+                        $cardholderIdentificationNumber !== ''
+                            ? $cardholderIdentificationNumber
+                            : null,
+
+                        $cardholderName !== ''
+                            ? $cardholderName
+                            : null
+                    );
+            }
+
+
+            /*
+            ==============================
+            STATUS MERCADO PAGO
+            ==============================
+            */
+
+            $statusMercadoPago =
+                isset(
+                    $pagamentoMercadoPago[
+                        'status'
+                    ]
+                )
+                    ? (string)
+                    $pagamentoMercadoPago[
+                        'status'
+                    ]
+                    : null;
+
+
+            /*
+            ==============================
+            STATUS LOCAL
+            ==============================
+            */
+
+            $statusPagamento =
+                $this->mapearStatusPagamento(
+                    $statusMercadoPago
+                );
+
+
+            /*
+            ==============================
+            EXPIRAÇÃO PIX
+            ==============================
+            */
+
+            $expiraEm =
+                null;
+
+
+            if (
+                $metodoPagamento ===
+                'pix'
+            ) {
+
+                $expiraEm =
+                    (new DateTimeImmutable(
+                        'now',
+                        new DateTimeZone(
+                            self::TIMEZONE
+                        )
+                    ))
+                    ->modify(
+                        '+24 hours'
+                    )
+                    ->format(
+                        'Y-m-d H:i:s'
+                    );
+            }
+
+
+            /*
+            ==============================
+            ID EXTERNO
+            ==============================
+            */
+
+            $pagamentoExternoId =
+                $pagamentoMercadoPago[
+                    'payment_id'
+                ]
+                ??
+                $pagamentoMercadoPago[
+                    'order_id'
+                ]
+                ??
+                null;
+
+
+            /*
+            ==============================
+            ATUALIZA PAGAMENTO
+            ==============================
+            */
+
+            $pedidoRepository
+                ->atualizarDadosPagamento(
+                    $pagamentoId,
+
+                    $pagamentoExternoId,
+
+                    $pagamentoMercadoPago[
+                        'qr_code'
+                    ]
+                        ??
+                        null,
+
+                    $expiraEm,
+
+                    $statusPagamento
+                );
+
+
+            /*
+            ==============================
+            APROVADO
+            ==============================
+            */
+
+            if (
+                $statusPagamento ===
+                'aprovado'
+            ) {
+
+                $agora =
+                    (new DateTimeImmutable(
+                        'now',
+                        new DateTimeZone(
+                            self::TIMEZONE
+                        )
+                    ))
+                    ->format(
+                        'Y-m-d H:i:s'
+                    );
+
+
+                $pedidoRepository
+                    ->atualizarStatusPagamento(
+                        $pagamentoId,
+
+                        'aprovado',
+
+                        $agora
+                    );
+
+
+                $pedidoRepository
+                    ->atualizarStatus(
+                        $pedidoId,
+
+                        'pago'
+                    );
+            }
+
+
+            /*
+            ==============================
+            RECUSADO
+            ==============================
+            */
+
+            elseif (
+                $statusPagamento ===
+                'recusado'
+            ) {
+
+                $pedidoRepository
+                    ->atualizarStatusPagamento(
+                        $pagamentoId,
+
+                        'recusado'
+                    );
+
+
+                $pedidoRepository
+                    ->atualizarStatus(
+                        $pedidoId,
+
+                        'cancelado'
+                    );
+            }
+
+
+            /*
+            ==============================
+            CANCELADO
+            ==============================
+            */
+
+            elseif (
+                $statusPagamento ===
+                'cancelado'
+            ) {
+
+                $pedidoRepository
+                    ->atualizarStatusPagamento(
+                        $pagamentoId,
+
+                        'cancelado'
+                    );
+
+
+                $pedidoRepository
+                    ->atualizarStatus(
+                        $pedidoId,
+
+                        'cancelado'
+                    );
+            }
+
+
+            /*
+            ==============================
+            GUARDA ORDER NA SESSÃO
+            ==============================
+            */
+
+            if (
+                session_status() !==
+                PHP_SESSION_ACTIVE
+            ) {
+
+                session_start();
+            }
+
+
+            if (
+                isset(
+                    $pagamentoMercadoPago[
+                        'order_id'
+                    ]
+                )
+                &&
+                $pagamentoMercadoPago[
+                    'order_id'
+                ] !== null
+            ) {
+
+                $_SESSION[
+                    'mercado_pago_order_' . $pedidoId
+                ] =
+                    $pagamentoMercadoPago[
+                        'order_id'
+                    ];
+            }
 
 
             /*
@@ -1459,6 +2016,12 @@ final class CheckoutController extends Controller
             );
 
 
+        /*
+        =================================
+        PEDIDO
+        =================================
+        */
+
         $pedido =
             $repository
             ->buscarPorIdDoCliente(
@@ -1484,17 +2047,39 @@ final class CheckoutController extends Controller
         }
 
 
+        /*
+        =================================
+        PAGAMENTO
+        =================================
+        */
+
+        $pagamento =
+            $repository
+            ->buscarPagamento(
+                $pedidoId
+            );
+
+
+        /*
+        =================================
+        VIEW
+        =================================
+        */
+
         $this->view(
             'site/checkout-sucesso',
             [
                 'tituloPagina' =>
-                    'Pedido realizado',
+                    'Pagamento do pedido',
 
                 'rotaAtual' =>
                     'checkout',
 
                 'pedido' =>
                     $pedido,
+
+                'pagamento' =>
+                    $pagamento,
             ]
         );
     }
@@ -1525,7 +2110,8 @@ final class CheckoutController extends Controller
                 $this->pdo
                 ->prepare(
                     "
-                        SELECT id
+                        SELECT
+                            id
                         FROM pedidos
                         WHERE codigo = :codigo
                         LIMIT 1

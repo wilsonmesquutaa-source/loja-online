@@ -55,6 +55,51 @@ final class CarrinhoRepository
             : null;
     }
 
+
+    /*
+    =================================
+    BUSCA CARRINHO PELO TOKEN
+    =================================
+    */
+
+    private function buscarPorToken(
+        string $tokenSessao
+    ): ?array {
+        $sql = '
+            SELECT
+                id,
+                cliente_id,
+                token_sessao,
+                status,
+                criado_em,
+                atualizado_em
+            FROM carrinhos
+            WHERE token_sessao = :token
+            LIMIT 1
+        ';
+
+        $consulta =
+            $this->pdo->prepare(
+                $sql
+            );
+
+        $consulta->bindValue(
+            ':token',
+            $tokenSessao,
+            PDO::PARAM_STR
+        );
+
+        $consulta->execute();
+
+        $carrinho =
+            $consulta->fetch();
+
+        return $carrinho !== false
+            ? $carrinho
+            : null;
+    }
+
+
     public function criar(
         string $tokenSessao,
         ?int $clienteId = null
@@ -72,15 +117,23 @@ final class CarrinhoRepository
             )
         ';
 
-        $consulta = $this->pdo->prepare($sql);
+        $consulta =
+            $this->pdo->prepare(
+                $sql
+            );
 
-        if ($clienteId === null) {
+        if (
+            $clienteId === null
+        ) {
+
             $consulta->bindValue(
                 ':cliente_id',
                 null,
                 PDO::PARAM_NULL
             );
+
         } else {
+
             $consulta->bindValue(
                 ':cliente_id',
                 $clienteId,
@@ -102,21 +155,196 @@ final class CarrinhoRepository
 
         $consulta->execute();
 
-        return (int) $this->pdo->lastInsertId();
+        return
+            (int)
+            $this->pdo->lastInsertId();
     }
+
 
     public function obterOuCriar(
         string $tokenSessao,
         ?int $clienteId = null
     ): array {
+        /*
+        =================================
+        TENTA ENCONTRAR CARRINHO ABERTO
+        =================================
+        */
+
         $carrinho =
             $this->buscarAbertoPorToken(
                 $tokenSessao
             );
 
-        if ($carrinho !== null) {
+        if (
+            $carrinho !== null
+        ) {
+
+            if (
+                $clienteId !== null
+                &&
+                (
+                    $carrinho[
+                        'cliente_id'
+                    ] === null
+                    ||
+                    (int)
+                    $carrinho[
+                        'cliente_id'
+                    ] !== $clienteId
+                )
+            ) {
+
+                $this->associarCliente(
+                    (int)
+                    $carrinho['id'],
+                    $clienteId
+                );
+
+                $carrinho[
+                    'cliente_id'
+                ] =
+                    $clienteId;
+            }
+
             return $carrinho;
         }
+
+
+        /*
+        =================================
+        PROCURA CARRINHO EXISTENTE
+        =================================
+
+        O token_sessao é UNIQUE.
+
+        Portanto, se já existir um carrinho
+        convertido para esse token, não podemos
+        tentar criar outro com o mesmo token.
+        */
+
+        $carrinhoExistente =
+            $this->buscarPorToken(
+                $tokenSessao
+            );
+
+
+        if (
+            $carrinhoExistente !== null
+        ) {
+
+            /*
+            ==============================
+            LIMPA ITENS DO CARRINHO ANTIGO
+            ==============================
+            */
+
+            $sqlLimparItens = '
+                DELETE FROM carrinho_itens
+                WHERE carrinho_id = :carrinho_id
+            ';
+
+
+            $consultaLimparItens =
+                $this->pdo->prepare(
+                    $sqlLimparItens
+                );
+
+
+            $consultaLimparItens->bindValue(
+                ':carrinho_id',
+                (int)
+                $carrinhoExistente['id'],
+                PDO::PARAM_INT
+            );
+
+
+            $consultaLimparItens->execute();
+
+
+            /*
+            ==============================
+            REABRE O CARRINHO
+            ==============================
+            */
+
+            $sqlReabrir = '
+                UPDATE carrinhos
+                SET
+                    cliente_id = :cliente_id,
+                    status = :status,
+                    atualizado_em = CURRENT_TIMESTAMP
+                WHERE id = :id
+            ';
+
+
+            $consultaReabrir =
+                $this->pdo->prepare(
+                    $sqlReabrir
+                );
+
+
+            if (
+                $clienteId === null
+            ) {
+
+                $consultaReabrir->bindValue(
+                    ':cliente_id',
+                    null,
+                    PDO::PARAM_NULL
+                );
+
+            } else {
+
+                $consultaReabrir->bindValue(
+                    ':cliente_id',
+                    $clienteId,
+                    PDO::PARAM_INT
+                );
+            }
+
+
+            $consultaReabrir->bindValue(
+                ':status',
+                'aberto',
+                PDO::PARAM_STR
+            );
+
+
+            $consultaReabrir->bindValue(
+                ':id',
+                (int)
+                $carrinhoExistente['id'],
+                PDO::PARAM_INT
+            );
+
+
+            $consultaReabrir->execute();
+
+
+            return [
+
+                'id' =>
+                    (int)
+                    $carrinhoExistente['id'],
+
+                'cliente_id' =>
+                    $clienteId,
+
+                'token_sessao' =>
+                    $tokenSessao,
+
+                'status' =>
+                    'aberto',
+            ];
+        }
+
+
+        /*
+        =================================
+        NÃO EXISTE: CRIA NOVO
+        =================================
+        */
 
         $id =
             $this->criar(
@@ -124,13 +352,23 @@ final class CarrinhoRepository
                 $clienteId
             );
 
+
         return [
-            'id' => $id,
-            'cliente_id' => $clienteId,
-            'token_sessao' => $tokenSessao,
-            'status' => 'aberto',
+
+            'id' =>
+                $id,
+
+            'cliente_id' =>
+                $clienteId,
+
+            'token_sessao' =>
+                $tokenSessao,
+
+            'status' =>
+                'aberto',
         ];
     }
+
 
     public function buscarItens(
         int $carrinhoId
@@ -172,7 +410,10 @@ final class CarrinhoRepository
                 ci.id
         ';
 
-        $consulta = $this->pdo->prepare($sql);
+        $consulta =
+            $this->pdo->prepare(
+                $sql
+            );
 
         $consulta->bindValue(
             ':carrinho_id',
@@ -188,8 +429,10 @@ final class CarrinhoRepository
 
         $consulta->execute();
 
-        return $consulta->fetchAll();
+        return
+            $consulta->fetchAll();
     }
+
 
     public function adicionarItem(
         int $carrinhoId,
@@ -219,7 +462,10 @@ final class CarrinhoRepository
                     CURRENT_TIMESTAMP
         ';
 
-        $consulta = $this->pdo->prepare($sql);
+        $consulta =
+            $this->pdo->prepare(
+                $sql
+            );
 
         $consulta->bindValue(
             ':carrinho_id',
@@ -252,6 +498,7 @@ final class CarrinhoRepository
 
         $consulta->execute();
     }
+
 
     public function atualizarItem(
         int $carrinhoId,
@@ -268,7 +515,10 @@ final class CarrinhoRepository
             AND produto_id = :produto_id
         ';
 
-        $consulta = $this->pdo->prepare($sql);
+        $consulta =
+            $this->pdo->prepare(
+                $sql
+            );
 
         $consulta->bindValue(
             ':quantidade',
@@ -302,6 +552,7 @@ final class CarrinhoRepository
         $consulta->execute();
     }
 
+
     public function removerItem(
         int $carrinhoId,
         int $produtoId
@@ -312,7 +563,10 @@ final class CarrinhoRepository
             AND produto_id = :produto_id
         ';
 
-        $consulta = $this->pdo->prepare($sql);
+        $consulta =
+            $this->pdo->prepare(
+                $sql
+            );
 
         $consulta->bindValue(
             ':carrinho_id',
@@ -329,6 +583,7 @@ final class CarrinhoRepository
         $consulta->execute();
     }
 
+
     public function removerItensPorCategoria(
         int $carrinhoId,
         int $categoriaId
@@ -343,7 +598,10 @@ final class CarrinhoRepository
             )
         ';
 
-        $consulta = $this->pdo->prepare($sql);
+        $consulta =
+            $this->pdo->prepare(
+                $sql
+            );
 
         $consulta->bindValue(
             ':carrinho_id',
@@ -359,6 +617,7 @@ final class CarrinhoRepository
 
         $consulta->execute();
     }
+
 
     public function atualizarPrecoPorCategoria(
         int $carrinhoId,
@@ -376,7 +635,10 @@ final class CarrinhoRepository
             AND p.categoria_id = :categoria_id
         ';
 
-        $consulta = $this->pdo->prepare($sql);
+        $consulta =
+            $this->pdo->prepare(
+                $sql
+            );
 
         $consulta->bindValue(
             ':preco',
@@ -404,6 +666,7 @@ final class CarrinhoRepository
         $consulta->execute();
     }
 
+
     public function removerSeVazio(
         int $carrinhoId
     ): void {
@@ -418,7 +681,10 @@ final class CarrinhoRepository
             )
         ';
 
-        $consulta = $this->pdo->prepare($sql);
+        $consulta =
+            $this->pdo->prepare(
+                $sql
+            );
 
         $consulta->bindValue(
             ':id',
@@ -454,7 +720,9 @@ final class CarrinhoRepository
     ): void {
         $sql = '
             UPDATE carrinhos
-            SET cliente_id = :cliente_id
+            SET
+                cliente_id = :cliente_id,
+                atualizado_em = CURRENT_TIMESTAMP
             WHERE id = :id
             AND status = :status
         ';
@@ -466,13 +734,13 @@ final class CarrinhoRepository
 
         $consulta->execute([
             ':cliente_id' =>
-            $clienteId,
+                $clienteId,
 
             ':id' =>
-            $carrinhoId,
+                $carrinhoId,
 
             ':status' =>
-            'aberto',
+                'aberto',
         ]);
     }
 
@@ -491,7 +759,8 @@ final class CarrinhoRepository
             UPDATE carrinhos
             SET
                 cliente_id = :cliente_id,
-                status = :status
+                status = :status,
+                atualizado_em = CURRENT_TIMESTAMP
             WHERE id = :id
         ';
 
@@ -502,13 +771,13 @@ final class CarrinhoRepository
 
         $consulta->execute([
             ':cliente_id' =>
-            $clienteId,
+                $clienteId,
 
             ':status' =>
-            'convertido',
+                'convertido',
 
             ':id' =>
-            $carrinhoId,
+                $carrinhoId,
         ]);
     }
 }
