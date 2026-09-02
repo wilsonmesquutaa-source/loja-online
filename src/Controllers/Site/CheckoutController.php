@@ -40,6 +40,62 @@ final class CheckoutController extends Controller
 
     /*
     =================================
+    VARIÁVEL DO AMBIENTE
+    =================================
+    */
+
+    private function obterVariavelAmbiente(
+        string $nome
+    ): string {
+
+        $valor =
+            $_ENV[$nome]
+            ?? null;
+
+
+        if (
+            !is_string($valor)
+            ||
+            trim($valor) === ''
+        ) {
+
+            $valor =
+                $_SERVER[$nome]
+                ?? null;
+        }
+
+
+        if (
+            !is_string($valor)
+            ||
+            trim($valor) === ''
+        ) {
+
+            $valor =
+                getenv($nome);
+        }
+
+
+        if (
+            $valor === false
+            ||
+            $valor === null
+        ) {
+
+            return '';
+        }
+
+
+        return
+            trim(
+                (string)
+                $valor
+            );
+    }
+
+
+    /*
+    =================================
     TOKEN DO CARRINHO
     =================================
     */
@@ -50,6 +106,7 @@ final class CheckoutController extends Controller
             session_status() !==
             PHP_SESSION_ACTIVE
         ) {
+
             session_start();
         }
 
@@ -85,6 +142,7 @@ final class CheckoutController extends Controller
             session_status() !==
             PHP_SESSION_ACTIVE
         ) {
+
             session_start();
         }
 
@@ -121,6 +179,7 @@ final class CheckoutController extends Controller
             session_status() !==
             PHP_SESSION_ACTIVE
         ) {
+
             session_start();
         }
 
@@ -158,6 +217,13 @@ final class CheckoutController extends Controller
     =================================
     MAPA STATUS MERCADO PAGO
     =================================
+
+    Orders API utiliza:
+
+    processed  = aprovado
+    accredited = aprovado e creditado
+
+    =================================
     */
 
     private function mapearStatusPagamento(
@@ -177,33 +243,76 @@ final class CheckoutController extends Controller
             $status
         ) {
 
+            /*
+            ==============================
+            APROVADO
+            ==============================
+            */
+
             case 'approved':
+            case 'processed':
+            case 'accredited':
 
                 return 'aprovado';
 
 
+            /*
+            ==============================
+            RECUSADO
+            ==============================
+            */
+
             case 'rejected':
+            case 'failed':
 
                 return 'recusado';
 
 
+            /*
+            ==============================
+            CANCELADO
+            ==============================
+            */
+
             case 'cancelled':
             case 'canceled':
+            case 'cancelled_by_user':
 
                 return 'cancelado';
 
+
+            /*
+            ==============================
+            ESTORNADO
+            ==============================
+            */
 
             case 'refunded':
 
                 return 'reembolsado';
 
 
+            /*
+            ==============================
+            PENDENTE
+            ==============================
+            */
+
             case 'pending':
+            case 'processing':
             case 'in_process':
             case 'in_process_payment':
+            case 'action_required':
+            case 'waiting_payment':
 
                 return 'pendente';
 
+
+            /*
+            ==============================
+            PADRÃO
+            ==============================
+            */
 
             default:
 
@@ -220,31 +329,13 @@ final class CheckoutController extends Controller
 
     public function index(): void
     {
-        /*
-        =================================
-        CLIENTE
-        =================================
-        */
-
         $clienteId =
             $this->obterClienteId();
 
 
-        /*
-        =================================
-        TOKEN
-        =================================
-        */
-
         $tokenSessao =
             $this->obterTokenSessao();
 
-
-        /*
-        =================================
-        MODALIDADE
-        =================================
-        */
 
         $modalidadeRecebimento =
             strtolower(
@@ -274,12 +365,6 @@ final class CheckoutController extends Controller
         }
 
 
-        /*
-        =================================
-        REPOSITORIES / SERVICES
-        =================================
-        */
-
         $carrinhoRepository =
             new CarrinhoRepository(
                 $this->pdo
@@ -295,12 +380,6 @@ final class CheckoutController extends Controller
         $pedidoAgendaService =
             new PedidoAgendaService();
 
-
-        /*
-        =================================
-        CARRINHO
-        =================================
-        */
 
         $carrinho =
             $carrinhoRepository
@@ -320,12 +399,6 @@ final class CheckoutController extends Controller
             return;
         }
 
-
-        /*
-        =================================
-        ITENS
-        =================================
-        */
 
         $itens =
             $carrinhoRepository
@@ -347,12 +420,6 @@ final class CheckoutController extends Controller
         }
 
 
-        /*
-        =================================
-        ASSOCIA CLIENTE
-        =================================
-        */
-
         $carrinhoRepository
             ->associarCliente(
                 (int)
@@ -361,12 +428,6 @@ final class CheckoutController extends Controller
                 $clienteId
             );
 
-
-        /*
-        =================================
-        SUBTOTAL
-        =================================
-        */
 
         $subtotal =
             0.0;
@@ -389,24 +450,12 @@ final class CheckoutController extends Controller
         }
 
 
-        /*
-        =================================
-        ENDEREÇOS
-        =================================
-        */
-
         $enderecos =
             $enderecoRepository
             ->buscarPorCliente(
                 $clienteId
             );
 
-
-        /*
-        =================================
-        ENDEREÇO SELECIONADO
-        =================================
-        */
 
         $enderecoSelecionado =
             null;
@@ -482,12 +531,6 @@ final class CheckoutController extends Controller
         }
 
 
-        /*
-        =================================
-        FRETE
-        =================================
-        */
-
         $frete =
             0.0;
 
@@ -555,12 +598,6 @@ final class CheckoutController extends Controller
         }
 
 
-        /*
-        =================================
-        RETIRADA
-        =================================
-        */
-
         if (
             $modalidadeRecebimento ===
             'retirada'
@@ -578,12 +615,6 @@ final class CheckoutController extends Controller
                 null;
         }
 
-
-        /*
-        =================================
-        HORÁRIOS
-        =================================
-        */
 
         $horariosDisponiveis =
             [];
@@ -617,21 +648,9 @@ final class CheckoutController extends Controller
         }
 
 
-        /*
-        =================================
-        DESCONTO
-        =================================
-        */
-
         $desconto =
             0.0;
 
-
-        /*
-        =================================
-        TOTAL
-        =================================
-        */
 
         $total =
             $subtotal
@@ -640,12 +659,6 @@ final class CheckoutController extends Controller
             -
             $desconto;
 
-
-        /*
-        =================================
-        PODE FINALIZAR
-        =================================
-        */
 
         $podeFinalizar =
             $horariosDisponiveis !== []
@@ -676,18 +689,10 @@ final class CheckoutController extends Controller
         */
 
         $mercadoPagoPublicKey =
-            trim(
-                (string) getenv(
-                    'MERCADO_PAGO_PUBLIC_KEY'
-                )
+            $this->obterVariavelAmbiente(
+                'MERCADO_PAGO_PUBLIC_KEY'
             );
 
-
-        /*
-        =================================
-        VIEW
-        =================================
-        */
 
         $this->view(
             'site/checkout',
@@ -755,41 +760,17 @@ final class CheckoutController extends Controller
 
     public function finalizar(): void
     {
-        /*
-        =================================
-        CLIENTE
-        =================================
-        */
-
         $clienteId =
             $this->obterClienteId();
 
-
-        /*
-        =================================
-        E-MAIL
-        =================================
-        */
 
         $emailCliente =
             $this->obterEmailCliente();
 
 
-        /*
-        =================================
-        TOKEN
-        =================================
-        */
-
         $tokenSessao =
             $this->obterTokenSessao();
 
-
-        /*
-        =================================
-        CSRF
-        =================================
-        */
 
         $tokenCsrf =
             isset(
@@ -813,12 +794,6 @@ final class CheckoutController extends Controller
             );
         }
 
-
-        /*
-        =================================
-        MODALIDADE
-        =================================
-        */
 
         $modalidadeRecebimento =
             strtolower(
@@ -856,12 +831,6 @@ final class CheckoutController extends Controller
         }
 
 
-        /*
-        =================================
-        HORÁRIO
-        =================================
-        */
-
         $dataHoraAgendada =
             trim(
                 (string)
@@ -893,12 +862,6 @@ final class CheckoutController extends Controller
         }
 
 
-        /*
-        =================================
-        ENDEREÇO
-        =================================
-        */
-
         $enderecoId =
             filter_input(
                 INPUT_POST,
@@ -906,12 +869,6 @@ final class CheckoutController extends Controller
                 FILTER_VALIDATE_INT
             );
 
-
-        /*
-        =================================
-        PAGAMENTO
-        =================================
-        */
 
         $metodoPagamento =
             strtolower(
@@ -1107,7 +1064,7 @@ final class CheckoutController extends Controller
 
         /*
         =================================
-        ENDEREÇO DE ENTREGA
+        ENDEREÇO
         =================================
         */
 
@@ -1198,12 +1155,6 @@ final class CheckoutController extends Controller
         }
 
 
-        /*
-        =================================
-        ITENS
-        =================================
-        */
-
         $itens =
             $carrinhoRepository
             ->buscarItens(
@@ -1224,12 +1175,6 @@ final class CheckoutController extends Controller
         }
 
 
-        /*
-        =================================
-        ASSOCIA CLIENTE
-        =================================
-        */
-
         $carrinhoRepository
             ->associarCliente(
                 (int)
@@ -1241,7 +1186,7 @@ final class CheckoutController extends Controller
 
         /*
         =================================
-        VALIDA HORÁRIO
+        AGENDA
         =================================
         */
 
@@ -1378,7 +1323,8 @@ final class CheckoutController extends Controller
 
                 $this->redirecionar(
                     '/checkout?recebimento=entrega&endereco='
-                    . (int) $enderecoId
+                    . (int)
+                    $enderecoId
                     . '&erro='
                     . rawurlencode(
                         'Não foi possível calcular o frete. Tente novamente.'
@@ -1389,12 +1335,6 @@ final class CheckoutController extends Controller
             }
         }
 
-
-        /*
-        =================================
-        RETIRADA
-        =================================
-        */
 
         if (
             $modalidadeRecebimento ===
@@ -1660,6 +1600,7 @@ final class CheckoutController extends Controller
                         $emailCliente
                     );
 
+
             /*
             ==============================
             CARTÃO
@@ -1722,12 +1663,6 @@ final class CheckoutController extends Controller
                     : null;
 
 
-            /*
-            ==============================
-            STATUS LOCAL
-            ==============================
-            */
-
             $statusPagamento =
                 $this->mapearStatusPagamento(
                     $statusMercadoPago
@@ -1769,6 +1704,13 @@ final class CheckoutController extends Controller
             ==============================
             ID EXTERNO
             ==============================
+
+            Para Orders API, a order é o
+            identificador principal.
+
+            Mantemos o payment_id quando
+            disponível para compatibilidade
+            com a tabela atual.
             */
 
             $pagamentoExternoId =
@@ -1846,7 +1788,6 @@ final class CheckoutController extends Controller
 
                         'pago'
                     );
-            }
 
 
             /*
@@ -1855,7 +1796,7 @@ final class CheckoutController extends Controller
             ==============================
             */
 
-            elseif (
+            } elseif (
                 $statusPagamento ===
                 'recusado'
             ) {
@@ -1874,7 +1815,6 @@ final class CheckoutController extends Controller
 
                         'cancelado'
                     );
-            }
 
 
             /*
@@ -1883,7 +1823,7 @@ final class CheckoutController extends Controller
             ==============================
             */
 
-            elseif (
+            } elseif (
                 $statusPagamento ===
                 'cancelado'
             ) {
@@ -2016,12 +1956,6 @@ final class CheckoutController extends Controller
             );
 
 
-        /*
-        =================================
-        PEDIDO
-        =================================
-        */
-
         $pedido =
             $repository
             ->buscarPorIdDoCliente(
@@ -2047,24 +1981,12 @@ final class CheckoutController extends Controller
         }
 
 
-        /*
-        =================================
-        PAGAMENTO
-        =================================
-        */
-
         $pagamento =
             $repository
             ->buscarPagamento(
                 $pedidoId
             );
 
-
-        /*
-        =================================
-        VIEW
-        =================================
-        */
 
         $this->view(
             'site/checkout-sucesso',

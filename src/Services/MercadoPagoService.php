@@ -17,10 +17,8 @@ final class MercadoPagoService
     public function __construct()
     {
         $this->accessToken =
-            trim(
-                (string) getenv(
-                    'MERCADO_PAGO_ACCESS_TOKEN'
-                )
+            $this->obterVariavelAmbiente(
+                'MERCADO_PAGO_ACCESS_TOKEN'
             );
 
 
@@ -32,6 +30,62 @@ final class MercadoPagoService
                 'MERCADO_PAGO_ACCESS_TOKEN não configurado.'
             );
         }
+    }
+
+
+    /*
+    =================================
+    OBTÉM VARIÁVEL DO AMBIENTE
+    =================================
+    */
+
+    private function obterVariavelAmbiente(
+        string $nome
+    ): string {
+
+        $valor =
+            $_ENV[$nome]
+            ?? null;
+
+
+        if (
+            !is_string($valor)
+            ||
+            trim($valor) === ''
+        ) {
+
+            $valor =
+                $_SERVER[$nome]
+                ?? null;
+        }
+
+
+        if (
+            !is_string($valor)
+            ||
+            trim($valor) === ''
+        ) {
+
+            $valor =
+                getenv($nome);
+        }
+
+
+        if (
+            $valor === false
+            ||
+            $valor === null
+        ) {
+
+            return '';
+        }
+
+
+        return
+            trim(
+                (string)
+                $valor
+            );
     }
 
 
@@ -101,7 +155,7 @@ final class MercadoPagoService
 
         /*
         =================================
-        PAYLOAD
+        PAYLOAD ORDERS API
         =================================
         */
 
@@ -150,6 +204,12 @@ final class MercadoPagoService
             ],
         ];
 
+
+        /*
+        =================================
+        ENVIA PARA ORDERS API
+        =================================
+        */
 
         $resposta =
             $this->requisicao(
@@ -287,6 +347,9 @@ final class MercadoPagoService
     =================================
     CRIA PAGAMENTO CARTÃO
     =================================
+
+    Checkout Transparente
+    Orders API
     */
 
     public function criarCartao(
@@ -399,6 +462,12 @@ final class MercadoPagoService
         ];
 
 
+        /*
+        =================================
+        IDENTIFICAÇÃO DO PAGADOR
+        =================================
+        */
+
         if (
             $identificationType !== null
             &&
@@ -430,47 +499,32 @@ final class MercadoPagoService
         }
 
 
-        if (
-            $nomeTitular !== null
-            &&
-            trim(
-                $nomeTitular
-            ) !== ''
-        ) {
-
-            $payer[
-                'first_name'
-            ] =
-                trim(
-                    $nomeTitular
-                );
-        }
-
-
         /*
         =================================
-        PAYLOAD
+        PAYLOAD ORDERS API
         =================================
+
+        O Card Payment Brick gera:
+
+        - token
+        - payment_method_id
+        - installments
+        - payer
+
+        Esses dados são enviados ao backend
+        para criação da Order.
         */
 
         $payload = [
 
-            'transaction_amount' =>
-                (float)
+            'type' =>
+                'online',
+
+            'processing_mode' =>
+                'automatic',
+
+            'total_amount' =>
                 $valorFormatado,
-
-            'token' =>
-                $tokenCartao,
-
-            'description' =>
-                'Pedido '
-                . $referenciaExterna,
-
-            'installments' =>
-                $parcelas,
-
-            'payment_method_id' =>
-                $paymentMethodId,
 
             'external_reference' =>
                 $referenciaExterna,
@@ -478,29 +532,39 @@ final class MercadoPagoService
             'payer' =>
                 $payer,
 
-            'binary_mode' =>
-                false,
+            'transactions' => [
 
-            'three_d_secure_mode' =>
-                'optional',
+                'payments' => [
+
+                    [
+
+                        'amount' =>
+                            $valorFormatado,
+
+                        'payment_method' => [
+
+                            'id' =>
+                                $paymentMethodId,
+
+                            /*
+                            =================================
+                            TIPO DO CARTÃO
+                            =================================
+                            */
+
+                            'type' =>
+                                'credit_card',
+
+                            'token' =>
+                                $tokenCartao,
+
+                            'installments' =>
+                                $parcelas,
+                        ],
+                    ],
+                ],
+            ],
         ];
-
-
-        if (
-            $issuerId !== null
-            &&
-            trim(
-                $issuerId
-            ) !== ''
-        ) {
-
-            $payload[
-                'issuer_id'
-            ] =
-                trim(
-                    $issuerId
-                );
-        }
 
 
         /*
@@ -517,14 +581,14 @@ final class MercadoPagoService
 
         /*
         =================================
-        ENVIA PARA API DE PAYMENTS
+        ENVIA PARA ORDERS API
         =================================
         */
 
         $resposta =
             $this->requisicao(
                 'POST',
-                '/v1/payments',
+                '/v1/orders',
                 $payload,
                 [
                     'X-Idempotency-Key: '
@@ -535,7 +599,7 @@ final class MercadoPagoService
 
         /*
         =================================
-        VALIDA RESPOSTA
+        VALIDA ORDER
         =================================
         */
 
@@ -546,36 +610,73 @@ final class MercadoPagoService
         ) {
 
             throw new RuntimeException(
-                'O Mercado Pago não retornou o ID do pagamento com cartão.'
+                'O Mercado Pago não retornou o ID da order com cartão.'
             );
         }
 
 
+        /*
+        =================================
+        VALIDA PAGAMENTO
+        =================================
+        */
+
+        if (
+            empty(
+                $resposta[
+                    'transactions'
+                ]['payments'][0]
+            )
+        ) {
+
+            throw new RuntimeException(
+                'O Mercado Pago não retornou os dados do pagamento com cartão.'
+            );
+        }
+
+
+        $pagamento =
+            $resposta[
+                'transactions'
+            ]['payments'][0];
+
+
+        /*
+        =================================
+        RETORNO PADRONIZADO
+        =================================
+        */
+
         return [
 
             'order_id' =>
-                null,
-
-            'payment_id' =>
                 (string)
                 $resposta['id'],
 
-            'status' =>
+            'payment_id' =>
                 isset(
-                    $resposta['status']
+                    $pagamento['id']
                 )
                     ? (string)
-                    $resposta['status']
+                    $pagamento['id']
+                    : null,
+
+            'status' =>
+                isset(
+                    $pagamento['status']
+                )
+                    ? (string)
+                    $pagamento['status']
                     : null,
 
             'status_detail' =>
                 isset(
-                    $resposta[
+                    $pagamento[
                         'status_detail'
                     ]
                 )
                     ? (string)
-                    $resposta[
+                    $pagamento[
                         'status_detail'
                     ]
                     : null,
@@ -636,6 +737,12 @@ final class MercadoPagoService
     =================================
     CONSULTA PAGAMENTO
     =================================
+
+    Mantido para compatibilidade
+    com partes antigas do projeto.
+
+    A integração principal via Orders
+    deve utilizar buscarOrder().
     */
 
     public function buscarPagamento(
@@ -820,6 +927,12 @@ final class MercadoPagoService
             );
 
 
+        /*
+        =================================
+        RESPOSTA INVÁLIDA
+        =================================
+        */
+
         if (
             !is_array(
                 $dados
@@ -828,9 +941,19 @@ final class MercadoPagoService
 
             throw new RuntimeException(
                 'O Mercado Pago retornou uma resposta inválida.'
+                . ' HTTP: '
+                . $codigoHttp
+                . ' Resposta: '
+                . $corpo
             );
         }
 
+
+        /*
+        =================================
+        TRATAMENTO DE ERRO DA API
+        =================================
+        */
 
         if (
             $codigoHttp < 200
@@ -838,9 +961,14 @@ final class MercadoPagoService
             $codigoHttp >= 300
         ) {
 
-            $mensagem =
-                'Erro ao comunicar com o Mercado Pago.';
+            $partesMensagem = [];
 
+
+            /*
+            =================================
+            MESSAGE
+            =================================
+            */
 
             if (
                 isset(
@@ -852,15 +980,167 @@ final class MercadoPagoService
                 )
             ) {
 
-                $mensagem =
-                    $dados['message'];
+                $partesMensagem[] =
+                    'message: '
+                    . $dados['message'];
             }
+
+
+            /*
+            =================================
+            ERROR
+            =================================
+            */
+
+            if (
+                isset(
+                    $dados['error']
+                )
+                &&
+                is_string(
+                    $dados['error']
+                )
+            ) {
+
+                $partesMensagem[] =
+                    'error: '
+                    . $dados['error'];
+            }
+
+
+            /*
+            =================================
+            CAUSE
+            =================================
+            */
+
+            if (
+                isset(
+                    $dados['cause']
+                )
+            ) {
+
+                if (
+                    is_string(
+                        $dados['cause']
+                    )
+                ) {
+
+                    $partesMensagem[] =
+                        'cause: '
+                        . $dados['cause'];
+
+                } elseif (
+                    is_array(
+                        $dados['cause']
+                    )
+                ) {
+
+                    $partesMensagem[] =
+                        'cause: '
+                        .
+                        json_encode(
+                            $dados['cause'],
+                            JSON_UNESCAPED_UNICODE
+                            |
+                            JSON_UNESCAPED_SLASHES
+                        );
+                }
+            }
+
+
+            /*
+            =================================
+            DETAILS
+            =================================
+            */
+
+            if (
+                isset(
+                    $dados['details']
+                )
+            ) {
+
+                if (
+                    is_string(
+                        $dados['details']
+                    )
+                ) {
+
+                    $partesMensagem[] =
+                        'details: '
+                        . $dados['details'];
+
+                } elseif (
+                    is_array(
+                        $dados['details']
+                    )
+                ) {
+
+                    $partesMensagem[] =
+                        'details: '
+                        .
+                        json_encode(
+                            $dados['details'],
+                            JSON_UNESCAPED_UNICODE
+                            |
+                            JSON_UNESCAPED_SLASHES
+                        );
+                }
+            }
+
+
+            /*
+            =================================
+            RESPOSTA COMPLETA
+            =================================
+
+            Caso o Mercado Pago utilize
+            outro campo para informar o erro,
+            ainda teremos a resposta original.
+            */
+
+            $respostaCompleta =
+                json_encode(
+                    $dados,
+                    JSON_UNESCAPED_UNICODE
+                    |
+                    JSON_UNESCAPED_SLASHES
+                );
+
+
+            $mensagem =
+                'Erro ao comunicar com o Mercado Pago.';
+
+
+            if (
+                !empty(
+                    $partesMensagem
+                )
+            ) {
+
+                $mensagem .=
+                    ' '
+                    .
+                    implode(
+                        ' | ',
+                        $partesMensagem
+                    );
+            }
+
+
+            $mensagem .=
+                ' Código HTTP: '
+                . $codigoHttp;
+
+
+            $mensagem .=
+                ' Resposta: '
+                . $respostaCompleta;
 
 
             throw new RuntimeException(
                 $mensagem
-                . ' Código HTTP: '
-                . $codigoHttp
             );
         }
 

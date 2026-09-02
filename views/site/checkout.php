@@ -124,6 +124,16 @@ $csrfToken =
     ?? '';
 
 
+$mercadoPagoPublicKey =
+    trim(
+        (string)
+        (
+            $mercadoPagoPublicKey
+            ?? ''
+        )
+    );
+
+
 /*
 =================================
 AGRUPA OS ITENS
@@ -168,55 +178,55 @@ foreach (
 
 
     if (
-        str_contains(
+        strpos(
             $nomeCategoria,
             'tradicionais'
-        )
+        ) !== false
     ) {
 
         $tipoCategoria =
             'cento_tradicionais';
 
     } elseif (
-        str_contains(
+        strpos(
             $nomeCategoria,
             'folhados'
-        )
+        ) !== false
     ) {
 
         $tipoCategoria =
             'cento_folhados';
 
     } elseif (
-        str_contains(
+        strpos(
             $nomeCategoria,
             'grandes'
-        )
+        ) !== false
     ) {
 
         $tipoCategoria =
             'salgados_grandes';
 
     } elseif (
-        str_contains(
+        strpos(
             $nomeCategoria,
             'empadão'
-        )
+        ) !== false
         ||
-        str_contains(
+        strpos(
             $nomeCategoria,
             'empadões'
-        )
+        ) !== false
         ||
-        str_contains(
+        strpos(
             $nomeCategoria,
             'empadao'
-        )
+        ) !== false
         ||
-        str_contains(
+        strpos(
             $nomeCategoria,
             'empadoes'
-        )
+        ) !== false
     ) {
 
         $tipoCategoria =
@@ -633,6 +643,7 @@ $textoTipoHorario =
             method="POST"
             action="<?= BASE_URL ?>/checkout/finalizar"
             class="checkout-form"
+            id="checkout-form"
         >
 
             <input
@@ -678,8 +689,6 @@ $textoTipoHorario =
 
                 <div class="checkout-pagamentos">
 
-                    <!-- ENTREGA -->
-
                     <label
                         class="checkout-pagamento-option"
                     >
@@ -711,8 +720,6 @@ $textoTipoHorario =
 
                     </label>
 
-
-                    <!-- RETIRADA -->
 
                     <label
                         class="checkout-pagamento-option"
@@ -747,8 +754,6 @@ $textoTipoHorario =
 
                 </div>
 
-
-                <!-- LOCAL DE RETIRADA -->
 
                 <?php if (
                     $modalidadeRecebimento ===
@@ -808,10 +813,6 @@ $textoTipoHorario =
                     $modalidadeRecebimento ===
                     'entrega'
                 ): ?>
-
-                    <!-- =============================
-                         ENDEREÇO
-                    ============================== -->
 
                     <section class="checkout-card">
 
@@ -1177,10 +1178,6 @@ $textoTipoHorario =
 
                 <?php else: ?>
 
-                    <!-- =============================
-                         RETIRADA
-                    ============================== -->
-
                     <section class="checkout-card">
 
                         <div
@@ -1286,8 +1283,6 @@ $textoTipoHorario =
                         class="checkout-pagamentos"
                     >
 
-                        <!-- PIX -->
-
                         <label
                             class="checkout-pagamento-option"
                         >
@@ -1316,8 +1311,6 @@ $textoTipoHorario =
                         </label>
 
 
-                        <!-- CARTÃO -->
-
                         <label
                             class="checkout-pagamento-option"
                         >
@@ -1326,6 +1319,10 @@ $textoTipoHorario =
                                 type="radio"
                                 name="metodo_pagamento"
                                 value="cartao"
+                                <?= $mercadoPagoPublicKey === ''
+                                    ? 'disabled'
+                                    : ''
+                                ?>
                             >
 
 
@@ -1337,7 +1334,20 @@ $textoTipoHorario =
 
 
                                 <small>
-                                    Crédito ou débito.
+
+                                    <?php if (
+                                        $mercadoPagoPublicKey !== ''
+                                    ): ?>
+
+                                        Crédito ou débito.
+
+                                    <?php else: ?>
+
+                                        Pagamento com cartão
+                                        indisponível.
+
+                                    <?php endif; ?>
+
                                 </small>
 
                             </div>
@@ -1345,6 +1355,55 @@ $textoTipoHorario =
                         </label>
 
                     </div>
+
+
+                    <?php if (
+                        $mercadoPagoPublicKey !== ''
+                    ): ?>
+
+                        <div
+                            id="checkout-cartao-container"
+                            style="
+                                display: none;
+                                margin-top: 24px;
+                            "
+                        >
+
+                            <div
+                                class="checkout-frete-alerta"
+                                style="
+                                    margin-bottom: 18px;
+                                    border-color:
+                                        rgba(245, 124, 0, 0.18);
+
+                                    background:
+                                        #fffaf4;
+
+                                    color:
+                                        var(--marrom);
+                                "
+                            >
+
+                                <strong>
+                                    Pagamento seguro
+                                </strong>
+
+
+                                <span>
+                                    Os dados do cartão são processados
+                                    diretamente pelo Mercado Pago.
+                                </span>
+
+                            </div>
+
+
+                            <div
+                                id="cardPaymentBrick_container"
+                            ></div>
+
+                        </div>
+
+                    <?php endif; ?>
 
                 </section>
 
@@ -1599,10 +1658,6 @@ $textoTipoHorario =
                 </div>
 
 
-                <!-- =================================
-                     PRODUTOS
-                ================================== -->
-
                 <div
                     class="checkout-produtos"
                 >
@@ -1657,10 +1712,6 @@ $textoTipoHorario =
 
                             </div>
 
-
-                            <!-- =================================
-                                 CENTOS
-                            ================================== -->
 
                             <?php if (
                                 $grupo[
@@ -1743,10 +1794,6 @@ $textoTipoHorario =
                                 </div>
 
 
-                            <!-- =================================
-                                 GRANDES
-                            ================================== -->
-
                             <?php elseif (
                                 $grupo[
                                     'tipo_categoria'
@@ -1807,10 +1854,6 @@ $textoTipoHorario =
 
                                 </div>
 
-
-                            <!-- =================================
-                                 EMPADÃO
-                            ================================== -->
 
                             <?php elseif (
                                 $grupo[
@@ -1875,8 +1918,6 @@ $textoTipoHorario =
                             <?php endif; ?>
 
 
-                            <!-- SUBTOTAL -->
-
                             <div
                                 class="checkout-produto-subtotal"
                             >
@@ -1911,15 +1952,9 @@ $textoTipoHorario =
                 </div>
 
 
-                <!-- =================================
-                     VALORES
-                ================================== -->
-
                 <div
                     class="checkout-valores"
                 >
-
-                    <!-- SUBTOTAL -->
 
                     <div>
 
@@ -1943,8 +1978,6 @@ $textoTipoHorario =
 
                     </div>
 
-
-                    <!-- ENTREGA -->
 
                     <div>
 
@@ -1980,8 +2013,6 @@ $textoTipoHorario =
                     </div>
 
 
-                    <!-- DISTÂNCIA -->
-
                     <?php if (
                         $distanciaKm !== null
                         &&
@@ -2015,8 +2046,6 @@ $textoTipoHorario =
                     <?php endif; ?>
 
 
-                    <!-- DESCONTO -->
-
                     <?php if (
                         $desconto > 0
                     ): ?>
@@ -2046,8 +2075,6 @@ $textoTipoHorario =
                     <?php endif; ?>
 
 
-                    <!-- TOTAL -->
-
                     <div
                         class="checkout-total"
                     >
@@ -2075,10 +2102,6 @@ $textoTipoHorario =
                 </div>
 
 
-                <!-- =================================
-                     AÇÕES
-                ================================== -->
-
                 <div
                     class="checkout-acoes"
                 >
@@ -2094,6 +2117,7 @@ $textoTipoHorario =
                     <button
                         type="submit"
                         class="checkout-btn-finalizar"
+                        id="checkout-btn-finalizar"
                         <?= !$podeFinalizar
                             ? 'disabled'
                             : ''
@@ -2115,10 +2139,102 @@ $textoTipoHorario =
 </main>
 
 
+<?php if (
+    $mercadoPagoPublicKey !== ''
+): ?>
+
+    <script
+        src="https://sdk.mercadopago.com/js/v2"
+    ></script>
+
+<?php endif; ?>
+
+
 <script>
 document.addEventListener(
     'DOMContentLoaded',
     function () {
+
+        /*
+        =================================
+        ELEMENTOS
+        =================================
+        */
+
+        const checkoutForm =
+            document.getElementById(
+                'checkout-form'
+            );
+
+
+        const botaoFinalizar =
+            document.getElementById(
+                'checkout-btn-finalizar'
+            );
+
+
+        const radiosPagamento =
+            document.querySelectorAll(
+                'input[name="metodo_pagamento"]'
+            );
+
+
+        const radioPix =
+            document.querySelector(
+                'input[name="metodo_pagamento"][value="pix"]'
+            );
+
+
+        const radioCartao =
+            document.querySelector(
+                'input[name="metodo_pagamento"][value="cartao"]'
+            );
+
+
+        const containerCartao =
+            document.getElementById(
+                'checkout-cartao-container'
+            );
+
+
+        const containerBrick =
+            document.getElementById(
+                'cardPaymentBrick_container'
+            );
+
+
+        const podeUsarCartao =
+            <?= $mercadoPagoPublicKey !== ''
+                ? 'true'
+                : 'false'
+            ?>;
+
+
+        const publicKey =
+            <?= json_encode(
+                $mercadoPagoPublicKey,
+                JSON_UNESCAPED_SLASHES
+                |
+                JSON_UNESCAPED_UNICODE
+            ) ?>;
+
+
+        const valorTotal =
+            <?= number_format(
+                $total,
+                2,
+                '.',
+                ''
+            ) ?>;
+
+
+        let cardPaymentBrickController =
+            null;
+
+
+        let carregandoCartao =
+            false;
+
 
         /*
         =================================
@@ -2231,31 +2347,692 @@ document.addEventListener(
                         horarios.forEach(
                             function (outroHorario) {
 
-                                outroHorario
-                                    .closest(
+                                const opcao =
+                                    outroHorario.closest(
                                         '.checkout-horario-opcao'
-                                    )
-                                    ?.classList
-                                    .remove(
+                                    );
+
+
+                                if (
+                                    opcao
+                                ) {
+
+                                    opcao.classList.remove(
                                         'selecionado'
                                     );
+                                }
                             }
                         );
 
 
-                        this
-                            .closest(
+                        const opcaoAtual =
+                            this.closest(
                                 '.checkout-horario-opcao'
-                            )
-                            ?.classList
-                            .add(
+                            );
+
+
+                        if (
+                            opcaoAtual
+                        ) {
+
+                            opcaoAtual.classList.add(
                                 'selecionado'
                             );
+                        }
                     }
                 );
 
             }
         );
+
+
+        /*
+        =================================
+        PAGAMENTO
+        =================================
+        */
+
+        radiosPagamento.forEach(
+            function (radio) {
+
+                radio.addEventListener(
+                    'change',
+                    function () {
+
+                        if (
+                            this.value ===
+                            'cartao'
+                        ) {
+
+                            ativarCartao();
+
+                        } else {
+
+                            ativarPix();
+                        }
+                    }
+                );
+            }
+        );
+
+
+        /*
+        =================================
+        ATIVA PIX
+        =================================
+        */
+
+        function ativarPix() {
+
+            if (
+                containerCartao
+            ) {
+
+                containerCartao.style.display =
+                    'none';
+            }
+
+
+            if (
+                botaoFinalizar
+            ) {
+
+                botaoFinalizar.style.display =
+                    '';
+            }
+
+
+            destruirBrick();
+        }
+
+
+        /*
+        =================================
+        ATIVA CARTÃO
+        =================================
+        */
+
+        async function ativarCartao() {
+
+            if (
+                !podeUsarCartao
+                ||
+                !radioCartao
+                ||
+                radioCartao.disabled
+            ) {
+                return;
+            }
+
+
+            if (
+                !containerCartao
+                ||
+                !containerBrick
+            ) {
+                return;
+            }
+
+
+            containerCartao.style.display =
+                'block';
+
+
+            if (
+                botaoFinalizar
+            ) {
+
+                botaoFinalizar.style.display =
+                    'none';
+            }
+
+
+            if (
+                cardPaymentBrickController
+            ) {
+
+                return;
+            }
+
+
+            if (
+                carregandoCartao
+            ) {
+
+                return;
+            }
+
+
+            carregandoCartao =
+                true;
+
+
+            try {
+
+                if (
+                    typeof MercadoPago ===
+                    'undefined'
+                ) {
+
+                    throw new Error(
+                        'O SDK do Mercado Pago não foi carregado.'
+                    );
+                }
+
+
+                if (
+                    !publicKey
+                ) {
+
+                    throw new Error(
+                        'A Public Key do Mercado Pago não foi configurada.'
+                    );
+                }
+
+
+                const mercadoPago =
+                    new MercadoPago(
+                        publicKey
+                    );
+
+
+                const bricksBuilder =
+                    mercadoPago.bricks();
+
+
+                const settings = {
+
+                    initialization: {
+
+                        amount:
+                            Number(
+                                valorTotal
+                            ),
+                    },
+
+
+                    callbacks: {
+
+                        onReady:
+                            function () {
+
+                                carregandoCartao =
+                                    false;
+                            },
+
+
+                        onSubmit:
+                            function (
+                                formData
+                            ) {
+
+                                return new Promise(
+                                    function (
+                                        resolve,
+                                        reject
+                                    ) {
+
+                                        try {
+
+                                            if (
+                                                !formData
+                                                ||
+                                                !formData.token
+                                            ) {
+
+                                                throw new Error(
+                                                    'O Mercado Pago não gerou o token do cartão.'
+                                                );
+                                            }
+
+
+                                            /*
+                                            ==========================
+                                            TOKEN
+                                            ==========================
+                                            */
+
+                                            adicionarCampoOculto(
+                                                checkoutForm,
+                                                'card_token',
+                                                formData.token
+                                            );
+
+
+                                            /*
+                                            ==========================
+                                            PAYMENT METHOD
+                                            ==========================
+                                            */
+
+                                            adicionarCampoOculto(
+                                                checkoutForm,
+                                                'card_payment_method_id',
+                                                formData.payment_method_id
+                                                    || ''
+                                            );
+
+
+                                            /*
+                                            ==========================
+                                            ISSUER
+                                            ==========================
+                                            */
+
+                                            adicionarCampoOculto(
+                                                checkoutForm,
+                                                'card_issuer_id',
+                                                formData.issuer_id
+                                                    || ''
+                                            );
+
+
+                                            /*
+                                            ==========================
+                                            PARCELAS
+                                            ==========================
+                                            */
+
+                                            adicionarCampoOculto(
+                                                checkoutForm,
+                                                'card_installments',
+                                                formData.installments
+                                                    || '1'
+                                            );
+
+
+                                            /*
+                                            ==========================
+                                            NOME DO TITULAR
+                                            ==========================
+                                            */
+
+                                            const nomeTitular =
+                                                formData.cardholderName
+                                                ||
+                                                (
+                                                    formData.payer
+                                                    &&
+                                                    formData.payer.first_name
+                                                )
+                                                ||
+                                                '';
+
+
+                                            adicionarCampoOculto(
+                                                checkoutForm,
+                                                'cardholder_name',
+                                                nomeTitular
+                                            );
+
+
+                                            /*
+                                            ==========================
+                                            DOCUMENTO
+                                            ==========================
+                                            */
+
+                                            let tipoDocumento =
+                                                '';
+
+
+                                            let numeroDocumento =
+                                                '';
+
+
+                                            if (
+                                                formData.cardholderIdentificationType
+                                            ) {
+
+                                                tipoDocumento =
+                                                    formData.cardholderIdentificationType;
+                                            }
+
+
+                                            if (
+                                                formData.cardholderIdentificationNumber
+                                            ) {
+
+                                                numeroDocumento =
+                                                    formData.cardholderIdentificationNumber;
+                                            }
+
+
+                                            if (
+                                                formData.payer
+                                                &&
+                                                formData.payer.identification
+                                            ) {
+
+                                                if (
+                                                    formData.payer.identification.type
+                                                ) {
+
+                                                    tipoDocumento =
+                                                        formData
+                                                            .payer
+                                                            .identification
+                                                            .type;
+                                                }
+
+
+                                                if (
+                                                    formData.payer.identification.number
+                                                ) {
+
+                                                    numeroDocumento =
+                                                        formData
+                                                            .payer
+                                                            .identification
+                                                            .number;
+                                                }
+                                            }
+
+
+                                            adicionarCampoOculto(
+                                                checkoutForm,
+                                                'cardholder_identification_type',
+                                                tipoDocumento
+                                            );
+
+
+                                            adicionarCampoOculto(
+                                                checkoutForm,
+                                                'cardholder_identification_number',
+                                                numeroDocumento
+                                            );
+
+
+                                            /*
+                                            ==========================
+                                            MÉTODO
+                                            ==========================
+                                            */
+
+                                            adicionarCampoOculto(
+                                                checkoutForm,
+                                                'metodo_pagamento',
+                                                'cartao'
+                                            );
+
+
+                                            /*
+                                            ==========================
+                                            ENVIA FORMULÁRIO
+                                            ==========================
+                                            */
+
+                                            HTMLFormElement
+                                                .prototype
+                                                .submit
+                                                .call(
+                                                    checkoutForm
+                                                );
+
+
+                                            resolve();
+
+                                        } catch (
+                                            erro
+                                        ) {
+
+                                            console.error(
+                                                'Erro ao preparar pagamento com cartão:',
+                                                erro
+                                            );
+
+
+                                            reject(
+                                                erro
+                                            );
+                                        }
+                                    }
+                                );
+                            },
+
+
+                        onError:
+                            function (
+                                erro
+                            ) {
+
+                                console.error(
+                                    'Erro no Card Payment Brick:',
+                                    erro
+                                );
+
+
+                                carregandoCartao =
+                                    false;
+
+
+                                alert(
+                                    'Não foi possível carregar ou processar o pagamento com cartão. Tente novamente.'
+                                );
+                            },
+                    },
+                };
+
+
+                cardPaymentBrickController =
+                    await bricksBuilder.create(
+                        'cardPayment',
+                        'cardPaymentBrick_container',
+                        settings
+                    );
+
+
+            } catch (
+                erro
+            ) {
+
+                console.error(
+                    'Erro ao criar Card Payment Brick:',
+                    erro
+                );
+
+
+                carregandoCartao =
+                    false;
+
+
+                containerCartao.style.display =
+                    'none';
+
+
+                if (
+                    botaoFinalizar
+                ) {
+
+                    botaoFinalizar.style.display =
+                        '';
+                }
+
+
+                alert(
+                    'Não foi possível carregar o pagamento com cartão. Verifique a configuração da Public Key do Mercado Pago.'
+                );
+            }
+        }
+
+
+        /*
+        =================================
+        DESTRÓI BRICK
+        =================================
+        */
+
+        function destruirBrick() {
+
+            if (
+                cardPaymentBrickController
+                &&
+                typeof
+                cardPaymentBrickController.unmount ===
+                'function'
+            ) {
+
+                try {
+
+                    const resultado =
+                        cardPaymentBrickController
+                        .unmount();
+
+
+                    if (
+                        resultado
+                        &&
+                        typeof resultado.catch ===
+                        'function'
+                    ) {
+
+                        resultado.catch(
+                            function () {}
+                        );
+                    }
+
+                } catch (
+                    erro
+                ) {
+
+                    console.error(
+                        'Erro ao desmontar Card Payment Brick:',
+                        erro
+                    );
+                }
+            }
+
+
+            cardPaymentBrickController =
+                null;
+
+
+            carregandoCartao =
+                false;
+        }
+
+
+        /*
+        =================================
+        CAMPO OCULTO
+        =================================
+        */
+
+        function adicionarCampoOculto(
+            formulario,
+            nome,
+            valor
+        ) {
+
+            let campo =
+                formulario.querySelector(
+                    'input[name="' +
+                    nome +
+                    '"]'
+                );
+
+
+            if (
+                !campo
+            ) {
+
+                campo =
+                    document.createElement(
+                        'input'
+                    );
+
+
+                campo.type =
+                    'hidden';
+
+
+                campo.name =
+                    nome;
+
+
+                formulario.appendChild(
+                    campo
+                );
+            }
+
+
+            campo.value =
+                valor === null
+                    ? ''
+                    : String(
+                        valor
+                    );
+        }
+
+
+        /*
+        =================================
+        SUBMIT NORMAL
+        =================================
+        */
+
+        if (
+            checkoutForm
+        ) {
+
+            checkoutForm.addEventListener(
+                'submit',
+                function (
+                    evento
+                ) {
+
+                    if (
+                        radioCartao
+                        &&
+                        radioCartao.checked
+                    ) {
+
+                        /*
+                        O pagamento com cartão
+                        deve ser submetido pelo
+                        botão interno do Brick.
+                        */
+
+                        if (
+                            !cardPaymentBrickController
+                        ) {
+
+                            evento.preventDefault();
+
+                            ativarCartao();
+
+                            return;
+                        }
+
+
+                        /*
+                        Se já existe Brick, não
+                        usamos o botão externo.
+                        */
+
+                        evento.preventDefault();
+
+                    }
+
+                }
+            );
+        }
+
+
+        /*
+        =================================
+        ESTADO INICIAL
+        =================================
+        */
+
+        if (
+            radioPix
+            &&
+            radioPix.checked
+        ) {
+
+            ativarPix();
+        }
 
     }
 );
