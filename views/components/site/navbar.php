@@ -234,7 +234,7 @@ $clienteFoto =
             href="<?= BASE_URL ?>/">
 
             <img
-                src="<?= BASE_URL ?>/assets/images/logo.png"
+                src="<?= BASE_URL ?>/assets/images/logo.webp"
                 alt="Cantim do Lanche"
                 height="55">
 
