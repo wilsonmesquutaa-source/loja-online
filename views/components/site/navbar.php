@@ -105,6 +105,7 @@ if (
 
                     $tipo =
                         'cento_tradicionais';
+
                 } elseif (
                     str_contains(
                         $nomeCategoria,
@@ -114,6 +115,7 @@ if (
 
                     $tipo =
                         'cento_folhados';
+
                 } elseif (
                     str_contains(
                         $nomeCategoria,
@@ -123,6 +125,7 @@ if (
 
                     $tipo =
                         'salgados_grandes';
+
                 } elseif (
                     str_contains(
                         $nomeCategoria,
@@ -174,6 +177,7 @@ if (
                             $grupo['quantidade']
                                 / 4
                         );
+
                 } elseif (
                     $grupo['tipo'] ===
                     'cento_folhados'
@@ -184,6 +188,7 @@ if (
                             $grupo['quantidade']
                                 / 2
                         );
+
                 } else {
 
                     $quantidadeCarrinho +=
@@ -205,10 +210,22 @@ $clienteLogado =
     !empty($_SESSION['cliente_id']);
 
 
-$clienteNome =
+$clienteNomeCompleto =
     (string) (
         $_SESSION['cliente_nome']
         ?? ''
+    );
+
+
+$clienteNome =
+    trim(
+        (string) (
+            preg_split(
+                '/\s+/',
+                $clienteNomeCompleto
+            )[0]
+            ?? ''
+        )
     );
 
 
@@ -222,7 +239,12 @@ $clienteFoto =
     class="navbar navbar-expand-lg navbar-site shadow-sm sticky-top"
     aria-label="Navegação principal">
 
-    <div class="container-fluid px-4">
+    <div
+        class="
+            container-fluid
+            px-4
+            navbar-container-marca
+        ">
 
 
         <!-- =================================
@@ -230,7 +252,12 @@ $clienteFoto =
         ================================== -->
 
         <a
-            class="navbar-brand-logo d-flex align-items-center gap-2"
+            class="
+                navbar-brand-logo
+                d-flex
+                align-items-center
+                gap-2
+            "
             href="<?= BASE_URL ?>/">
 
             <img
@@ -242,11 +269,385 @@ $clienteFoto =
 
 
         <!-- =================================
-             MENU MOBILE
+             AÇÕES MOBILE
+        ================================== -->
+
+        <div
+            class="
+                navbar-acoes-mobile
+                d-flex
+                align-items-center
+                gap-1
+            ">
+
+
+            <?php if ($clienteLogado): ?>
+
+                <!-- CLIENTE LOGADO -->
+
+                <div
+                    class="dropdown">
+
+                    <div
+                        class="
+                            btn
+                            btn-navbar-cliente
+                            d-flex
+                            align-items-center
+                            gap-1
+                            p-0
+                        "
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false">
+
+                        <span
+                            class="
+                                navbar-cliente-boas-vindas
+                            ">
+
+                            Bem-vindo,
+
+                            <strong>
+                                <?= htmlspecialchars(
+                                    $clienteNome,
+                                    ENT_QUOTES,
+                                    'UTF-8'
+                                ) ?>
+                            </strong>
+
+                        </span>
+
+
+                        <span
+                            class="navbar-cliente-avatar">
+
+                            <?php if (
+                                !empty($clienteFoto)
+                            ): ?>
+
+                                <img
+                                    src="<?= htmlspecialchars(
+                                        (string)
+                                        $clienteFoto,
+                                        ENT_QUOTES,
+                                        'UTF-8'
+                                    ) ?>"
+                                    alt="Foto de perfil">
+
+                            <?php else: ?>
+
+                                <i
+                                    class="
+                                        bi
+                                        bi-person
+                                    "
+                                    aria-hidden="true"></i>
+
+                            <?php endif; ?>
+
+                        </span>
+
+
+                        <i
+                            class="
+                                bi
+                                bi-chevron-down
+                            "
+                            aria-hidden="true"></i>
+
+                    </div>
+
+
+                    <ul
+                        class="
+                            dropdown-menu
+                            dropdown-menu-end
+                        ">
+
+                        <li>
+
+                            <a
+                                href="<?= BASE_URL ?>/cliente/perfil"
+                                class="dropdown-item">
+
+                                <i
+                                    class="
+                                        bi
+                                        bi-pencil
+                                        me-2
+                                    "></i>
+
+                                Editar perfil
+
+                            </a>
+
+                        </li>
+
+
+                        <li>
+
+                            <a
+                                href="<?= BASE_URL ?>/cliente/pedidos"
+                                class="dropdown-item">
+
+                                <i
+                                    class="
+                                        bi
+                                        bi-box-seam
+                                        me-2
+                                    "></i>
+
+                                Meus pedidos
+
+                            </a>
+
+                        </li>
+
+
+                        <li>
+
+                            <a
+                                href="<?= BASE_URL ?>/cliente/enderecos"
+                                class="dropdown-item">
+
+                                <i
+                                    class="
+                                        bi
+                                        bi-geo-alt
+                                        me-2
+                                    "></i>
+
+                                Meus endereços
+
+                            </a>
+
+                        </li>
+
+
+                        <li>
+
+                            <a
+                                href="<?= BASE_URL ?>/cliente/seguranca"
+                                class="dropdown-item">
+
+                                <i
+                                    class="
+                                        bi
+                                        bi-shield-lock
+                                        me-2
+                                    "></i>
+
+                                Segurança
+
+                            </a>
+
+                        </li>
+
+
+                        <li>
+
+                            <hr
+                                class="dropdown-divider">
+
+                        </li>
+
+
+                        <li>
+
+                            <form
+                                method="POST"
+                                action="<?= BASE_URL ?>/logout">
+
+                                <input
+                                    type="hidden"
+                                    name="_csrf"
+                                    value="<?= htmlspecialchars(
+                                        Csrf::gerarCliente(),
+                                        ENT_QUOTES,
+                                        'UTF-8'
+                                    ) ?>">
+
+                                <button
+                                    type="submit"
+                                    class="
+                                        dropdown-item
+                                        text-danger
+                                    ">
+
+                                    <i
+                                        class="
+                                            bi
+                                            bi-box-arrow-right
+                                            me-2
+                                        "></i>
+
+                                    Sair
+
+                                </button>
+
+                            </form>
+
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+            <?php endif; ?>
+
+
+            <!-- =================================
+                 CARRINHO MOBILE
+            ================================== -->
+
+            <a
+                href="<?= BASE_URL ?>/carrinho"
+                class="
+                    btn
+                    btn-carrinho
+                    position-relative
+                    navbar-carrinho-mobile
+                "
+                title="Carrinho">
+
+                <i
+                    class="bi bi-cart3"></i>
+
+
+                <span
+                    class="
+                        position-absolute
+                        top-0
+                        start-100
+                        translate-middle
+                        badge
+                        rounded-pill
+                        bg-danger
+                    ">
+
+                    <?= $quantidadeCarrinho ?>
+
+                </span>
+
+            </a>
+
+
+            <?php if (!$clienteLogado): ?>
+
+
+                <!-- =================================
+                     ENTRAR MOBILE
+                ================================== -->
+
+                <div
+                    class="dropdown">
+
+                    <button
+                        type="button"
+                        class="
+                            btn
+                            btn-navbar-menor
+                            navbar-botao-mobile
+                            dropdown-toggle
+                        "
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false">
+
+                        <i
+                            class="bi bi-person"></i>
+
+                        Entrar
+
+                    </button>
+
+
+                    <ul
+                        class="
+                            dropdown-menu
+                            dropdown-menu-end
+                        ">
+
+                        <li>
+
+                            <a
+                                href="<?= BASE_URL ?>/login"
+                                class="dropdown-item">
+
+                                <i
+                                    class="
+                                        bi
+                                        bi-box-arrow-in-right
+                                        me-2
+                                    "></i>
+
+                                Login
+
+                            </a>
+
+                        </li>
+
+
+                        <li>
+
+                            <a
+                                href="<?= BASE_URL ?>/cadastro"
+                                class="dropdown-item">
+
+                                <i
+                                    class="
+                                        bi
+                                        bi-person-plus
+                                        me-2
+                                    "></i>
+
+                                Criar conta
+
+                            </a>
+
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- =================================
+                     ADMIN MOBILE
+                ================================== -->
+
+                <a
+                    href="<?= BASE_URL ?>/login-admin"
+                    class="
+                        btn
+                        btn-dark
+                        btn-navbar-menor
+                        navbar-botao-mobile
+                    ">
+
+                    <i
+                        class="
+                            bi
+                            bi-shield-lock
+                        "></i>
+
+                    Admin
+
+                </a>
+
+
+            <?php endif; ?>
+
+
+        </div>
+
+
+        <!-- =================================
+             MENU HAMBURGER
         ================================== -->
 
         <button
-            class="navbar-toggler"
+            class="navbar-toggler navbar-toggler-marca"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#menuPrincipal"
@@ -261,7 +662,10 @@ $clienteFoto =
 
 
         <div
-            class="collapse navbar-collapse"
+            class="
+                collapse
+                navbar-collapse
+            "
             id="menuPrincipal">
 
 
@@ -270,7 +674,11 @@ $clienteFoto =
             ================================== -->
 
             <ul
-                class="navbar-nav mx-auto align-items-lg-center">
+                class="
+                    navbar-nav
+                    mx-auto
+                    align-items-lg-center
+                ">
 
                 <li class="nav-item">
 
@@ -351,11 +759,12 @@ $clienteFoto =
 
 
             <!-- =================================
-                 AÇÕES DA NAVBAR
+                 AÇÕES DESKTOP
             ================================== -->
 
             <div
                 class="
+                    navbar-acoes-desktop
                     d-flex
                     flex-column
                     flex-lg-row
@@ -364,9 +773,7 @@ $clienteFoto =
                 ">
 
 
-                <!-- =================================
-                     CARRINHO
-                ================================== -->
+                <!-- CARRINHO -->
 
                 <a
                     href="<?= BASE_URL ?>/carrinho"
@@ -399,9 +806,7 @@ $clienteFoto =
                 </a>
 
 
-                <!-- =================================
-                     PESQUISA
-                ================================== -->
+                <!-- PESQUISA -->
 
                 <form
                     class="d-flex"
@@ -435,11 +840,10 @@ $clienteFoto =
                 <?php if (!$clienteLogado): ?>
 
 
-                    <!-- =================================
-                         ENTRAR
-                    ================================== -->
+                    <!-- ENTRAR -->
 
-                    <div class="dropdown">
+                    <div
+                        class="dropdown">
 
                         <button
                             type="button"
@@ -510,9 +914,7 @@ $clienteFoto =
                     </div>
 
 
-                    <!-- =================================
-                         ADMIN
-                    ================================== -->
+                    <!-- ADMIN -->
 
                     <a
                         href="<?= BASE_URL ?>/login-admin"
@@ -536,19 +938,12 @@ $clienteFoto =
                 <?php else: ?>
 
 
-                    <!-- =================================
-                         CLIENTE LOGADO
-                    ================================== -->
+                    <!-- CLIENTE DESKTOP -->
 
-                    <div class="dropdown">
-
-
-                        <!-- =================================
-                             BOTÃO DO CLIENTE
-                        ================================== -->
+                    <div
+                        class="dropdown">
 
                         <div
-
                             class="
                                 btn
                                 btn-navbar-cliente
@@ -559,9 +954,10 @@ $clienteFoto =
                             data-bs-toggle="dropdown"
                             aria-expanded="false">
 
-
                             <span
-                                class="navbar-cliente-boas-vindas">
+                                class="
+                                    navbar-cliente-boas-vindas
+                                ">
 
                                 Bem-vindo,
 
@@ -576,10 +972,10 @@ $clienteFoto =
                             </span>
 
 
-                            <!-- FOTO -->
-
                             <span
-                                class="navbar-cliente-avatar">
+                                class="
+                                    navbar-cliente-avatar
+                                ">
 
                                 <?php if (
                                     !empty($clienteFoto)
@@ -587,11 +983,11 @@ $clienteFoto =
 
                                     <img
                                         src="<?= htmlspecialchars(
-                                                    (string)
-                                                    $clienteFoto,
-                                                    ENT_QUOTES,
-                                                    'UTF-8'
-                                                ) ?>"
+                                            (string)
+                                            $clienteFoto,
+                                            ENT_QUOTES,
+                                            'UTF-8'
+                                        ) ?>"
                                         alt="Foto de perfil">
 
                                 <?php else: ?>
@@ -608,8 +1004,6 @@ $clienteFoto =
                             </span>
 
 
-                            <!-- SETA -->
-
                             <i
                                 class="
                                     bi
@@ -617,21 +1011,14 @@ $clienteFoto =
                                 "
                                 aria-hidden="true"></i>
 
-
                         </div>
 
-
-                        <!-- =================================
-                             DROPDOWN DO CLIENTE
-                        ================================== -->
 
                         <ul
                             class="
                                 dropdown-menu
                                 dropdown-menu-end
                             ">
-
-                            <!-- EDITAR PERFIL -->
 
                             <li>
 
@@ -653,8 +1040,6 @@ $clienteFoto =
                             </li>
 
 
-                            <!-- MEUS PEDIDOS -->
-
                             <li>
 
                                 <a
@@ -675,8 +1060,6 @@ $clienteFoto =
                             </li>
 
 
-                            <!-- MEUS ENDEREÇOS -->
-
                             <li>
 
                                 <a
@@ -696,8 +1079,6 @@ $clienteFoto =
 
                             </li>
 
-
-                            <!-- SEGURANÇA -->
 
                             <li>
 
@@ -727,8 +1108,6 @@ $clienteFoto =
                             </li>
 
 
-                            <!-- SAIR -->
-
                             <li>
 
                                 <form
@@ -739,11 +1118,10 @@ $clienteFoto =
                                         type="hidden"
                                         name="_csrf"
                                         value="<?= htmlspecialchars(
-                                                    Csrf::gerarCliente(),
-                                                    ENT_QUOTES,
-                                                    'UTF-8'
-                                                ) ?>">
-
+                                            Csrf::gerarCliente(),
+                                            ENT_QUOTES,
+                                            'UTF-8'
+                                        ) ?>">
 
                                     <button
                                         type="submit"

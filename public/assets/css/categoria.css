@@ -94,7 +94,7 @@ CONTEÚDO DA CATEGORIA - container que fica o botão voltar os textos e os cards
 =================================
 */
 
-.categoria-conteudo {
+.categoria-conteudo{
     position: relative;
 
     z-index: 10;
@@ -106,7 +106,7 @@ CONTEÚDO DA CATEGORIA - container que fica o botão voltar os textos e os cards
 
     background: var(--creme);
 
-    border-radius: 30px 30px 30px 30px;
+    border-radius: 50px 50px 50px 50px;
 
     min-height: 500px;
         box-shadow:
@@ -1761,4 +1761,577 @@ REDUZIR MOVIMENTO
         transform:
             none;
     }
+}
+
+/*
+=================================
+NOVO CONTAINER DOS CARDS
+=================================
+*/
+
+.categoria-cards-container {
+    width:
+        100%;
+}
+
+
+/*
+=================================
+INFORMAÇÕES DO CARD
+=================================
+*/
+
+.produto-card-informacoes {
+    width:
+        100%;
+}
+
+
+/*
+=================================
+MOBILE
+=================================
+*/
+
+@media (max-width: 575.98px) {
+
+    /*
+    =================================
+    NOVO CONTAINER
+    =================================
+    */
+
+    .categoria-cards-container {
+        width:
+            100%;
+
+        margin:
+            0;
+
+        padding:
+            0;
+    }
+
+
+    /*
+    =================================
+    GRADE
+    =================================
+    */
+
+    .categoria-cards-container
+    .categoria-produtos-grid {
+
+        width:
+            100%;
+
+        margin:
+            0;
+
+        display:
+            grid;
+
+        grid-template-columns:
+            1fr;
+
+        gap:
+            0.65rem;
+    }
+
+
+    /*
+    =================================
+    CARD MOBILE
+    =================================
+    */
+
+    .categoria-cards-container
+    .produto-wrapper {
+
+        width:
+            100%;
+
+        height:
+            auto;
+
+        min-height:
+            82px;
+
+        border-radius:
+            14px;
+
+        background:
+            var(--branco);
+
+        border:
+            1px solid
+            rgba(93, 64, 55, 0.10);
+
+        box-shadow:
+            0 2px 7px
+            rgba(0, 0, 0, 0.06);
+
+        overflow:
+            hidden;
+
+        transition:
+            box-shadow 0.25s ease,
+            border-color 0.25s ease;
+    }
+
+
+    /*
+    =================================
+    REMOVE ELEVAÇÃO DO HOVER
+    NO MOBILE
+    =================================
+    */
+
+    .categoria-cards-container
+    .produto-wrapper:hover {
+
+        transform:
+            none;
+
+        box-shadow:
+            0 2px 7px
+            rgba(0, 0, 0, 0.06);
+    }
+
+
+    /*
+    =================================
+    CARD INTERNO
+    =================================
+    */
+
+    .categoria-cards-container
+    .produto-selecao-card {
+
+        width:
+            100%;
+
+        min-height:
+            82px;
+
+        height:
+            auto;
+    }
+
+
+    /*
+    =================================
+    CONTEÚDO HORIZONTAL
+    =================================
+    */
+
+    .categoria-cards-container
+    .produto-card-conteudo {
+
+        width:
+            100%;
+
+        min-height:
+            82px;
+
+        height:
+            auto;
+
+        display:
+            flex;
+
+        flex-direction:
+            row;
+
+        align-items:
+            center;
+
+        gap:
+            0.65rem;
+
+        padding:
+            0.55rem 0.65rem;
+    }
+
+
+    /*
+    =================================
+    FOTO PEQUENA
+    =================================
+    */
+
+    .categoria-cards-container
+    .produto-imagem-placeholder {
+
+        width:
+            58px;
+
+        height:
+            58px;
+
+        min-width:
+            58px;
+
+        margin:
+            0;
+
+        flex-shrink:
+            0;
+
+        border-radius:
+            10px;
+
+        background:
+            var(--marrom);
+    }
+
+
+    .categoria-cards-container
+    .produto-imagem-placeholder img {
+
+        width:
+            100%;
+
+        height:
+            100%;
+
+        object-fit:
+            cover;
+    }
+
+
+    .categoria-cards-container
+    .produto-imagem-placeholder i {
+
+        font-size:
+            1.6rem;
+    }
+
+
+    /*
+    =================================
+    REMOVE ZOOM DA IMAGEM NO MOBILE
+    =================================
+    */
+
+    .categoria-cards-container
+    .produto-selecao-card:hover
+    .produto-imagem-placeholder {
+
+        transform:
+            none;
+    }
+
+
+    .categoria-cards-container
+    .produto-selecao-card:hover
+    .produto-imagem-placeholder img {
+
+        transform:
+            none;
+    }
+
+
+    /*
+    =================================
+    INFORMAÇÕES
+    =================================
+    */
+
+    .categoria-cards-container
+    .produto-card-informacoes {
+
+        min-width:
+            0;
+
+        flex:
+            1;
+
+        display:
+            flex;
+
+        flex-direction:
+            column;
+
+        justify-content:
+            center;
+
+        align-self:
+            stretch;
+    }
+
+
+    /*
+    =================================
+    NOME
+    =================================
+    */
+
+    .categoria-cards-container
+    .produto-card-titulo {
+
+        width:
+            100%;
+
+        min-height:
+            18px;
+
+        max-height:
+            36px;
+
+        margin:
+            0 0 0.15rem;
+
+        font-size:
+            0.82rem;
+
+        line-height:
+            1.15;
+
+        text-align:
+            left;
+
+        display:
+            -webkit-box;
+
+        -webkit-line-clamp:
+            2;
+
+        -webkit-box-orient:
+            vertical;
+
+        overflow:
+            hidden;
+    }
+
+
+    /*
+    =================================
+    DESCRIÇÃO
+    =================================
+    */
+
+    .categoria-cards-container
+    .produto-card-descricao {
+
+        width:
+            100%;
+
+        min-height:
+            0;
+
+        max-height:
+            32px;
+
+        margin:
+            0;
+
+        font-size:
+            0.70rem;
+
+        line-height:
+            1.25;
+
+        text-align:
+            left;
+
+        overflow:
+            hidden;
+
+        display:
+            -webkit-box;
+
+        -webkit-line-clamp:
+            2;
+
+        -webkit-box-orient:
+            vertical;
+    }
+
+
+    /*
+    =================================
+    CONTROLES
+    =================================
+    */
+
+    .categoria-cards-container
+    .contador-produto {
+
+        width:
+            auto;
+
+        min-width:
+            72px;
+
+        min-height:
+            34px;
+
+        margin:
+            0;
+
+        padding:
+            0;
+
+        flex-shrink:
+            0;
+
+        display:
+            flex;
+
+        flex-direction:
+            row;
+
+        align-items:
+            center;
+
+        justify-content:
+            flex-end;
+
+        gap:
+            0.15rem;
+    }
+
+
+    /*
+    =================================
+    BOTÃO -
+    =================================
+    */
+
+    .categoria-cards-container
+    .contador-produto
+    .contador-botao-menos {
+
+        width:
+            25px;
+
+        height:
+            25px;
+
+        min-width:
+            25px;
+
+        border-radius:
+            7px;
+
+        font-size:
+            0.8rem;
+    }
+
+
+    /*
+    =================================
+    QUANTIDADE
+    =================================
+    */
+
+    .categoria-cards-container
+    .contador-produto
+    .contador-quantidade {
+
+        min-width:
+            20px;
+
+        font-size:
+            0.8rem;
+    }
+
+
+    /*
+    =================================
+    BOTÃO +
+    =================================
+    */
+
+    .categoria-cards-container
+    .contador-produto
+    .contador-botao-mais,
+    .categoria-cards-container
+    .contador-produto
+    [data-aumentar] {
+
+        width:
+            25px !important;
+
+        height:
+            25px !important;
+
+        min-width:
+            25px;
+
+        border-radius:
+            7px !important;
+    }
+
+
+    .categoria-cards-container
+    .contador-produto
+    .contador-botao i {
+
+        font-size:
+            0.8rem;
+    }
+
+
+    /*
+    =================================
+    ALERTA
+    =================================
+    */
+
+    .categoria-cards-container
+    .categoria-alerta {
+
+        font-size:
+            0.78rem;
+
+        margin-bottom:
+            1rem;
+
+        padding:
+            0.7rem;
+    }
+
+
+    /*
+    =================================
+    CABEÇALHO
+    =================================
+    */
+
+    .categoria-cards-container
+    .categoria-cabecalho {
+
+        margin-bottom:
+            1rem;
+    }
+
+
+    .categoria-cards-container
+    .categoria-subtitulo {
+
+        font-size:
+            0.8rem;
+    }
+
+
+    .categoria-cards-container
+    .categoria-titulo {
+
+        font-size:
+            1.25rem;
+    }
+
+
+    .categoria-cards-container
+    .categoria-descricao {
+
+        font-size:
+            0.82rem;
+
+        line-height:
+            1.35;
+    }
+
 }

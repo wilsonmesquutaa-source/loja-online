@@ -1,6 +1,7 @@
 .navbar-brand {
     letter-spacing: 0.3px;
 }
+
 .navbar-brand-logo img {
     filter:
         drop-shadow(2px 0 0 var(--branco))
@@ -8,6 +9,7 @@
         drop-shadow(0 2px 0 var(--branco))
         drop-shadow(0 -2px 0 var(--branco));
 }
+
 
 /* ============================
    CARRINHO DA NAVBAR
@@ -25,6 +27,7 @@
     color: var(--branco);
 }
 
+
 .btn-navbar-menor {
     font-size: 0.9rem;
     padding: 0.4rem 0.7rem;
@@ -34,8 +37,9 @@
     border: 2px solid var(--cor-destaque);
 }
 
+
 /* ============================
-   Menu
+   MENU
 ============================ */
 
 .nav-link-marca {
@@ -52,15 +56,18 @@
         color 0.2s ease;
 }
 
+
 .nav-link-marca:hover {
     color: var(--branco);
     background-color: var(--cor-destaque);
 }
 
+
 .nav-link-marca.active {
     color: var(--branco);
     background-color: var(--cor-destaque);
 }
+
 
 .navbar-site {
     background-color: var(--cor-secundaria) !important;
@@ -80,16 +87,15 @@
     color:
         var(--branco);
 
-
     font-size:
         0.9rem;
 
     font-weight:
         600;
-    
-
 }
-.btn-navbar-cliente:hover{
+
+
+.btn-navbar-cliente:hover {
     color: var(--branco);
 }
 
@@ -181,4 +187,295 @@
 .btn-navbar-cliente.show .bi-chevron-down {
     transform:
         rotate(180deg);
+}
+
+
+/* ============================
+   NOVA ESTRUTURA DA NAVBAR
+============================ */
+
+.navbar-acoes-mobile {
+    display: none !important;
+}
+
+
+/* ============================
+   HAMBURGER LARANJA
+============================ */
+
+.navbar-toggler-marca {
+    border: 2px solid var(--cor-destaque);
+    padding: 0.35rem 0.55rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.navbar-toggler-marca:focus {
+    box-shadow:
+        0 0 0 0.2rem
+        rgba(255, 165, 0, 0.25);
+}
+
+
+.navbar-toggler-marca .navbar-toggler-icon {
+    width: 1rem;
+    height: 1rem;
+
+    filter:
+        invert(63%)
+        sepia(92%)
+        saturate(1600%)
+        hue-rotate(358deg)
+        brightness(102%)
+        contrast(103%);
+}
+
+
+/* ============================
+   DESKTOP
+============================ */
+
+@media (min-width: 992px) {
+
+    .navbar-container-marca {
+        flex-wrap: nowrap;
+    }
+
+    .navbar-toggler-marca {
+        display: none;
+    }
+
+    .navbar-acoes-desktop {
+        display: flex !important;
+    }
+
+}
+
+
+/* ============================
+   MOBILE / TABLET
+============================ */
+
+@media (max-width: 991.98px) {
+
+    .navbar-container-marca {
+        flex-wrap: nowrap;
+    }
+
+
+    /* LOGO */
+
+    .navbar-brand-logo {
+        flex-shrink: 1;
+        min-width: 0;
+    }
+
+
+    .navbar-brand-logo img {
+        height: 48px;
+        width: auto;
+    }
+
+
+    /* AÇÕES MOBILE */
+
+    .navbar-acoes-mobile {
+        display: flex !important;
+
+        margin-left: auto;
+
+        flex-shrink: 1;
+
+        min-width: 0;
+    }
+
+
+    /* AÇÕES DESKTOP FICAM ESCONDIDAS */
+
+    .navbar-acoes-desktop {
+        display: none !important;
+    }
+
+
+    /* CLIENTE */
+
+    .navbar-cliente-boas-vindas {
+        white-space: nowrap;
+        font-size: 0.75rem;
+    }
+
+
+    .navbar-cliente-avatar {
+        width: 28px;
+        height: 28px;
+    }
+
+
+    .navbar-cliente-avatar i {
+        font-size: 16px;
+    }
+
+
+    .navbar-acoes-mobile
+    .btn-navbar-cliente {
+        white-space: nowrap;
+    }
+
+
+    /* CARRINHO */
+
+    .navbar-carrinho-mobile {
+        flex-shrink: 0;
+
+        padding:
+            0.35rem 0.55rem;
+    }
+
+
+    /* BOTÕES ENTRAR / ADMIN */
+
+    .navbar-botao-mobile {
+        flex-shrink: 0;
+
+        font-size:
+            0.72rem;
+
+        padding:
+            0.35rem 0.45rem;
+
+        white-space:
+            nowrap;
+    }
+
+
+    .navbar-botao-mobile i {
+        margin-right:
+            2px;
+    }
+
+
+    /* HAMBURGER */
+
+    .navbar-toggler-marca {
+        display:
+            block;
+
+        flex-shrink:
+            0;
+
+        margin-left:
+            0.25rem;
+    }
+
+
+    /* MENU ABERTO */
+
+    .navbar-collapse {
+        width: 100%;
+    }
+
+
+    .navbar-collapse
+    .navbar-nav {
+        width: 100%;
+
+        margin-top:
+            0.75rem;
+
+        align-items:
+            stretch !important;
+    }
+
+
+    .navbar-collapse
+    .nav-item {
+        width: 100%;
+    }
+
+
+    .navbar-collapse
+    .nav-link-marca {
+        margin:
+            0.15rem 0;
+
+        width:
+            100%;
+
+        text-align:
+            left;
+    }
+
+
+    /* PESQUISA DENTRO DO MENU */
+
+    .navbar-collapse
+    form {
+        width:
+            100%;
+
+        margin-top:
+            0.75rem;
+    }
+
+}
+
+
+/* ============================
+   TELAS MUITO PEQUENAS
+============================ */
+
+@media (max-width: 575.98px) {
+
+    .container-fluid.navbar-container-marca {
+        padding-left:
+            0.75rem;
+
+        padding-right:
+            0.75rem;
+    }
+
+
+    .navbar-brand-logo img {
+        height:
+            43px;
+    }
+
+
+    .navbar-cliente-boas-vindas {
+        font-size:
+            0.68rem;
+    }
+
+
+    .navbar-cliente-avatar {
+        width:
+            26px;
+
+        height:
+            26px;
+    }
+
+
+    .navbar-carrinho-mobile {
+        padding:
+            0.3rem 0.45rem;
+    }
+
+
+    .navbar-botao-mobile {
+        font-size:
+            0.65rem;
+
+        padding:
+            0.3rem 0.4rem;
+    }
+
+
+    .navbar-toggler-marca {
+        padding:
+            0.3rem 0.4rem;
+    }
+
 }

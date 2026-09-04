@@ -122,177 +122,19 @@ if (
         ?>
     "
     data-tipo-categoria="<?= htmlspecialchars(
-                                $tipoCategoria,
-                                ENT_QUOTES,
-                                'UTF-8'
-                            ) ?>"
+        $tipoCategoria,
+        ENT_QUOTES,
+        'UTF-8'
+    ) ?>"
     data-limite="<?= (int) $limiteOpcoes ?>"
     data-tipo-contador="<?= (
-                            $ehSalgadosGrandes
-                            ||
-                            $ehEmpadao
-                        )
-                            ? 'quantidade'
-                            : 'opcoes'
-                        ?>">
-
-
-    <!-- =================================
-         CABEÇALHO DA CATEGORIA
-    ================================== -->
-
-    <div
-        class="categoria-cabecalho"
-        data-limite-opcoes="<?= (int) $limiteOpcoes ?>">
-
-
-        <p class="categoria-subtitulo">
-
-            Escolha os sabores
-
-        </p>
-
-
-        <h3 class="categoria-titulo">
-
-            <?= htmlspecialchars(
-                $nomeCategoria,
-                ENT_QUOTES,
-                'UTF-8'
-            ) ?>
-
-        </h3>
-
-
-        <?php if (
-            !empty($categoria['descricao'])
-        ): ?>
-
-            <p class="categoria-descricao">
-
-                <?= htmlspecialchars(
-                    $categoria['descricao'],
-                    ENT_QUOTES,
-                    'UTF-8'
-                ) ?>
-
-            </p>
-
-        <?php endif; ?>
-
-
-    </div>
-
-
-    <!-- =================================
-         ALERTA DA CATEGORIA
-    ================================== -->
-
-    <div class="alert alert-warning categoria-alerta">
-
-
-        <div
-            class="
-                d-flex
-                align-items-center
-                gap-2
-            "
-        >
-
-
-            <i class="bi bi-info-circle"></i>
-
-
-            <div>
-
-
-                <?php if ($ehSalgadosGrandes): ?>
-
-                    <strong>
-
-                        Escolha a quantidade
-                        desejada de cada salgado.
-
-                    </strong>
-
-
-                    <br>
-
-
-                    <span class="small">
-
-                        Cada unidade custa
-                        R$ 5,00.
-
-                        Para revenda, a unidade
-                        custa R$ 3,00,
-                        com mínimo de 10 unidades.
-
-                    </span>
-
-
-                <?php elseif ($ehEmpadao): ?>
-
-
-                    <strong>
-
-                        Escolha a quantidade desejada.
-
-                    </strong>
-
-
-                    <br>
-
-
-                    <span class="small">
-
-                        Cada unidade custa R$ 100,00.
-
-                    </span>
-
-
-                <?php else: ?>
-
-
-                    <strong>
-
-                        Monte seu cento
-                        escolhendo até
-                        <?= (int) $limiteOpcoes ?>
-                        sabores.
-
-                    </strong>
-
-
-                    <br>
-
-
-                    <span class="small">
-
-                        Partes escolhidas:
-
-                        <strong data-contador-opcoes>
-
-                            0
-
-                        </strong>
-
-                        /
-                        <?= (int) $limiteOpcoes ?>
-
-                    </span>
-
-
-                <?php endif; ?>
-
-
-            </div>
-
-
-        </div>
-
-
-    </div>
+        $ehSalgadosGrandes
+        ||
+        $ehEmpadao
+    )
+        ? 'quantidade'
+        : 'opcoes'
+    ?>">
 
 
     <!-- =================================
@@ -304,7 +146,6 @@ if (
         method="POST"
         data-form-carrinho
     >
-
 
         <input
             type="hidden"
@@ -327,20 +168,772 @@ if (
 
 
         <!-- =================================
-             CENTO
+             NOVO CONTAINER DOS CARDS
+             
+             Este container envolve:
+             - Escolha os sabores
+             - Título
+             - Descrição
+             - Alerta
+             - Todos os cards
+
+             O painel fixo do cento fica
+             fora deste container.
         ================================== -->
 
-        <?php if ($ehCento): ?>
+        <div class="categoria-cards-container">
 
 
-            <div class="categoria-cento-layout">
+            <!-- =================================
+                 CABEÇALHO DA CATEGORIA
+            ================================== -->
+
+            <div
+                class="categoria-cabecalho"
+                data-limite-opcoes="<?= (int) $limiteOpcoes ?>"
+            >
+
+
+                <p class="categoria-subtitulo">
+
+                    Escolha os sabores
+
+                </p>
+
+
+                <h3 class="categoria-titulo">
+
+                    <?= htmlspecialchars(
+                        $nomeCategoria,
+                        ENT_QUOTES,
+                        'UTF-8'
+                    ) ?>
+
+                </h3>
+
+
+                <?php if (
+                    !empty(
+                        $categoria['descricao']
+                    )
+                ): ?>
+
+                    <p class="categoria-descricao">
+
+                        <?= htmlspecialchars(
+                            $categoria['descricao'],
+                            ENT_QUOTES,
+                            'UTF-8'
+                        ) ?>
+
+                    </p>
+
+                <?php endif; ?>
+
+
+            </div>
+
+
+            <!-- =================================
+                 ALERTA DA CATEGORIA
+            ================================== -->
+
+            <div
+                class="
+                    alert
+                    alert-warning
+                    categoria-alerta
+                "
+            >
+
+                <div
+                    class="
+                        d-flex
+                        align-items-center
+                        gap-2
+                    "
+                >
+
+                    <i
+                        class="bi bi-info-circle"
+                    ></i>
+
+
+                    <div>
+
+
+                        <?php if (
+                            $ehSalgadosGrandes
+                        ): ?>
+
+                            <strong>
+
+                                Escolha a quantidade
+                                desejada de cada salgado.
+
+                            </strong>
+
+
+                            <br>
+
+
+                            <span class="small">
+
+                                Cada unidade custa
+                                R$ 5,00.
+
+                                Para revenda, a unidade
+                                custa R$ 3,00,
+                                com mínimo de 10 unidades.
+
+                            </span>
+
+
+                        <?php elseif (
+                            $ehEmpadao
+                        ): ?>
+
+
+                            <strong>
+
+                                Escolha a quantidade desejada.
+
+                            </strong>
+
+
+                            <br>
+
+
+                            <span class="small">
+
+                                Cada unidade custa R$ 100,00.
+
+                            </span>
+
+
+                        <?php else: ?>
+
+
+                            <strong>
+
+                                Monte seu cento
+                                escolhendo até
+                                <?= (int) $limiteOpcoes ?>
+                                sabores.
+
+                            </strong>
+
+
+                            <br>
+
+
+                            <span class="small">
+
+                                Partes escolhidas:
+
+                                <strong
+                                    data-contador-opcoes
+                                >
+
+                                    0
+
+                                </strong>
+
+                                /
+                                <?= (int) $limiteOpcoes ?>
+
+                            </span>
+
+
+                        <?php endif; ?>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+            <!-- =================================
+                 ÁREA DOS PRODUTOS
+            ================================== -->
+
+            <?php if (
+                $ehCento
+            ): ?>
+
+
+                <div
+                    class="
+                        categoria-cento-layout
+                    "
+                >
+
+
+                    <!-- =================================
+                         ÁREA DOS PRODUTOS
+                    ================================== -->
+
+                    <div
+                        class="
+                            categoria-produtos-area
+                        "
+                    >
+
+
+                        <?php if (
+                            $produtos === []
+                        ): ?>
+
+
+                            <div
+                                class="
+                                    alert
+                                    alert-info
+                                "
+                            >
+
+                                Nenhum sabor disponível
+                                nesta categoria.
+
+                            </div>
+
+
+                        <?php else: ?>
+
+
+                            <div
+                                class="
+                                    categoria-produtos-grid
+                                "
+                            >
+
+
+                                <?php foreach (
+                                    $produtos
+                                    as $produto
+                                ): ?>
+
+
+                                    <?php
+
+                                    $produtoId =
+                                        (int)
+                                        $produto['id'];
+
+
+                                    $quantidadeInicial =
+                                        (int) (
+                                            $quantidadesIniciais[
+                                                $produtoId
+                                            ]
+                                            ?? 0
+                                        );
+
+                                    ?>
+
+
+                                    <div
+                                        class="
+                                            produto-wrapper
+                                        "
+                                        data-produto-wrapper
+                                    >
+
+
+                                        <div
+                                            class="
+                                                produto-selecao-card
+                                            "
+                                            data-produto-id="<?= $produtoId ?>"
+                                        >
+
+
+                                            <div
+                                                class="
+                                                    produto-card-conteudo
+                                                "
+                                            >
+
+
+                                                <!-- =================================
+                                                     IMAGEM
+                                                ================================== -->
+
+                                                <?php if (
+                                                    !empty(
+                                                        $produto[
+                                                            'imagem_url'
+                                                        ]
+                                                    )
+                                                ): ?>
+
+                                                    <div
+                                                        class="
+                                                            produto-imagem-placeholder
+                                                        "
+                                                    >
+
+                                                        <img
+                                                            src="<?= BASE_URL . $produto['imagem_url'] ?>"
+                                                            alt="<?= htmlspecialchars(
+                                                                'Imagem de '
+                                                                . $produto['nome'],
+                                                                ENT_QUOTES,
+                                                                'UTF-8'
+                                                            ) ?>"
+                                                            style="
+                                                                object-position:
+                                                                    <?= isset(
+                                                                        $produto[
+                                                                            'imagem_posicao_x'
+                                                                        ]
+                                                                    )
+                                                                        ? (float)
+                                                                            $produto[
+                                                                                'imagem_posicao_x'
+                                                                            ]
+                                                                        : 50
+                                                                    ?>%
+                                                                    <?= isset(
+                                                                        $produto[
+                                                                            'imagem_posicao_y'
+                                                                        ]
+                                                                    )
+                                                                        ? (float)
+                                                                            $produto[
+                                                                                'imagem_posicao_y'
+                                                                            ]
+                                                                        : 50
+                                                                    ?>%;
+                                                            "
+                                                        >
+
+                                                    </div>
+
+                                                <?php else: ?>
+
+                                                    <div
+                                                        class="
+                                                            produto-imagem-placeholder
+                                                        "
+                                                    >
+
+                                                        <i
+                                                            class="
+                                                                bi
+                                                                bi-image
+                                                            "
+                                                        ></i>
+
+                                                    </div>
+
+                                                <?php endif; ?>
+
+
+                                                <!-- =================================
+                                                     INFORMAÇÕES DO PRODUTO
+                                                ================================== -->
+
+                                                <div
+                                                    class="
+                                                        produto-card-informacoes
+                                                    "
+                                                >
+
+
+                                                    <!-- NOME -->
+
+                                                    <h4
+                                                        class="
+                                                            produto-card-titulo
+                                                        "
+                                                    >
+
+                                                        <?= htmlspecialchars(
+                                                            $produto['nome'],
+                                                            ENT_QUOTES,
+                                                            'UTF-8'
+                                                        ) ?>
+
+                                                    </h4>
+
+
+                                                    <!-- DESCRIÇÃO -->
+
+                                                    <div
+                                                        class="
+                                                            produto-card-descricao
+                                                        "
+                                                    >
+
+                                                        <?php if (
+                                                            !empty(
+                                                                $produto[
+                                                                    'descricao'
+                                                                ]
+                                                            )
+                                                        ): ?>
+
+                                                            <?= htmlspecialchars(
+                                                                $produto[
+                                                                    'descricao'
+                                                                ],
+                                                                ENT_QUOTES,
+                                                                'UTF-8'
+                                                            ) ?>
+
+                                                        <?php endif; ?>
+
+                                                    </div>
+
+
+                                                </div>
+
+
+                                                <!-- =================================
+                                                     CONTADOR
+                                                ================================== -->
+
+                                                <div
+                                                    class="
+                                                        contador-produto
+                                                    "
+                                                >
+
+
+                                                    <button
+                                                        type="button"
+                                                        class="
+                                                            contador-botao
+                                                            contador-botao-menos
+                                                        "
+                                                        data-diminuir
+                                                        <?= (
+                                                            $quantidadeInicial <= 0
+                                                        )
+                                                            ? 'disabled'
+                                                            : ''
+                                                        ?>
+                                                    >
+
+                                                        <i
+                                                            class="
+                                                                bi
+                                                                bi-dash
+                                                            "
+                                                        ></i>
+
+                                                    </button>
+
+
+                                                    <span
+                                                        class="
+                                                            contador-quantidade
+                                                        "
+                                                        data-quantidade
+                                                    >
+
+                                                        <?= $quantidadeInicial ?>
+
+                                                    </span>
+
+
+                                                    <button
+                                                        type="button"
+                                                        class="
+                                                            contador-botao
+                                                            contador-botao-mais
+                                                        "
+                                                        data-aumentar
+                                                    >
+
+                                                        <i
+                                                            class="
+                                                                bi
+                                                                bi-plus
+                                                            "
+                                                        ></i>
+
+                                                    </button>
+
+
+                                                </div>
+
+
+                                                <!-- INPUT OCULTO -->
+
+                                                <input
+                                                    type="hidden"
+                                                    name="quantidades[<?= $produtoId ?>]"
+                                                    value="<?= $quantidadeInicial ?>"
+                                                    data-input-quantidade
+                                                >
+
+
+                                            </div>
+
+
+                                        </div>
+
+
+                                    </div>
+
+
+                                <?php endforeach; ?>
+
+
+                            </div>
+
+
+                        <?php endif; ?>
+
+
+                    </div>
+
+
+                    <!-- =================================
+                         PAINEL DO CENTO
+
+                         Fica fora do novo container
+                         dos cards.
+                    ================================== -->
+
+                    <div
+                        class="
+                            cento-preview-area
+                        "
+                    >
+
+
+                        <div
+                            class="
+                                cento-preview-sticky
+                            "
+                        >
+
+
+                            <div
+                                class="
+                                    cento-preview
+                                "
+                            >
+
+
+                                <!-- TÍTULO -->
+
+                                <div
+                                    class="
+                                        cento-preview-header
+                                    "
+                                >
+
+                                    <h4
+                                        class="
+                                            cento-preview-titulo
+                                        "
+                                    >
+
+                                        <?= $ehTradicionais
+                                            ? 'Cento Tradicional'
+                                            : 'Cento Folhado'
+                                        ?>
+
+                                    </h4>
+
+                                </div>
+
+
+                                <!-- QUADRADO DO CENTO -->
+
+                                <div
+                                    class="
+                                        cento-circulo
+                                    "
+                                    data-partes="<?= $partesCento ?>"
+                                >
+
+
+                                    <?php for (
+                                        $parte = 1;
+                                        $parte <= $partesCento;
+                                        $parte++
+                                    ): ?>
+
+
+                                        <div
+                                            class="
+                                                cento-setor
+                                            "
+                                            data-cento-setor="<?= $parte ?>"
+                                            data-parte="<?= $parte ?>"
+                                        >
+
+                                            <span
+                                                class="
+                                                    cento-setor-texto
+                                                "
+                                                data-cento-texto
+                                            >
+                                            </span>
+
+                                        </div>
+
+
+                                    <?php endfor; ?>
+
+
+                                    <?php if (
+                                        $ehTradicionais
+                                    ): ?>
+
+
+                                        <div
+                                            class="
+                                                cento-divisao
+                                                cento-divisao-vertical
+                                            "
+                                        ></div>
+
+
+                                        <div
+                                            class="
+                                                cento-divisao
+                                                cento-divisao-horizontal
+                                            "
+                                        ></div>
+
+
+                                    <?php else: ?>
+
+
+                                        <div
+                                            class="
+                                                cento-divisao
+                                                cento-divisao-vertical
+                                            "
+                                        ></div>
+
+
+                                    <?php endif; ?>
+
+
+                                    <!-- CENTRO -->
+
+                                    <div
+                                        class="cento-centro"
+                                    >
+
+                                        <strong>
+
+                                            100
+
+                                        </strong>
+
+                                        <span>
+
+                                            unidades
+
+                                        </span>
+
+                                    </div>
+
+
+                                </div>
+
+
+                                <!-- STATUS -->
+
+                                <div
+                                    class="
+                                        cento-preview-status
+                                    "
+                                    data-cento-status
+                                >
+
+                                    <small>
+
+                                        Monte seu cento.
+
+                                    </small>
+
+                                </div>
+
+
+                                <!-- LIMPAR -->
+
+                                <button
+                                    type="button"
+                                    class="
+                                        cento-botao-limpar
+                                    "
+                                    data-limpar-cento
+                                >
+
+                                    <i
+                                        class="
+                                            bi
+                                            bi-arrow-counterclockwise
+                                        "
+                                    ></i>
+
+                                    Limpar seleção
+
+                                </button>
+
+
+                                <!-- ADICIONAR -->
+
+                                <button
+                                    type="submit"
+                                    class="
+                                        cento-botao-carrinho
+                                    "
+                                    data-adicionar-carrinho
+                                >
+
+                                    <i
+                                        class="
+                                            bi
+                                            bi-cart-plus
+                                        "
+                                    ></i>
+
+                                    <?= $estaEditando
+                                        ? 'Atualizar carrinho'
+                                        : 'Adicionar ao carrinho'
+                                    ?>
+
+                                </button>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+            <?php else: ?>
 
 
                 <!-- =================================
-                     ÁREA DOS PRODUTOS
+                     CATEGORIAS NORMAIS
                 ================================== -->
 
-                <div class="categoria-produtos-area">
+                <div
+                    class="
+                        categoria-produtos-area
+                    "
+                >
 
 
                     <?php if (
@@ -348,7 +941,12 @@ if (
                     ): ?>
 
 
-                        <div class="alert alert-info">
+                        <div
+                            class="
+                                alert
+                                alert-info
+                            "
+                        >
 
                             Nenhum sabor disponível
                             nesta categoria.
@@ -359,7 +957,11 @@ if (
                     <?php else: ?>
 
 
-                        <div class="categoria-produtos-grid">
+                        <div
+                            class="
+                                categoria-produtos-grid
+                            "
+                        >
 
 
                             <?php foreach (
@@ -371,7 +973,8 @@ if (
                                 <?php
 
                                 $produtoId =
-                                    (int) $produto['id'];
+                                    (int)
+                                    $produto['id'];
 
 
                                 $quantidadeInicial =
@@ -386,19 +989,25 @@ if (
 
 
                                 <div
-                                    class="produto-wrapper"
+                                    class="
+                                        produto-wrapper
+                                    "
                                     data-produto-wrapper
                                 >
 
 
                                     <div
-                                        class="produto-selecao-card"
+                                        class="
+                                            produto-selecao-card
+                                        "
                                         data-produto-id="<?= $produtoId ?>"
                                     >
 
 
                                         <div
-                                            class="produto-card-conteudo"
+                                            class="
+                                                produto-card-conteudo
+                                            "
                                         >
 
 
@@ -478,54 +1087,60 @@ if (
 
 
                                             <!-- =================================
-                                                 NOME
-                                            ================================== -->
-
-                                            <h4
-                                                class="
-                                                    produto-card-titulo
-                                                "
-                                            >
-
-                                                <?= htmlspecialchars(
-                                                    $produto['nome'],
-                                                    ENT_QUOTES,
-                                                    'UTF-8'
-                                                ) ?>
-
-                                            </h4>
-
-
-                                            <!-- =================================
-                                                 DESCRIÇÃO
+                                                 INFORMAÇÕES DO PRODUTO
                                             ================================== -->
 
                                             <div
                                                 class="
-                                                    produto-card-descricao
+                                                    produto-card-informacoes
                                                 "
                                             >
 
 
-                                                <?php if (
-                                                    !empty(
-                                                        $produto[
-                                                            'descricao'
-                                                        ]
-                                                    )
-                                                ): ?>
+                                                <!-- NOME -->
 
+                                                <h4
+                                                    class="
+                                                        produto-card-titulo
+                                                    "
+                                                >
 
                                                     <?= htmlspecialchars(
-                                                        $produto[
-                                                            'descricao'
-                                                        ],
+                                                        $produto['nome'],
                                                         ENT_QUOTES,
                                                         'UTF-8'
                                                     ) ?>
 
+                                                </h4>
 
-                                                <?php endif; ?>
+
+                                                <!-- DESCRIÇÃO -->
+
+                                                <div
+                                                    class="
+                                                        produto-card-descricao
+                                                    "
+                                                >
+
+                                                    <?php if (
+                                                        !empty(
+                                                            $produto[
+                                                                'descricao'
+                                                            ]
+                                                        )
+                                                    ): ?>
+
+                                                        <?= htmlspecialchars(
+                                                            $produto[
+                                                                'descricao'
+                                                            ],
+                                                            ENT_QUOTES,
+                                                            'UTF-8'
+                                                        ) ?>
+
+                                                    <?php endif; ?>
+
+                                                </div>
 
 
                                             </div>
@@ -542,8 +1157,6 @@ if (
                                             >
 
 
-                                                <!-- DIMINUIR -->
-
                                                 <button
                                                     type="button"
                                                     class="
@@ -559,7 +1172,6 @@ if (
                                                     ?>
                                                 >
 
-
                                                     <i
                                                         class="
                                                             bi
@@ -567,11 +1179,8 @@ if (
                                                         "
                                                     ></i>
 
-
                                                 </button>
 
-
-                                                <!-- QUANTIDADE -->
 
                                                 <span
                                                     class="
@@ -585,8 +1194,6 @@ if (
                                                 </span>
 
 
-                                                <!-- AUMENTAR -->
-
                                                 <button
                                                     type="button"
                                                     class="
@@ -596,14 +1203,12 @@ if (
                                                     data-aumentar
                                                 >
 
-
                                                     <i
                                                         class="
                                                             bi
                                                             bi-plus
                                                         "
                                                     ></i>
-
 
                                                 </button>
 
@@ -642,539 +1247,10 @@ if (
                 </div>
 
 
-                <!-- =================================
-                     PAINEL DO CENTO
-                ================================== -->
+            <?php endif; ?>
 
-                <div class="cento-preview-area">
 
-
-                    <div class="cento-preview-sticky">
-
-
-                        <div class="cento-preview">
-
-
-                            <!-- TÍTULO -->
-
-                            <div class="cento-preview-header">
-
-
-                                <h4
-                                    class="
-                                        cento-preview-titulo
-                                    "
-                                >
-
-                                    <?= $ehTradicionais
-                                        ? 'Cento Tradicional'
-                                        : 'Cento Folhado'
-                                    ?>
-
-
-                                </h4>
-
-
-                            </div>
-
-
-                            <!-- QUADRADO DO CENTO -->
-
-                            <div
-                                class="cento-circulo"
-                                data-partes="<?= $partesCento ?>"
-                            >
-
-
-                                <?php for (
-                                    $parte = 1;
-                                    $parte <= $partesCento;
-                                    $parte++
-                                ): ?>
-
-
-                                    <div
-                                        class="cento-setor"
-                                        data-cento-setor="<?= $parte ?>"
-                                        data-parte="<?= $parte ?>"
-                                    >
-
-
-                                        <span
-                                            class="
-                                                cento-setor-texto
-                                            "
-                                            data-cento-texto
-                                        >
-                                        </span>
-
-
-                                    </div>
-
-
-                                <?php endfor; ?>
-
-
-                                <?php if (
-                                    $ehTradicionais
-                                ): ?>
-
-
-                                    <div
-                                        class="
-                                            cento-divisao
-                                            cento-divisao-vertical
-                                        "
-                                    >
-                                    </div>
-
-
-                                    <div
-                                        class="
-                                            cento-divisao
-                                            cento-divisao-horizontal
-                                        "
-                                    >
-                                    </div>
-
-
-                                <?php else: ?>
-
-
-                                    <div
-                                        class="
-                                            cento-divisao
-                                            cento-divisao-vertical
-                                        "
-                                    >
-                                    </div>
-
-
-                                <?php endif; ?>
-
-
-                                <!-- CENTRO -->
-
-                                <div
-                                    class="cento-centro"
-                                >
-
-
-                                    <strong>
-
-                                        100
-
-                                    </strong>
-
-
-                                    <span>
-
-                                        unidades
-
-                                    </span>
-
-
-                                </div>
-
-
-                            </div>
-
-
-                            <!-- STATUS -->
-
-                            <div
-                                class="cento-preview-status"
-                                data-cento-status
-                            >
-
-
-                                <small>
-
-                                    Monte seu cento.
-
-                                </small>
-
-
-                            </div>
-
-
-                            <!-- LIMPAR -->
-
-                            <button
-                                type="button"
-                                class="
-                                    cento-botao-limpar
-                                "
-                                data-limpar-cento
-                            >
-
-
-                                <i
-                                    class="
-                                        bi
-                                        bi-arrow-counterclockwise
-                                    "
-                                ></i>
-
-
-                                Limpar seleção
-
-
-                            </button>
-
-
-                            <!-- ADICIONAR -->
-
-                            <button
-                                type="submit"
-                                class="
-                                    cento-botao-carrinho
-                                "
-                                data-adicionar-carrinho
-                            >
-
-
-                                <i
-                                    class="
-                                        bi
-                                        bi-cart-plus
-                                    "
-                                ></i>
-
-
-                                <?= $estaEditando
-                                    ? 'Atualizar carrinho'
-                                    : 'Adicionar ao carrinho'
-                                ?>
-
-
-                            </button>
-
-
-                        </div>
-
-
-                    </div>
-
-
-                </div>
-
-
-            </div>
-
-
-        <?php else: ?>
-
-
-            <!-- =================================
-                 CATEGORIAS NORMAIS
-            ================================== -->
-
-            <div class="categoria-produtos-area">
-
-
-                <?php if (
-                    $produtos === []
-                ): ?>
-
-
-                    <div class="alert alert-info">
-
-                        Nenhum sabor disponível
-                        nesta categoria.
-
-                    </div>
-
-
-                <?php else: ?>
-
-
-                    <div class="categoria-produtos-grid">
-
-
-                        <?php foreach (
-                            $produtos
-                            as $produto
-                        ): ?>
-
-
-                            <?php
-
-                            $produtoId =
-                                (int) $produto['id'];
-
-
-                            $quantidadeInicial =
-                                (int) (
-                                    $quantidadesIniciais[
-                                        $produtoId
-                                    ]
-                                    ?? 0
-                                );
-
-                            ?>
-
-
-                            <div
-                                class="produto-wrapper"
-                                data-produto-wrapper
-                            >
-
-
-                                <div
-                                    class="produto-selecao-card"
-                                    data-produto-id="<?= $produtoId ?>"
-                                >
-
-
-                                    <div
-                                        class="produto-card-conteudo"
-                                    >
-
-
-                                        <!-- =================================
-                                             IMAGEM
-                                        ================================== -->
-
-                                        <?php if (
-                                            !empty(
-                                                $produto[
-                                                    'imagem_url'
-                                                ]
-                                            )
-                                        ): ?>
-
-                                            <div
-                                                class="
-                                                    produto-imagem-placeholder
-                                                "
-                                            >
-
-                                                <img
-                                                    src="<?= BASE_URL . $produto['imagem_url'] ?>"
-                                                    alt="<?= htmlspecialchars(
-                                                        'Imagem de '
-                                                        . $produto['nome'],
-                                                        ENT_QUOTES,
-                                                        'UTF-8'
-                                                    ) ?>"
-                                                    style="
-                                                        object-position:
-                                                            <?= isset(
-                                                                $produto[
-                                                                    'imagem_posicao_x'
-                                                                ]
-                                                            )
-                                                                ? (float)
-                                                                    $produto[
-                                                                        'imagem_posicao_x'
-                                                                    ]
-                                                                : 50
-                                                            ?>%
-                                                            <?= isset(
-                                                                $produto[
-                                                                    'imagem_posicao_y'
-                                                                ]
-                                                            )
-                                                                ? (float)
-                                                                    $produto[
-                                                                        'imagem_posicao_y'
-                                                                    ]
-                                                                : 50
-                                                            ?>%;
-                                                    "
-                                                >
-
-                                            </div>
-
-                                        <?php else: ?>
-
-                                            <div
-                                                class="
-                                                    produto-imagem-placeholder
-                                                "
-                                            >
-
-                                                <i
-                                                    class="
-                                                        bi
-                                                        bi-image
-                                                    "
-                                                ></i>
-
-                                            </div>
-
-                                        <?php endif; ?>
-
-
-                                        <!-- =================================
-                                             NOME
-                                        ================================== -->
-
-                                        <h4
-                                            class="
-                                                produto-card-titulo
-                                            "
-                                        >
-
-                                            <?= htmlspecialchars(
-                                                $produto['nome'],
-                                                ENT_QUOTES,
-                                                'UTF-8'
-                                            ) ?>
-
-
-                                        </h4>
-
-
-                                        <!-- =================================
-                                             DESCRIÇÃO
-                                        ================================== -->
-
-                                        <div
-                                            class="
-                                                produto-card-descricao
-                                            "
-                                        >
-
-
-                                            <?php if (
-                                                !empty(
-                                                    $produto[
-                                                        'descricao'
-                                                    ]
-                                                )
-                                            ): ?>
-
-
-                                                <?= htmlspecialchars(
-                                                    $produto[
-                                                        'descricao'
-                                                    ],
-                                                    ENT_QUOTES,
-                                                    'UTF-8'
-                                                ) ?>
-
-
-                                            <?php endif; ?>
-
-
-                                        </div>
-
-
-                                        <!-- =================================
-                                             CONTADOR
-                                        ================================== -->
-
-                                        <div
-                                            class="
-                                                contador-produto
-                                            "
-                                        >
-
-
-                                            <!-- DIMINUIR -->
-
-                                            <button
-                                                type="button"
-                                                class="
-                                                    contador-botao
-                                                    contador-botao-menos
-                                                "
-                                                data-diminuir
-                                                <?= (
-                                                    $quantidadeInicial <= 0
-                                                )
-                                                    ? 'disabled'
-                                                    : ''
-                                                ?>
-                                            >
-
-
-                                                <i
-                                                    class="
-                                                        bi
-                                                        bi-dash
-                                                    "
-                                                ></i>
-
-
-                                            </button>
-
-
-                                            <!-- QUANTIDADE -->
-
-                                            <span
-                                                class="
-                                                    contador-quantidade
-                                                "
-                                                data-quantidade
-                                            >
-
-                                                <?= $quantidadeInicial ?>
-
-
-                                            </span>
-
-
-                                            <!-- AUMENTAR -->
-
-                                            <button
-                                                type="button"
-                                                class="
-                                                    contador-botao
-                                                    contador-botao-mais
-                                                "
-                                                data-aumentar
-                                            >
-
-
-                                                <i
-                                                    class="
-                                                        bi
-                                                        bi-plus
-                                                    "
-                                                ></i>
-
-
-                                            </button>
-
-
-                                        </div>
-
-
-                                        <!-- INPUT OCULTO -->
-
-                                        <input
-                                            type="hidden"
-                                            name="quantidades[<?= $produtoId ?>]"
-                                            value="<?= $quantidadeInicial ?>"
-                                            data-input-quantidade
-                                        >
-
-
-                                    </div>
-
-
-                                </div>
-
-
-                            </div>
-
-
-                        <?php endforeach; ?>
-
-
-                    </div>
-
-
-                <?php endif; ?>
-
-
-            </div>
-
-
-        <?php endif; ?>
+        </div>
 
 
         <!-- =================================
@@ -1187,12 +1263,16 @@ if (
 
 
             <div
-                class="categoria-acao-sticky"
+                class="
+                    categoria-acao-sticky
+                "
             >
 
 
                 <div
-                    class="categoria-acao-card"
+                    class="
+                        categoria-acao-card
+                    "
                 >
 
 
@@ -1202,12 +1282,10 @@ if (
                         "
                     >
 
-
                         <?= $ehSalgadosGrandes
                             ? 'Salgados Grandes'
                             : 'Empadão de Frango'
                         ?>
-
 
                     </h4>
 
@@ -1218,12 +1296,10 @@ if (
                         "
                     >
 
-
                         <?= $ehSalgadosGrandes
                             ? 'Escolha as quantidades desejadas.'
                             : 'Escolha a quantidade desejada.'
                         ?>
-
 
                     </p>
 
@@ -1234,16 +1310,13 @@ if (
                         "
                     >
 
-
                         <span
                             class="
                                 categoria-acao-contador-label
                             "
                         >
 
-
                             Quantidade selecionada
-
 
                         </span>
 
@@ -1255,9 +1328,7 @@ if (
                             data-contador-quantidade
                         >
 
-
                             <?= $totalInicialUnidades ?>
-
 
                         </strong>
 
@@ -1268,14 +1339,12 @@ if (
                             "
                         >
 
-
                             <?= (
                                 $totalInicialUnidades === 1
                             )
                                 ? 'unidade'
                                 : 'unidades'
                             ?>
-
 
                         </span>
 
@@ -1291,7 +1360,6 @@ if (
                         data-adicionar-carrinho
                     >
 
-
                         <i
                             class="
                                 bi
@@ -1304,7 +1372,6 @@ if (
                             ? 'Atualizar carrinho'
                             : 'Adicionar ao carrinho'
                         ?>
-
 
                     </button>
 

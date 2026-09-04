@@ -27,6 +27,7 @@ View::componente(
 );
 
 ?>
+
 <link
     rel="stylesheet"
     href="<?= BASE_URL ?>/assets/css/categoria.css">
@@ -50,35 +51,19 @@ View::componente(
                 ): ?>
 
                 style="
-                        background-image:
-                            url('<?= BASE_URL
-                                        . $bannerCategoria['url_imagem'] ?>');
+                    background-image:
+                        url('<?= BASE_URL
+                                    . $bannerCategoria['url_imagem'] ?>');
 
-                        background-position:
-                            <?= (float)
-                            $bannerCategoria['posicao_x'] ?>%
-                            <?= (float)
-                            $bannerCategoria['posicao_y'] ?>%;
-                    "
+                    background-position:
+                        <?= (float)
+                        $bannerCategoria['posicao_x'] ?>%
+                        <?= (float)
+                        $bannerCategoria['posicao_y'] ?>%;
+                "
 
                 <?php endif; ?>>
             </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         </div>
 
@@ -87,8 +72,7 @@ View::componente(
              CONTEÚDO DA CATEGORIA
         ================================== -->
 
-        <div class="container categoria-conteudo">
-
+        <div class="container-fluid categoria-conteudo">
             <?php if (
                 $sucessoCategoria ===
                 'adicionado'
@@ -186,6 +170,7 @@ View::componente(
 
 </main>
 
+
 <!--
 =================================
 MODAL CENTO INCOMPLETO
@@ -244,6 +229,7 @@ MODAL CENTO INCOMPLETO
 
             </div>
 
+
             <div class="modal-footer">
 
                 <button
@@ -279,6 +265,7 @@ MODAL CENTO INCOMPLETO
                         'modalCentoIncompleto'
                     );
 
+
                 if (
                     modalElement &&
                     typeof bootstrap !==
@@ -290,7 +277,9 @@ MODAL CENTO INCOMPLETO
                             modalElement
                         );
 
+
                     modal.show();
+
                 }
 
             }
@@ -310,50 +299,70 @@ MODAL CENTO INCOMPLETO
                     '.categoria-pagina'
                 );
 
+
             const imagem =
                 document.querySelector(
                     '.img_destaque_imagem'
                 );
 
+
+            const containerImagem =
+                document.querySelector(
+                    '.img_destaque_container'
+                );
+
+
+            const conteudo =
+                document.querySelector(
+                    '.categoria-conteudo'
+                );
+
+
             if (
                 !pagina ||
-                !imagem
+                !imagem ||
+                !containerImagem ||
+                !conteudo
             ) {
                 return;
             }
+
+
+            /*
+            =================================
+            CONFIGURAÇÃO DO EFEITO
+            =================================
+            */
+
+            const margemInicial = -110;
+
+
+            const margemFinal = -165;
+
+
+            const deslocamentoMaximo =
+                260;
+
+
+            const movimentoImagemMaximo =
+                70;
 
 
             let animacaoPendente =
                 false;
 
 
-            function atualizarParallax() {
+            /*
+            =================================
+            ATUALIZAÇÃO DO MOVIMENTO
+            =================================
+            */
+
+            function atualizarEfeitoScroll() {
 
                 const rect =
                     pagina.getBoundingClientRect();
 
-
-                const alturaImagem =
-                    document
-                    .querySelector(
-                        '.img_destaque_container'
-                    )
-                    ?.offsetHeight ||
-                    0;
-
-
-                if (
-                    alturaImagem <= 0
-                ) {
-                    return;
-                }
-
-
-                /*
-                =================================
-                DISTÂNCIA DA PÁGINA NO SCROLL
-                =================================
-                */
 
                 const deslocamento =
                     Math.max(
@@ -363,29 +372,73 @@ MODAL CENTO INCOMPLETO
 
 
                 /*
-                =================================
-                VELOCIDADE DA IMAGEM
-                =================================
-
-                A imagem acompanha apenas 35%
-                do movimento da página.
-
-                Isso cria o efeito de profundidade.
+                O efeito termina depois de
+                aproximadamente 260px de scroll.
                 */
 
-                const movimento =
+                const progresso =
                     Math.min(
-                        deslocamento * 0.35,
-                        alturaImagem * 0.35
+                        deslocamento /
+                        deslocamentoMaximo,
+                        1
                     );
+
+
+                /*
+                =================================
+                IMAGEM / FUNDO
+                =================================
+
+                A camada superior desce
+                até 70px.
+                */
+
+                const movimentoImagem =
+                    progresso *
+                    movimentoImagemMaximo;
 
 
                 imagem.style.transform =
                     'translateY(' +
-                    movimento +
+                    movimentoImagem +
                     'px)';
+
+
+                /*
+                =================================
+                CONTAINER
+                =================================
+
+                O container aumenta sua
+                sobreposição de -110px para
+                -165px.
+
+                Isso faz a área creme subir
+                sobre o fundo.
+                */
+
+                const margemAtual =
+                    margemInicial +
+                    (
+                        (
+                            margemFinal -
+                            margemInicial
+                        ) *
+                        progresso
+                    );
+
+
+                conteudo.style.marginTop =
+                    margemAtual + 'px';
+
             }
 
+
+            /*
+            =================================
+            REQUEST ANIMATION FRAME
+            =================================
+            */
 
             function solicitarAtualizacao() {
 
@@ -403,15 +456,23 @@ MODAL CENTO INCOMPLETO
                 requestAnimationFrame(
                     function() {
 
-                        atualizarParallax();
+                        atualizarEfeitoScroll();
 
 
                         animacaoPendente =
                             false;
+
                     }
                 );
+
             }
 
+
+            /*
+            =================================
+            EVENTOS
+            =================================
+            */
 
             window.addEventListener(
                 'scroll',
@@ -427,7 +488,13 @@ MODAL CENTO INCOMPLETO
             );
 
 
-            atualizarParallax();
+            /*
+            =================================
+            ESTADO INICIAL
+            =================================
+            */
+
+            atualizarEfeitoScroll();
 
         }
     );
@@ -435,4 +502,4 @@ MODAL CENTO INCOMPLETO
 
 
 <?php require APP_ROOT
-. '/views/layouts/site/footer.php';
+    . '/views/layouts/site/footer.php';
