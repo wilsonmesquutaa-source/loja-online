@@ -28,18 +28,15 @@ $facebookContato = $facebookContato
 
         <div class="row align-items-center g-5">
 
-
             <div class="col-lg-7">
 
                 <p class="section-etiqueta text-white">
                     Atendimento
                 </p>
 
-
                 <h2 class="display-6 fw-bold text-white">
                     Faça seu pedido
                 </h2>
-
 
                 <p class="lead text-white">
 
@@ -51,7 +48,6 @@ $facebookContato = $facebookContato
                     salgados para seu momento especial.
 
                 </p>
-
 
                 <a
                     href="https://wa.me/<?= $whatsappContato ?>"
@@ -65,22 +61,15 @@ $facebookContato = $facebookContato
 
                 </a>
 
-
             </div>
-
-
 
             <div class="col-lg-5">
 
-
                 <div class="contato-card shadow-lg">
-
 
                     <h3 class="h5 fw-bold mb-4">
                         Entre em contato
                     </h3>
-
-
 
                     <p>
 
@@ -94,9 +83,6 @@ $facebookContato = $facebookContato
 
                     </p>
 
-
-
-
                     <p>
 
                         <i class="bi bi-telephone-fill me-2"></i>
@@ -108,9 +94,6 @@ $facebookContato = $facebookContato
                         ) ?>
 
                     </p>
-
-
-
 
                     <p>
 
@@ -124,9 +107,6 @@ $facebookContato = $facebookContato
 
                     </p>
 
-
-
-
                     <p class="mb-0">
 
                         <i class="bi bi-facebook me-2"></i>
@@ -139,18 +119,12 @@ $facebookContato = $facebookContato
 
                     </p>
 
-
-
                 </div>
-
 
             </div>
 
-
         </div>
 
-
     </div>
-
 
 </section>

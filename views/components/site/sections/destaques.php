@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-$categoriasDestaques =
-    $categoriasDestaques
+$destaquesHome =
+    $destaquesHome
     ?? [];
 
 ?>
@@ -11,6 +11,10 @@ $categoriasDestaques =
 <section class="destaques-section py-5">
 
     <div class="container">
+
+        <!-- =================================
+             CABEÇALHO
+        ================================== -->
 
         <div class="text-center mb-5">
 
@@ -29,14 +33,20 @@ $categoriasDestaques =
         </div>
 
 
+        <!-- =================================
+             LISTA DE DESTAQUES
+        ================================== -->
+
         <div class="row g-4">
 
-            <?php if ($categoriasDestaques === []): ?>
+            <?php if ($destaquesHome === []): ?>
 
                 <div class="col-12">
 
                     <div class="alert alert-info text-center">
+
                         Nenhum destaque disponível no momento.
+
                     </div>
 
                 </div>
@@ -44,23 +54,162 @@ $categoriasDestaques =
             <?php endif; ?>
 
 
-            <?php foreach ($categoriasDestaques as $categoria): ?>
+            <?php foreach ($destaquesHome as $destaque): ?>
 
-                <div class="col-md-6 col-lg-4">
 
-                    <article class="destaque-card card border-0 shadow-sm h-100">
+                <?php
 
-                        <div class="card-body d-flex flex-column">
+                /* =================================
+                   TÍTULO
+                ================================== */
 
-                            <span class="destaque-etiqueta mb-3">
+                $titulo =
+                    $destaque['tipo'] === 'produto'
+                        ? (
+                            $destaque['produto_nome']
+                            ?? ''
+                        )
+                        : (
+                            $destaque['categoria_nome']
+                            ?? ''
+                        );
+
+
+                /* =================================
+                   DESCRIÇÃO
+                ================================== */
+
+                $descricao =
+                    $destaque['tipo'] === 'produto'
+                        ? (
+                            $destaque['produto_descricao']
+                            ?? ''
+                        )
+                        : (
+                            $destaque['categoria_descricao']
+                            ?? ''
+                        );
+
+                ?>
+
+
+                <!-- =================================
+                     CARD
+                ================================== -->
+
+                <div class="col-6 col-md-6 col-lg-4">
+
+                    <article
+                        class="
+                            destaque-card
+                            produto-card
+                            card
+                            border-0
+                            shadow-sm
+                            overflow-hidden
+                        "
+                    >
+
+
+                        <!-- =================================
+                             IMAGEM
+                        ================================== -->
+
+                        <div class="cardapio-categoria-imagem">
+
+                            <?php if (
+                                !empty(
+                                    $destaque['imagem_url']
+                                )
+                            ): ?>
+
+                                <img
+                                    src="<?= BASE_URL . $destaque['imagem_url'] ?>"
+                                    alt="<?= htmlspecialchars(
+                                        'Imagem de ' . $titulo,
+                                        ENT_QUOTES,
+                                        'UTF-8'
+                                    ) ?>"
+                                    style="
+                                        object-position:
+                                            <?= isset(
+                                                $destaque[
+                                                    'imagem_posicao_x'
+                                                ]
+                                            )
+                                                ? (float)
+                                                    $destaque[
+                                                        'imagem_posicao_x'
+                                                    ]
+                                                : 50
+                                            ?>%
+                                            <?= isset(
+                                                $destaque[
+                                                    'imagem_posicao_y'
+                                                ]
+                                            )
+                                                ? (float)
+                                                    $destaque[
+                                                        'imagem_posicao_y'
+                                                    ]
+                                                : 50
+                                            ?>%;
+                                    "
+                                >
+
+                            <?php else: ?>
+
+                                <div
+                                    class="
+                                        cardapio-categoria-imagem-placeholder
+                                    "
+                                >
+
+                                    <i
+                                        class="
+                                            bi
+                                            bi-image
+                                        "
+                                        aria-hidden="true"
+                                    ></i>
+
+                                </div>
+
+                            <?php endif; ?>
+
+                        </div>
+
+
+                        <!-- =================================
+                             CONTEÚDO
+                        ================================== -->
+
+                        <div class="card-body">
+
+
+                            <!-- =================================
+                                 ETIQUETA
+                            ================================== -->
+
+                            <span
+                                class="
+                                    destaque-etiqueta
+                                "
+                            >
+
                                 Destaque
+
                             </span>
 
+
+                            <!-- =================================
+                                 TÍTULO
+                            ================================== -->
 
                             <h3 class="h5 fw-bold">
 
                                 <?= htmlspecialchars(
-                                    $categoria['nome'],
+                                    $titulo,
                                     ENT_QUOTES,
                                     'UTF-8'
                                 ) ?>
@@ -68,25 +217,54 @@ $categoriasDestaques =
                             </h3>
 
 
-                            <p class="text-secondary">
+                            <!-- =================================
+                                 DESCRIÇÃO
+                            ================================== -->
 
-                                <?= htmlspecialchars(
-                                    $categoria['descricao'] ?? '',
-                                    ENT_QUOTES,
-                                    'UTF-8'
-                                ) ?>
+                            <?php if (
+                                !empty(
+                                    trim(
+                                        $descricao
+                                    )
+                                )
+                            ): ?>
 
-                            </p>
+                                <p
+                                    class="
+                                        text-secondary
+                                        destaque-descricao
+                                    "
+                                >
+
+                                    <?= htmlspecialchars(
+                                        $descricao,
+                                        ENT_QUOTES,
+                                        'UTF-8'
+                                    ) ?>
+
+                                </p>
+
+                            <?php endif; ?>
 
 
-                            <div class="mt-auto">
+                            <!-- =================================
+                                 AÇÕES
+                            ================================== -->
 
-                                <p class="destaque-preco mb-3">
+                            <div class="destaque-acoes">
+
+
+                                <!-- =================================
+                                     PREÇO
+                                ================================== -->
+
+                                <p class="destaque-preco">
 
                                     R$
 
                                     <?= number_format(
-                                        (float) $categoria['preco'],
+                                        (float)
+                                        $destaque['preco'],
                                         2,
                                         ',',
                                         '.'
@@ -95,14 +273,25 @@ $categoriasDestaques =
                                 </p>
 
 
+                                <!-- =================================
+                                     BOTÃO
+                                ================================== -->
+
                                 <a
-                                    class="btn btn-marca w-100"
-                                    href="<?= BASE_URL ?>/cardapio/categoria/<?= (int) $categoria['id'] ?>"
+                                    class="
+                                        btn
+                                        btn-marca
+                                        w-100
+                                    "
+                                    href="<?= BASE_URL ?>/cardapio/categoria/<?= (int) $destaque['categoria_id'] ?>"
                                 >
+
                                     Ver sabores
+
                                 </a>
 
                             </div>
+
 
                         </div>
 

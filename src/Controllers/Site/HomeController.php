@@ -12,14 +12,13 @@ final class HomeController extends Controller
 {
     public function index(): void
     {
-
         $beneficios = [
 
             [
                 'icone' => 'bi bi-hand-thumbs-up',
                 'titulo' => 'Feito à mão',
                 'texto' =>
-                'Salgados artesanais preparados com carinho e qualidade.',
+                'Cada salgado é preparado à mão, com cuidado e de forma artesanal.',
             ],
 
             [
@@ -46,11 +45,62 @@ final class HomeController extends Controller
         ];
 
 
-        $cardapioRepository = new CardapioRepository($this->pdo);
+        /*
+        |--------------------------------------------------------------------------
+        | CARDÁPIO
+        |--------------------------------------------------------------------------
+        */
 
-        $categoriasDestaques = $cardapioRepository->buscarCategoriasDestaque();
+        $cardapioRepository =
+            new CardapioRepository(
+                $this->pdo
+            );
 
 
+        $destaquesHome =
+            $cardapioRepository
+                ->buscarDestaquesHome();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | BANNERS DA HOME
+        |--------------------------------------------------------------------------
+        */
+
+        $stmtBanners =
+            $this->pdo->query("
+                SELECT
+                    id,
+                    titulo,
+                    texto_alternativo,
+                    url_imagem,
+                    posicao_x,
+                    posicao_y,
+                    ordem,
+                    ativo
+
+                FROM banners_home
+
+                WHERE ativo = 1
+
+                AND url_imagem <> ''
+
+                ORDER BY
+                    ordem ASC,
+                    id ASC
+            ");
+
+
+        $bannersHome =
+            $stmtBanners->fetchAll();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | VIEW
+        |--------------------------------------------------------------------------
+        */
 
         $this->view(
             'site/home',
@@ -81,20 +131,29 @@ final class HomeController extends Controller
                 $beneficios,
 
 
-                'categoriasDestaques' =>
-                $categoriasDestaques,
+                'destaquesHome' =>
+                $destaquesHome,
+
+
+                'bannersHome' =>
+                $bannersHome,
+
 
                 'emailContato' =>
                 'contato@cantimdolanche.com',
 
+
                 'telefoneContato' =>
                 '(85) 99236-7866',
+
 
                 'whatsappContato' =>
                 '5585992367866',
 
+
                 'instagramContato' =>
                 '@cantimdolanche',
+
 
                 'facebookContato' =>
                 'Cantim do Lanche',

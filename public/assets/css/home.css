@@ -3,9 +3,14 @@ GERAL HOME
 ============================ */
 
 .hero-loja {
-    min-height: 560px;
-    display: flex;
-    align-items: center;
+    min-height:
+        560px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
 
     background:
         radial-gradient(
@@ -27,50 +32,83 @@ HERO
 
 .hero-etiqueta,
 .section-etiqueta {
-    color: var(--cor-primaria);
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 0.12rem;
-    text-transform: uppercase;
+    color:
+        var(--cor-primaria);
+
+    font-size:
+        0.85rem;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        0.12rem;
+
+    text-transform:
+        uppercase;
 }
 
 
 .hero-card {
-    padding: 2.5rem;
-    color: var(--branco);
-    background: var(--cor-secundaria);
-    border-radius: 1.5rem;
+    padding:
+        2.5rem;
+
+    color:
+        var(--branco);
+
+    background:
+        var(--cor-secundaria);
+
+    border-radius:
+        1.5rem;
 }
 
 
 .hero-card i {
-    color: var(--cor-destaque);
-    font-size: 3rem;
+    color:
+        var(--cor-destaque);
+
+    font-size:
+        3rem;
 }
 
 
 .hero-texto h1 {
-    font-size: 3rem;
-    font-weight: 800;
-    color: var(--marrom);
+    font-size:
+        3rem;
+
+    font-weight:
+        800;
+
+    color:
+        var(--marrom);
 }
 
 
 .hero-texto h1 span {
-    color: var(--cor-destaque);
+    color:
+        var(--cor-destaque);
 }
 
 
 .hero-texto p {
-    font-size: 1.2rem;
-    color: var(--cor-texto);
-    line-height: 1.6;
+    font-size:
+        1.2rem;
+
+    color:
+        var(--cor-texto);
+
+    line-height:
+        1.6;
 }
 
 
 .hero-imagem img {
-    max-width: 430px;
-    width: 100%;
+    max-width:
+        430px;
+
+    width:
+        100%;
 
     filter:
         drop-shadow(
@@ -80,22 +118,382 @@ HERO
 
 
 /* ============================
+BANNER DINÂMICO DA HOME
+============================ */
+
+.hero-banner-home {
+    padding:
+        0 !important;
+
+    width:
+        100%;
+
+    height:
+        380px;
+
+    overflow:
+        hidden;
+
+    position:
+        relative;
+
+    background:
+        var(--cor-secundaria);
+
+    border-radius:
+        1.5rem;
+}
+
+
+/* ============================
+ÁREA DOS SLIDES
+============================ */
+
+.hero-banner-slides {
+    width:
+        100%;
+
+    height:
+        100%;
+
+    position:
+        relative;
+}
+
+
+/* ============================
+SLIDES
+============================ */
+
+.hero-banner-slide {
+    position:
+        absolute;
+
+    inset:
+        0;
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    margin:
+        0;
+
+    overflow:
+        hidden;
+
+    opacity:
+        0;
+
+    visibility:
+        hidden;
+
+    transform:
+        scale(1.03);
+
+    transition:
+        opacity 0.8s ease,
+        transform 1.2s ease,
+        visibility 0s linear 0.8s;
+
+    pointer-events:
+        none;
+
+    z-index:
+        1;
+}
+
+
+/* ============================
+SLIDE ATIVO
+============================ */
+
+.hero-banner-slide.ativo {
+    opacity:
+        1;
+
+    visibility:
+        visible;
+
+    transform:
+        scale(1);
+
+    transition:
+        opacity 0.8s ease,
+        transform 1.2s ease,
+        visibility 0s linear 0s;
+
+    pointer-events:
+        auto;
+
+    z-index:
+        2;
+}
+
+
+/* ============================
+SLIDE ATIVO
+============================ */
+
+.hero-banner-slide.ativo {
+    opacity:
+        1;
+
+    transform:
+        translateX(0);
+
+    pointer-events:
+        auto;
+
+    z-index:
+        2;
+}
+
+/* ============================
+IMAGEM
+============================ */
+
+.hero-banner-slide img {
+    width:
+        100%;
+
+    height:
+        100%;
+
+    display:
+        block;
+
+    object-fit:
+        cover;
+
+    filter:
+        none !important;
+}
+
+
+/* ============================
+TÍTULO DO BANNER
+============================ */
+
+.hero-banner-titulo {
+    position:
+        absolute;
+
+    left:
+        0;
+
+    right:
+        0;
+
+    bottom:
+        0;
+
+    padding:
+        1rem 1.25rem;
+
+    background:
+        linear-gradient(
+            to top,
+            rgba(0, 0, 0, 0.45),
+            rgba(0, 0, 0, 0)
+        );
+
+    color:
+        var(--branco);
+
+    font-weight:
+        700;
+
+    font-size:
+        1rem;
+
+    z-index:
+        2;
+}
+
+
+/* ============================
+INDICADORES
+============================ */
+
+.hero-banner-indicadores {
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    bottom:
+        15px;
+
+    transform:
+        translateX(-50%);
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        8px;
+
+    z-index:
+        10;
+}
+
+
+.hero-banner-indicador {
+    width:
+        9px;
+
+    height:
+        9px;
+
+    padding:
+        0;
+
+    border:
+        none;
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(255, 255, 255, 0.55);
+
+    cursor:
+        pointer;
+
+    transition:
+        transform 0.25s ease,
+        background 0.25s ease;
+
+    appearance:
+        none;
+}
+
+
+.hero-banner-indicador:hover {
+    transform:
+        scale(1.2);
+
+    background:
+        var(--branco);
+}
+
+
+.hero-banner-indicador.ativo {
+    width:
+        24px;
+
+    border-radius:
+        10px;
+
+    background:
+        var(--cor-destaque);
+}
+
+
+/* ============================
+MOBILE / TABLET
+============================ */
+
+@media (max-width: 991.98px) {
+
+    .hero-banner-home {
+        height:
+            300px;
+    }
+
+}
+
+
+/* ============================
+CELULAR
+============================ */
+
+@media (max-width: 768px) {
+
+    .hero-banner-home {
+        height:
+            260px;
+
+        margin-top:
+            0;
+    }
+
+
+    .hero-banner-titulo {
+        padding:
+            0.8rem 1rem;
+
+        font-size:
+            0.9rem;
+    }
+
+
+    .hero-banner-indicadores {
+        bottom:
+            10px;
+    }
+
+}
+
+
+/* ============================
 BOTÕES
 ============================ */
 
 .btn-marca {
-    background: var(--cor-destaque);
-    color: var(--branco);
-    padding: 14px 35px;
-    border-radius: 30px;
-    font-weight: bold;
-    border: none;
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    background:
+        var(--cor-destaque);
+
+    color:
+        var(--branco) !important;
+
+    padding:
+        14px 35px;
+
+    border:
+        none;
+
+    border-radius:
+        30px;
+
+    font-weight:
+        bold;
+
+    text-decoration:
+        none !important;
 }
 
 
-.btn-marca:hover {
-    background: var(--laranja-hover);
-    color: var(--branco);
+.btn-marca:hover,
+.btn-marca:focus,
+.btn-marca:active {
+    background:
+        var(--laranja-hover);
+
+    color:
+        var(--branco) !important;
+
+    text-decoration:
+        none !important;
 }
 
 
@@ -104,19 +502,26 @@ TÍTULOS
 ============================ */
 
 .titulo-secao {
-    text-align: center;
-    margin: 60px 0 35px;
+    text-align:
+        center;
+
+    margin:
+        60px 0 35px;
 }
 
 
 .titulo-secao h2 {
-    font-size: 2.2rem;
-    color: var(--marrom);
+    font-size:
+        2.2rem;
+
+    color:
+        var(--marrom);
 }
 
 
 .titulo-secao span {
-    color: var(--cor-destaque);
+    color:
+        var(--cor-destaque);
 }
 
 
@@ -126,38 +531,68 @@ BENEFÍCIOS / CATEGORIAS
 
 .beneficio-card,
 .categoria-card {
-    background: var(--branco);
-    border-radius: 20px;
-    padding: 30px;
-    height: 100%;
-    border: 1px solid #eee;
-    transition: 0.3s;
+    background:
+        var(--branco);
+
+    border-radius:
+        20px;
+
+    padding:
+        30px;
+
+    height:
+        100%;
+
+    border:
+        1px solid #eee;
+
+    transition:
+        transform 0.35s ease,
+        box-shadow 0.35s ease;
 }
 
 
-.beneficio-card:hover,
-.categoria-card:hover {
-    transform: translateY(-8px);
+@media (min-width: 992px) {
 
-    box-shadow:
-        0 10px 25px rgba(0, 0, 0, 0.10);
+    .beneficio-card:hover,
+    .categoria-card:hover {
+        transform:
+            translateY(-8px);
+
+        box-shadow:
+            0 10px 25px rgba(0, 0, 0, 0.10);
+    }
+
 }
 
 
 .beneficio-icone {
-    width: 55px;
-    height: 55px;
+    width:
+        55px;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    height:
+        55px;
 
-    background: var(--cor-destaque);
-    color: var(--branco);
+    display:
+        flex;
 
-    border-radius: 15px;
+    align-items:
+        center;
 
-    font-size: 25px;
+    justify-content:
+        center;
+
+    background:
+        var(--cor-destaque);
+
+    color:
+        var(--branco);
+
+    border-radius:
+        15px;
+
+    font-size:
+        25px;
 }
 
 
@@ -166,11 +601,14 @@ PRODUTOS
 ============================ */
 
 .produto-card {
-    position: relative;
+    position:
+        relative;
 
-    height: 100%;
+    height:
+        100%;
 
-    overflow: hidden;
+    overflow:
+        hidden;
 
     background:
         var(--branco);
@@ -196,11 +634,9 @@ PRODUTOS
 }
 
 
-/*
----------------------------------
+/* ============================
 FAIXA LARANJA
----------------------------------
-*/
+============================ */
 
 .produto-card::before {
     content:
@@ -241,30 +677,30 @@ FAIXA LARANJA
 }
 
 
-/*
----------------------------------
+/* ============================
 HOVER DO CARD
----------------------------------
-*/
+============================ */
 
-.produto-card:hover {
-    transform:
-        translateY(-8px) !important;
+@media (min-width: 992px) {
 
-    box-shadow:
-        0 18px 40px
-        rgba(93, 64, 55, 0.16) !important;
+    .produto-card:hover {
+        transform:
+            translateY(-8px) !important;
 
-    border-color:
-        rgba(245, 124, 0, 0.18) !important;
+        box-shadow:
+            0 18px 40px
+            rgba(93, 64, 55, 0.16) !important;
+
+        border-color:
+            rgba(245, 124, 0, 0.18) !important;
+    }
+
 }
 
 
-/*
----------------------------------
-CONTEÚDO
----------------------------------
-*/
+/* ============================
+CONTEÚDO PRODUTOS
+============================ */
 
 .produto-card .card-body {
     padding:
@@ -272,11 +708,9 @@ CONTEÚDO
 }
 
 
-/*
----------------------------------
-ETIQUETA
----------------------------------
-*/
+/* ============================
+ETIQUETA PRODUTOS
+============================ */
 
 .produto-card .badge {
     border-radius:
@@ -293,11 +727,9 @@ ETIQUETA
 }
 
 
-/*
----------------------------------
-TÍTULO
----------------------------------
-*/
+/* ============================
+TÍTULO PRODUTOS
+============================ */
 
 .produto-card h3 {
     margin-bottom:
@@ -317,11 +749,9 @@ TÍTULO
 }
 
 
-/*
----------------------------------
-DESCRIÇÃO
----------------------------------
-*/
+/* ============================
+DESCRIÇÃO PRODUTOS
+============================ */
 
 .produto-card p.text-secondary {
     color:
@@ -335,11 +765,9 @@ DESCRIÇÃO
 }
 
 
-/*
----------------------------------
-PREÇO
----------------------------------
-*/
+/* ============================
+PREÇO PRODUTOS
+============================ */
 
 .produto-card .text-warning {
     color:
@@ -347,11 +775,9 @@ PREÇO
 }
 
 
-/*
----------------------------------
-BOTÃO
----------------------------------
-*/
+/* ============================
+BOTÃO PRODUTOS
+============================ */
 
 .produto-card .btn-warning {
     padding:
@@ -373,6 +799,9 @@ BOTÃO
     font-weight:
         600;
 
+    text-decoration:
+        none !important;
+
     transition:
         background-color 0.25s ease,
         border-color 0.25s ease,
@@ -391,6 +820,9 @@ BOTÃO
     color:
         var(--branco) !important;
 
+    text-decoration:
+        none !important;
+
     transform:
         translateY(-1px);
 
@@ -398,8 +830,6 @@ BOTÃO
         0 5px 14px
         rgba(93, 64, 55, 0.12);
 }
-
-
 
 
 /* ============================
@@ -414,110 +844,1092 @@ CONTATO / WHATSAPP
             var(--marrom)
         );
 
-    color: var(--branco);
-    padding: 50px 0;
+    color:
+        var(--branco);
+
+    padding:
+        50px 0;
 }
 
 
 .contato-card {
-    background: var(--branco);
-    color: var(--marrom);
-    border-radius: 25px;
-    padding: 30px;
+    background:
+        var(--branco);
+
+    color:
+        var(--marrom);
+
+    border-radius:
+        25px;
+
+    padding:
+        30px;
+}
+
+
+/* ==================================
+DESTAQUES
+================================== */
+
+.destaques-section {
+    background:
+        var(--creme);
+}
+
+
+/* ==================================
+CABEÇALHO DOS DESTAQUES
+================================== */
+
+.destaques-section .section-etiqueta {
+    color:
+        var(--laranja-hover);
+
+    font-weight:
+        700;
+
+    text-transform:
+        uppercase;
+
+    letter-spacing:
+        1px;
+
+    margin-bottom:
+        8px;
+}
+
+
+/* ==================================
+GRADE DOS DESTAQUES
+================================== */
+
+.destaques-section .row {
+    display:
+        grid !important;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap:
+        1.5rem;
+
+    margin:
+        0 !important;
+
+    width:
+        100%;
+
+    overflow:
+        visible !important;
+}
+
+
+/* ==================================
+COLUNAS DOS DESTAQUES
+================================== */
+
+.destaques-section .row > [class*="col-"] {
+    width:
+        100% !important;
+
+    max-width:
+        100% !important;
+
+    padding:
+        0 !important;
+
+    margin:
+        0 !important;
+
+    min-width:
+        0;
+
+    display:
+        block;
+
+    overflow:
+        visible !important;
+}
+
+
+/* ==================================
+CARD DE DESTAQUE
+================================== */
+
+.destaque-card {
+    position:
+        relative;
+
+    z-index:
+        1;
+
+    width:
+        100%;
+
+    min-width:
+        0;
+
+    height:
+        100%;
+
+    display:
+        flex !important;
+
+    flex-direction:
+        column;
+
+    background:
+        var(--branco);
+
+    border:
+        1px solid
+        rgba(93, 64, 55, 0.06) !important;
+
+    border-radius:
+        20px !important;
+
+    overflow:
+        hidden;
+
+    box-shadow:
+        0 8px 32px
+        rgba(93, 64, 55, 0.08) !important;
+
+    box-sizing:
+        border-box;
+
+    transform:
+        translateY(0) !important;
+
+    transition:
+        transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 0.35s ease !important;
+
+    will-change:
+        transform;
+}
+
+
+/* ==================================
+HOVER DOS DESTAQUES
+APENAS COMPUTADOR
+================================== */
+
+@media (min-width: 992px) {
+
+    .destaques-section .destaque-card:hover {
+        transform:
+            translateY(-8px) !important;
+
+        box-shadow:
+            0 10px 25px
+            rgba(0, 0, 0, 0.10) !important;
+
+        border-color:
+            rgba(245, 124, 0, 0.18) !important;
+
+        z-index:
+            5;
+    }
+
+
+    .destaques-section
+    .destaque-card:hover
+    .cardapio-categoria-imagem img {
+
+        transform:
+            scale(1.05);
+    }
+
+}
+
+
+/* ==================================
+IMAGEM
+================================== */
+
+.cardapio-categoria-imagem {
+    width:
+        100%;
+
+    height:
+        190px;
+
+    flex:
+        0 0 190px;
+
+    overflow:
+        hidden;
+
+    background:
+        #f8f5f0;
+}
+
+
+.cardapio-categoria-imagem img {
+    width:
+        100%;
+
+    height:
+        100%;
+
+    display:
+        block;
+
+    object-fit:
+        cover;
+
+    transition:
+        transform 0.4s ease;
+}
+
+
+/* ==================================
+PLACEHOLDER DA IMAGEM
+================================== */
+
+.cardapio-categoria-imagem-placeholder {
+    width:
+        100%;
+
+    height:
+        100%;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    background:
+        #f8f5f0;
+
+    color:
+        #9ca3af;
+
+    font-size:
+        3rem;
+}
+
+
+/* ==================================
+CONTEÚDO DO CARD
+================================== */
+
+.destaque-card .card-body {
+    width:
+        100%;
+
+    min-width:
+        0;
+
+    display:
+        flex !important;
+
+    flex-direction:
+        column;
+
+    padding:
+        1.25rem !important;
+
+    box-sizing:
+        border-box;
+
+    flex:
+        1;
+}
+
+
+/* ==================================
+ETIQUETA
+================================== */
+
+.destaque-etiqueta {
+    display:
+        inline-flex;
+
+    align-self:
+        flex-start;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    width:
+        fit-content;
+
+    padding:
+        6px 14px;
+
+    margin-bottom:
+        0.6rem;
+
+    background:
+        var(--cor-destaque);
+
+    color:
+        var(--branco);
+
+    border-radius:
+        20px;
+
+    font-size:
+        0.75rem;
+
+    font-weight:
+        700;
+
+    flex-shrink:
+        0;
+}
+
+
+/* ==================================
+TÍTULO
+================================== */
+
+.destaque-card h3 {
+    width:
+        100%;
+
+    min-height:
+        42px;
+
+    max-height:
+        42px;
+
+    margin:
+        0 0 0.6rem !important;
+
+    color:
+        var(--marrom);
+
+    font-size:
+        1.05rem;
+
+    font-weight:
+        700;
+
+    line-height:
+        1.25;
+
+    overflow:
+        hidden;
+
+    display:
+        -webkit-box;
+
+    -webkit-line-clamp:
+        2;
+
+    -webkit-box-orient:
+        vertical;
+}
+
+
+/* ==================================
+DESCRIÇÃO
+================================== */
+
+.destaque-descricao {
+    width:
+        100%;
+
+    min-height:
+        60px;
+
+    max-height:
+        60px;
+
+    margin:
+        0 0 1rem !important;
+
+    color:
+        #777777 !important;
+
+    font-size:
+        0.88rem;
+
+    line-height:
+        1.4;
+
+    overflow:
+        hidden;
+
+    display:
+        -webkit-box;
+
+    -webkit-line-clamp:
+        3;
+
+    -webkit-box-orient:
+        vertical;
+}
+
+
+/* ==================================
+ÁREA DE PREÇO E BOTÃO
+================================== */
+
+.destaque-acoes {
+    width:
+        100%;
+
+    margin-top:
+        auto;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    justify-content:
+        flex-end;
+
+    min-width:
+        0;
+}
+
+
+/* ==================================
+PREÇO
+================================== */
+
+.destaque-preco {
+    min-height:
+        29px;
+
+    margin:
+        0 0 0.75rem !important;
+
+    color:
+        var(--laranja-hover);
+
+    font-size:
+        1.35rem;
+
+    font-weight:
+        700;
+
+    line-height:
+        1.2;
+
+    flex-shrink:
+        0;
+}
+
+
+/* ==================================
+BOTÃO VER SABORES
+================================== */
+
+.destaque-card .btn-marca {
+    width:
+        100% !important;
+
+    min-height:
+        46px;
+
+    display:
+        flex !important;
+
+    align-items:
+        center !important;
+
+    justify-content:
+        center !important;
+
+    padding:
+        0.65rem 1rem !important;
+
+    background:
+        var(--laranja-hover) !important;
+
+    border:
+        1px solid
+        var(--laranja-hover) !important;
+
+    border-radius:
+        12px !important;
+
+    color:
+        var(--branco) !important;
+
+    font-size:
+        0.9rem;
+
+    font-weight:
+        700;
+
+    line-height:
+        1.2;
+
+    text-decoration:
+        none !important;
+
+    cursor:
+        pointer;
+
+    box-sizing:
+        border-box;
+}
+
+
+.destaque-card .btn-marca:hover,
+.destaque-card .btn-marca:focus,
+.destaque-card .btn-marca:active {
+    background:
+        var(--marrom) !important;
+
+    border-color:
+        var(--marrom) !important;
+
+    color:
+        var(--branco) !important;
+
+    text-decoration:
+        none !important;
+}
+
+
+/* ==================================
+TABLET
+ATÉ 991px
+================================== */
+
+@media (max-width: 991.98px) {
+
+    .destaques-section .row {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap:
+            1rem;
+    }
+
+
+    .cardapio-categoria-imagem {
+        height:
+            150px;
+
+        flex:
+            0 0 150px;
+    }
+
+
+    .destaque-card .card-body {
+        padding:
+            1rem !important;
+    }
+
+
+    .destaque-card h3 {
+        min-height:
+            40px;
+
+        max-height:
+            40px;
+
+        font-size:
+            0.95rem;
+    }
+
+
+    .destaque-descricao {
+        min-height:
+            55px;
+
+        max-height:
+            55px;
+
+        font-size:
+            0.8rem;
+
+        -webkit-line-clamp:
+            3;
+    }
+
+
+    .destaque-preco {
+        font-size:
+            1.1rem;
+    }
+
+
+    .destaque-card:hover {
+        transform:
+            none !important;
+    }
+
+}
+
+
+/* ==================================
+CELULAR
+ATÉ 768px
+================================== */
+
+@media (max-width: 768px) {
+
+    .destaques-section {
+        padding-top:
+            2rem !important;
+
+        padding-bottom:
+            2rem !important;
+    }
+
+
+    /* ==================================
+    GRADE
+    2 CARDS NO CELULAR
+    ================================= */
+
+    .destaques-section .row {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap:
+            0.65rem;
+
+        align-items:
+            stretch;
+    }
+
+
+    /* ==================================
+    COLUNA
+    ================================= */
+
+    .destaques-section .row > [class*="col-"] {
+        display:
+            flex !important;
+
+        height:
+            auto !important;
+    }
+
+
+    /* ==================================
+    CARD
+    ================================= */
+
+    .destaques-section .destaque-card,
+    .destaques-section .produto-card {
+        width:
+            100%;
+
+        height:
+            100% !important;
+
+        min-height:
+            0 !important;
+
+        display:
+            flex !important;
+
+        flex-direction:
+            column;
+    }
+
+
+    /* ==================================
+    IMAGEM
+    ================================= */
+
+    .cardapio-categoria-imagem {
+        height:
+            100px;
+
+        flex:
+            0 0 100px;
+    }
+
+
+    /* ==================================
+    CONTEÚDO
+    ================================= */
+
+    .destaque-card .card-body {
+        flex:
+            1;
+
+        padding:
+            0.7rem !important;
+    }
+
+
+    /* ==================================
+    ETIQUETA
+    ================================= */
+
+    .destaque-etiqueta {
+        padding:
+            3px 7px;
+
+        margin-bottom:
+            0.45rem;
+
+        border-radius:
+            8px;
+
+        font-size:
+            0.6rem;
+    }
+
+
+    /* ==================================
+    TÍTULO
+    ================================= */
+
+    .destaque-card h3 {
+        min-height:
+            34px;
+
+        max-height:
+            34px;
+
+        margin:
+            0 0 0.4rem !important;
+
+        font-size:
+            0.78rem;
+
+        line-height:
+            1.2;
+    }
+
+
+    /* ==================================
+    DESCRIÇÃO
+    ================================= */
+
+    .destaque-descricao {
+        width:
+            100%;
+
+        min-height:
+            0 !important;
+
+        max-height:
+            none !important;
+
+        margin:
+            0 0 0.65rem !important;
+
+        font-size:
+            0.68rem;
+
+        line-height:
+            1.35;
+
+        overflow:
+            hidden !important;
+
+        display:
+            -webkit-box !important;
+
+        -webkit-line-clamp:
+            3 !important;
+
+        -webkit-box-orient:
+            vertical !important;
+    }
+
+
+    /* ==================================
+    ÁREA DE AÇÕES
+    ================================= */
+
+    .destaque-acoes {
+        margin-top:
+            auto;
+    }
+
+
+    /* ==================================
+    PREÇO
+    ================================= */
+
+    .destaque-preco {
+        min-height:
+            20px;
+
+        margin:
+            0 0 0.45rem !important;
+
+        font-size:
+            0.85rem;
+
+        line-height:
+            1.1;
+    }
+
+
+    /* ==================================
+    BOTÃO
+    ================================= */
+
+    .destaque-card .btn-marca {
+        min-height:
+            34px;
+
+        padding:
+            0.35rem 0.3rem !important;
+
+        border-radius:
+            8px !important;
+
+        font-size:
+            0.65rem;
+
+        line-height:
+            1.1;
+
+        white-space:
+            nowrap;
+    }
+
+}
+
+
+/* ==================================
+CELULAR PEQUENO
+ATÉ 575px
+================================== */
+
+@media (max-width: 575.98px) {
+
+    .destaques-section .row {
+        gap:
+            0.5rem;
+    }
+
+
+    /* ==================================
+    IMAGEM
+    ================================= */
+
+    .cardapio-categoria-imagem {
+        height:
+            90px;
+
+        flex:
+            0 0 90px;
+    }
+
+
+    /* ==================================
+    CONTEÚDO
+    ================================= */
+
+    .destaque-card .card-body {
+        padding:
+            0.6rem !important;
+    }
+
+
+    /* ==================================
+    ETIQUETA
+    ================================= */
+
+    .destaque-etiqueta {
+        padding:
+            3px 6px;
+
+        margin-bottom:
+            0.4rem;
+
+        font-size:
+            0.56rem;
+    }
+
+
+    /* ==================================
+    TÍTULO
+    ================================= */
+
+    .destaque-card h3 {
+        min-height:
+            32px;
+
+        max-height:
+            32px;
+
+        margin:
+            0 0 0.35rem !important;
+
+        font-size:
+            0.74rem;
+
+        line-height:
+            1.15;
+    }
+
+
+    /* ==================================
+    DESCRIÇÃO
+    ================================= */
+
+    .destaque-descricao {
+        margin:
+            0 0 0.6rem !important;
+
+        font-size:
+            0.64rem;
+
+        line-height:
+            1.35;
+
+        -webkit-line-clamp:
+            3 !important;
+    }
+
+
+    /* ==================================
+    PREÇO
+    ================================= */
+
+    .destaque-preco {
+        min-height:
+            18px;
+
+        margin:
+            0 0 0.4rem !important;
+
+        font-size:
+            0.8rem;
+    }
+
+
+    /* ==================================
+    BOTÃO
+    ================================= */
+
+    .destaque-card .btn-marca {
+        min-height:
+            32px;
+
+        padding:
+            0.3rem 0.2rem !important;
+
+        border-radius:
+            8px !important;
+
+        font-size:
+            0.62rem;
+    }
+
 }
 
 
 /* ============================
-RESPONSIVO
+RESPONSIVO GERAL DA HOME
 ============================ */
 
 @media (max-width: 768px) {
 
     .hero-loja {
-        min-height: auto;
+        min-height:
+            auto;
     }
 
 
     .hero-card {
-        padding: 2rem;
+        padding:
+            2rem;
     }
 
 
     .hero-texto h1 {
-        font-size: 2.2rem;
-        text-align: center;
+        font-size:
+            2.2rem;
+
+        text-align:
+            center;
     }
 
 
     .hero-texto p {
-        text-align: center;
+        text-align:
+            center;
     }
 
 
     .hero-imagem {
-        margin-top: 30px;
-        text-align: center;
+        margin-top:
+            30px;
+
+        text-align:
+            center;
     }
 
 }
 
-/* ============================
-DESTAQUES
-============================ */
 
-.destaques-section {
-    background: var(--creme);
+/* ==================================
+REDUZIR MOVIMENTO
+================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .produto-card,
+    .produto-card::before,
+    .destaque-card,
+    .cardapio-categoria-imagem img,
+    .destaque-card .btn-marca,
+    .beneficio-card,
+    .categoria-card {
+
+        transition:
+            none !important;
+    }
+
+
+    .produto-card:hover,
+    .destaque-card:hover,
+    .beneficio-card:hover,
+    .categoria-card:hover,
+    .destaque-card:hover
+    .cardapio-categoria-imagem img,
+    .destaque-card .btn-marca:hover {
+
+        transform:
+            none !important;
+    }
+
 }
 
-.destaques-section .section-etiqueta {
-    color: var(--laranja-hover);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 8px;
+@media (min-width: 992px) {
+
+    .destaques-section .destaque-card {
+        transform:
+            translateY(0) !important;
+
+        transition:
+            transform 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+
+    .destaques-section .destaque-card:hover {
+        transform:
+            translateY(-8px) !important;
+    }
+
 }
 
-.destaque-card {
-    background: var(--branco);
-    border-radius: 18px;
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
 
-.destaque-card:hover {
-    transform: translateY(-5px);
-}
-
-.destaque-etiqueta {
-    display: inline-flex;
-    align-self: flex-start;
-    align-items: center;
-    justify-content: center;
-    padding: 6px 14px;
-    background: var(--cor-destaque);
-    color: var(--cor-secundaria);
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 700;
-}
-
-.destaque-preco {
-    color: var(--laranja-hover);
-    font-size: 1.5rem;
-    font-weight: 700;
-}
-
-.destaque-card .btn-marca {
-    background: var(--laranja-hover);
-    color: var(--branco);
-    border: none;
-}
-
-.destaque-card .btn-marca:hover {
-    background: var(--marrom);
-    color: var(--branco);
-}
-
+/*
+=================================
+IMAGEM DA CATEGORIA
+=================================
+*/
 
 .cardapio-categoria-imagem {
 
@@ -534,6 +1946,12 @@ DESTAQUES
         #f8f5f0;
 }
 
+
+/*
+=================================
+IMAGEM REAL
+=================================
+*/
 
 .cardapio-categoria-imagem img {
 
@@ -554,6 +1972,12 @@ DESTAQUES
 }
 
 
+/*
+=================================
+EFEITO HOVER
+=================================
+*/
+
 .produto-card:hover
 .cardapio-categoria-imagem img {
 
@@ -561,6 +1985,12 @@ DESTAQUES
         scale(1.05);
 }
 
+
+/*
+=================================
+PLACEHOLDER
+=================================
+*/
 
 .cardapio-categoria-imagem-placeholder {
 
@@ -588,4 +2018,3 @@ DESTAQUES
     font-size:
         3rem;
 }
-

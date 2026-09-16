@@ -1,6 +1,9 @@
 .navbar-brand {
-    letter-spacing: 0.3px;
+    letter-spacing:
+        0.3px;
 }
+
+
 .navbar-brand-logo img {
     filter:
         drop-shadow(2px 0 0 var(--branco))
@@ -9,61 +12,301 @@
         drop-shadow(0 -2px 0 var(--branco));
 }
 
+
 /* ============================
    CARRINHO DA NAVBAR
 ============================ */
 
 .btn-carrinho {
-    color: var(--cor-destaque);
-    border: 2px solid var(--cor-destaque);
-    background: transparent;
+    width:
+        38px;
+
+    height:
+        38px;
+
+    padding:
+        0;
+
+    flex:
+        0 0 38px;
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    color:
+        var(--cor-destaque);
+
+    border:
+        2px solid var(--cor-destaque);
+
+    background:
+        transparent;
+
+    line-height:
+        1;
 }
 
 
 .btn-carrinho:hover {
-    background: var(--cor-destaque);
-    color: var(--branco);
+    background:
+        var(--cor-destaque);
+
+    color:
+        var(--branco);
 }
 
-.btn-navbar-menor {
-    font-size: 0.9rem;
-    padding: 0.4rem 0.7rem;
-    color: var(--cor-destaque);
-    background-color: var(--branco);
-    font-weight: 700;
-    border: 2px solid var(--cor-destaque);
+
+.btn-carrinho i {
+    font-size:
+        1rem;
+
+    line-height:
+        1;
 }
+
 
 /* ============================
-   Menu
+   BOTÕES MENORES
+============================ */
+
+.btn-navbar-menor {
+    width:
+        38px;
+
+    height:
+        38px;
+
+    padding:
+        0;
+
+    flex:
+        0 0 38px;
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    color:
+        var(--branco);
+
+    background-color:
+        var(--cor-destaque);
+
+    font-size:
+        1rem;
+
+    font-weight:
+        700;
+
+    line-height:
+        1;
+
+    border:
+        2px solid var(--branco);
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+
+/*
+=================================
+ENTRAR / ADMIN
+=================================
+*/
+
+
+/* =========================
+   FOCUS
+   IGUAL AO HOVER
+========================= */
+
+.btn-navbar-menor:focus,
+.btn-navbar-menor:focus-visible {
+    color:
+        var(--cor-destaque) !important;
+
+    background-color:
+        var(--cor-secundaria) !important;
+
+    border:
+        2px solid var(--cor-destaque) !important;
+
+    box-shadow:
+        none !important;
+}
+
+
+.btn-navbar-menor:focus i,
+.btn-navbar-menor:focus-visible i {
+    color:
+        var(--cor-destaque) !important;
+}
+
+
+/* =========================
+   SELECIONADO / ABERTO
+   IGUAL AO HOVER
+========================= */
+
+.btn-navbar-menor.show {
+    color:
+        var(--cor-destaque) !important;
+
+    background-color:
+        var(--cor-secundaria) !important;
+
+    border:
+        2px solid var(--cor-destaque) !important;
+
+    box-shadow:
+        none !important;
+}
+
+
+.btn-navbar-menor.show i {
+    color:
+        var(--cor-destaque) !important;
+}
+
+
+/* =========================
+   ATIVO
+   IGUAL AO HOVER
+========================= */
+
+.btn-navbar-menor:active {
+    color:
+        var(--cor-destaque) !important;
+
+    background-color:
+        var(--cor-secundaria) !important;
+
+    border:
+        2px solid var(--cor-destaque) !important;
+
+    box-shadow:
+        none !important;
+}
+
+
+.btn-navbar-menor:active i {
+    color:
+        var(--cor-destaque) !important;
+}
+
+
+/* =========================
+   HOVER
+   PRETO + LARANJA
+========================= */
+
+.btn-navbar-menor:hover {
+    color:
+        var(--cor-destaque) !important;
+
+    background-color:
+        var(--cor-secundaria) !important;
+
+    border:
+        2px solid var(--cor-destaque) !important;
+
+    box-shadow:
+        none !important;
+}
+
+
+.btn-navbar-menor:hover i {
+    color:
+        var(--cor-destaque) !important;
+}
+
+
+/*
+=================================
+RETIRAR A SETA AUTOMÁTICA
+DOS BOTÕES COM DROPDOWN
+=================================
+*/
+
+.btn-navbar-menor.dropdown-toggle::after {
+    display:
+        none;
+}
+
+
+.btn-navbar-menor i {
+    margin:
+        0;
+
+    font-size:
+        1rem;
+
+    line-height:
+        1;
+}
+
+
+/* ============================
+   MENU
 ============================ */
 
 .nav-link-marca {
-    color: var(--branco);
-    font-weight: 600;
+    color:
+        var(--branco);
 
-    padding: 0.55rem 0.9rem;
-    margin: 0 0.6rem;
+    font-weight:
+        600;
 
-    border-radius: 0.6rem;
+    padding:
+        0.55rem 0.9rem;
+
+    margin:
+        0 0.6rem;
+
+    border-radius:
+        0.6rem;
 
     transition:
         background-color 0.2s ease,
         color 0.2s ease;
 }
 
+
 .nav-link-marca:hover {
-    color: var(--branco);
-    background-color: var(--cor-destaque);
+    color:
+        var(--branco);
+
+    background-color:
+        var(--cor-destaque);
 }
+
 
 .nav-link-marca.active {
-    color: var(--branco);
-    background-color: var(--cor-destaque);
+    color:
+        var(--branco);
+
+    background-color:
+        var(--cor-destaque);
 }
 
+
 .navbar-site {
-    background-color: var(--cor-secundaria) !important;
+    background-color:
+        var(--cor-secundaria) !important;
 }
 
 
@@ -72,7 +315,8 @@
 ============================ */
 
 .btn-navbar-cliente {
-    min-height: 38px;
+    min-height:
+        38px;
 
     padding:
         0.35rem 0.7rem;
@@ -80,21 +324,258 @@
     color:
         var(--branco);
 
-
     font-size:
         0.9rem;
 
     font-weight:
         600;
-    
-
-}
-.btn-navbar-cliente:hover{
-    color: var(--branco);
 }
 
 
-/* FOTO DO CLIENTE */
+.btn-navbar-cliente:hover {
+    color:
+        var(--branco);
+}
+
+
+/* =========================
+   REMOVER FOCO DO CLIENTE
+========================= */
+
+.btn-navbar-cliente:focus,
+.btn-navbar-cliente:focus-visible,
+.btn-navbar-cliente:active {
+    outline:
+        none !important;
+
+    box-shadow:
+        none !important;
+
+    border-color:
+        transparent !important;
+}
+
+
+/* ============================
+   DROPDOWN PERSONALIZADO
+   DO CLIENTE
+============================ */
+
+.dropdown-cliente-custom {
+    position:
+        relative;
+}
+
+
+/* ============================
+   BOTÃO DO CLIENTE
+============================ */
+
+.dropdown-cliente-custom
+.btn-navbar-cliente {
+    cursor:
+        pointer;
+
+    user-select:
+        none;
+}
+
+
+/* ============================
+   MENU DO CLIENTE
+============================ */
+
+.dropdown-menu-cliente-custom {
+
+    position:
+        absolute;
+
+    top:
+        calc(100% + 0.45rem);
+
+    right:
+        0;
+
+    z-index:
+        1050;
+
+    min-width:
+        210px;
+
+    list-style:
+        none;
+
+    margin:
+        0;
+
+    padding:
+        0.45rem;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.08);
+
+    border-radius:
+        0.75rem;
+
+    background-color:
+        var(--cor-secundaria);
+
+    box-shadow:
+        0 10px 25px
+        rgba(0, 0, 0, 0.25);
+
+    transform-origin:
+        top right;
+
+    opacity:
+        0;
+
+    visibility:
+        hidden;
+
+    pointer-events:
+        none;
+
+    transform:
+        translateY(-5px)
+        scale(0.92);
+
+    transition:
+        opacity 0.18s ease,
+        transform 0.18s ease,
+        visibility 0s linear 0.18s;
+}
+
+
+/* ============================
+   DROPDOWN ABERTO
+============================ */
+
+.dropdown-cliente-custom.aberto
+.dropdown-menu-cliente-custom {
+
+    opacity:
+        1;
+
+    visibility:
+        visible;
+
+    pointer-events:
+        auto;
+
+    transform:
+        translateY(0)
+        scale(1);
+
+    transition:
+        opacity 0.18s ease,
+        transform 0.18s ease,
+        visibility 0s linear 0s;
+}
+
+
+/* ============================
+   ITENS DO DROPDOWN
+============================ */
+
+.dropdown-menu-cliente-custom
+.dropdown-item {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    min-height:
+        40px;
+
+    padding:
+        0.55rem 0.75rem;
+
+    border-radius:
+        0.5rem;
+
+    color:
+        var(--branco);
+
+    font-size:
+        0.9rem;
+
+    transition:
+        background-color 0.15s ease,
+        color 0.15s ease;
+}
+
+
+.dropdown-menu-cliente-custom
+.dropdown-item:hover {
+
+    color:
+        var(--branco);
+
+    background-color:
+        var(--cor-destaque);
+}
+
+
+.dropdown-menu-cliente-custom
+.dropdown-item i {
+
+    width:
+        20px;
+
+    text-align:
+        center;
+
+    font-size:
+        1rem;
+}
+
+
+/* ============================
+   DIVISOR
+============================ */
+
+.dropdown-menu-cliente-custom
+.dropdown-divider {
+
+    border-top:
+        1px solid
+        rgba(255, 255, 255, 0.12);
+
+    margin:
+        0.35rem 0;
+}
+
+
+/* ============================
+   SAIR
+============================ */
+
+.dropdown-menu-cliente-custom
+.dropdown-item.text-danger {
+
+    color:
+        #ff6b6b !important;
+}
+
+
+.dropdown-menu-cliente-custom
+.dropdown-item.text-danger:hover {
+
+    color:
+        var(--branco) !important;
+
+    background-color:
+        #dc3545;
+}
+
+
+/* ============================
+   FOTO DO CLIENTE
+============================ */
 
 .navbar-cliente-avatar {
     width:
@@ -150,35 +631,560 @@
 }
 
 
-/* NOME */
+/* ============================
+   NOME
+============================ */
 
 .navbar-cliente-nome {
-    max-width:
-        150px;
-
-    overflow:
-        hidden;
-
-    text-overflow:
-        ellipsis;
-
     white-space:
         nowrap;
+
+    overflow:
+        visible;
+
+    text-overflow:
+        clip;
 }
 
 
-/* SETA DO DROPDOWN */
+/* ============================
+   SETA DO DROPDOWN
+============================ */
 
-.btn-navbar-cliente .bi-chevron-down {
+.dropdown-cliente-custom
+.bi-chevron-down {
+
     font-size:
         0.75rem;
 
     transition:
-        transform 0.2s ease;
+        transform 0.18s ease;
 }
 
 
-.btn-navbar-cliente.show .bi-chevron-down {
+.dropdown-cliente-custom.aberto
+.bi-chevron-down {
+
     transform:
         rotate(180deg);
+}
+
+
+/* ============================
+   NOVA ESTRUTURA DA NAVBAR
+============================ */
+
+.navbar-acoes-mobile {
+    display:
+        none !important;
+}
+
+
+/* ============================
+   HAMBURGER
+============================ */
+
+.navbar-toggler-marca {
+    width:
+        38px;
+
+    height:
+        38px;
+
+    padding:
+        0;
+
+    margin:
+        0;
+
+    flex:
+        0 0 38px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    color:
+        var(--cor-destaque);
+
+    background:
+        transparent;
+
+    border:
+        2px solid var(--cor-destaque);
+
+    border-radius:
+        0.5rem;
+}
+
+
+.navbar-toggler-marca i {
+    font-size:
+        1.25rem;
+
+    line-height:
+        1;
+
+    color:
+        var(--cor-destaque);
+}
+
+
+.navbar-toggler-marca:hover {
+    color:
+        var(--cor-destaque);
+
+    background:
+        rgba(255, 165, 0, 0.08);
+}
+
+
+.navbar-toggler-marca:focus {
+    color:
+        var(--cor-destaque);
+
+    box-shadow:
+        0 0 0 0.2rem
+        rgba(255, 165, 0, 0.25);
+}
+
+
+/* ============================
+   DESKTOP
+============================ */
+
+@media (min-width: 992px) {
+
+    .navbar-container-marca {
+        flex-wrap:
+            nowrap;
+    }
+
+
+    .navbar-toggler-marca {
+        display:
+            none;
+    }
+
+
+    .navbar-acoes-desktop {
+        display:
+            flex !important;
+    }
+
+
+    /*
+    =================================
+    BOTÕES DESKTOP
+    =================================
+    */
+
+    .navbar-acoes-desktop
+    .btn-carrinho,
+
+    .navbar-acoes-desktop
+    .btn-navbar-menor {
+
+        width:
+            38px;
+
+        height:
+            38px;
+
+        flex:
+            0 0 38px;
+
+        padding:
+            0;
+
+        display:
+            inline-flex;
+
+        align-items:
+            center;
+
+        justify-content:
+            center;
+    }
+
+}
+
+
+/* ============================
+   MOBILE / TABLET
+============================ */
+
+@media (max-width: 991.98px) {
+
+    .navbar-container-marca {
+        flex-wrap:
+            nowrap;
+
+        align-items:
+            center;
+
+        padding-left:
+            0.25rem !important;
+
+        padding-right:
+            0.5rem !important;
+    }
+
+
+    /* =========================
+       LOGO
+    ========================= */
+
+    .navbar-brand-logo {
+        flex:
+            0 1 105px;
+
+        width:
+            105px;
+
+        max-width:
+            105px;
+
+        min-width:
+            0;
+
+        margin-right:
+            0.2rem;
+
+        overflow:
+            hidden;
+    }
+
+
+    .navbar-brand-logo picture {
+        display:
+            block;
+
+        width:
+            100%;
+    }
+
+
+    .navbar-brand-logo img {
+        display:
+            block;
+
+        width:
+            100%;
+
+        max-width:
+            105px;
+
+        height:
+            40px;
+
+        object-fit:
+            contain;
+
+        object-position:
+            left center;
+    }
+
+
+    /* =========================
+       AÇÕES MOBILE
+    ========================= */
+
+    .navbar-acoes-mobile {
+        display:
+            flex !important;
+
+        align-items:
+            center;
+
+        justify-content:
+            flex-end;
+
+        gap:
+            0.35rem !important;
+
+        margin-left:
+            auto;
+
+        flex:
+            1 1 auto;
+
+        min-width:
+            0;
+    }
+
+
+    /* =========================
+       AÇÕES DESKTOP ESCONDIDAS
+    ========================= */
+
+    .navbar-acoes-desktop {
+        display:
+            none !important;
+    }
+
+
+    /* =========================
+       CLIENTE
+    ========================= */
+
+    .navbar-cliente-boas-vindas {
+        white-space:
+            nowrap;
+
+        font-size:
+            0.70rem;
+
+        line-height:
+            1;
+
+        overflow:
+            visible;
+
+        text-overflow:
+            clip;
+    }
+
+
+    .navbar-cliente-avatar {
+        width:
+            28px;
+
+        height:
+            28px;
+
+        flex:
+            0 0 28px;
+    }
+
+
+    .navbar-cliente-avatar i {
+        font-size:
+            16px;
+    }
+
+
+    .navbar-acoes-mobile
+    .btn-navbar-cliente {
+        white-space:
+            nowrap;
+
+        min-width:
+            0;
+
+        padding:
+            0;
+    }
+
+
+    /* =========================
+       CARRINHO
+    ========================= */
+
+    .navbar-carrinho-mobile {
+        width:
+            38px;
+
+        height:
+            38px;
+
+        padding:
+            0;
+
+        flex:
+            0 0 38px;
+
+        display:
+            flex;
+
+        align-items:
+            center;
+
+        justify-content:
+            center;
+    }
+
+
+    .navbar-carrinho-mobile i {
+        font-size:
+            1rem;
+
+        line-height:
+            1;
+    }
+
+
+    /* =========================
+       BOTÕES ENTRAR / ADMIN
+    ========================= */
+
+    .navbar-botao-mobile {
+        width:
+            38px;
+
+        height:
+            38px;
+
+        flex:
+            0 0 38px;
+
+        flex-shrink:
+            0;
+
+        padding:
+            0;
+
+        display:
+            inline-flex;
+
+        align-items:
+            center;
+
+        justify-content:
+            center;
+    }
+
+
+    .navbar-botao-mobile i {
+        margin:
+            0;
+
+        font-size:
+            1rem;
+
+        line-height:
+            1;
+    }
+
+
+    /* =========================
+       HAMBURGER
+    ========================= */
+
+    .navbar-toggler-marca {
+        display:
+            flex;
+
+        flex:
+            0 0 38px;
+
+        width:
+            38px;
+
+        height:
+            38px;
+
+        margin-left:
+            0.35rem;
+    }
+
+
+    /* =========================
+       MENU ABERTO
+    ========================= */
+
+    .navbar-collapse {
+        width:
+            100%;
+    }
+
+
+    .navbar-collapse
+    .navbar-nav {
+        width:
+            100%;
+
+        margin-top:
+            0.75rem;
+
+        align-items:
+            stretch !important;
+    }
+
+
+    .navbar-collapse
+    .nav-item {
+        width:
+            100%;
+    }
+
+
+    .navbar-collapse
+    .nav-link-marca {
+        margin:
+            0.15rem 0;
+
+        width:
+            100%;
+
+        text-align:
+            left;
+    }
+
+
+    /* =========================
+       PESQUISA DENTRO DO MENU
+    ========================= */
+
+    .navbar-collapse
+    form {
+        width:
+            100%;
+
+        margin-top:
+            0.75rem;
+    }
+
+}
+
+
+/* ============================
+   TELAS MUITO PEQUENAS
+============================ */
+
+@media (max-width: 575.98px) {
+
+    .dropdown-menu-cliente-custom {
+
+        min-width:
+            195px;
+
+        top:
+            calc(100% + 0.20rem);
+
+        padding:
+            0.35rem;
+
+        transform-origin:
+            top right;
+
+        transform:
+            translateY(-4px)
+            scale(0.94);
+
+        transition:
+            opacity 0.16s ease,
+            transform 0.16s ease,
+            visibility 0s linear 0.16s;
+    }
+
+
+    .dropdown-cliente-custom.aberto
+    .dropdown-menu-cliente-custom {
+
+        transform:
+            translateY(0)
+            scale(1);
+
+        transition:
+            opacity 0.16s ease,
+            transform 0.16s ease,
+            visibility 0s linear 0s;
+    }
+
 }

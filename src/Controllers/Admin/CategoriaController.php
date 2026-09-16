@@ -12,6 +12,12 @@ final class CategoriaController extends Controller
 {
     public function index(): void
     {
+        $mensagemSucesso = isset($_SESSION['admin_categoria_sucesso'])
+            ? (string) $_SESSION['admin_categoria_sucesso']
+            : null;
+
+        unset($_SESSION['admin_categoria_sucesso']);
+
         $pdo = require APP_ROOT
             . '/database/conexao.php';
 
@@ -30,7 +36,34 @@ final class CategoriaController extends Controller
                         categoria_imagens.ordem ASC,
                         categoria_imagens.id ASC
                     LIMIT 1
-                ) AS imagem_url
+                ) AS imagem_url,
+
+                (
+                    SELECT categoria_imagens.posicao_x
+                    FROM categoria_imagens
+                    WHERE categoria_imagens.categoria_id = categorias.id
+                    AND categoria_imagens.principal = 1
+                    ORDER BY categoria_imagens.ordem ASC, categoria_imagens.id ASC
+                    LIMIT 1
+                ) AS imagem_posicao_x,
+
+                (
+                    SELECT categoria_imagens.posicao_y
+                    FROM categoria_imagens
+                    WHERE categoria_imagens.categoria_id = categorias.id
+                    AND categoria_imagens.principal = 1
+                    ORDER BY categoria_imagens.ordem ASC, categoria_imagens.id ASC
+                    LIMIT 1
+                ) AS imagem_posicao_y,
+
+                (
+                    SELECT categoria_imagens.escala
+                    FROM categoria_imagens
+                    WHERE categoria_imagens.categoria_id = categorias.id
+                    AND categoria_imagens.principal = 1
+                    ORDER BY categoria_imagens.ordem ASC, categoria_imagens.id ASC
+                    LIMIT 1
+                ) AS imagem_escala
 
             FROM categorias
 
@@ -51,6 +84,9 @@ final class CategoriaController extends Controller
 
                 'categorias' =>
                 $categorias,
+
+                'mensagemSucesso' =>
+                $mensagemSucesso,
             ]
         );
     }
@@ -159,6 +195,18 @@ final class CategoriaController extends Controller
             ?? 0
         );
 
+        $posicaoX = $this->normalizarPosicao(
+            $_POST['posicao_x'] ?? 50
+        );
+
+        $posicaoY = $this->normalizarPosicao(
+            $_POST['posicao_y'] ?? 50
+        );
+
+        $escala = $this->normalizarEscala(
+            $_POST['escala'] ?? 1.20
+        );
+
 
         if (
             $nome === ''
@@ -247,10 +295,17 @@ final class CategoriaController extends Controller
                 $pdo,
                 $categoriaId,
                 $nome,
-                50.00,
-                50.00
+                $posicaoX,
+                $posicaoY,
+                $escala
             );
         }
+
+        $this->definirMensagemSucesso(
+            $this->possuiUpload('imagem')
+                ? 'Categoria cadastrada e imagem carregada com sucesso.'
+                : 'Categoria cadastrada com sucesso.'
+        );
 
 
         $this->redirecionar(
@@ -303,7 +358,8 @@ final class CategoriaController extends Controller
                     principal,
                     ordem,
                     posicao_x,
-                    posicao_y
+                    posicao_y,
+                    escala
                 FROM categoria_imagens
                 WHERE categoria_id = :categoria_id
                 AND principal = 1
@@ -481,6 +537,12 @@ final class CategoriaController extends Controller
                     ?? 50
             );
 
+        $escala =
+            $this->normalizarEscala(
+                $_POST['escala']
+                    ?? 1.20
+            );
+
 
         if (
             $nome === ''
@@ -553,26 +615,21 @@ final class CategoriaController extends Controller
         =================================
         */
 
-        if (
-            $this->possuiUpload(
-                'imagem'
-            )
-        ) {
+        $novaImagem = $this->possuiUpload('imagem');
+        $removerImagem = isset($_POST['excluir_imagem'])
+            && (string) $_POST['excluir_imagem'] === '1';
+
+        if ($novaImagem) {
 
             $this->salvarImagemCategoria(
                 $pdo,
                 $id,
                 $nome,
                 $posicaoX,
-                $posicaoY
+                $posicaoY,
+                $escala
             );
-        } elseif (
-            isset($_POST['excluir_imagem'])
-            &&
-            (string)
-            $_POST['excluir_imagem']
-            === '1'
-        ) {
+        } elseif ($removerImagem) {
 
             /*
             -----------------------------
@@ -597,7 +654,8 @@ final class CategoriaController extends Controller
                     UPDATE categoria_imagens
                     SET
                         posicao_x = :posicao_x,
-                        posicao_y = :posicao_y
+                        posicao_y = :posicao_y,
+                        escala = :escala
                     WHERE categoria_id =
                         :categoria_id
                     AND principal = 1
@@ -611,10 +669,21 @@ final class CategoriaController extends Controller
                 ':posicao_y' =>
                 $posicaoY,
 
+                ':escala' =>
+                $escala,
+
                 ':categoria_id' =>
                 $id,
             ]);
         }
+
+        $this->definirMensagemSucesso(
+            $novaImagem
+                ? 'Alterações salvas e nova imagem carregada com sucesso.'
+                : ($removerImagem
+                    ? 'Alterações salvas e imagem removida com sucesso.'
+                    : 'Alterações salvas com sucesso.')
+        );
 
 
         $this->redirecionar(
@@ -653,6 +722,27 @@ final class CategoriaController extends Controller
             $valor,
             2
         );
+    }
+
+    private function normalizarEscala(
+        $valor
+    ): float {
+
+        $valor = is_numeric($valor)
+            ? (float) $valor
+            : 1.20;
+
+        return round(
+            min(max($valor, 1.05), 2.00),
+            2
+        );
+    }
+
+    private function definirMensagemSucesso(
+        string $mensagem
+    ): void {
+
+        $_SESSION['admin_categoria_sucesso'] = $mensagem;
     }
 
     /*
@@ -695,7 +785,8 @@ final class CategoriaController extends Controller
         int $categoriaId,
         string $nomeCategoria,
         float $posicaoX,
-        float $posicaoY
+        float $posicaoY,
+        float $escala
     ): void {
 
         if (
@@ -784,14 +875,9 @@ final class CategoriaController extends Controller
 
 
         $extensoesPermitidas = [
-            'image/jpeg' =>
-            'jpg',
-
-            'image/png' =>
-            'png',
-
-            'image/webp' =>
-            'webp',
+            'image/jpeg' => true,
+            'image/png' => true,
+            'image/webp' => true,
         ];
 
 
@@ -853,8 +939,7 @@ final class CategoriaController extends Controller
             . bin2hex(
                 random_bytes(8)
             )
-            . '.'
-            . $extensoesPermitidas[$mime];
+            . '.webp';
 
 
         $destino =
@@ -864,8 +949,9 @@ final class CategoriaController extends Controller
 
 
         if (
-            !move_uploaded_file(
+            !$this->converterImagemParaWebp(
                 $arquivoTemporario,
+                $mime,
                 $destino
             )
         ) {
@@ -890,6 +976,11 @@ final class CategoriaController extends Controller
         $posicaoY =
             $this->normalizarPosicao(
                 $posicaoY
+            );
+
+        $escala =
+            $this->normalizarEscala(
+                $escala
             );
 
 
@@ -990,7 +1081,8 @@ final class CategoriaController extends Controller
                         principal,
                         ordem,
                         posicao_x,
-                        posicao_y
+                        posicao_y,
+                        escala
                     )
                     VALUES
                     (
@@ -1000,7 +1092,8 @@ final class CategoriaController extends Controller
                         1,
                         1,
                         :posicao_x,
-                        :posicao_y
+                        :posicao_y,
+                        :escala
                     )
                 ");
 
@@ -1021,6 +1114,9 @@ final class CategoriaController extends Controller
 
                 ':posicao_y' =>
                 $posicaoY,
+
+                ':escala' =>
+                $escala,
             ]);
         } catch (
             \Throwable $erro
@@ -1039,6 +1135,58 @@ final class CategoriaController extends Controller
 
             throw $erro;
         }
+    }
+
+
+    private function converterImagemParaWebp(
+        string $origem,
+        string $mime,
+        string $destino
+    ): bool {
+
+        if (
+            !function_exists('imagewebp')
+        ) {
+
+            throw new RuntimeException(
+                'A extensão GD com suporte a WebP não está disponível no servidor.'
+            );
+        }
+
+
+        switch ($mime) {
+
+            case 'image/jpeg':
+                $imagem = @imagecreatefromjpeg($origem);
+                break;
+
+            case 'image/png':
+                $imagem = @imagecreatefrompng($origem);
+                break;
+
+            case 'image/webp':
+                $imagem = @imagecreatefromwebp($origem);
+                break;
+
+            default:
+                $imagem = false;
+        }
+
+
+        if ($imagem === false) {
+            return false;
+        }
+
+
+        imagepalettetotruecolor($imagem);
+        imagealphablending($imagem, false);
+        imagesavealpha($imagem, true);
+
+        $salvou = imagewebp($imagem, $destino, 86);
+
+        imagedestroy($imagem);
+
+        return $salvou;
     }
 
 

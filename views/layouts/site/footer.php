@@ -97,11 +97,29 @@
 
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</footer>
 
-<script src="<?= BASE_URL ?>/assets/js/site.js"></script>
-<script src="<?= BASE_URL ?>/assets/js/categoria.js"></script>
-<script src="<?= BASE_URL ?>/assets/js/carrinho.js"></script>
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+></script>
+
+
+<script
+    src="<?= BASE_URL ?>/assets/js/site.js?v=<?= time() ?>"
+></script>
+
+
+<script
+    src="<?= BASE_URL ?>/assets/js/categoria.js?v=<?= time() ?>"
+></script>
+
+
+<script
+    src="<?= BASE_URL ?>/assets/js/carrinho.js?v=<?= time() ?>"
+></script>
+
+
 </body>
 
 </html>

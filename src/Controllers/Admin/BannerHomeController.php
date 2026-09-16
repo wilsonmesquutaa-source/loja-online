@@ -8,7 +8,7 @@ use App\Controllers\Controller;
 use App\Helpers\Csrf;
 use RuntimeException;
 
-final class DestaqueController extends Controller
+final class BannerHomeController extends Controller
 {
     /*
     =================================
@@ -18,47 +18,43 @@ final class DestaqueController extends Controller
 
     public function index(): void
     {
-        $pdo =
-            require APP_ROOT
+        $mensagemSucesso = isset($_SESSION['admin_banner_home_sucesso'])
+            ? (string) $_SESSION['admin_banner_home_sucesso']
+            : null;
+
+        unset($_SESSION['admin_banner_home_sucesso']);
+
+        $pdo = require APP_ROOT
             . '/database/conexao.php';
 
 
-        $sql = "
+        $stmt = $pdo->query("
             SELECT
-                categoria_banners.*,
-
-                categorias.nome AS categoria,
-                categorias.slug AS categoria_slug
-
-            FROM categoria_banners
-
-            INNER JOIN categorias
-                ON categorias.id =
-                    categoria_banners.categoria_id
-
+                *
+            FROM banners_home
             ORDER BY
-                categorias.nome ASC,
-                categoria_banners.id ASC
-        ";
+                ordem ASC,
+                id ASC
+        ");
 
 
-        $destaques =
-            $pdo
-            ->query($sql)
-            ->fetchAll();
+        $banners = $stmt->fetchAll();
 
 
         $this->view(
-            'admin/destaques',
+            'admin/banners-home',
             [
                 'tituloPagina' =>
-                    'Destaques',
+                    'Banners da Home',
 
-                'destaques' =>
-                    $destaques,
+                'banners' =>
+                    $banners,
 
                 'csrfToken' =>
                     Csrf::gerar(),
+
+                'mensagemSucesso' =>
+                    $mensagemSucesso,
             ]
         );
     }
@@ -72,36 +68,14 @@ final class DestaqueController extends Controller
 
     public function novo(): void
     {
-        $pdo =
-            require APP_ROOT
-            . '/database/conexao.php';
-
-
-        $categorias =
-            $pdo
-            ->query("
-                SELECT
-                    id,
-                    nome,
-                    slug
-                FROM categorias
-                WHERE ativo = 1
-                ORDER BY nome ASC
-            ")
-            ->fetchAll();
-
-
         $this->view(
-            'admin/destaque-form',
+            'admin/banner-home-form',
             [
                 'tituloPagina' =>
-                    'Novo Destaque',
+                    'Novo Banner da Home',
 
-                'destaque' =>
+                'banner' =>
                     null,
-
-                'categorias' =>
-                    $categorias,
 
                 'csrfToken' =>
                     Csrf::gerar(),
@@ -118,10 +92,9 @@ final class DestaqueController extends Controller
 
     public function salvar(): void
     {
-        $token =
-            isset($_POST['_token'])
-                ? (string) $_POST['_token']
-                : null;
+        $token = isset($_POST['_token'])
+            ? (string) $_POST['_token']
+            : null;
 
 
         if (!Csrf::validar($token)) {
@@ -134,25 +107,24 @@ final class DestaqueController extends Controller
         }
 
 
-        $pdo =
-            require APP_ROOT
+        $pdo = require APP_ROOT
             . '/database/conexao.php';
 
 
-        $categoriaId =
-            (int) (
-                $_POST['categoria_id']
-                ?? 0
-            );
+        $titulo = trim(
+            (string) (
+                $_POST['titulo']
+                ?? ''
+            )
+        );
 
 
-        $textoAlternativo =
-            trim(
-                (string) (
-                    $_POST['texto_alternativo']
-                    ?? ''
-                )
-            );
+        $textoAlternativo = trim(
+            (string) (
+                $_POST['texto_alternativo']
+                ?? ''
+            )
+        );
 
 
         $posicaoX =
@@ -169,49 +141,19 @@ final class DestaqueController extends Controller
             );
 
 
+        $ordem = max(
+            1,
+            (int) (
+                $_POST['ordem']
+                ?? 1
+            )
+        );
+
+
         $ativo =
             isset($_POST['ativo'])
                 ? (int) $_POST['ativo']
                 : 1;
-
-
-        if ($categoriaId <= 0) {
-
-            exit(
-                'Selecione uma categoria.'
-            );
-        }
-
-
-        /*
-        =================================
-        VERIFICA SE JÁ EXISTE DESTAQUE
-        =================================
-        */
-
-        $stmtExiste =
-            $pdo->prepare("
-                SELECT
-                    id
-                FROM categoria_banners
-                WHERE categoria_id =
-                    :categoria_id
-                LIMIT 1
-            ");
-
-
-        $stmtExiste->execute([
-            ':categoria_id' =>
-                $categoriaId,
-        ]);
-
-
-        if ($stmtExiste->fetch()) {
-
-            exit(
-                'Esta categoria já possui uma imagem de destaque.'
-            );
-        }
 
 
         /*
@@ -227,14 +169,14 @@ final class DestaqueController extends Controller
         ) {
 
             exit(
-                'Selecione uma imagem de destaque.'
+                'Selecione uma imagem para o banner.'
             );
         }
 
 
         /*
         =================================
-        SALVA IMAGEM
+        PROCESSA IMAGEM
         =================================
         */
 
@@ -252,46 +194,54 @@ final class DestaqueController extends Controller
 
         try {
 
-            $stmt =
-                $pdo->prepare("
-                    INSERT INTO categoria_banners
-                    (
-                        categoria_id,
-                        url_imagem,
-                        texto_alternativo,
-                        posicao_x,
-                        posicao_y,
-                        ativo
-                    )
-                    VALUES
-                    (
-                        :categoria_id,
-                        :url_imagem,
-                        :texto_alternativo,
-                        :posicao_x,
-                        :posicao_y,
-                        :ativo
-                    )
-                ");
+            $stmt = $pdo->prepare("
+                INSERT INTO banners_home
+                (
+                    titulo,
+                    texto_alternativo,
+                    url_imagem,
+                    posicao_x,
+                    posicao_y,
+                    ordem,
+                    ativo
+                )
+                VALUES
+                (
+                    :titulo,
+                    :texto_alternativo,
+                    :url_imagem,
+                    :posicao_x,
+                    :posicao_y,
+                    :ordem,
+                    :ativo
+                )
+            ");
 
 
             $stmt->execute([
-                ':categoria_id' =>
-                    $categoriaId,
-
-                ':url_imagem' =>
-                    $dadosImagem['url_imagem'],
+                ':titulo' =>
+                    $titulo !== ''
+                        ? $titulo
+                        : null,
 
                 ':texto_alternativo' =>
                     $textoAlternativo !== ''
                         ? $textoAlternativo
                         : null,
 
+                ':url_imagem' =>
+                    $dadosImagem[
+                        'url_imagem'
+                    ],
+
                 ':posicao_x' =>
                     $posicaoX,
 
                 ':posicao_y' =>
                     $posicaoY,
+
+                ':ordem' =>
+                    $ordem,
 
                 ':ativo' =>
                     $ativo === 1
@@ -317,9 +267,10 @@ final class DestaqueController extends Controller
             throw $erro;
         }
 
+        $this->definirMensagemSucesso('Banner cadastrado com sucesso.');
 
         $this->redirecionar(
-            '/admin/destaques'
+            '/admin/banners-home'
         );
     }
 
@@ -334,28 +285,17 @@ final class DestaqueController extends Controller
         int $id
     ): void {
 
-        $pdo =
-            require APP_ROOT
+        $pdo = require APP_ROOT
             . '/database/conexao.php';
 
 
-        $stmt =
-            $pdo->prepare("
-                SELECT
-                    cb.*,
-
-                    c.nome AS categoria,
-                    c.slug AS categoria_slug
-
-                FROM categoria_banners cb
-
-                INNER JOIN categorias c
-                    ON c.id =
-                        cb.categoria_id
-
-                WHERE cb.id = :id
-                LIMIT 1
-            ");
+        $stmt = $pdo->prepare("
+            SELECT
+                *
+            FROM banners_home
+            WHERE id = :id
+            LIMIT 1
+        ");
 
 
         $stmt->execute([
@@ -364,45 +304,28 @@ final class DestaqueController extends Controller
         ]);
 
 
-        $destaque =
+        $banner =
             $stmt->fetch();
 
 
         if (
-            $destaque === false
+            $banner === false
         ) {
 
             $this->redirecionar(
-                '/admin/destaques'
+                '/admin/banners-home'
             );
         }
 
 
-        $categorias =
-            $pdo
-            ->query("
-                SELECT
-                    id,
-                    nome,
-                    slug
-                FROM categorias
-                WHERE ativo = 1
-                ORDER BY nome ASC
-            ")
-            ->fetchAll();
-
-
         $this->view(
-            'admin/destaque-form',
+            'admin/banner-home-form',
             [
                 'tituloPagina' =>
-                    'Editar Destaque',
+                    'Editar Banner da Home',
 
-                'destaque' =>
-                    $destaque,
-
-                'categorias' =>
-                    $categorias,
+                'banner' =>
+                    $banner,
 
                 'csrfToken' =>
                     Csrf::gerar(),
@@ -421,10 +344,9 @@ final class DestaqueController extends Controller
         int $id
     ): void {
 
-        $token =
-            isset($_POST['_token'])
-                ? (string) $_POST['_token']
-                : null;
+        $token = isset($_POST['_token'])
+            ? (string) $_POST['_token']
+            : null;
 
 
         if (!Csrf::validar($token)) {
@@ -437,25 +359,23 @@ final class DestaqueController extends Controller
         }
 
 
-        $pdo =
-            require APP_ROOT
+        $pdo = require APP_ROOT
             . '/database/conexao.php';
 
 
         /*
         =================================
-        BUSCA DESTAQUE
+        BUSCA BANNER
         =================================
         */
 
-        $stmtExistente =
-            $pdo->prepare("
-                SELECT
-                    *
-                FROM categoria_banners
-                WHERE id = :id
-                LIMIT 1
-            ");
+        $stmtExistente = $pdo->prepare("
+            SELECT
+                *
+            FROM banners_home
+            WHERE id = :id
+            LIMIT 1
+        ");
 
 
         $stmtExistente->execute([
@@ -464,34 +384,34 @@ final class DestaqueController extends Controller
         ]);
 
 
-        $destaque =
+        $banner =
             $stmtExistente->fetch();
 
 
         if (
-            $destaque === false
+            $banner === false
         ) {
 
             $this->redirecionar(
-                '/admin/destaques'
+                '/admin/banners-home'
             );
         }
 
 
-        $categoriaId =
-            (int) (
-                $_POST['categoria_id']
-                ?? 0
-            );
+        $titulo = trim(
+            (string) (
+                $_POST['titulo']
+                ?? ''
+            )
+        );
 
 
-        $textoAlternativo =
-            trim(
-                (string) (
-                    $_POST['texto_alternativo']
-                    ?? ''
-                )
-            );
+        $textoAlternativo = trim(
+            (string) (
+                $_POST['texto_alternativo']
+                ?? ''
+            )
+        );
 
 
         $posicaoX =
@@ -508,56 +428,19 @@ final class DestaqueController extends Controller
             );
 
 
+        $ordem = max(
+            1,
+            (int) (
+                $_POST['ordem']
+                ?? 1
+            )
+        );
+
+
         $ativo =
             isset($_POST['ativo'])
                 ? (int) $_POST['ativo']
                 : 1;
-
-
-        if (
-            $categoriaId <= 0
-        ) {
-
-            exit(
-                'Selecione uma categoria.'
-            );
-        }
-
-
-        /*
-        =================================
-        VERIFICA TROCA DE CATEGORIA
-        =================================
-        */
-
-        $stmtCategoria =
-            $pdo->prepare("
-                SELECT
-                    id
-                FROM categoria_banners
-                WHERE categoria_id = :categoria_id
-                AND id <> :id
-                LIMIT 1
-            ");
-
-
-        $stmtCategoria->execute([
-            ':categoria_id' =>
-                $categoriaId,
-
-            ':id' =>
-                $id,
-        ]);
-
-
-        if (
-            $stmtCategoria->fetch()
-        ) {
-
-            exit(
-                'Esta categoria já possui uma imagem de destaque.'
-            );
-        }
 
 
         /*
@@ -580,49 +463,58 @@ final class DestaqueController extends Controller
 
             try {
 
-                $stmt =
-                    $pdo->prepare("
-                        UPDATE categoria_banners
-                        SET
-                            categoria_id =
-                                :categoria_id,
+                $stmt = $pdo->prepare("
+                    UPDATE banners_home
+                    SET
+                        titulo =
+                            :titulo,
 
-                            url_imagem =
-                                :url_imagem,
+                        texto_alternativo =
+                            :texto_alternativo,
 
-                            texto_alternativo =
-                                :texto_alternativo,
+                        url_imagem =
+                            :url_imagem,
 
-                            posicao_x =
-                                :posicao_x,
+                        posicao_x =
+                            :posicao_x,
 
-                            posicao_y =
-                                :posicao_y,
+                        posicao_y =
+                            :posicao_y,
 
-                            ativo =
-                                :ativo
+                        ordem =
+                            :ordem,
 
-                        WHERE id = :id
-                    ");
+                        ativo =
+                            :ativo
+
+                    WHERE id = :id
+                ");
 
 
                 $stmt->execute([
-                    ':categoria_id' =>
-                        $categoriaId,
-
-                    ':url_imagem' =>
-                        $dadosImagem['url_imagem'],
+                    ':titulo' =>
+                        $titulo !== ''
+                            ? $titulo
+                            : null,
 
                     ':texto_alternativo' =>
                         $textoAlternativo !== ''
                             ? $textoAlternativo
                             : null,
 
+                    ':url_imagem' =>
+                        $dadosImagem[
+                            'url_imagem'
+                        ],
+
                     ':posicao_x' =>
                         $posicaoX,
 
                     ':posicao_y' =>
                         $posicaoY,
+
+                    ':ordem' =>
+                        $ordem,
 
                     ':ativo' =>
                         $ativo === 1
@@ -661,7 +553,7 @@ final class DestaqueController extends Controller
             $arquivoAntigo =
                 APP_ROOT
                 . '/public'
-                . $destaque[
+                . $banner[
                     'url_imagem'
                 ];
 
@@ -677,40 +569,75 @@ final class DestaqueController extends Controller
                 );
             }
 
-        } else {
+        } elseif (
+            isset(
+                $_POST['excluir_imagem']
+            )
+            &&
+            (string)
+                $_POST['excluir_imagem']
+                === '1'
+        ) {
 
             /*
-            =================================
-            APENAS DADOS / POSIÇÃO
-            =================================
+            -----------------------------
+            EXCLUI IMAGEM
+            -----------------------------
             */
 
-            $stmt =
-                $pdo->prepare("
-                    UPDATE categoria_banners
-                    SET
-                        categoria_id =
-                            :categoria_id,
+            $arquivoAntigo =
+                APP_ROOT
+                . '/public'
+                . $banner[
+                    'url_imagem'
+                ];
 
-                        texto_alternativo =
-                            :texto_alternativo,
 
-                        posicao_x =
-                            :posicao_x,
+            if (
+                is_file(
+                    $arquivoAntigo
+                )
+            ) {
 
-                        posicao_y =
-                            :posicao_y,
+                @unlink(
+                    $arquivoAntigo
+                );
+            }
 
-                        ativo =
-                            :ativo
 
-                    WHERE id = :id
-                ");
+            $stmt = $pdo->prepare("
+                UPDATE banners_home
+                SET
+                    titulo =
+                        :titulo,
+
+                    texto_alternativo =
+                        :texto_alternativo,
+
+                    url_imagem =
+                        '',
+
+                    posicao_x =
+                        :posicao_x,
+
+                    posicao_y =
+                        :posicao_y,
+
+                    ordem =
+                        :ordem,
+
+                    ativo =
+                        :ativo
+
+                WHERE id = :id
+            ");
 
 
             $stmt->execute([
-                ':categoria_id' =>
-                    $categoriaId,
+                ':titulo' =>
+                    $titulo !== ''
+                        ? $titulo
+                        : null,
 
                 ':texto_alternativo' =>
                     $textoAlternativo !== ''
@@ -723,6 +650,71 @@ final class DestaqueController extends Controller
                 ':posicao_y' =>
                     $posicaoY,
 
+                ':ordem' =>
+                    $ordem,
+
+                ':ativo' =>
+                    $ativo === 1
+                        ? 1
+                        : 0,
+
+                ':id' =>
+                    $id,
+            ]);
+
+        } else {
+
+            /*
+            -----------------------------
+            APENAS DADOS
+            -----------------------------
+            */
+
+            $stmt = $pdo->prepare("
+                UPDATE banners_home
+                SET
+                    titulo =
+                        :titulo,
+
+                    texto_alternativo =
+                        :texto_alternativo,
+
+                    posicao_x =
+                        :posicao_x,
+
+                    posicao_y =
+                        :posicao_y,
+
+                    ordem =
+                        :ordem,
+
+                    ativo =
+                        :ativo
+
+                WHERE id = :id
+            ");
+
+
+            $stmt->execute([
+                ':titulo' =>
+                    $titulo !== ''
+                        ? $titulo
+                        : null,
+
+                ':texto_alternativo' =>
+                    $textoAlternativo !== ''
+                        ? $textoAlternativo
+                        : null,
+
+                ':posicao_x' =>
+                    $posicaoX,
+
+                ':posicao_y' =>
+                    $posicaoY,
+
+                ':ordem' =>
+                    $ordem,
+
                 ':ativo' =>
                     $ativo === 1
                         ? 1
@@ -733,9 +725,10 @@ final class DestaqueController extends Controller
             ]);
         }
 
+        $this->definirMensagemSucesso('Alterações do banner salvas com sucesso.');
 
         $this->redirecionar(
-            '/admin/destaques'
+            '/admin/banners-home'
         );
     }
 
@@ -750,10 +743,9 @@ final class DestaqueController extends Controller
         int $id
     ): void {
 
-        $token =
-            isset($_POST['_token'])
-                ? (string) $_POST['_token']
-                : null;
+        $token = isset($_POST['_token'])
+            ? (string) $_POST['_token']
+            : null;
 
 
         if (!Csrf::validar($token)) {
@@ -766,19 +758,17 @@ final class DestaqueController extends Controller
         }
 
 
-        $pdo =
-            require APP_ROOT
+        $pdo = require APP_ROOT
             . '/database/conexao.php';
 
 
-        $stmt =
-            $pdo->prepare("
-                SELECT
-                    url_imagem
-                FROM categoria_banners
-                WHERE id = :id
-                LIMIT 1
-            ");
+        $stmt = $pdo->prepare("
+            SELECT
+                url_imagem
+            FROM banners_home
+            WHERE id = :id
+            LIMIT 1
+        ");
 
 
         $stmt->execute([
@@ -787,16 +777,16 @@ final class DestaqueController extends Controller
         ]);
 
 
-        $destaque =
+        $banner =
             $stmt->fetch();
 
 
         if (
-            $destaque === false
+            $banner === false
         ) {
 
             $this->redirecionar(
-                '/admin/destaques'
+                '/admin/banners-home'
             );
         }
 
@@ -804,16 +794,15 @@ final class DestaqueController extends Controller
         $arquivo =
             APP_ROOT
             . '/public'
-            . $destaque[
+            . $banner[
                 'url_imagem'
             ];
 
 
-        $stmtExcluir =
-            $pdo->prepare("
-                DELETE FROM categoria_banners
-                WHERE id = :id
-            ");
+        $stmtExcluir = $pdo->prepare("
+            DELETE FROM banners_home
+            WHERE id = :id
+        ");
 
 
         $stmtExcluir->execute([
@@ -833,9 +822,10 @@ final class DestaqueController extends Controller
             );
         }
 
+        $this->definirMensagemSucesso('Banner removido com sucesso.');
 
         $this->redirecionar(
-            '/admin/destaques'
+            '/admin/banners-home'
         );
     }
 
@@ -850,10 +840,9 @@ final class DestaqueController extends Controller
         int $id
     ): void {
 
-        $token =
-            isset($_POST['_token'])
-                ? (string) $_POST['_token']
-                : null;
+        $token = isset($_POST['_token'])
+            ? (string) $_POST['_token']
+            : null;
 
 
         if (!Csrf::validar($token)) {
@@ -866,23 +855,21 @@ final class DestaqueController extends Controller
         }
 
 
-        $pdo =
-            require APP_ROOT
+        $pdo = require APP_ROOT
             . '/database/conexao.php';
 
 
-        $stmt =
-            $pdo->prepare("
-                UPDATE categoria_banners
-                SET
-                    ativo =
-                        CASE
-                            WHEN ativo = 1
-                            THEN 0
-                            ELSE 1
-                        END
-                WHERE id = :id
-            ");
+        $stmt = $pdo->prepare("
+            UPDATE banners_home
+            SET
+                ativo =
+                    CASE
+                        WHEN ativo = 1
+                        THEN 0
+                        ELSE 1
+                    END
+            WHERE id = :id
+        ");
 
 
         $stmt->execute([
@@ -890,9 +877,10 @@ final class DestaqueController extends Controller
                 $id,
         ]);
 
+        $this->definirMensagemSucesso('Visibilidade do banner atualizada.');
 
         $this->redirecionar(
-            '/admin/destaques'
+            '/admin/banners-home'
         );
     }
 
@@ -949,19 +937,19 @@ final class DestaqueController extends Controller
         return isset(
             $_FILES[$campo]
         )
-        &&
-        is_array(
-            $_FILES[$campo]
-        )
-        &&
-        (
-            (int)
-            (
-                $_FILES[$campo]['error']
-                ?? UPLOAD_ERR_NO_FILE
+            &&
+            is_array(
+                $_FILES[$campo]
             )
-        )
-        !== UPLOAD_ERR_NO_FILE;
+            &&
+            (
+                (int)
+                (
+                    $_FILES[$campo]['error']
+                    ?? UPLOAD_ERR_NO_FILE
+                )
+            )
+            !== UPLOAD_ERR_NO_FILE;
     }
 
 
@@ -971,8 +959,13 @@ final class DestaqueController extends Controller
     =================================
     */
 
+    private function definirMensagemSucesso(string $mensagem): void
+    {
+        $_SESSION['admin_banner_home_sucesso'] = $mensagem;
+    }
+
     private function processarUpload(
-        int $destaqueId
+        int $bannerId
     ): array {
 
         if (
@@ -1102,6 +1095,32 @@ final class DestaqueController extends Controller
         }
 
 
+        $largura =
+            (int) (
+                $dimensoes[0]
+                ?? 0
+            );
+
+
+        $altura =
+            (int) (
+                $dimensoes[1]
+                ?? 0
+            );
+
+
+        if (
+            $largura <= 0
+            ||
+            $altura <= 0
+        ) {
+
+            throw new RuntimeException(
+                'Não foi possível identificar as dimensões da imagem.'
+            );
+        }
+
+
         /*
         =================================
         PASTA
@@ -1110,7 +1129,7 @@ final class DestaqueController extends Controller
 
         $pasta =
             APP_ROOT
-            . '/public/assets/uploads/destaques';
+            . '/public/assets/uploads/banners-home';
 
 
         if (
@@ -1126,7 +1145,7 @@ final class DestaqueController extends Controller
         ) {
 
             throw new RuntimeException(
-                'Não foi possível criar a pasta de imagens de destaque.'
+                'Não foi possível criar a pasta dos banners da Home.'
             );
         }
 
@@ -1138,9 +1157,9 @@ final class DestaqueController extends Controller
         */
 
         $prefixo =
-            $destaqueId > 0
-                ? 'destaque_' . $destaqueId
-                : 'destaque_novo';
+            $bannerId > 0
+                ? 'banner_home_' . $bannerId
+                : 'banner_home_novo';
 
 
         $nomeArquivo =
@@ -1176,7 +1195,7 @@ final class DestaqueController extends Controller
 
         return [
             'url_imagem' =>
-                '/assets/uploads/destaques/'
+                '/assets/uploads/banners-home/'
                 . $nomeArquivo,
 
             'caminho' =>

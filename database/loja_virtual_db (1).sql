@@ -129,6 +129,7 @@ CREATE TABLE `categoria_imagens` (
   `ordem` smallint(5) UNSIGNED NOT NULL DEFAULT 1,
   `posicao_x` decimal(5,2) NOT NULL DEFAULT 50.00,
   `posicao_y` decimal(5,2) NOT NULL DEFAULT 50.00,
+  `escala` decimal(4,2) NOT NULL DEFAULT 1.20,
   `criado_em` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

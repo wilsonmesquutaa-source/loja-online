@@ -24,22 +24,25 @@ View::componente(
     <?php
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | HERO
-    |--------------------------------------------------------------------------
-    */
+/*
+|--------------------------------------------------------------------------
+| HERO
+|--------------------------------------------------------------------------
+*/
 
-    View::componente(
-        'site/sections/hero',
-        [
-            'tituloHero' =>
-            $tituloHero,
+View::componente(
+    'site/sections/hero',
+    [
+        'tituloHero' =>
+        $tituloHero,
 
-            'textoHero' =>
-            $textoHero,
-        ]
-    );
+        'textoHero' =>
+        $textoHero,
+
+        'bannersHome' =>
+        $bannersHome,
+    ]
+);
 
 
     /*
@@ -48,13 +51,13 @@ View::componente(
 |--------------------------------------------------------------------------
 */
 
-    View::componente(
-        'site/sections/destaques',
-        [
-            'categoriasDestaques' =>
-            $categoriasDestaques,
-        ]
-    );
+View::componente(
+    'site/sections/destaques',
+    [
+        'destaquesHome' =>
+        $destaquesHome,
+    ]
+);
 
 
     /*
@@ -75,7 +78,7 @@ View::componente(
     /*
     |--------------------------------------------------------------------------
     | CONTATO
-    |--------------------------------------------------------------------------
+    |-------------------------------------------------------------------------
     */
 
     View::componente(

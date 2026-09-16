@@ -1,10 +1,12 @@
-/*
-=================================
-CATEGORIA - BASE
-=================================
-*/
+/* =================================
+   CATEGORIA - BASE
+================================= */
 
 .categoria-selecao {
+    width: 100%;
+}
+
+.categoria-cards-container {
     width: 100%;
 }
 
@@ -33,102 +35,72 @@ CATEGORIA - BASE
     line-height: 1.5;
 }
 
-/*
-=================================
-PÁGINA DA CATEGORIA
-=================================
-*/
+
+/* =================================
+   PÁGINA DA CATEGORIA
+================================= */
 
 .categoria-pagina {
     position: relative;
     width: 100%;
-    
 }
 
 
-/*
-=================================
-IMAGEM DESTAQUE DA CATEGORIA
-=================================
-*/
+/* =================================
+   IMAGEM DESTAQUE DA CATEGORIA
+================================= */
 
 .img_destaque_container {
     position: relative;
-
     width: 100%;
     height: 430px;
-
     overflow: hidden;
-
     border-radius: 0 0 25px 25px;
 }
 
 
-/*
-=================================
-IMAGEM
-=================================
-*/
+/* =================================
+   IMAGEM DESTAQUE
+================================= */
 
 .img_destaque_imagem {
     position: absolute;
-
     inset: 0;
-
     width: 100%;
     height: 100%;
-
     background-color: #e8c7a8;
-
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-
     z-index: 1;
 }
 
 
-/*
-=================================
-CONTEÚDO DA CATEGORIA - container que fica o botão voltar os textos e os cards
-=================================
-*/
+/* =================================
+   CONTEÚDO DA CATEGORIA
+================================= */
 
 .categoria-conteudo {
     position: relative;
-
     z-index: 10;
-
     margin-top: -110px;
-
     padding-top: 2rem;
     padding-bottom: 3rem;
-
     background: var(--creme);
-
-    border-radius: 30px 30px 30px 30px;
-
+    border-radius: 50px;
     min-height: 500px;
-        box-shadow:
+    box-shadow:
         0 4px 12px rgba(0, 0, 0, 0.15);
 }
-
-
-/*
-=================================
-CATEGORIA
-=================================
-*/
 
 .categoria-conteudo .categoria-selecao {
     width: 100%;
 }
 
-/*
-=================================
-ALERTA DA CATEGORIA
-=================================
-*/
+
+/* =================================
+   ALERTA DA CATEGORIA
+================================= */
 
 .categoria-alerta {
     margin-bottom: 1.5rem;
@@ -136,96 +108,94 @@ ALERTA DA CATEGORIA
 }
 
 
-/*
-=================================
-ÁREA DOS PRODUTOS
-=================================
-*/
+/* =================================
+   ÁREA DOS PRODUTOS
+================================= */
 
 .categoria-produtos-area {
     width: 100%;
     min-width: 0;
-    
 }
 
 
-/*
-=================================
-GRADE DOS PRODUTOS
-=================================
-*/
+/* =================================
+   GRADE DOS PRODUTOS
+================================= */
 
 .categoria-produtos-grid {
     width: 80%;
     margin: 0 auto;
+
     display: grid;
-    grid-template-columns:
-        repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+
     gap: 3rem;
+
     align-items: stretch;
 }
 
-/*
-=================================
-WRAPPER DO PRODUTO
-=================================
-*/
+
+/* =================================
+   EMBALAGEM DO PRODUTO
+================================= */
+
 .produto-wrapper {
-    background: var(--branco);
-    border-radius: 20px;
-    padding: 0px;
-    height: 100%;
-    transition: 0.3s;
     position: relative;
+
+    width: 100%;
+    height: 100%;
+
+    padding: 0;
+
+    background: var(--branco);
+
+    border-radius: 20px;
+
     overflow: hidden;
+
+    box-sizing: border-box;
+
+    transition:
+        transform 0.6s,
+        box-shadow 0.5s ease;
 }
 
-.produto-wrapper:hover {
-    transform: translateY(-8px);
 
-    box-shadow:
-        0 10px 25px rgba(0, 0, 0, 0.10);
+@media (min-width: 992px) {
+
+    .produto-wrapper:hover {
+        transform:
+            translateY(-8px) !important;
+
+        box-shadow:
+            0 10px 25px rgba(0, 0, 0, 0.10) !important;
+    }
+
 }
 
-/*
 
-
-/*
-=================================
-FAIXA LARANJA
-=================================
-*/
+/* =================================
+   FAIXA LARANJA
+================================= */
 
 .produto-wrapper::before {
-    content:
-        '';
+    content: '';
 
-    position:
-        absolute;
+    position: absolute;
 
-    top:
-        0;
+    top: 0;
+    left: 0;
 
-    left:
-        0;
+    width: 100%;
+    height: 3px;
 
-    width:
-        100%;
+    background: var(--cor-destaque);
 
-    height:
-        3px;
+    opacity: 0;
 
-    background:
-        var(--cor-destaque);
+    pointer-events: none;
 
-    opacity:
-        0;
-
-    pointer-events:
-        none;
-
-    z-index:
-        10;
+    z-index: 10;
 
     transition:
         opacity 0.5s ease;
@@ -236,18 +206,16 @@ FAIXA LARANJA
 }
 
 
-/*
-=================================
-FOCO DO CARD
-=================================
-*/
+/* =================================
+   FOCO DO CARTÃO
+================================= */
 
 .produto-wrapper:focus-within {
     outline:
         2px solid var(--laranja-hover);
 
     outline-offset:
-        0px;
+        0;
 }
 
 .produto-wrapper.selecionado {
@@ -255,15 +223,25 @@ FOCO DO CARD
         2px solid var(--cor-destaque);
 
     outline-offset:
-        0px;
+        0;
 }
 
 
-/*
-=================================
-CONTEÚDO DO CARD
-=================================
-*/
+/* =================================
+   CARTÃO
+================================= */
+
+.produto-selecao-card {
+    width: 100%;
+    height: 100%;
+
+    box-sizing: border-box;
+}
+
+
+/* =================================
+   CONTEÚDO DO CARD
+================================= */
 
 .produto-card-conteudo {
     width: 100%;
@@ -275,15 +253,15 @@ CONTEÚDO DO CARD
 
     align-items: center;
 
+    box-sizing: border-box;
 
+    min-width: 0;
 }
 
 
-/*
-=================================
-IMAGEM
-=================================
-*/
+/* =================================
+   IMAGEM DO PRODUTO
+================================= */
 
 .produto-imagem-placeholder {
     width: 100%;
@@ -307,11 +285,13 @@ IMAGEM
     overflow:
         hidden;
 
+    box-sizing:
+        border-box;
+
     transition:
         transform 0.35s ease,
         background-color 0.35s ease;
 }
-
 
 .produto-selecao-card:hover .produto-imagem-placeholder {
     transform:
@@ -320,7 +300,6 @@ IMAGEM
     background:
         #FFF1DE;
 }
-
 
 .produto-imagem-placeholder i {
     font-size:
@@ -334,7 +313,6 @@ IMAGEM
         color 0.35s ease;
 }
 
-
 .produto-selecao-card:hover .produto-imagem-placeholder i {
     transform:
         scale(1.08);
@@ -344,11 +322,9 @@ IMAGEM
 }
 
 
-/*
-=================================
-CASO TENHA IMG REAL
-=================================
-*/
+/* =================================
+   IMAGEM REAL
+================================= */
 
 .produto-imagem-placeholder img {
     width: 100%;
@@ -362,18 +338,30 @@ CASO TENHA IMG REAL
         transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-
-.produto-selecao-card:hover .produto-imagem-placeholder img {
+.produto-selecao-card:hover
+.produto-imagem-placeholder img {
     transform:
         scale(1.05);
 }
 
 
-/*
-=================================
-NOME DO PRODUTO
-=================================
-*/
+/* =================================
+   INFORMAÇÕES
+================================= */
+
+.produto-card-informacoes {
+    width: 100%;
+
+    min-width: 0;
+
+    box-sizing:
+        border-box;
+}
+
+
+/* =================================
+   NOME DO PRODUTO
+================================= */
 
 .produto-card-titulo {
     width: 100%;
@@ -413,11 +401,9 @@ NOME DO PRODUTO
 }
 
 
-/*
-=================================
-DESCRIÇÃO
-=================================
-*/
+/* =================================
+   DESCRIÇÃO
+================================= */
 
 .produto-card-descricao {
     width: 100%;
@@ -454,19 +440,21 @@ DESCRIÇÃO
 }
 
 
-/*
-=================================
-CONTADOR
-=================================
-*/
+/* =================================
+   CONTADOR
+================================= */
 
 .contador-produto {
     width: 100%;
 
-    min-height: 42px;
+    min-height:
+        42px;
 
     margin-top:
         auto;
+
+    padding-bottom:
+        1.5rem;
 
     display:
         flex;
@@ -482,28 +470,37 @@ CONTADOR
 
     flex-shrink:
         0;
-    padding-bottom: 1.5rem;
+
+    box-sizing:
+        border-box;
 }
 
 
-/*
-=================================
-BOTÃO -
-=================================
-*/
+/* =================================
+   BOTÃO -
+================================= */
 
 .contador-produto .contador-botao-menos {
     width: 34px;
     height: 34px;
 
     min-width: 34px;
+    max-width: 34px;
 
-    padding: 0;
+    flex:
+        0 0 34px;
 
-    display: flex;
+    padding:
+        0;
 
-    align-items: center;
-    justify-content: center;
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
 
     border:
         1px solid var(--marrom);
@@ -523,13 +520,15 @@ BOTÃO -
     cursor:
         pointer;
 
+    box-sizing:
+        border-box;
+
     transition:
         background-color 0.25s ease,
         color 0.25s ease,
         border-color 0.25s ease,
         transform 0.25s ease;
 }
-
 
 .contador-produto .contador-botao-menos:hover:not(:disabled) {
     background:
@@ -545,7 +544,6 @@ BOTÃO -
         translateY(-1px);
 }
 
-
 .contador-produto .contador-botao-menos:disabled {
     opacity:
         0.45;
@@ -555,24 +553,31 @@ BOTÃO -
 }
 
 
-/*
-=================================
-BOTÃO +
-=================================
-*/
+/* =================================
+   BOTÃO +
+================================= */
 
 .contador-produto .contador-botao-mais {
     width: 34px;
     height: 34px;
 
     min-width: 34px;
+    max-width: 34px;
 
-    padding: 0;
+    flex:
+        0 0 34px;
 
-    display: flex;
+    padding:
+        0;
 
-    align-items: center;
-    justify-content: center;
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
 
     border:
         1px solid var(--cor-destaque);
@@ -601,13 +606,15 @@ BOTÃO +
     visibility:
         visible;
 
+    box-sizing:
+        border-box;
+
     transition:
         background-color 0.25s ease,
         border-color 0.25s ease,
         color 0.25s ease,
         transform 0.25s ease;
 }
-
 
 .contador-produto .contador-botao-mais,
 .contador-produto [data-aumentar] {
@@ -616,6 +623,15 @@ BOTÃO +
 
     height:
         34px !important;
+
+    min-width:
+        34px !important;
+
+    max-width:
+        34px !important;
+
+    flex:
+        0 0 34px !important;
 
     padding:
         0 !important;
@@ -650,12 +666,9 @@ BOTÃO +
     cursor:
         pointer;
 
-    transition:
-        background-color 0.25s ease,
-        border-color 0.25s ease,
-        transform 0.25s ease;
+    box-sizing:
+        border-box !important;
 }
-
 
 .contador-produto .contador-botao-mais i,
 .contador-produto [data-aumentar] i {
@@ -668,7 +681,6 @@ BOTÃO +
     visibility:
         visible !important;
 }
-
 
 .contador-produto .contador-botao-mais:hover:not(:disabled),
 .contador-produto [data-aumentar]:hover:not(:disabled) {
@@ -685,7 +697,6 @@ BOTÃO +
         translateY(-1px);
 }
 
-
 .contador-produto .contador-botao-mais:disabled {
     opacity:
         0.45;
@@ -695,11 +706,9 @@ BOTÃO +
 }
 
 
-/*
-=================================
-ÍCONES DOS BOTÕES
-=================================
-*/
+/* =================================
+   ÍCONES DOS CONTADORES
+================================= */
 
 .contador-produto .contador-botao i {
     display:
@@ -719,15 +728,23 @@ BOTÃO +
 }
 
 
-/*
-=================================
-NÚMERO
-=================================
-*/
+/* =================================
+   NÚMERO
+================================= */
 
-.contador-produto .contador-quantidade {
+.contador-produto .contador-quantidade,
+.contador-produto .quantidade-produto {
+    width:
+        30px;
+
     min-width:
         30px;
+
+    max-width:
+        30px;
+
+    flex:
+        0 0 30px;
 
     padding:
         0;
@@ -749,18 +766,14 @@ NÚMERO
 }
 
 
-/*
-=================================
-LAYOUT DO CENTO
-=================================
-*/
+/* =================================
+   LAYOUT DO CENTO
+================================= */
 
 .categoria-cento-layout {
     width:
         100%;
-}
 
-.categoria-cento-layout {
     display:
         grid;
 
@@ -774,24 +787,15 @@ LAYOUT DO CENTO
         start;
 }
 
-
-/*
-=================================
-ÁREA DO CENTO
-=================================
-*/
-
 .categoria-cento-layout .categoria-produtos-area {
     min-width:
         0;
 }
 
 
-/*
-=================================
-PAINEL DO CENTO
-=================================
-*/
+/* =================================
+   PAINEL DO CENTO
+================================= */
 
 .cento-preview-area {
     width:
@@ -833,14 +837,15 @@ PAINEL DO CENTO
 
     box-shadow:
         0 0.3rem 0.8rem rgba(0, 0, 0, 0.10);
+
+    box-sizing:
+        border-box;
 }
 
 
-/*
-=================================
-TÍTULO DO CENTO
-=================================
-*/
+/* =================================
+   TÍTULO DO CENTO
+================================= */
 
 .cento-preview-titulo {
     margin:
@@ -860,11 +865,9 @@ TÍTULO DO CENTO
 }
 
 
-/*
-=================================
-STATUS
-=================================
-*/
+/* =================================
+   STATUS
+================================= */
 
 .cento-preview-status {
     margin-bottom:
@@ -878,11 +881,9 @@ STATUS
 }
 
 
-/*
-=================================
-CÍRCULO DO CENTO
-=================================
-*/
+/* =================================
+   CÍRCULO DO CENTO
+================================= */
 
 .cento-circulo {
     position:
@@ -908,14 +909,15 @@ CÍRCULO DO CENTO
 
     border:
         4px solid var(--marrom);
+
+    box-sizing:
+        border-box;
 }
 
 
-/*
-=================================
-SETORES
-=================================
-*/
+/* =================================
+   SETORES
+================================= */
 
 .cento-setor {
     position:
@@ -955,73 +957,85 @@ SETORES
 }
 
 
-/*
-=================================
-4 PARTES
-=================================
-*/
+/* =================================
+   4 PARTES
+================================= */
 
-.cento-circulo[data-partes="4"] .cento-setor[data-parte="1"] {
+.cento-circulo[data-partes="4"]
+.cento-setor[data-parte="1"] {
     clip-path:
-        polygon(0 0,
+        polygon(
+            0 0,
             50% 0,
             50% 50%,
-            0 50%);
+            0 50%
+        );
 }
 
-.cento-circulo[data-partes="4"] .cento-setor[data-parte="2"] {
+.cento-circulo[data-partes="4"]
+.cento-setor[data-parte="2"] {
     clip-path:
-        polygon(50% 0,
+        polygon(
+            50% 0,
             100% 0,
             100% 50%,
-            50% 50%);
+            50% 50%
+        );
 }
 
-.cento-circulo[data-partes="4"] .cento-setor[data-parte="3"] {
+.cento-circulo[data-partes="4"]
+.cento-setor[data-parte="3"] {
     clip-path:
-        polygon(50% 50%,
+        polygon(
+            50% 50%,
             100% 50%,
             100% 100%,
-            50% 100%);
+            50% 100%
+        );
 }
 
-.cento-circulo[data-partes="4"] .cento-setor[data-parte="4"] {
+.cento-circulo[data-partes="4"]
+.cento-setor[data-parte="4"] {
     clip-path:
-        polygon(0 50%,
+        polygon(
+            0 50%,
             50% 50%,
             50% 100%,
-            0 100%);
+            0 100%
+        );
 }
 
 
-/*
-=================================
-2 PARTES
-=================================
-*/
+/* =================================
+   2 PARTES
+================================= */
 
-.cento-circulo[data-partes="2"] .cento-setor[data-parte="1"] {
+.cento-circulo[data-partes="2"]
+.cento-setor[data-parte="1"] {
     clip-path:
-        polygon(0 0,
+        polygon(
+            0 0,
             50% 0,
             50% 100%,
-            0 100%);
+            0 100%
+        );
 }
 
-.cento-circulo[data-partes="2"] .cento-setor[data-parte="2"] {
+.cento-circulo[data-partes="2"]
+.cento-setor[data-parte="2"] {
     clip-path:
-        polygon(50% 0,
+        polygon(
+            50% 0,
             100% 0,
             100% 100%,
-            50% 100%);
+            50% 100%
+        );
 }
 
 
-/*
-=================================
-TEXTOS DOS SETORES
-=================================
-*/
+/* =================================
+   TEXTOS DOS SETORES
+================================= */
 
 .cento-setor-texto {
     position:
@@ -1076,13 +1090,13 @@ TEXTOS DOS SETORES
 }
 
 
-/*
-=================================
-TEXTOS - 4 PARTES
-=================================
-*/
+/* =================================
+   TEXTOS - 4 PARTES
+================================= */
 
-.cento-circulo[data-partes="4"] .cento-setor[data-parte="1"] .cento-setor-texto {
+.cento-circulo[data-partes="4"]
+.cento-setor[data-parte="1"]
+.cento-setor-texto {
     top:
         25%;
 
@@ -1090,7 +1104,9 @@ TEXTOS - 4 PARTES
         25%;
 }
 
-.cento-circulo[data-partes="4"] .cento-setor[data-parte="2"] .cento-setor-texto {
+.cento-circulo[data-partes="4"]
+.cento-setor[data-parte="2"]
+.cento-setor-texto {
     top:
         25%;
 
@@ -1098,7 +1114,9 @@ TEXTOS - 4 PARTES
         75%;
 }
 
-.cento-circulo[data-partes="4"] .cento-setor[data-parte="3"] .cento-setor-texto {
+.cento-circulo[data-partes="4"]
+.cento-setor[data-parte="3"]
+.cento-setor-texto {
     top:
         75%;
 
@@ -1106,7 +1124,9 @@ TEXTOS - 4 PARTES
         75%;
 }
 
-.cento-circulo[data-partes="4"] .cento-setor[data-parte="4"] .cento-setor-texto {
+.cento-circulo[data-partes="4"]
+.cento-setor[data-parte="4"]
+.cento-setor-texto {
     top:
         75%;
 
@@ -1115,13 +1135,13 @@ TEXTOS - 4 PARTES
 }
 
 
-/*
-=================================
-TEXTOS - 2 PARTES
-=================================
-*/
+/* =================================
+   TEXTOS - 2 PARTES
+================================= */
 
-.cento-circulo[data-partes="2"] .cento-setor[data-parte="1"] .cento-setor-texto {
+.cento-circulo[data-partes="2"]
+.cento-setor[data-parte="1"]
+.cento-setor-texto {
     top:
         50%;
 
@@ -1129,7 +1149,9 @@ TEXTOS - 2 PARTES
         25%;
 }
 
-.cento-circulo[data-partes="2"] .cento-setor[data-parte="2"] .cento-setor-texto {
+.cento-circulo[data-partes="2"]
+.cento-setor[data-parte="2"]
+.cento-setor-texto {
     top:
         50%;
 
@@ -1138,11 +1160,9 @@ TEXTOS - 2 PARTES
 }
 
 
-/*
-=================================
-DIVISÕES
-=================================
-*/
+/* =================================
+   DIVISÕES
+================================= */
 
 .cento-divisao {
     position:
@@ -1152,10 +1172,12 @@ DIVISÕES
         10;
 
     background:
-        rgba(93,
+        rgba(
+            93,
             64,
             55,
-            0.35);
+            0.35
+        );
 
     pointer-events:
         none;
@@ -1196,11 +1218,9 @@ DIVISÕES
 }
 
 
-/*
-=================================
-CENTRO
-=================================
-*/
+/* =================================
+   CENTRO
+================================= */
 
 .cento-centro {
     position:
@@ -1255,10 +1275,14 @@ CENTRO
         1;
 
     box-shadow:
-        0 0.15rem 0.4rem rgba(0, 0, 0, 0.14);
+        0 0.15rem 0.4rem
+        rgba(0, 0, 0, 0.14);
 
     pointer-events:
         none;
+
+    box-sizing:
+        border-box;
 }
 
 .cento-centro strong {
@@ -1275,11 +1299,9 @@ CENTRO
 }
 
 
-/*
-=================================
-BOTÃO LIMPAR CENTO
-=================================
-*/
+/* =================================
+   BOTÃO LIMPAR CENTO
+================================= */
 
 .cento-preview [data-limpar-cento] {
     width:
@@ -1323,11 +1345,9 @@ BOTÃO LIMPAR CENTO
 }
 
 
-/*
-=================================
-BOTÃO ADICIONAR
-=================================
-*/
+/* =================================
+   BOTÃO ADICIONAR
+================================= */
 
 .cento-botao-carrinho {
     width:
@@ -1377,11 +1397,9 @@ BOTÃO ADICIONAR
 }
 
 
-/*
-=================================
-PAINEL SALGADOS GRANDES / EMPADÃO
-=================================
-*/
+/* =================================
+   PAINEL SALGADOS GRANDES / EMPADÃO
+================================= */
 
 .categoria-com-acao-lateral {
     padding-right:
@@ -1419,7 +1437,11 @@ PAINEL SALGADOS GRANDES / EMPADÃO
         1.25rem;
 
     box-shadow:
-        0 0.5rem 1.5rem rgba(0, 0, 0, 0.12);
+        0 0.5rem 1.5rem
+        rgba(0, 0, 0, 0.12);
+
+    box-sizing:
+        border-box;
 }
 
 .categoria-acao-titulo {
@@ -1532,11 +1554,9 @@ PAINEL SALGADOS GRANDES / EMPADÃO
 }
 
 
-/*
-=================================
-TABLET
-=================================
-*/
+/* =================================
+   TABLET / ATÉ 1199px
+================================= */
 
 @media (max-width: 1199.98px) {
 
@@ -1587,136 +1607,727 @@ TABLET
 }
 
 
-/*
-=================================
-TABLET MENOR
-=================================
-*/
+/* =================================
+   CARDS RESPONSIVOS
+   CELULAR + TABLET
+================================= */
 
-@media (max-width: 767.98px) {
+@media (max-width: 991.98px) {
 
+    /* =================================
+       CONTÊINERES
+    ================================= */
+
+    .categoria-cards-container,
+    .categoria-produtos-area,
     .categoria-produtos-grid {
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
-
-        gap:
-            0.75rem;
-    }
-
-    .produto-selecao-card {
-        height:
-            310px;
-    }
-
-    .produto-imagem-placeholder {
-        height:
-            100px;
-    }
-
-    .cento-circulo {
         width:
-            180px;
-
-        height:
-            180px;
-    }
-}
-
-
-/*
-=================================
-CELULAR
-=================================
-*/
-
-@media (max-width: 575.98px) {
-
-    .categoria-produtos-grid {
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
-
-        gap:
-            0.65rem;
-    }
-
-    .produto-selecao-card {
-        height:
-            300px;
-
-        border-radius:
-            18px;
-    }
-
-    .produto-card-conteudo {
-        padding:
-            0.7rem;
-    }
-
-    .produto-imagem-placeholder {
-        height:
-            85px;
-
-        margin-bottom:
-            0.6rem;
-
-        border-radius:
-            12px;
-    }
-
-    .produto-card-titulo {
-        font-size:
-            0.85rem;
-
-        min-height:
-            36px;
-
-        max-height:
-            36px;
-    }
-
-    .produto-card-descricao {
-        font-size:
-            0.75rem;
-
-        min-height:
-            40px;
-
-        max-height:
-            40px;
-    }
-
-    .contador-produto {
-        gap:
-            0.35rem;
-    }
-
-    .contador-produto .contador-botao-menos,
-    .contador-produto .contador-botao-mais {
-        width:
-            30px;
-
-        height:
-            30px;
+            100% !important;
 
         min-width:
-            30px;
-
-        border-radius:
-            9px;
+            0 !important;
     }
 
-    .contador-produto .contador-botao i {
-        font-size:
+    .categoria-cards-container {
+        margin:
+            0 !important;
+
+        padding:
+            0 !important;
+    }
+
+
+    /* =================================
+       CABEÇALHO
+    ================================= */
+
+    .categoria-cards-container .categoria-cabecalho {
+        margin-bottom:
             1rem;
     }
 
-    .contador-produto .contador-quantidade {
-        min-width:
-            24px;
+    .categoria-cards-container .categoria-subtitulo {
+        font-size:
+            0.8rem;
+    }
+
+    .categoria-cards-container .categoria-titulo {
+        font-size:
+            1.25rem;
+    }
+
+    .categoria-cards-container .categoria-descricao {
+        font-size:
+            0.82rem;
+
+        line-height:
+            1.35;
+    }
+
+
+    /* =================================
+       ALERTA
+    ================================= */
+
+    .categoria-cards-container .categoria-alerta {
+        margin-bottom:
+            1rem;
+
+        padding:
+            0.7rem;
 
         font-size:
-            0.9rem;
+            0.78rem;
     }
+
+
+    /* =================================
+       GRADE
+    ================================= */
+
+    .categoria-cards-container .categoria-produtos-grid {
+        display:
+            grid !important;
+
+        grid-template-columns:
+            minmax(0, 1fr) !important;
+
+        gap:
+            0.65rem !important;
+
+        margin:
+            0 !important;
+    }
+
+
+    /* =================================
+       CARTÃO EXTERNO
+    ================================= */
+
+    .categoria-cards-container .produto-wrapper {
+        display:
+            block !important;
+
+        width:
+            100% !important;
+
+        min-width:
+            0 !important;
+
+        height:
+            auto !important;
+
+        min-height:
+            82px !important;
+
+        margin:
+            0 !important;
+
+        padding:
+            0 !important;
+
+        border-radius:
+            14px;
+
+        background:
+            var(--branco);
+
+        border:
+            1px solid rgba(93, 64, 55, 0.10);
+
+        box-shadow:
+            0 2px 7px rgba(0, 0, 0, 0.06);
+
+        overflow:
+            hidden !important;
+
+        box-sizing:
+            border-box !important;
+    }
+
+    .categoria-cards-container .produto-wrapper:hover {
+        transform:
+            none !important;
+
+        box-shadow:
+            0 2px 7px rgba(0, 0, 0, 0.06);
+    }
+
+
+    /* =================================
+       CARTÃO INTERNO
+    ================================= */
+
+    .categoria-cards-container .produto-selecao-card {
+        display:
+            block !important;
+
+        width:
+            100% !important;
+
+        min-width:
+            0 !important;
+
+        height:
+            auto !important;
+
+        min-height:
+            82px !important;
+
+        margin:
+            0 !important;
+
+        padding:
+            0 !important;
+
+        box-sizing:
+            border-box !important;
+    }
+
+
+    /* =================================
+       CONTEÚDO HORIZONTAL
+    ================================= */
+
+    .categoria-cards-container .produto-card-conteudo {
+        width:
+            100% !important;
+
+        min-width:
+            0 !important;
+
+        height:
+            auto !important;
+
+        min-height:
+            82px !important;
+
+        display:
+            flex !important;
+
+        flex-direction:
+            row !important;
+
+        flex-wrap:
+            nowrap !important;
+
+        align-items:
+            center !important;
+
+        justify-content:
+            flex-start !important;
+
+        gap:
+            10px !important;
+
+        padding:
+            0 10px 0 0 !important;
+
+        margin:
+            0 !important;
+
+        box-sizing:
+            border-box !important;
+
+        overflow:
+            visible !important;
+    }
+
+
+    /* =================================
+       IMAGEM
+       82x82
+       RENTE AO TOPO, FUNDO E ESQUERDA
+    ================================= */
+
+    .categoria-cards-container
+    .produto-card-conteudo
+    > .produto-imagem-placeholder {
+
+        display:
+            flex !important;
+
+        width:
+            82px !important;
+
+        min-width:
+            82px !important;
+
+        max-width:
+            82px !important;
+
+        height:
+            82px !important;
+
+        min-height:
+            82px !important;
+
+        max-height:
+            82px !important;
+
+        flex:
+            0 0 82px !important;
+
+        margin:
+            0 !important;
+
+        padding:
+            0 !important;
+
+        border-radius:
+            10px !important;
+
+        box-sizing:
+            border-box !important;
+
+        overflow:
+            hidden !important;
+    }
+
+
+    /* =================================
+       IMAGEM REAL
+    ================================= */
+
+    .categoria-cards-container
+    .produto-imagem-placeholder img {
+
+        display:
+            block !important;
+
+        width:
+            100% !important;
+
+        height:
+            100% !important;
+
+        object-fit:
+            cover !important;
+    }
+
+
+    .categoria-cards-container
+    .produto-imagem-placeholder i {
+
+        font-size:
+            1.8rem;
+    }
+
+
+    /* =================================
+       INFORMAÇÕES
+    ================================= */
+
+    .categoria-cards-container
+    .produto-card-conteudo
+    > .produto-card-informacoes {
+
+        display:
+            flex !important;
+
+        flex-direction:
+            column !important;
+
+        justify-content:
+            center !important;
+
+        align-items:
+            flex-start !important;
+
+        width:
+            auto !important;
+
+        min-width:
+            0 !important;
+
+        max-width:
+            none !important;
+
+        height:
+            auto !important;
+
+        min-height:
+            0 !important;
+
+        flex:
+            1 1 0 !important;
+
+        margin:
+            0 !important;
+
+        padding:
+            0 !important;
+
+        overflow:
+            hidden !important;
+
+        box-sizing:
+            border-box !important;
+    }
+
+
+    /* =================================
+       NOME
+    ================================= */
+
+    .categoria-cards-container
+    .produto-card-titulo {
+
+        width:
+            100% !important;
+
+        min-width:
+            0 !important;
+
+        min-height:
+            0 !important;
+
+        max-height:
+            36px !important;
+
+        margin:
+            0 0 2px !important;
+
+        padding:
+            0 !important;
+
+        font-size:
+            0.82rem !important;
+
+        line-height:
+            1.15 !important;
+
+        text-align:
+            left !important;
+
+        overflow:
+            hidden !important;
+
+        display:
+            -webkit-box !important;
+
+        -webkit-line-clamp:
+            2;
+
+        -webkit-box-orient:
+            vertical;
+    }
+
+
+    /* =================================
+       DESCRIÇÃO
+    ================================= */
+
+    .categoria-cards-container
+    .produto-card-descricao {
+
+        width:
+            100% !important;
+
+        min-width:
+            0 !important;
+
+        min-height:
+            0 !important;
+
+        max-height:
+            32px !important;
+
+        margin:
+            0 !important;
+
+        padding:
+            0 !important;
+
+        font-size:
+            0.70rem !important;
+
+        line-height:
+            1.25 !important;
+
+        text-align:
+            left !important;
+
+        overflow:
+            hidden !important;
+
+        display:
+            -webkit-box !important;
+
+        -webkit-line-clamp:
+            2;
+
+        -webkit-box-orient:
+            vertical;
+    }
+
+
+    /* =================================
+       CONTADOR
+    ================================= */
+
+    .categoria-cards-container
+    .produto-card-conteudo
+    > .contador-produto {
+
+        display:
+            flex !important;
+
+        flex-direction:
+            row !important;
+
+        flex-wrap:
+            nowrap !important;
+
+        align-items:
+            center !important;
+
+        justify-content:
+            space-between !important;
+
+        width:
+            80px !important;
+
+        min-width:
+            80px !important;
+
+        max-width:
+            80px !important;
+
+        height:
+            34px !important;
+
+        min-height:
+            34px !important;
+
+        max-height:
+            34px !important;
+
+        flex:
+            0 0 80px !important;
+
+        margin:
+            0 !important;
+
+        padding:
+            0 !important;
+
+        gap:
+            0 !important;
+
+        box-sizing:
+            border-box !important;
+
+        overflow:
+            visible !important;
+    }
+
+
+    /* =================================
+       BOTÃO -
+    ================================= */
+
+    .categoria-cards-container
+    .contador-produto
+    .contador-botao-menos {
+
+        display:
+            flex !important;
+
+        align-items:
+            center !important;
+
+        justify-content:
+            center !important;
+
+        width:
+            24px !important;
+
+        min-width:
+            24px !important;
+
+        max-width:
+            24px !important;
+
+        height:
+            24px !important;
+
+        min-height:
+            24px !important;
+
+        max-height:
+            24px !important;
+
+        flex:
+            0 0 24px !important;
+
+        padding:
+            0 !important;
+
+        margin:
+            0 !important;
+
+        box-sizing:
+            border-box !important;
+
+        visibility:
+            visible !important;
+
+        opacity:
+            1 !important;
+    }
+
+
+    /* =================================
+       QUANTIDADE
+================================= */
+
+    .categoria-cards-container
+    .contador-produto
+    .contador-quantidade,
+
+    .categoria-cards-container
+    .contador-produto
+    .quantidade-produto {
+
+        display:
+            block !important;
+
+        width:
+            20px !important;
+
+        min-width:
+            20px !important;
+
+        max-width:
+            20px !important;
+
+        height:
+            auto !important;
+
+        min-height:
+            0 !important;
+
+        max-height:
+            none !important;
+
+        flex:
+            0 0 20px !important;
+
+        margin:
+            0 !important;
+
+        padding:
+            0 !important;
+
+        text-align:
+            center !important;
+
+        font-size:
+            0.8rem !important;
+
+        line-height:
+            1 !important;
+
+        box-sizing:
+            border-box !important;
+    }
+
+
+    /* =================================
+       BOTÃO +
+    ================================= */
+
+    .categoria-cards-container
+    .contador-produto
+    .contador-botao-mais,
+
+    .categoria-cards-container
+    .contador-produto
+    [data-aumentar] {
+
+        display:
+            flex !important;
+
+        align-items:
+            center !important;
+
+        justify-content:
+            center !important;
+
+        width:
+            24px !important;
+
+        min-width:
+            24px !important;
+
+        max-width:
+            24px !important;
+
+        height:
+            24px !important;
+
+        min-height:
+            24px !important;
+
+        max-height:
+            24px !important;
+
+        flex:
+            0 0 24px !important;
+
+        padding:
+            0 !important;
+
+        margin:
+            0 !important;
+
+        box-sizing:
+            border-box !important;
+
+        visibility:
+            visible !important;
+
+        opacity:
+            1 !important;
+    }
+
+
+    /* =================================
+       ÍCONES DOS BOTÕES
+    ================================= */
+
+    .categoria-cards-container
+    .contador-produto
+    .contador-botao
+    i {
+
+        display:
+            inline-block !important;
+
+        width:
+            auto !important;
+
+        height:
+            auto !important;
+
+        font-size:
+            0.8rem !important;
+
+        line-height:
+            1 !important;
+
+        color:
+            inherit !important;
+
+        pointer-events:
+            none !important;
+    }
+
+
+    /* =================================
+       CENTO NO CELULAR
+    ================================= */
 
     .cento-circulo {
         width:
@@ -1731,6 +2342,11 @@ CELULAR
             1rem 0.6rem;
     }
 
+
+    /* =================================
+       PAINEL SALGADOS / EMPADÃO
+    ================================= */
+
     .categoria-acao-card {
         padding:
             1rem;
@@ -1738,27 +2354,203 @@ CELULAR
 }
 
 
-/*
-=================================
-REDUZIR MOVIMENTO
-=================================
-*/
+/* =================================
+   CELULAR PEQUENO
+================================= */
+
+@media (max-width: 575.98px) {
+
+    .img_destaque_container {
+        height:
+            300px;
+    }
+
+    .categoria-conteudo {
+        margin-top:
+            -70px;
+
+        padding-top:
+            1.5rem;
+
+        border-radius:
+            35px;
+    }
+
+
+    /* =================================
+       CONTEÚDO
+       SEM ESPAÇO À ESQUERDA
+    ================================= */
+
+    .categoria-cards-container
+    .produto-card-conteudo {
+
+        gap:
+            8px !important;
+
+        padding:
+            0 8px 0 0 !important;
+    }
+
+
+    /* =================================
+       IMAGEM
+       82x82 E RENTE AO CARD
+    ================================= */
+
+    .categoria-cards-container
+    .produto-card-conteudo
+    > .produto-imagem-placeholder {
+
+        width:
+            82px !important;
+
+        min-width:
+            82px !important;
+
+        max-width:
+            82px !important;
+
+        height:
+            82px !important;
+
+        min-height:
+            82px !important;
+
+        max-height:
+            82px !important;
+
+        flex:
+            0 0 82px !important;
+
+        margin:
+            0 !important;
+
+        border-radius:
+            10px !important;
+    }
+
+
+    .categoria-cards-container
+    .produto-imagem-placeholder img {
+
+        width:
+            100% !important;
+
+        height:
+            100% !important;
+
+        object-fit:
+            cover !important;
+    }
+
+
+    /* =================================
+       CONTADOR
+    ================================= */
+
+    .categoria-cards-container
+    .produto-card-conteudo
+    > .contador-produto {
+
+        width:
+            76px !important;
+
+        min-width:
+            76px !important;
+
+        max-width:
+            76px !important;
+
+        flex:
+            0 0 76px !important;
+    }
+
+    .categoria-cards-container
+    .contador-produto
+    .contador-botao-menos,
+
+    .categoria-cards-container
+    .contador-produto
+    .contador-botao-mais,
+
+    .categoria-cards-container
+    .contador-produto
+    [data-aumentar] {
+
+        width:
+            23px !important;
+
+        min-width:
+            23px !important;
+
+        max-width:
+            23px !important;
+
+        height:
+            23px !important;
+
+        min-height:
+            23px !important;
+
+        max-height:
+            23px !important;
+
+        flex:
+            0 0 23px !important;
+    }
+
+    .categoria-cards-container
+    .contador-produto
+    .contador-quantidade,
+
+    .categoria-cards-container
+    .contador-produto
+    .quantidade-produto {
+
+        width:
+            18px !important;
+
+        min-width:
+            18px !important;
+
+        max-width:
+            18px !important;
+
+        flex:
+            0 0 18px !important;
+
+        font-size:
+            0.78rem !important;
+    }
+}
+
+
+/* =================================
+   REDUZIR MOVIMENTO
+================================= */
 
 @media (prefers-reduced-motion: reduce) {
 
+
+    .produto-wrapper::before,
     .produto-selecao-card,
-    .produto-selecao-card::before,
     .produto-imagem-placeholder,
     .produto-imagem-placeholder img,
     .produto-imagem-placeholder i,
     .contador-produto .contador-botao-menos,
     .contador-produto .contador-botao-mais {
+
         transition:
             none !important;
     }
 
-    .produto-selecao-card:hover {
+    .produto-selecao-card:hover
+    .produto-imagem-placeholder,
+    .produto-selecao-card:hover
+    .produto-imagem-placeholder img {
+
         transform:
-            none;
+            none !important;
     }
 }

@@ -6,7 +6,8 @@ use App\Controllers\Admin\LoginAdminController;
 use App\Controllers\Admin\DashboardController;
 use App\Controllers\Admin\ProdutoController;
 use App\Controllers\Admin\CategoriaController;
-use App\Controllers\Admin\DestaqueController;
+use App\Controllers\Admin\DestaquesHomeController;
+use App\Controllers\Admin\BannerHomeController;
 use App\Controllers\Admin\PedidoController;
 
 
@@ -82,69 +83,148 @@ return [
 
     /*
     =================================
-    DESTAQUES
+    DESTAQUES DA HOME
     =================================
     */
 
     [
         'method' => 'GET',
-        'path' => '/admin/destaques',
+        'path' => '/admin/destaques-home',
         'action' => [
-            DestaqueController::class,
+            DestaquesHomeController::class,
             'index',
         ],
     ],
 
     [
         'method' => 'GET',
-        'path' => '/admin/destaques/novo',
+        'path' => '/admin/destaques-home/novo',
         'action' => [
-            DestaqueController::class,
+            DestaquesHomeController::class,
             'novo',
         ],
     ],
 
     [
         'method' => 'POST',
-        'path' => '/admin/destaques/salvar',
+        'path' => '/admin/destaques-home/salvar',
         'action' => [
-            DestaqueController::class,
+            DestaquesHomeController::class,
             'salvar',
         ],
     ],
 
     [
         'method' => 'GET',
-        'path' => '/admin/destaques/editar/{id}',
+        'path' => '/admin/destaques-home/editar/{id}',
         'action' => [
-            DestaqueController::class,
+            DestaquesHomeController::class,
             'editar',
         ],
     ],
 
     [
         'method' => 'POST',
-        'path' => '/admin/destaques/atualizar/{id}',
+        'path' => '/admin/destaques-home/atualizar/{id}',
         'action' => [
-            DestaqueController::class,
+            DestaquesHomeController::class,
             'atualizar',
         ],
     ],
 
     [
         'method' => 'POST',
-        'path' => '/admin/destaques/alternar/{id}',
+        'path' => '/admin/destaques-home/alternar/{id}',
         'action' => [
-            DestaqueController::class,
+            DestaquesHomeController::class,
             'alternarAtivo',
         ],
     ],
 
     [
         'method' => 'POST',
-        'path' => '/admin/destaques/excluir/{id}',
+        'path' => '/admin/destaques-home/excluir/{id}',
         'action' => [
-            DestaqueController::class,
+            DestaquesHomeController::class,
+            'excluir',
+        ],
+    ],
+
+    [
+        'method' => 'POST',
+        'path' => '/admin/destaques-home/ordem',
+        'action' => [
+            DestaquesHomeController::class,
+            'atualizarOrdem',
+        ],
+    ],
+
+
+    /*
+    =================================
+    BANNERS DA HOME
+    =================================
+    */
+
+    [
+        'method' => 'GET',
+        'path' => '/admin/banners-home',
+        'action' => [
+            BannerHomeController::class,
+            'index',
+        ],
+    ],
+
+    [
+        'method' => 'GET',
+        'path' => '/admin/banners-home/novo',
+        'action' => [
+            BannerHomeController::class,
+            'novo',
+        ],
+    ],
+
+    [
+        'method' => 'POST',
+        'path' => '/admin/banners-home/salvar',
+        'action' => [
+            BannerHomeController::class,
+            'salvar',
+        ],
+    ],
+
+    [
+        'method' => 'GET',
+        'path' => '/admin/banners-home/editar/{id}',
+        'action' => [
+            BannerHomeController::class,
+            'editar',
+        ],
+    ],
+
+    [
+        'method' => 'POST',
+        'path' => '/admin/banners-home/atualizar/{id}',
+        'action' => [
+            BannerHomeController::class,
+            'atualizar',
+        ],
+    ],
+
+    [
+        'method' => 'POST',
+        'path' => '/admin/banners-home/alternar/{id}',
+        'action' => [
+            BannerHomeController::class,
+            'alternarAtivo',
+        ],
+    ],
+
+    [
+        'method' => 'POST',
+        'path' => '/admin/banners-home/excluir/{id}',
+        'action' => [
+            BannerHomeController::class,
             'excluir',
         ],
     ],

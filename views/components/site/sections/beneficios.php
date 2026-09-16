@@ -38,36 +38,30 @@ $beneficios = $beneficios ?? [];
                         <div class="beneficio-icone">
 
                             <i
-                                class="<?=
-                                    htmlspecialchars(
-                                        $beneficio['icone'],
-                                        ENT_QUOTES,
-                                        'UTF-8'
-                                    )
-                                ?>"
+                                class="<?= htmlspecialchars(
+                                    $beneficio['icone'],
+                                    ENT_QUOTES,
+                                    'UTF-8'
+                                ) ?>"
                                 aria-hidden="true"
                             ></i>
 
                         </div>
 
                         <h3 class="h5">
-                            <?=
-                                htmlspecialchars(
-                                    $beneficio['titulo'],
-                                    ENT_QUOTES,
-                                    'UTF-8'
-                                )
-                            ?>
+                            <?= htmlspecialchars(
+                                $beneficio['titulo'],
+                                ENT_QUOTES,
+                                'UTF-8'
+                            ) ?>
                         </h3>
 
                         <p class="text-secondary mb-0">
-                            <?=
-                                htmlspecialchars(
-                                    $beneficio['texto'],
-                                    ENT_QUOTES,
-                                    'UTF-8'
-                                )
-                            ?>
+                            <?= htmlspecialchars(
+                                $beneficio['texto'],
+                                ENT_QUOTES,
+                                'UTF-8'
+                            ) ?>
                         </p>
 
                     </article>

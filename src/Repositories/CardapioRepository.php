@@ -183,6 +183,201 @@ final class CardapioRepository
 
     /*
     =================================
+    DESTAQUES DA HOME
+    =================================
+    */
+
+    public function buscarDestaquesHome(): array
+    {
+        $sql = '
+            SELECT
+                destaques_home.id AS destaque_id,
+                destaques_home.tipo,
+                destaques_home.item_id,
+                destaques_home.ordem,
+
+                categorias.id AS categoria_id,
+                categorias.nome AS categoria_nome,
+                categorias.slug AS categoria_slug,
+                categorias.descricao AS categoria_descricao,
+                categorias.preco,
+                categorias.preco_revenda,
+                categorias.quantidade_minima_revenda,
+
+                NULL AS produto_id,
+                NULL AS produto_nome,
+                NULL AS produto_descricao,
+
+                (
+                    SELECT
+                        categoria_imagens.url_imagem
+                    FROM categoria_imagens
+                    WHERE categoria_imagens.categoria_id =
+                        categorias.id
+                    AND categoria_imagens.principal = 1
+                    ORDER BY
+                        categoria_imagens.ordem ASC,
+                        categoria_imagens.id ASC
+                    LIMIT 1
+                ) AS imagem_url,
+
+                (
+                    SELECT
+                        categoria_imagens.posicao_x
+                    FROM categoria_imagens
+                    WHERE categoria_imagens.categoria_id =
+                        categorias.id
+                    AND categoria_imagens.principal = 1
+                    ORDER BY
+                        categoria_imagens.ordem ASC,
+                        categoria_imagens.id ASC
+                    LIMIT 1
+                ) AS imagem_posicao_x,
+
+                (
+                    SELECT
+                        categoria_imagens.posicao_y
+                    FROM categoria_imagens
+                    WHERE categoria_imagens.categoria_id =
+                        categorias.id
+                    AND categoria_imagens.principal = 1
+                    ORDER BY
+                        categoria_imagens.ordem ASC,
+                        categoria_imagens.id ASC
+                    LIMIT 1
+                ) AS imagem_posicao_y
+
+            FROM destaques_home
+
+            INNER JOIN categorias
+                ON categorias.id =
+                    destaques_home.item_id
+
+            WHERE destaques_home.tipo = :tipo_categoria
+            AND destaques_home.ativo = 1
+            AND categorias.ativo = 1
+
+            UNION ALL
+
+            SELECT
+                destaques_home.id AS destaque_id,
+                destaques_home.tipo,
+                destaques_home.item_id,
+                destaques_home.ordem,
+
+                categorias.id AS categoria_id,
+                categorias.nome AS categoria_nome,
+                categorias.slug AS categoria_slug,
+                categorias.descricao AS categoria_descricao,
+                categorias.preco,
+                categorias.preco_revenda,
+                categorias.quantidade_minima_revenda,
+
+                produtos.id AS produto_id,
+                produtos.nome AS produto_nome,
+                produtos.descricao AS produto_descricao,
+
+                (
+                    SELECT
+                        produto_imagens.url_imagem
+                    FROM produto_imagens
+                    WHERE produto_imagens.produto_id =
+                        produtos.id
+                    AND produto_imagens.principal = 1
+                    ORDER BY
+                        produto_imagens.ordem ASC,
+                        produto_imagens.id ASC
+                    LIMIT 1
+                ) AS imagem_url,
+
+                (
+                    SELECT
+                        produto_imagens.posicao_x
+                    FROM produto_imagens
+                    WHERE produto_imagens.produto_id =
+                        produtos.id
+                    AND produto_imagens.principal = 1
+                    ORDER BY
+                        produto_imagens.ordem ASC,
+                        produto_imagens.id ASC
+                    LIMIT 1
+                ) AS imagem_posicao_x,
+
+                (
+                    SELECT
+                        produto_imagens.posicao_y
+                    FROM produto_imagens
+                    WHERE produto_imagens.produto_id =
+                        produtos.id
+                    AND produto_imagens.principal = 1
+                    ORDER BY
+                        produto_imagens.ordem ASC,
+                        produto_imagens.id ASC
+                    LIMIT 1
+                ) AS imagem_posicao_y
+
+            FROM destaques_home
+
+            INNER JOIN produtos
+                ON produtos.id =
+                    destaques_home.item_id
+
+            INNER JOIN categorias
+                ON categorias.id =
+                    produtos.categoria_id
+
+            WHERE destaques_home.tipo = :tipo_produto
+            AND destaques_home.ativo = 1
+            AND produtos.status = :status_produto
+            AND categorias.ativo = 1
+
+            ORDER BY
+                ordem ASC,
+                destaque_id ASC
+        ';
+
+
+        $consulta =
+            $this->pdo->prepare(
+                $sql
+            );
+
+
+        $consulta->bindValue(
+            ':tipo_categoria',
+            'categoria',
+            PDO::PARAM_STR
+        );
+
+
+        $consulta->bindValue(
+            ':tipo_produto',
+            'produto',
+            PDO::PARAM_STR
+        );
+
+
+        $consulta->bindValue(
+            ':status_produto',
+            'ativo',
+            PDO::PARAM_STR
+        );
+
+
+        $consulta->execute();
+
+
+        $destaques =
+            $consulta->fetchAll();
+
+
+        return
+            $destaques;
+    }
+
+
+    /*
+    =================================
     CATEGORIA POR ID
     =================================
     */
@@ -369,6 +564,7 @@ final class CardapioRepository
         return
             $consulta->fetchAll();
     }
+
 
     /*
     =================================

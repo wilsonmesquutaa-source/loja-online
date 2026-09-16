@@ -2,650 +2,132 @@
 
 declare(strict_types=1);
 
-require APP_ROOT
-    . '/views/layouts/admin-header.php';
-
-$pedidos =
-    $pedidos ?? [];
-
-$statusAtual =
-    $statusAtual ?? null;
-
-$csrfToken =
-    $csrfToken
-    ?? \App\Helpers\Csrf::gerar();
-
-
-/*
-=================================
-TRADUÇÃO DOS STATUS
-=================================
-*/
+$pedidos = $pedidos ?? [];
+$statusAtual = $statusAtual ?? null;
 
 $nomesStatus = [
-
-    'aguardando_pagamento' =>
-        'Aguardando pagamento',
-
-    'pago' =>
-        'Pago',
-
-    'em_separacao' =>
-        'Em preparação',
-
-    'enviado' =>
-        'Saiu para entrega',
-
-    'entregue' =>
-        'Entregue',
-
-    'cancelado' =>
-        'Cancelado',
+    'aguardando_pagamento' => 'Aguardando pagamento',
+    'pago' => 'Pago',
+    'em_separacao' => 'Em preparação',
+    'enviado' => 'Saiu para entrega',
+    'entregue' => 'Entregue',
+    'cancelado' => 'Cancelado',
 ];
 
+$porStatus = array_fill_keys(array_keys($nomesStatus), 0);
+$faturamento = 0.0;
+
+foreach ($pedidos as $pedido) {
+    $statusPedido = (string) ($pedido['status'] ?? '');
+
+    if (array_key_exists($statusPedido, $porStatus)) {
+        $porStatus[$statusPedido] += 1;
+    }
+
+    if ($statusPedido !== 'cancelado') {
+        $faturamento += (float) ($pedido['total'] ?? 0);
+    }
+}
+
+require APP_ROOT . '/views/layouts/admin-header.php';
 
 ?>
 
+<main class="admin-container pedidos-admin">
 
-<div class="container-fluid">
-
-
-    <!-- =================================
-         CABEÇALHO
-    ================================== -->
-
-    <div
-        class="
-            d-flex
-            justify-content-between
-            align-items-center
-            mb-4
-        ">
-
+    <section class="pedidos-cabecalho">
         <div>
-
-            <h1 class="h3 mb-1">
-
-                Pedidos
-
-            </h1>
-
-
-            <p class="text-muted mb-0">
-
-                Gerencie os pedidos realizados
-                pelos clientes.
-
-            </p>
-
+            <span class="pedidos-sobretitulo"><i class="bi bi-receipt-cutoff" aria-hidden="true"></i> Operação da loja</span>
+            <h1>Pedidos</h1>
+            <p>Visualize, acompanhe e atualize cada pedido recebido.</p>
         </div>
-
-    </div>
-
-
-    <!-- =================================
-         FILTROS
-    ================================== -->
-
-    <div class="card mb-4">
-
-        <div class="card-body">
-
-            <form
-                method="GET"
-                action="<?= BASE_URL ?>/admin/pedidos"
-                class="
-                    row
-                    g-3
-                    align-items-end
-                ">
-
-                <div
-                    class="
-                        col-md-5
-                        col-lg-4
-                    ">
-
-                    <label
-                        for="status"
-                        class="form-label">
-
-                        Filtrar por status
-
-                    </label>
-
-
-                    <select
-                        id="status"
-                        name="status"
-                        class="form-control">
-
-                        <option
-                            value=""
-                            <?= $statusAtual === null
-                                ? 'selected'
-                                : ''
-                            ?>>
-
-                            Todos os pedidos
-
-                        </option>
-
-
-                        <?php foreach (
-                            $nomesStatus
-                            as $valor => $nome
-                        ): ?>
-
-                            <option
-                                value="<?= htmlspecialchars(
-                                    $valor,
-                                    ENT_QUOTES,
-                                    'UTF-8'
-                                ) ?>"
-                                <?= $statusAtual === $valor
-                                    ? 'selected'
-                                    : ''
-                                ?>>
-
-                                <?= htmlspecialchars(
-                                    $nome,
-                                    ENT_QUOTES,
-                                    'UTF-8'
-                                ) ?>
-
-                            </option>
-
-                        <?php endforeach; ?>
-
-                    </select>
-
-                </div>
-
-
-                <div
-                    class="
-                        col-md-auto
-                    ">
-
-                    <button
-                        type="submit"
-                        class="
-                            btn
-                            btn-primary
-                        ">
-
-                        <i
-                            class="
-                                bi
-                                bi-funnel
-                                me-1
-                            "></i>
-
-                        Filtrar
-
-                    </button>
-
-                </div>
-
-
-                <?php if (
-                    $statusAtual !== null
-                ): ?>
-
-                    <div
-                        class="
-                            col-md-auto
-                        ">
-
-                        <a
-                            href="<?= BASE_URL ?>/admin/pedidos"
-                            class="
-                                btn
-                                btn-outline-secondary
-                            ">
-
-                            Limpar filtro
-
-                        </a>
-
-                    </div>
-
-                <?php endif; ?>
-
-            </form>
-
-        </div>
-
-    </div>
-
-
-    <!-- =================================
-         LISTAGEM
-    ================================== -->
-
-    <div class="card">
-
-        <div class="card-body">
-
-            <div class="table-responsive">
-
-                <table
-                    class="
-                        table
-                        table-hover
-                        align-middle
-                    ">
-
-                    <thead>
-
-                        <tr>
-
-                            <th>
-                                Pedido
-                            </th>
-
-                            <th>
-                                Cliente
-                            </th>
-
-                            <th>
-                                Recebimento
-                            </th>
-
-                            <th>
-                                Agendamento
-                            </th>
-
-                            <th>
-                                Total
-                            </th>
-
-                            <th>
-                                Status
-                            </th>
-
-                            <th>
-                                Ações
-                            </th>
-
-                        </tr>
-
-                    </thead>
-
-
-                    <tbody>
-
-
-                        <?php if (
-                            $pedidos === []
-                        ): ?>
-
-
-                            <tr>
-
-                                <td
-                                    colspan="7"
-                                    class="
-                                        text-center
-                                        py-5
-                                    ">
-
-                                    <div
-                                        class="
-                                            text-muted
-                                        ">
-
-                                        <i
-                                            class="
-                                                bi
-                                                bi-inbox
-                                            "
-                                            style="
-                                                font-size: 2.5rem;
-                                            "></i>
-
-
-                                        <div class="mt-2">
-
-                                            Nenhum pedido encontrado.
-
-                                        </div>
-
-                                    </div>
-
-                                </td>
-
-                            </tr>
-
-
-                        <?php else: ?>
-
-
-                            <?php foreach (
-                                $pedidos
-                                as $pedido
-                            ): ?>
-
-
-                                <?php
-
-                                $status =
-                                    (string)
-                                    $pedido['status'];
-
-
-                                $nomeStatus =
-                                    $nomesStatus[$status]
-                                    ?? $status;
-
-
-                                /*
-                                -----------------------------
-                                COR DO STATUS
-                                -----------------------------
-                                */
-
-                                $classeStatus =
-                                    'bg-secondary';
-
-
-                                switch (
-                                    $status
-                                ) {
-
-                                    case 'aguardando_pagamento':
-
-                                        $classeStatus =
-                                            'bg-warning text-dark';
-
-                                        break;
-
-
-                                    case 'pago':
-
-                                        $classeStatus =
-                                            'bg-primary';
-
-                                        break;
-
-
-                                    case 'em_separacao':
-
-                                        $classeStatus =
-                                            'bg-info text-dark';
-
-                                        break;
-
-
-                                    case 'enviado':
-
-                                        $classeStatus =
-                                            'bg-secondary';
-
-                                        break;
-
-
-                                    case 'entregue':
-
-                                        $classeStatus =
-                                            'bg-success';
-
-                                        break;
-
-
-                                    case 'cancelado':
-
-                                        $classeStatus =
-                                            'bg-danger';
-
-                                        break;
-                                }
-
-
-                                /*
-                                -----------------------------
-                                DATA
-                                -----------------------------
-                                */
-
-                                $dataPedido =
-                                    !empty(
-                                        $pedido['criado_em']
-                                    )
-                                    ? date(
-                                        'd/m/Y H:i',
-                                        strtotime(
-                                            $pedido['criado_em']
-                                        )
-                                    )
-                                    : '-';
-
-
-                                /*
-                                -----------------------------
-                                AGENDAMENTO
-                                -----------------------------
-                                */
-
-                                $agendamento =
-                                    !empty(
-                                        $pedido['data_hora_agendada']
-                                    )
-                                    ? date(
-                                        'd/m/Y H:i',
-                                        strtotime(
-                                            $pedido[
-                                                'data_hora_agendada'
-                                            ]
-                                        )
-                                    )
-                                    : '-';
-
-
-                                /*
-                                -----------------------------
-                                MODALIDADE
-                                -----------------------------
-                                */
-
-                                $modalidade =
-                                    $pedido[
-                                        'modalidade_recebimento'
-                                    ]
-                                    === 'entrega'
-                                    ? 'Entrega'
-                                    : 'Retirada';
-
-
-                                ?>
-
-
-                                <tr>
-
-
-                                    <!-- PEDIDO -->
-
-                                    <td>
-
-                                        <strong>
-
-                                            #<?= htmlspecialchars(
-                                                (string)
-                                                $pedido['codigo'],
-                                                ENT_QUOTES,
-                                                'UTF-8'
-                                            ) ?>
-
-                                        </strong>
-
-
-                                        <br>
-
-
-                                        <small
-                                            class="
-                                                text-muted
-                                            ">
-
-                                            <?= htmlspecialchars(
-                                                $dataPedido,
-                                                ENT_QUOTES,
-                                                'UTF-8'
-                                            ) ?>
-
-                                        </small>
-
-                                    </td>
-
-
-                                    <!-- CLIENTE -->
-
-                                    <td>
-
-                                        <strong>
-
-                                            <?= htmlspecialchars(
-                                                (string)
-                                                $pedido[
-                                                    'nome_cliente'
-                                                ],
-                                                ENT_QUOTES,
-                                                'UTF-8'
-                                            ) ?>
-
-                                        </strong>
-
-
-                                        <br>
-
-
-                                        <small
-                                            class="
-                                                text-muted
-                                            ">
-
-                                            <?= htmlspecialchars(
-                                                (string)
-                                                $pedido[
-                                                    'email_cliente'
-                                                ],
-                                                ENT_QUOTES,
-                                                'UTF-8'
-                                            ) ?>
-
-                                        </small>
-
-                                    </td>
-
-
-                                    <!-- RECEBIMENTO -->
-
-                                    <td>
-
-                                        <?= $modalidade ?>
-
-                                    </td>
-
-
-                                    <!-- AGENDAMENTO -->
-
-                                    <td>
-
-                                        <?= htmlspecialchars(
-                                            $agendamento,
-                                            ENT_QUOTES,
-                                            'UTF-8'
-                                        ) ?>
-
-                                    </td>
-
-
-                                    <!-- TOTAL -->
-
-                                    <td>
-
-                                        <strong>
-
-                                            R$
-
-                                            <?= number_format(
-                                                (float)
-                                                $pedido['total'],
-                                                2,
-                                                ',',
-                                                '.'
-                                            ) ?>
-
-                                        </strong>
-
-                                    </td>
-
-
-                                    <!-- STATUS -->
-
-                                    <td>
-
-                                        <span
-                                            class="
-                                                badge
-                                                <?= $classeStatus ?>
-                                            ">
-
-                                            <?= htmlspecialchars(
-                                                $nomeStatus,
-                                                ENT_QUOTES,
-                                                'UTF-8'
-                                            ) ?>
-
-                                        </span>
-
-                                    </td>
-
-
-                                    <!-- AÇÕES -->
-
-                                    <td>
-
-                                        <a
-                                            href="<?= BASE_URL ?>/admin/pedidos/<?= (int) $pedido['id'] ?>"
-                                            class="
-                                                btn
-                                                btn-primary
-                                                btn-sm
-                                            ">
-
-                                            <i
-                                                class="
-                                                    bi
-                                                    bi-eye
-                                                    me-1
-                                                "></i>
-
-                                            Ver pedido
-
-                                        </a>
-
-                                    </td>
-
-
-                                </tr>
-
-
-                            <?php endforeach; ?>
-
-
-                        <?php endif; ?>
-
-
-                    </tbody>
-
-                </table>
-
+        <a href="<?= BASE_URL ?>/admin" class="pedidos-voltar"><i class="bi bi-grid-1x2-fill" aria-hidden="true"></i> Painel inicial</a>
+    </section>
+
+    <section class="pedidos-resumo" aria-label="Resumo dos pedidos">
+        <article class="pedido-resumo-card pedido-resumo-card--total">
+            <span><i class="bi bi-bag-check-fill"></i></span>
+            <div><small>Pedidos exibidos</small><strong><?= count($pedidos) ?></strong></div>
+        </article>
+        <article class="pedido-resumo-card pedido-resumo-card--preparo">
+            <span><i class="bi bi-fire"></i></span>
+            <div><small>Em preparação</small><strong><?= $porStatus['em_separacao'] ?></strong></div>
+        </article>
+        <article class="pedido-resumo-card pedido-resumo-card--entrega">
+            <span><i class="bi bi-truck"></i></span>
+            <div><small>Em entrega</small><strong><?= $porStatus['enviado'] ?></strong></div>
+        </article>
+        <article class="pedido-resumo-card pedido-resumo-card--vendas">
+            <span><i class="bi bi-cash-stack"></i></span>
+            <div><small>Valor dos pedidos</small><strong>R$ <?= number_format($faturamento, 2, ',', '.') ?></strong></div>
+        </article>
+    </section>
+
+    <section class="pedidos-painel">
+        <div class="pedidos-ferramentas">
+            <div>
+                <strong>Lista de pedidos</strong>
+                <span><?= count($pedidos) ?> registro<?= count($pedidos) === 1 ? '' : 's' ?></span>
             </div>
 
+            <form method="GET" action="<?= BASE_URL ?>/admin/pedidos" class="pedidos-filtro-form">
+                <label for="statusPedido"><i class="bi bi-funnel" aria-hidden="true"></i><span class="sr-only">Filtrar por status</span></label>
+                <select id="statusPedido" name="status">
+                    <option value="">Todos os status</option>
+                    <?php foreach ($nomesStatus as $valor => $nome): ?>
+                        <option value="<?= htmlspecialchars($valor, ENT_QUOTES, 'UTF-8') ?>"<?= $statusAtual === $valor ? ' selected' : '' ?>><?= htmlspecialchars($nome, ENT_QUOTES, 'UTF-8') ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <button type="submit">Aplicar</button>
+                <?php if ($statusAtual !== null): ?>
+                    <a href="<?= BASE_URL ?>/admin/pedidos" title="Limpar filtro"><i class="bi bi-x-lg" aria-hidden="true"></i><span class="sr-only">Limpar filtro</span></a>
+                <?php endif; ?>
+            </form>
         </div>
 
-    </div>
+        <?php if ($pedidos === []): ?>
+            <div class="pedidos-vazio">
+                <i class="bi bi-inbox" aria-hidden="true"></i>
+                <strong>Nenhum pedido encontrado</strong>
+                <span>Quando houver novos pedidos, eles aparecerão aqui.</span>
+            </div>
+        <?php else: ?>
+            <div class="pedidos-tabela-area">
+                <table class="pedidos-tabela">
+                    <thead>
+                        <tr><th>Pedido</th><th>Cliente</th><th>Recebimento</th><th>Agendamento</th><th>Total</th><th>Status</th><th><span class="sr-only">Ações</span></th></tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($pedidos as $pedido): ?>
+                            <?php
+                            $status = (string) $pedido['status'];
+                            $nomeStatus = $nomesStatus[$status] ?? $status;
+                            $dataPedido = !empty($pedido['criado_em']) ? date('d/m/Y · H:i', strtotime((string) $pedido['criado_em'])) : '-';
+                            $agendamento = !empty($pedido['data_hora_agendada']) ? date('d/m/Y · H:i', strtotime((string) $pedido['data_hora_agendada'])) : 'Não agendado';
+                            $entrega = ($pedido['modalidade_recebimento'] ?? '') === 'entrega';
+                            ?>
+                            <tr>
+                                <td data-label="Pedido">
+                                    <div class="pedido-codigo"><strong>#<?= htmlspecialchars((string) $pedido['codigo'], ENT_QUOTES, 'UTF-8') ?></strong><span><?= htmlspecialchars($dataPedido, ENT_QUOTES, 'UTF-8') ?></span></div>
+                                </td>
+                                <td data-label="Cliente">
+                                    <div class="pedido-cliente"><span class="pedido-cliente-avatar"><i class="bi bi-person-fill"></i></span><div><strong><?= htmlspecialchars((string) $pedido['nome_cliente'], ENT_QUOTES, 'UTF-8') ?></strong><span><?= htmlspecialchars((string) $pedido['email_cliente'], ENT_QUOTES, 'UTF-8') ?></span></div></div>
+                                </td>
+                                <td data-label="Recebimento"><span class="pedido-recebimento pedido-recebimento--<?= $entrega ? 'entrega' : 'retirada' ?>"><i class="bi bi-<?= $entrega ? 'truck' : 'shop' ?>" aria-hidden="true"></i><?= $entrega ? 'Entrega' : 'Retirada' ?></span></td>
+                                <td data-label="Agendamento"><span class="pedido-agendamento"><i class="bi bi-calendar3" aria-hidden="true"></i><?= htmlspecialchars($agendamento, ENT_QUOTES, 'UTF-8') ?></span></td>
+                                <td data-label="Total"><strong class="pedido-total">R$ <?= number_format((float) $pedido['total'], 2, ',', '.') ?></strong></td>
+                                <td data-label="Status"><span class="pedido-status pedido-status--<?= htmlspecialchars($status, ENT_QUOTES, 'UTF-8') ?>"><i class="bi bi-circle-fill" aria-hidden="true"></i><?= htmlspecialchars($nomeStatus, ENT_QUOTES, 'UTF-8') ?></span></td>
+                                <td class="pedido-acao" data-label="Ações"><a href="<?= BASE_URL ?>/admin/pedidos/<?= (int) $pedido['id'] ?>"><i class="bi bi-arrow-up-right" aria-hidden="true"></i><span>Detalhes</span></a></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php endif; ?>
+    </section>
 
-</div>
+</main>
+
+<?php
+
+require APP_ROOT . '/views/layouts/admin-footer.php';

@@ -5,11 +5,11 @@ declare(strict_types=1);
 require APP_ROOT
     . '/views/layouts/admin-header.php';
 
-$destaque =
-    $destaque ?? null;
 
-$categorias =
-    $categorias ?? [];
+$banner =
+    $banner
+    ?? null;
+
 
 $csrfToken =
     $csrfToken
@@ -17,37 +17,47 @@ $csrfToken =
 
 
 $posicaoX =
-    $destaque !== null
+    $banner !== null
     && isset(
-        $destaque['posicao_x']
+        $banner['posicao_x']
     )
         ? (float)
-            $destaque['posicao_x']
+            $banner['posicao_x']
         : 50.00;
 
 
 $posicaoY =
-    $destaque !== null
+    $banner !== null
     && isset(
-        $destaque['posicao_y']
+        $banner['posicao_y']
     )
         ? (float)
-            $destaque['posicao_y']
+            $banner['posicao_y']
         : 50.00;
 
 
-$ativo =
-    $destaque !== null
+$ordem =
+    $banner !== null
     && isset(
-        $destaque['ativo']
+        $banner['ordem']
     )
         ? (int)
-            $destaque['ativo']
+            $banner['ordem']
+        : 1;
+
+
+$ativo =
+    $banner !== null
+    && isset(
+        $banner['ativo']
+    )
+        ? (int)
+            $banner['ativo']
         : 1;
 
 ?>
 
-<main class="admin-container">
+<main class="admin-container banner-home-editor">
 
     <section class="card-admin p-4">
 
@@ -59,9 +69,9 @@ $ativo =
 
             <h1 class="h3 mb-1">
 
-                <?= $destaque
-                    ? 'Editar Destaque'
-                    : 'Novo Destaque'
+                <?= $banner
+                    ? 'Editar Banner da Home'
+                    : 'Novo Banner da Home'
                 ?>
 
             </h1>
@@ -69,9 +79,9 @@ $ativo =
 
             <p class="text-muted mb-0">
 
-                <?= $destaque
-                    ? 'Atualize a imagem de destaque da categoria.'
-                    : 'Cadastre uma imagem de destaque para uma categoria.'
+                <?= $banner
+                    ? 'Atualize a imagem e os dados do banner.'
+                    : 'Cadastre uma imagem para aparecer no banner da Home.'
                 ?>
 
             </p>
@@ -86,10 +96,10 @@ $ativo =
         <form
             method="POST"
             enctype="multipart/form-data"
-            action="<?= BASE_URL ?><?= $destaque
-                ? '/admin/destaques/atualizar/'
-                    . (int) $destaque['id']
-                : '/admin/destaques/salvar'
+            action="<?= BASE_URL ?><?= $banner
+                ? '/admin/banners-home/atualizar/'
+                    . (int) $banner['id']
+                : '/admin/banners-home/salvar'
             ?>"
         >
 
@@ -106,16 +116,15 @@ $ativo =
             >
 
 
-            <!-- =================================
-                 POSIÇÃO DA IMAGEM
-            ================================== -->
+            <!-- POSIÇÃO -->
 
             <input
                 type="hidden"
                 name="posicao_x"
                 id="posicao_x"
                 value="<?= htmlspecialchars(
-                    (string) $posicaoX,
+                    (string)
+                    $posicaoX,
                     ENT_QUOTES,
                     'UTF-8'
                 ) ?>"
@@ -127,7 +136,8 @@ $ativo =
                 name="posicao_y"
                 id="posicao_y"
                 value="<?= htmlspecialchars(
-                    (string) $posicaoY,
+                    (string)
+                    $posicaoY,
                     ENT_QUOTES,
                     'UTF-8'
                 ) ?>"
@@ -135,77 +145,44 @@ $ativo =
 
 
             <!-- =================================
-                 CATEGORIA
+                 TÍTULO
             ================================== -->
 
             <div class="mb-4">
 
                 <label
-                    for="categoria_id"
+                    for="titulo"
                     class="form-label"
                 >
 
-                    Categoria
+                    Título
 
                 </label>
 
 
-                <select
-                    id="categoria_id"
-                    name="categoria_id"
+                <input
+                    type="text"
+                    id="titulo"
+                    name="titulo"
                     class="form-control"
-                    required
+                    maxlength="150"
+                    value="<?= htmlspecialchars(
+                        (string) (
+                            $banner[
+                                'titulo'
+                            ]
+                            ?? ''
+                        ),
+                        ENT_QUOTES,
+                        'UTF-8'
+                    ) ?>"
                 >
-
-                    <option value="">
-
-                        Selecione uma categoria
-
-                    </option>
-
-
-                    <?php foreach (
-                        $categorias
-                        as $categoria
-                    ): ?>
-
-                        <option
-                            value="<?= (int)
-                                $categoria['id'] ?>"
-                            <?= (
-                                $destaque
-                                &&
-                                (int)
-                                    $destaque[
-                                        'categoria_id'
-                                    ]
-                                    ===
-                                    (int)
-                                        $categoria['id']
-                            )
-                                ? 'selected'
-                                : ''
-                            ?>
-                        >
-
-                            <?= htmlspecialchars(
-                                (string)
-                                    $categoria['nome'],
-                                ENT_QUOTES,
-                                'UTF-8'
-                            ) ?>
-
-                        </option>
-
-                    <?php endforeach; ?>
-
-                </select>
 
 
                 <div class="form-text">
 
-                    Escolha a categoria que receberá
-                    esta imagem de destaque.
+                    Título opcional para identificar
+                    o banner no painel.
 
                 </div>
 
@@ -236,7 +213,7 @@ $ativo =
                     maxlength="255"
                     value="<?= htmlspecialchars(
                         (string) (
-                            $destaque[
+                            $banner[
                                 'texto_alternativo'
                             ]
                             ?? ''
@@ -257,53 +234,92 @@ $ativo =
 
 
             <!-- =================================
-                 STATUS
+                 ORDEM E STATUS
             ================================== -->
 
-            <div class="mb-4">
+            <div class="row">
 
-                <label
-                    for="ativo"
-                    class="form-label"
-                >
+                <div class="col-md-6 mb-4">
 
-                    Status
-
-                </label>
-
-
-                <select
-                    id="ativo"
-                    name="ativo"
-                    class="form-control"
-                >
-
-                    <option
-                        value="1"
-                        <?= $ativo === 1
-                            ? 'selected'
-                            : ''
-                        ?>
+                    <label
+                        for="ordem"
+                        class="form-label"
                     >
 
-                        Ativo
+                        Ordem de exibição
 
-                    </option>
+                    </label>
 
 
-                    <option
-                        value="0"
-                        <?= $ativo === 0
-                            ? 'selected'
-                            : ''
-                        ?>
+                    <input
+                        type="number"
+                        id="ordem"
+                        name="ordem"
+                        class="form-control"
+                        min="1"
+                        value="<?= htmlspecialchars(
+                            (string) $ordem,
+                            ENT_QUOTES,
+                            'UTF-8'
+                        ) ?>"
                     >
 
-                        Inativo
 
-                    </option>
+                    <div class="form-text">
 
-                </select>
+                        Menor número aparece primeiro.
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6 mb-4">
+
+                    <label
+                        for="ativo"
+                        class="form-label"
+                    >
+
+                        Status
+
+                    </label>
+
+
+                    <select
+                        id="ativo"
+                        name="ativo"
+                        class="form-control"
+                    >
+
+                        <option
+                            value="1"
+                            <?= $ativo === 1
+                                ? 'selected'
+                                : ''
+                            ?>
+                        >
+
+                            Ativo
+
+                        </option>
+
+
+                        <option
+                            value="0"
+                            <?= $ativo === 0
+                                ? 'selected'
+                                : ''
+                            ?>
+                        >
+
+                            Inativo
+
+                        </option>
+
+                    </select>
+
+                </div>
 
             </div>
 
@@ -319,14 +335,12 @@ $ativo =
                     class="form-label"
                 >
 
-                    Imagem de destaque
+                    Imagem do banner
 
                 </label>
 
 
-                <!-- =================================
-                     PREVIEW
-                ================================== -->
+                <!-- PREVIEW -->
 
                 <div
                     id="imagem-preview-container"
@@ -347,10 +361,10 @@ $ativo =
                 >
 
                     <?php if (
-                        $destaque !== null
+                        $banner !== null
                         &&
                         !empty(
-                            $destaque[
+                            $banner[
                                 'url_imagem'
                             ]
                         )
@@ -359,15 +373,15 @@ $ativo =
                         <img
                             id="imagem-preview"
                             src="<?= BASE_URL
-                                . $destaque[
+                                . $banner[
                                     'url_imagem'
                                 ] ?>"
                             alt="<?= htmlspecialchars(
                                 (string) (
-                                    $destaque[
+                                    $banner[
                                         'texto_alternativo'
                                     ]
-                                    ?? 'Imagem de destaque'
+                                    ?? 'Pré-visualização do banner'
                                 ),
                                 ENT_QUOTES,
                                 'UTF-8'
@@ -425,23 +439,13 @@ $ativo =
                 </div>
 
 
-                <div
-                    class="form-text mb-2"
-                >
+                <div class="form-text mb-2">
 
                     Arraste a imagem dentro da área
                     para ajustar o enquadramento.
 
-                    Você pode mover para cima,
-                    para baixo, para a esquerda
-                    e para a direita.
-
                 </div>
 
-
-                <!-- =================================
-                     CENTRALIZAR
-                ================================== -->
 
                 <button
                     type="button"
@@ -467,9 +471,7 @@ $ativo =
                 </button>
 
 
-                <!-- =================================
-                     UPLOAD
-                ================================== -->
+                <!-- UPLOAD -->
 
                 <input
                     type="file"
@@ -485,7 +487,7 @@ $ativo =
                         image/png,
                         image/webp
                     "
-                    <?= $destaque
+                    <?= $banner
                         ? ''
                         : 'required'
                     ?>
@@ -501,7 +503,7 @@ $ativo =
                     5 MB.
 
                     <?php if (
-                        $destaque
+                        $banner
                     ): ?>
 
                         Envie uma nova imagem
@@ -512,26 +514,19 @@ $ativo =
                 </div>
 
 
-                <!-- =================================
-                     EXCLUIR
-                ================================== -->
+                <!-- EXCLUIR -->
 
                 <?php if (
-                    $destaque !== null
+                    $banner !== null
                     &&
                     !empty(
-                        $destaque[
+                        $banner[
                             'url_imagem'
                         ]
                     )
                 ): ?>
 
-                    <div
-                        class="
-                            form-check
-                            mt-3
-                        "
-                    >
+                    <div class="form-check mt-3">
 
                         <input
                             class="form-check-input"
@@ -572,7 +567,7 @@ $ativo =
                     type="submit"
                 >
 
-                    <?= $destaque
+                    <?= $banner
                         ? 'Atualizar'
                         : 'Salvar'
                     ?>
@@ -581,7 +576,7 @@ $ativo =
 
 
                 <a
-                    href="<?= BASE_URL ?>/admin/destaques"
+                    href="<?= BASE_URL ?>/admin/banners-home"
                     class="
                         btn
                         btn-secondary
@@ -762,7 +757,7 @@ document.addEventListener(
 
 
             imagem.alt =
-                'Pré-visualização da imagem de destaque';
+                'Pré-visualização do banner';
 
 
             imagem.draggable =
