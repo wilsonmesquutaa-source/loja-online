@@ -21,7 +21,6 @@ final class ProdutoController extends Controller
             require APP_ROOT
             . '/database/conexao.php';
 
-
         $sql = "
             SELECT
                 produtos.*,
@@ -51,12 +50,10 @@ final class ProdutoController extends Controller
                 produtos.id DESC
         ";
 
-
         $produtos =
             $pdo
-            ->query($sql)
-            ->fetchAll();
-
+                ->query($sql)
+                ->fetchAll();
 
         $this->view(
             'admin/produtos',
@@ -83,17 +80,15 @@ final class ProdutoController extends Controller
             require APP_ROOT
             . '/database/conexao.php';
 
-
         $categorias =
             $pdo
-            ->query("
-                SELECT *
-                FROM categorias
-                WHERE ativo = 1
-                ORDER BY nome ASC
-            ")
-            ->fetchAll();
-
+                ->query("
+                    SELECT *
+                    FROM categorias
+                    WHERE ativo = 1
+                    ORDER BY nome ASC
+                ")
+                ->fetchAll();
 
         $this->view(
             'admin/produto-form',
@@ -126,13 +121,11 @@ final class ProdutoController extends Controller
             require APP_ROOT
             . '/database/conexao.php';
 
-
         $categoriaId =
             (int) (
                 $_POST['categoria_id']
                 ?? 0
             );
-
 
         $nome =
             trim(
@@ -142,7 +135,6 @@ final class ProdutoController extends Controller
                 )
             );
 
-
         $slug =
             trim(
                 (string) (
@@ -151,7 +143,6 @@ final class ProdutoController extends Controller
                 )
             );
 
-
         $descricao =
             trim(
                 (string) (
@@ -159,7 +150,6 @@ final class ProdutoController extends Controller
                     ?? ''
                 )
             );
-
 
         $estoque =
             max(
@@ -170,36 +160,41 @@ final class ProdutoController extends Controller
                 )
             );
 
+        $posicaoX =
+            $this->normalizarPosicao(
+                $_POST['posicao_x']
+                ?? 50
+            );
 
-        if (
-            $categoriaId <= 0
-        ) {
+        $posicaoY =
+            $this->normalizarPosicao(
+                $_POST['posicao_y']
+                ?? 50
+            );
 
+        $escala =
+            $this->normalizarEscala(
+                $_POST['escala']
+                ?? 1.20
+            );
+
+        if ($categoriaId <= 0) {
             exit(
                 'Selecione uma categoria.'
             );
         }
 
-
-        if (
-            $nome === ''
-        ) {
-
+        if ($nome === '') {
             exit(
                 'Informe o nome do produto.'
             );
         }
 
-
-        if (
-            $slug === ''
-        ) {
-
+        if ($slug === '') {
             exit(
                 'Informe o slug do produto.'
             );
         }
-
 
         $sql = "
             INSERT INTO produtos
@@ -220,12 +215,10 @@ final class ProdutoController extends Controller
             )
         ";
 
-
         $stmt =
             $pdo->prepare(
                 $sql
             );
-
 
         $stmt->execute([
             ':categoria_id' =>
@@ -246,11 +239,9 @@ final class ProdutoController extends Controller
                 $estoque,
         ]);
 
-
         $produtoId =
             (int)
-            $pdo->lastInsertId();
-
+                $pdo->lastInsertId();
 
         /*
         =================================
@@ -263,16 +254,15 @@ final class ProdutoController extends Controller
                 'imagem'
             )
         ) {
-
             $this->salvarImagemProduto(
                 $pdo,
                 $produtoId,
                 $nome,
-                50.00,
-                50.00
+                $posicaoX,
+                $posicaoY,
+                $escala
             );
         }
-
 
         $this->redirecionar(
             '/admin/produtos'
@@ -294,7 +284,6 @@ final class ProdutoController extends Controller
             require APP_ROOT
             . '/database/conexao.php';
 
-
         $stmt =
             $pdo->prepare("
                 SELECT *
@@ -303,37 +292,29 @@ final class ProdutoController extends Controller
                 LIMIT 1
             ");
 
-
         $stmt->execute([
             ':id' =>
                 $id,
         ]);
 
-
         $produto =
             $stmt->fetch();
 
-
-        if (
-            $produto === false
-        ) {
-
+        if ($produto === false) {
             $this->redirecionar(
                 '/admin/produtos'
             );
         }
 
-
         $categorias =
             $pdo
-            ->query("
-                SELECT *
-                FROM categorias
-                WHERE ativo = 1
-                ORDER BY nome ASC
-            ")
-            ->fetchAll();
-
+                ->query("
+                    SELECT *
+                    FROM categorias
+                    WHERE ativo = 1
+                    ORDER BY nome ASC
+                ")
+                ->fetchAll();
 
         $stmtImagem =
             $pdo->prepare("
@@ -345,7 +326,8 @@ final class ProdutoController extends Controller
                     principal,
                     ordem,
                     posicao_x,
-                    posicao_y
+                    posicao_y,
+                    escala
                 FROM produto_imagens
                 WHERE produto_id = :produto_id
                 AND principal = 1
@@ -355,25 +337,18 @@ final class ProdutoController extends Controller
                 LIMIT 1
             ");
 
-
         $stmtImagem->execute([
             ':produto_id' =>
                 $id,
         ]);
 
-
         $imagemProduto =
             $stmtImagem->fetch();
 
-
-        if (
-            $imagemProduto === false
-        ) {
-
+        if ($imagemProduto === false) {
             $imagemProduto =
                 null;
         }
-
 
         $this->view(
             'admin/produto-form',
@@ -408,7 +383,6 @@ final class ProdutoController extends Controller
             require APP_ROOT
             . '/database/conexao.php';
 
-
         $stmtExiste =
             $pdo->prepare("
                 SELECT
@@ -419,33 +393,25 @@ final class ProdutoController extends Controller
                 LIMIT 1
             ");
 
-
         $stmtExiste->execute([
             ':id' =>
                 $id,
         ]);
 
-
         $produtoExistente =
             $stmtExiste->fetch();
 
-
-        if (
-            $produtoExistente === false
-        ) {
-
+        if ($produtoExistente === false) {
             $this->redirecionar(
                 '/admin/produtos'
             );
         }
-
 
         $categoriaId =
             (int) (
                 $_POST['categoria_id']
                 ?? 0
             );
-
 
         $nome =
             trim(
@@ -455,7 +421,6 @@ final class ProdutoController extends Controller
                 )
             );
 
-
         $slug =
             trim(
                 (string) (
@@ -464,7 +429,6 @@ final class ProdutoController extends Controller
                 )
             );
 
-
         $descricao =
             trim(
                 (string) (
@@ -472,7 +436,6 @@ final class ProdutoController extends Controller
                     ?? ''
                 )
             );
-
 
         $estoque =
             max(
@@ -483,13 +446,11 @@ final class ProdutoController extends Controller
                 )
             );
 
-
         $posicaoX =
             $this->normalizarPosicao(
                 $_POST['posicao_x']
                 ?? 50
             );
-
 
         $posicaoY =
             $this->normalizarPosicao(
@@ -497,36 +458,29 @@ final class ProdutoController extends Controller
                 ?? 50
             );
 
+        $escala =
+            $this->normalizarEscala(
+                $_POST['escala']
+                ?? 1.20
+            );
 
-        if (
-            $categoriaId <= 0
-        ) {
-
+        if ($categoriaId <= 0) {
             exit(
                 'Selecione uma categoria.'
             );
         }
 
-
-        if (
-            $nome === ''
-        ) {
-
+        if ($nome === '') {
             exit(
                 'Informe o nome do produto.'
             );
         }
 
-
-        if (
-            $slug === ''
-        ) {
-
+        if ($slug === '') {
             exit(
                 'Informe o slug do produto.'
             );
         }
-
 
         $sql = "
             UPDATE produtos
@@ -539,12 +493,10 @@ final class ProdutoController extends Controller
             WHERE id = :id
         ";
 
-
         $stmt =
             $pdo->prepare(
                 $sql
             );
-
 
         $stmt->execute([
             ':categoria_id' =>
@@ -568,53 +520,49 @@ final class ProdutoController extends Controller
                 $id,
         ]);
 
-
         /*
         =================================
-        EXCLUI IMAGEM
+        IMAGEM
         =================================
         */
 
-        if (
+        $novaImagem =
+            $this->possuiUpload(
+                'imagem'
+            );
+
+        $removerImagem =
             isset(
                 $_POST['excluir_imagem']
             )
             &&
             (string)
                 $_POST['excluir_imagem']
-                === '1'
-        ) {
+                === '1';
 
-            $this->excluirImagemPrincipal(
-                $pdo,
-                $id
-            );
-
-        } elseif (
-            $this->possuiUpload(
-                'imagem'
-            )
-        ) {
-
-            /*
-            -----------------------------
-            NOVA IMAGEM
-            -----------------------------
-            */
+        if ($novaImagem) {
 
             $this->salvarImagemProduto(
                 $pdo,
                 $id,
                 $nome,
                 $posicaoX,
-                $posicaoY
+                $posicaoY,
+                $escala
+            );
+
+        } elseif ($removerImagem) {
+
+            $this->excluirImagemPrincipal(
+                $pdo,
+                $id
             );
 
         } else {
 
             /*
             -----------------------------
-            APENAS POSICIONAMENTO
+            APENAS ENQUADRAMENTO
             -----------------------------
             */
 
@@ -623,12 +571,12 @@ final class ProdutoController extends Controller
                     UPDATE produto_imagens
                     SET
                         posicao_x = :posicao_x,
-                        posicao_y = :posicao_y
+                        posicao_y = :posicao_y,
+                        escala = :escala
                     WHERE produto_id =
                         :produto_id
                     AND principal = 1
                 ");
-
 
             $stmtImagem->execute([
                 ':posicao_x' =>
@@ -637,11 +585,13 @@ final class ProdutoController extends Controller
                 ':posicao_y' =>
                     $posicaoY,
 
+                ':escala' =>
+                    $escala,
+
                 ':produto_id' =>
                     $id,
             ]);
         }
-
 
         $this->redirecionar(
             '/admin/produtos'
@@ -663,7 +613,6 @@ final class ProdutoController extends Controller
             require APP_ROOT
             . '/database/conexao.php';
 
-
         $stmt =
             $pdo->prepare(
                 "
@@ -672,12 +621,10 @@ final class ProdutoController extends Controller
                 "
             );
 
-
         $stmt->execute([
             ':id' =>
                 $id,
         ]);
-
 
         $this->redirecionar(
             '/admin/produtos'
@@ -700,25 +647,44 @@ final class ProdutoController extends Controller
                 ? (float) $valor
                 : 50.00;
 
-
-        if (
-            $valor < 0
-        ) {
-
+        if ($valor < 0) {
             return 0.00;
         }
 
-
-        if (
-            $valor > 100
-        ) {
-
+        if ($valor > 100) {
             return 100.00;
         }
 
-
         return round(
             $valor,
+            2
+        );
+    }
+
+
+    /*
+    =================================
+    NORMALIZA ESCALA
+    =================================
+    */
+
+    private function normalizarEscala(
+        $valor
+    ): float {
+
+        $valor =
+            is_numeric($valor)
+                ? (float) $valor
+                : 1.20;
+
+        return round(
+            min(
+                max(
+                    $valor,
+                    1.05
+                ),
+                2.00
+            ),
             2
         );
     }
@@ -743,8 +709,7 @@ final class ProdutoController extends Controller
         )
         &&
         (
-            (int)
-            (
+            (int) (
                 $_FILES[$campo]['error']
                 ?? UPLOAD_ERR_NO_FILE
             )
@@ -764,7 +729,8 @@ final class ProdutoController extends Controller
         int $produtoId,
         string $nomeProduto,
         float $posicaoX,
-        float $posicaoY
+        float $posicaoY,
+        float $escala
     ): void {
 
         if (
@@ -772,16 +738,13 @@ final class ProdutoController extends Controller
                 $_FILES['imagem']
             )
         ) {
-
             throw new RuntimeException(
                 'Nenhuma imagem foi recebida.'
             );
         }
 
-
         $arquivo =
             $_FILES['imagem'];
-
 
         $erro =
             (int) (
@@ -789,16 +752,11 @@ final class ProdutoController extends Controller
                 ?? UPLOAD_ERR_NO_FILE
             );
 
-
-        if (
-            $erro !== UPLOAD_ERR_OK
-        ) {
-
+        if ($erro !== UPLOAD_ERR_OK) {
             throw new RuntimeException(
                 'Não foi possível enviar a imagem.'
             );
         }
-
 
         $tamanho =
             (int) (
@@ -806,25 +764,21 @@ final class ProdutoController extends Controller
                 ?? 0
             );
 
-
         if (
             $tamanho <= 0
             ||
             $tamanho > 5 * 1024 * 1024
         ) {
-
             throw new RuntimeException(
                 'A imagem deve possuir no máximo 5 MB.'
             );
         }
-
 
         $arquivoTemporario =
             (string) (
                 $arquivo['tmp_name']
                 ?? ''
             );
-
 
         if (
             $arquivoTemporario === ''
@@ -833,24 +787,20 @@ final class ProdutoController extends Controller
                 $arquivoTemporario
             )
         ) {
-
             throw new RuntimeException(
                 'Upload de imagem inválido.'
             );
         }
-
 
         $finfo =
             new \finfo(
                 FILEINFO_MIME_TYPE
             );
 
-
         $mime =
             $finfo->file(
                 $arquivoTemporario
             );
-
 
         $extensoesPermitidas = [
             'image/jpeg' =>
@@ -863,7 +813,6 @@ final class ProdutoController extends Controller
                 'webp',
         ];
 
-
         if (
             !isset(
                 $extensoesPermitidas[
@@ -871,33 +820,25 @@ final class ProdutoController extends Controller
                 ]
             )
         ) {
-
             throw new RuntimeException(
                 'Formato de imagem não permitido. Use JPG, PNG ou WEBP.'
             );
         }
-
 
         $dimensoes =
             @getimagesize(
                 $arquivoTemporario
             );
 
-
-        if (
-            $dimensoes === false
-        ) {
-
+        if ($dimensoes === false) {
             throw new RuntimeException(
                 'O arquivo enviado não é uma imagem válida.'
             );
         }
 
-
         $pasta =
             APP_ROOT
             . '/public/assets/uploads/produtos';
-
 
         if (
             !is_dir($pasta)
@@ -910,12 +851,10 @@ final class ProdutoController extends Controller
             &&
             !is_dir($pasta)
         ) {
-
             throw new RuntimeException(
                 'Não foi possível criar a pasta de imagens dos produtos.'
             );
         }
-
 
         $nomeArquivo =
             'produto_'
@@ -929,12 +868,10 @@ final class ProdutoController extends Controller
                 $mime
             ];
 
-
         $destino =
             $pasta
             . '/'
             . $nomeArquivo;
-
 
         if (
             !move_uploaded_file(
@@ -942,29 +879,29 @@ final class ProdutoController extends Controller
                 $destino
             )
         ) {
-
             throw new RuntimeException(
                 'Não foi possível salvar a imagem.'
             );
         }
 
-
         $urlImagem =
             '/assets/uploads/produtos/'
             . $nomeArquivo;
-
 
         $posicaoX =
             $this->normalizarPosicao(
                 $posicaoX
             );
 
-
         $posicaoY =
             $this->normalizarPosicao(
                 $posicaoY
             );
 
+        $escala =
+            $this->normalizarEscala(
+                $escala
+            );
 
         try {
 
@@ -985,16 +922,13 @@ final class ProdutoController extends Controller
                     AND principal = 1
                 ");
 
-
             $stmtAntigas->execute([
                 ':produto_id' =>
                     $produtoId,
             ]);
 
-
             $imagensAntigas =
                 $stmtAntigas->fetchAll();
-
 
             /*
             -----------------------------
@@ -1006,7 +940,6 @@ final class ProdutoController extends Controller
                 $imagensAntigas
                 as $imagemAntiga
             ) {
-
                 $arquivoAntigo =
                     APP_ROOT
                     . '/public'
@@ -1014,19 +947,16 @@ final class ProdutoController extends Controller
                         'url_imagem'
                     ];
 
-
                 if (
                     is_file(
                         $arquivoAntigo
                     )
                 ) {
-
                     @unlink(
                         $arquivoAntigo
                     );
                 }
             }
-
 
             /*
             -----------------------------
@@ -1042,12 +972,10 @@ final class ProdutoController extends Controller
                     AND principal = 1
                 ");
 
-
             $stmtExcluir->execute([
                 ':produto_id' =>
                     $produtoId,
             ]);
-
 
             /*
             -----------------------------
@@ -1065,7 +993,8 @@ final class ProdutoController extends Controller
                         principal,
                         ordem,
                         posicao_x,
-                        posicao_y
+                        posicao_y,
+                        escala
                     )
                     VALUES
                     (
@@ -1075,10 +1004,10 @@ final class ProdutoController extends Controller
                         1,
                         1,
                         :posicao_x,
-                        :posicao_y
+                        :posicao_y,
+                        :escala
                     )
                 ");
-
 
             $stmtImagem->execute([
                 ':produto_id' =>
@@ -1096,6 +1025,9 @@ final class ProdutoController extends Controller
 
                 ':posicao_y' =>
                     $posicaoY,
+
+                ':escala' =>
+                    $escala,
             ]);
 
         } catch (
@@ -1107,7 +1039,6 @@ final class ProdutoController extends Controller
                     $destino
                 )
             ) {
-
                 @unlink(
                     $destino
                 );
@@ -1141,42 +1072,32 @@ final class ProdutoController extends Controller
                 LIMIT 1
             ");
 
-
         $stmt->execute([
             ':produto_id' =>
                 $produtoId,
         ]);
 
-
         $imagem =
             $stmt->fetch();
 
-
-        if (
-            $imagem === false
-        ) {
-
+        if ($imagem === false) {
             return;
         }
-
 
         $arquivo =
             APP_ROOT
             . '/public'
             . $imagem['url_imagem'];
 
-
         if (
             is_file(
                 $arquivo
             )
         ) {
-
             @unlink(
                 $arquivo
             );
         }
-
 
         $stmtExcluir =
             $pdo->prepare("
@@ -1184,12 +1105,10 @@ final class ProdutoController extends Controller
                 WHERE id = :id
             ");
 
-
         $stmtExcluir->execute([
             ':id' =>
                 (int)
-                $imagem['id'],
+                    $imagem['id'],
         ]);
     }
 }
-

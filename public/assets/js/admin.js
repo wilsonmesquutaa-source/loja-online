@@ -532,3 +532,32 @@ document.addEventListener(
 
     }
 );
+
+/* Menu de opções do administrador */
+document.addEventListener('DOMContentLoaded', function () {
+    const botao = document.getElementById('adminUserToggle');
+    const painel = document.getElementById('adminUserDropdown');
+    if (!botao || !painel) return;
+    const menu = botao.closest('.admin-user-menu');
+    const fechar = function () {
+        painel.hidden = true;
+        botao.setAttribute('aria-expanded', 'false');
+    };
+    botao.addEventListener('click', function () {
+        const abrir = painel.hidden;
+        painel.hidden = !abrir;
+        botao.setAttribute('aria-expanded', String(abrir));
+    });
+    document.addEventListener('click', function (evento) {
+        if (!menu.contains(evento.target)) fechar();
+    });
+    document.addEventListener('keydown', function (evento) {
+        if (evento.key === 'Escape' && !painel.hidden) {
+            fechar();
+            botao.focus();
+        }
+    });
+    menu.addEventListener('focusout', function (evento) {
+        if (!menu.contains(evento.relatedTarget)) fechar();
+    });
+});

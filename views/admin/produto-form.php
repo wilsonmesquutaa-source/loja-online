@@ -2,1014 +2,735 @@
 
 declare(strict_types=1);
 
-require APP_ROOT
-    . '/views/layouts/admin-header.php';
-
-$produto =
-    $produto ?? null;
-
-$imagemProduto =
-    $imagemProduto ?? null;
-
+$produto = $produto ?? null;
+$imagemProduto = $imagemProduto ?? null;
+$categorias = $categorias ?? [];
 
 $posicaoX =
     $imagemProduto !== null
-    && isset(
-        $imagemProduto['posicao_x']
-    )
-        ? (float)
-            $imagemProduto['posicao_x']
-        : 50.00;
-
+    && isset($imagemProduto['posicao_x'])
+    ? (float) $imagemProduto['posicao_x']
+    : 50.00;
 
 $posicaoY =
     $imagemProduto !== null
-    && isset(
-        $imagemProduto['posicao_y']
-    )
-        ? (float)
-            $imagemProduto['posicao_y']
-        : 50.00;
+    && isset($imagemProduto['posicao_y'])
+    ? (float) $imagemProduto['posicao_y']
+    : 50.00;
+
+$escala =
+    $imagemProduto !== null
+    && isset($imagemProduto['escala'])
+    ? (float) $imagemProduto['escala']
+    : 1.20;
+
+$escala = min(
+    max(
+        $escala,
+        1.05
+    ),
+    2.00
+);
+
+$excedente =
+    ($escala - 1)
+    * 100;
+
+$imagemLeft =
+    - ($posicaoX / 100)
+        * $excedente;
+
+$imagemTop =
+    - ($posicaoY / 100)
+        * $excedente;
+
+require APP_ROOT
+    . '/views/layouts/admin-header.php';
 
 ?>
 
-<main class="admin-container">
+<main class="admin-container produto-editor-admin">
 
-    <section class="card-admin p-4">
+    <section class="produto-editor-cabecalho">
 
+        <div>
 
-        <div class="mb-4">
+            <a
+                href="<?= BASE_URL ?>/admin/produtos"
+                class="detalhe-voltar">
+                <i
+                    class="bi bi-arrow-left"
+                    aria-hidden="true"></i>
 
-            <h1 class="h3 mb-1">
+                Voltar aos produtos
+            </a>
+
+            <span class="produto-editor-sobretitulo">
 
                 <?= $produto
-                    ? 'Editar Produto'
-                    : 'Novo Produto'
+                    ? 'Edição de produto'
+                    : 'Novo produto'
+                ?>
+
+            </span>
+
+            <h1>
+
+                <?= $produto
+                    ? 'Editar produto'
+                    : 'Criar produto'
                 ?>
 
             </h1>
 
-
-            <p class="text-muted mb-0">
+            <p>
 
                 <?= $produto
-                    ? 'Atualize os dados do produto.'
-                    : 'Cadastre um novo produto.'
+                    ? 'Atualize as informações, estoque e apresentação deste produto.'
+                    : 'Cadastre um novo item para disponibilizar no seu cardápio.'
                 ?>
 
             </p>
 
         </div>
 
+        <span class="produto-editor-etapa">
 
-        <form
-            method="POST"
-            enctype="multipart/form-data"
-            action="<?= BASE_URL ?><?= $produto
-                ? '/admin/produtos/atualizar/'
-                    . $produto['id']
-                : '/admin/produtos/salvar'
-            ?>"
-        >
+            <i
+                class="bi bi-box-seam"
+                aria-hidden="true"></i>
 
+            Produtos
 
-            <!-- CSRF -->
+        </span>
 
-            <?php if (
-                isset($csrfToken)
-            ): ?>
-
-                <input
-                    type="hidden"
-                    name="_token"
-                    value="<?= htmlspecialchars(
-                        $csrfToken,
-                        ENT_QUOTES,
-                        'UTF-8'
-                    ) ?>"
-                >
-
-            <?php endif; ?>
+    </section>
 
 
-            <!-- POSIÇÃO DA IMAGEM -->
+    <form
+        class="produto-editor-formulario"
+        method="POST"
+        enctype="multipart/form-data"
+        action="<?= BASE_URL ?><?= $produto
+                                    ? '/admin/produtos/atualizar/' . (int) $produto['id']
+                                    : '/admin/produtos/salvar'
+                                ?>">
+
+        <?php if (isset($csrfToken)): ?>
 
             <input
                 type="hidden"
-                name="posicao_x"
-                id="posicao_x"
+                name="_token"
                 value="<?= htmlspecialchars(
-                    (string)
-                    $posicaoX,
-                    ENT_QUOTES,
-                    'UTF-8'
-                ) ?>"
-            >
+                            $csrfToken,
+                            ENT_QUOTES,
+                            'UTF-8'
+                        ) ?>">
+
+        <?php endif; ?>
 
 
-            <input
-                type="hidden"
-                name="posicao_y"
-                id="posicao_y"
-                value="<?= htmlspecialchars(
-                    (string)
-                    $posicaoY,
-                    ENT_QUOTES,
-                    'UTF-8'
-                ) ?>"
-            >
-
-
-            <!-- CATEGORIA -->
-
-            <div class="mb-3">
-
-                <label
-                    class="form-label"
-                    for="categoria_id"
-                >
-                    Categoria
-                </label>
-
-
-                <select
-                    name="categoria_id"
-                    id="categoria_id"
-                    class="form-control"
-                    required
-                >
-
-                    <option value="">
-                        Selecione uma categoria
-                    </option>
-
-
-                    <?php foreach (
-                        $categorias
-                        as $categoria
-                    ): ?>
-
-                        <option
-                            value="<?= (int)
-                                $categoria['id'] ?>"
-                            <?= $produto
-                                &&
-                                (int)
-                                    $produto[
-                                        'categoria_id'
-                                    ]
-                                    ===
-                                    (int)
-                                    $categoria['id']
-                                    ? 'selected'
-                                    : ''
-                            ?>
-                        >
-
-                            <?= htmlspecialchars(
-                                $categoria['nome'],
-                                ENT_QUOTES,
-                                'UTF-8'
-                            ) ?>
-
-                        </option>
-
-                    <?php endforeach; ?>
-
-                </select>
-
-            </div>
-
-
-            <!-- NOME -->
-
-            <div class="mb-3">
-
-                <label
-                    class="form-label"
-                    for="nome"
-                >
-                    Nome
-                </label>
-
-
-                <input
-                    type="text"
-                    name="nome"
-                    id="nome"
-                    class="form-control"
-                    required
-                    maxlength="150"
-                    value="<?= htmlspecialchars(
-                        $produto['nome'] ?? '',
+        <input
+            type="hidden"
+            name="posicao_x"
+            id="posicao_x"
+            value="<?= htmlspecialchars(
+                        (string) $posicaoX,
                         ENT_QUOTES,
                         'UTF-8'
-                    ) ?>"
-                >
-
-            </div>
+                    ) ?>">
 
 
-            <!-- SLUG -->
-
-            <div class="mb-3">
-
-                <label
-                    class="form-label"
-                    for="slug"
-                >
-                    Slug
-                </label>
-
-
-                <input
-                    type="text"
-                    name="slug"
-                    id="slug"
-                    class="form-control"
-                    required
-                    maxlength="180"
-                    value="<?= htmlspecialchars(
-                        $produto['slug'] ?? '',
+        <input
+            type="hidden"
+            name="posicao_y"
+            id="posicao_y"
+            value="<?= htmlspecialchars(
+                        (string) $posicaoY,
                         ENT_QUOTES,
                         'UTF-8'
-                    ) ?>"
-                >
-
-            </div>
+                    ) ?>">
 
 
-            <!-- DESCRIÇÃO -->
-
-            <div class="mb-3">
-
-                <label
-                    class="form-label"
-                    for="descricao"
-                >
-                    Descrição
-                </label>
-
-
-                <textarea
-                    name="descricao"
-                    id="descricao"
-                    class="form-control"
-                    rows="4"
-                    maxlength="500"
-                ><?= htmlspecialchars(
-                    $produto['descricao'] ?? '',
-                    ENT_QUOTES,
-                    'UTF-8'
-                ) ?></textarea>
-
-            </div>
-
-
-            <!-- ESTOQUE -->
-
-            <div class="mb-3">
-
-                <label
-                    class="form-label"
-                    for="estoque"
-                >
-                    Estoque
-                </label>
-
-
-                <input
-                    type="number"
-                    name="estoque"
-                    id="estoque"
-                    class="form-control"
-                    min="0"
-                    step="1"
-                    value="<?= htmlspecialchars(
-                        (string)
-                        (
-                            $produto['estoque']
-                            ?? 0
+        <input
+            type="hidden"
+            name="escala"
+            id="escala"
+            value="<?= htmlspecialchars(
+                        number_format(
+                            $escala,
+                            2,
+                            '.',
+                            ''
                         ),
                         ENT_QUOTES,
                         'UTF-8'
-                    ) ?>"
-                >
-
-            </div>
+                    ) ?>">
 
 
-            <!-- =================================
-                 IMAGEM
-            ================================== -->
+        <!-- ==================================
+             INFORMAÇÕES DO PRODUTO
+        =================================== -->
 
-            <div class="mb-4">
+        <section
+            class="
+                produto-editor-painel
+                produto-editor-dados
+            ">
+
+            <header>
+
+                <span>
+                    <i
+                        class="bi bi-pencil-square"
+                        aria-hidden="true"></i>
+                </span>
+
+                <div>
+
+                    <h2>
+                        Informações do produto
+                    </h2>
+
+                    <p>
+                        Dados exibidos no catálogo e no cardápio.
+                    </p>
+
+                </div>
+
+            </header>
+
+
+            <div class="produto-editor-campos">
 
                 <label
-                    for="imagem"
-                    class="form-label"
-                >
-                    Imagem do produto
+                    class="
+                        produto-editor-campo
+                        produto-editor-campo--total
+                    ">
+
+                    <span>
+                        Categoria
+                    </span>
+
+                    <select
+                        name="categoria_id"
+                        id="categoria_id"
+                        required>
+
+                        <option value="">
+                            Selecione uma categoria
+                        </option>
+
+                        <?php foreach ($categorias as $categoria): ?>
+
+                            <option
+                                value="<?= (int) $categoria['id'] ?>"
+                                <?= $produto
+                                    && (int) $produto['categoria_id']
+                                    === (int) $categoria['id']
+                                    ? ' selected'
+                                    : ''
+                                ?>>
+
+                                <?= htmlspecialchars(
+                                    $categoria['nome'],
+                                    ENT_QUOTES,
+                                    'UTF-8'
+                                ) ?>
+
+                            </option>
+
+                        <?php endforeach; ?>
+
+                    </select>
+
                 </label>
 
 
+                <label class="produto-editor-campo">
+
+                    <span>
+                        Nome
+                    </span>
+
+                    <input
+                        type="text"
+                        name="nome"
+                        id="nome"
+                        required
+                        maxlength="150"
+                        value="<?= htmlspecialchars(
+                                    $produto['nome'] ?? '',
+                                    ENT_QUOTES,
+                                    'UTF-8'
+                                ) ?>">
+
+                </label>
+
+
+                <label class="produto-editor-campo">
+
+                    <span>
+                        Slug
+                    </span>
+
+                    <input
+                        type="text"
+                        name="slug"
+                        id="slug"
+                        required
+                        maxlength="180"
+                        value="<?= htmlspecialchars(
+                                    $produto['slug'] ?? '',
+                                    ENT_QUOTES,
+                                    'UTF-8'
+                                ) ?>">
+
+                </label>
+
+
+                <label
+                    class="
+                        produto-editor-campo
+                        produto-editor-campo--total
+                    ">
+
+                    <span>
+                        Descrição
+                    </span>
+
+                    <textarea
+                        name="descricao"
+                        id="descricao"
+                        rows="4"
+                        maxlength="500"><?= htmlspecialchars(
+                                            $produto['descricao'] ?? '',
+                                            ENT_QUOTES,
+                                            'UTF-8'
+                                        ) ?></textarea>
+
+                </label>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================================
+             ESTOQUE
+        =================================== -->
+
+        <section
+            class="
+                produto-editor-painel
+                produto-editor-estoque
+            ">
+
+            <header>
+
+                <span>
+                    <i
+                        class="bi bi-box2-heart"
+                        aria-hidden="true"></i>
+                </span>
+
+                <div>
+
+                    <h2>
+                        Estoque
+                    </h2>
+
+                    <p>
+                        Controle a quantidade disponível.
+                    </p>
+
+                </div>
+
+            </header>
+
+
+            <div
+                class="
+                    produto-editor-campos
+                    produto-editor-campos--estoque
+                ">
+
+                <label class="produto-editor-campo">
+
+                    <span>
+                        Quantidade em estoque
+                    </span>
+
+                    <input
+                        type="number"
+                        name="estoque"
+                        id="estoque"
+                        min="0"
+                        step="1"
+                        value="<?= htmlspecialchars(
+                                    (string) (
+                                        $produto['estoque']
+                                        ?? 0
+                                    ),
+                                    ENT_QUOTES,
+                                    'UTF-8'
+                                ) ?>">
+
+                    <small>
+                        Informe quantas unidades estão disponíveis.
+                    </small>
+
+                </label>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================================
+             IMAGEM
+        =================================== -->
+
+        <section
+            class="
+                produto-editor-painel
+                produto-editor-imagem-painel
+            ">
+
+            <header>
+
+                <span>
+                    <i
+                        class="bi bi-image-fill"
+                        aria-hidden="true"></i>
+                </span>
+
+                <div>
+
+                    <h2>
+                        Imagem do produto
+                    </h2>
+
+                    <p>
+                        Escolha a imagem e ajuste exatamente a área que será exibida para o cliente.
+                    </p>
+
+                </div>
+
+            </header>
+
+
+            <div class="produto-imagem-editor">
+
+                <!-- PALCO -->
+
                 <div
-                    id="imagem-preview-container"
-                    style="
-                        position: relative;
-                        width: 100%;
-                        max-width: 420px;
-                        height: 220px;
-                        margin-bottom: 12px;
-                        border-radius: 14px;
-                        overflow: hidden;
-                        background: #f8fafc;
-                        border: 1px dashed #cbd5e1;
-                        cursor: default;
-                        user-select: none;
-                        touch-action: none;
-                    "
-                >
+                    class="produto-imagem-palco"
+                    id="imagem-palco">
 
                     <?php if (
                         $imagemProduto !== null
-                        &&
-                        !empty(
-                            $imagemProduto[
-                                'url_imagem'
-                            ]
-                        )
+                        && !empty($imagemProduto['url_imagem'])
                     ): ?>
 
                         <img
-                            id="imagem-preview"
-                            src="<?= BASE_URL
-                                . $imagemProduto[
-                                    'url_imagem'
-                                ] ?>"
-                            alt="Pré-visualização do produto"
-                            draggable="false"
-                            style="
-                                width: 100%;
-                                height: 100%;
-                                display: block;
-                                object-fit: cover;
-                                object-position:
-                                    <?= (float)
-                                        $posicaoX ?>%
-                                    <?= (float)
-                                        $posicaoY ?>%;
-                                pointer-events: none;
-                            "
-                        >
+                            id="imagem-guia"
+                            class="produto-imagem-guia" src="<?= BASE_URL
+                                                                    . htmlspecialchars(
+                                                                        $imagemProduto['url_imagem'],
+                                                                        ENT_QUOTES,
+                                                                        'UTF-8'
+                                                                    )
+                                                                ?>"
+                            alt=""
+                            aria-hidden="true">
 
-                    <?php else: ?>
+                    <?php endif; ?>
 
-                        <div
-                            id="imagem-preview-placeholder"
-                            style="
-                                width: 100%;
-                                height: 100%;
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                flex-direction: column;
-                                gap: 8px;
-                                color: #94a3b8;
-                            "
-                        >
+
+                    <div
+                        class="produto-imagem-preview" id="imagem-preview-container">
+
+                        <?php if (
+                            $imagemProduto !== null
+                            && !empty($imagemProduto['url_imagem'])
+                        ): ?>
+
+                            <img
+                                id="imagem-preview"
+                                src="<?= BASE_URL
+                                            . htmlspecialchars(
+                                                $imagemProduto['url_imagem'],
+                                                ENT_QUOTES,
+                                                'UTF-8'
+                                            )
+                                        ?>"
+                                alt="Pré-visualização do produto"
+                                draggable="false"
+                                style="
+                                    object-position:
+                                        <?= (float) $posicaoX ?>%
+                                        <?= (float) $posicaoY ?>%;
+                                    width:
+                                        <?= $escala * 100 ?>%;
+                                    height:
+                                        <?= $escala * 100 ?>%;
+                                    left:
+                                        <?= $imagemLeft ?>%;
+                                    top:
+                                        <?= $imagemTop ?>%;
+                                ">
+
+                        <?php else: ?>
+
+                            <div
+                                id="imagem-preview-placeholder"
+                                class="produto-imagem-placeholder">
+
+                                <i
+                                    class="bi bi-image"
+                                    aria-hidden="true"></i>
+
+                                <strong>
+                                    Nenhuma imagem selecionada
+                                </strong>
+
+                                <span>
+                                    Escolha uma imagem para visualizar aqui.
+                                </span>
+
+                            </div>
+
+                        <?php endif; ?>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CONTROLES -->
+
+                <div class="produto-imagem-opcoes">
+
+                    <div class="produto-imagem-ajuste">
+
+                        <div class="produto-imagem-instrucoes">
 
                             <i
-                                class="bi bi-image"
-                                style="
-                                    font-size: 3rem;
-                                "
-                            ></i>
+                                class="bi bi-arrows-move"
+                                aria-hidden="true"></i>
 
+                            <div>
 
-                            <span>
-                                Nenhuma imagem selecionada
-                            </span>
+                                <strong>
+                                    Ajuste o enquadramento
+                                </strong>
+
+                                <span>
+                                    Arraste a imagem ou use os controles para escolher a região exibida.
+                                </span>
+
+                            </div>
 
                         </div>
 
-                    <?php endif; ?>
 
-                </div>
+                        <div
+                            class="produto-imagem-direcoes"
+                            aria-label="Controles de posição da imagem">
 
+                            <button
+                                type="button"
+                                data-mover-imagem="cima"
+                                aria-label="Mover imagem para cima"
+                                title="Mover para cima">
 
-                <div
-                    class="form-text mb-2"
-                >
+                                <i
+                                    class="bi bi-arrow-up"
+                                    aria-hidden="true"></i>
 
-                    Escolha uma imagem e arraste dentro
-                    da área acima para ajustar o enquadramento.
+                            </button>
 
-                </div>
+                            <button
+                                type="button"
+                                data-mover-imagem="esquerda"
+                                aria-label="Mover imagem para esquerda"
+                                title="Mover para esquerda">
 
+                                <i
+                                    class="bi bi-arrow-left"
+                                    aria-hidden="true"></i>
 
-                <button
-                    type="button"
-                    class="
-                        btn
-                        btn-outline-secondary
-                        btn-sm
-                        mb-3
-                    "
-                    id="imagem-centralizar"
-                >
+                            </button>
 
-                    <i
-                        class="
-                            bi
-                            bi-arrows-fullscreen
-                            me-1
-                        "
-                    ></i>
+                            <button
+                                type="button"
+                                id="imagem-centralizar"
+                                aria-label="Centralizar imagem"
+                                title="Centralizar imagem">
 
-                    Centralizar imagem
+                                <i
+                                    class="bi bi-bullseye"
+                                    aria-hidden="true"></i>
 
-                </button>
+                            </button>
 
+                            <button
+                                type="button"
+                                data-mover-imagem="direita"
+                                aria-label="Mover imagem para direita"
+                                title="Mover para direita">
 
-                <input
-                    type="file"
-                    id="imagem"
-                    name="imagem"
-                    class="form-control"
-                    accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
-                >
+                                <i
+                                    class="bi bi-arrow-right"
+                                    aria-hidden="true"></i>
 
+                            </button>
 
-                <div class="form-text">
+                            <button
+                                type="button"
+                                data-mover-imagem="baixo"
+                                aria-label="Mover imagem para baixo"
+                                title="Mover para baixo">
 
-                    Formatos permitidos:
-                    JPG, PNG e WEBP.
-                    Tamanho máximo: 5 MB.
+                                <i
+                                    class="bi bi-arrow-down"
+                                    aria-hidden="true"></i>
 
-                    <?php if (
-                        $imagemProduto !== null
-                    ): ?>
+                            </button>
 
-                        Envie uma nova imagem para
-                        substituir a atual.
+                        </div>
 
-                    <?php endif; ?>
-
-                </div>
-
-
-                <?php if (
-                    $imagemProduto !== null
-                ): ?>
-
-                    <div
-                        class="form-check mt-3"
-                    >
-
-                        <input
-                            class="form-check-input"
-                            type="checkbox"
-                            name="excluir_imagem"
-                            value="1"
-                            id="excluir_imagem"
-                        >
+                    </div>
 
 
-                        <label
-                            class="form-check-label"
-                            for="excluir_imagem"
-                        >
+                    <div class="produto-imagem-acoes-inferiores">
 
-                            Excluir imagem atual
+                        <label class="produto-imagem-zoom">
+
+                            <span>
+                                <strong>
+                                    Tamanho da imagem
+                                </strong>
+
+                                <output id="imagem-zoom-valor">
+                                    120%
+                                </output>
+                            </span>
+
+                            <input
+                                type="range"
+                                id="imagem-zoom"
+                                min="105"
+                                max="200"
+                                step="1"
+                                value="120">
+
+                        </label>
+
+
+                        <label class="produto-upload">
+
+                            <i
+                                class="bi bi-cloud-arrow-up"
+                                aria-hidden="true"></i>
+
+                            <span>
+
+                                <strong>
+                                    Escolher imagem
+                                </strong>
+
+                                <small>
+                                    JPG, PNG ou WebP · máximo de 5 MB
+                                </small>
+
+                            </span>
+
+                            <input
+                                type="file"
+                                id="imagem"
+                                name="imagem"
+                                accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
 
                         </label>
 
                     </div>
 
-                <?php endif; ?>
+
+                    <?php if ($imagemProduto !== null): ?>
+
+                        <p class="produto-imagem-aviso">
+
+                            <i
+                                class="bi bi-info-circle"
+                                aria-hidden="true"></i>
+
+                            Envie uma nova imagem para substituir a atual.
+
+                        </p>
+
+
+                        <label class="produto-remover-imagem">
+
+                            <input
+                                type="checkbox"
+                                name="excluir_imagem"
+                                value="1"
+                                id="excluir_imagem">
+
+                            <span>
+                                Remover a imagem atual
+                            </span>
+
+                        </label>
+
+                    <?php endif; ?>
+
+                </div>
 
             </div>
 
-
-            <!-- BOTÕES -->
-
-            <div class="mt-4">
-
-                <button
-                    class="btn btn-success"
-                    type="submit"
-                >
-
-                    <?= $produto
-                        ? 'Atualizar'
-                        : 'Salvar'
-                    ?>
-
-                </button>
+        </section>
 
 
-                <a
-                    href="<?= BASE_URL ?>/admin/produtos"
-                    class="btn btn-secondary"
-                >
+        <!-- ==================================
+             AÇÕES
+        =================================== -->
 
-                    Cancelar
+        <footer class="produto-editor-acoes">
 
-                </a>
+            <a
+                href="<?= BASE_URL ?>/admin/produtos"
+                class="produto-editor-cancelar">
+                Cancelar
+            </a>
 
-            </div>
 
+            <button
+                type="submit"
+                class="produto-editor-salvar">
 
-        </form>
+                <i
+                    class="bi bi-check2"
+                    aria-hidden="true"></i>
 
-    </section>
+                <?= $produto
+                    ? 'Salvar alterações'
+                    : 'Criar produto'
+                ?>
+
+            </button>
+
+        </footer>
+
+    </form>
 
 </main>
-
-
-<script>
-
-document.addEventListener(
-    'DOMContentLoaded',
-    function () {
-
-        const campoImagem =
-            document.getElementById(
-                'imagem'
-            );
-
-
-        const previewContainer =
-            document.getElementById(
-                'imagem-preview-container'
-            );
-
-
-        const centralizarBotao =
-            document.getElementById(
-                'imagem-centralizar'
-            );
-
-
-        const campoPosicaoX =
-            document.getElementById(
-                'posicao_x'
-            );
-
-
-        const campoPosicaoY =
-            document.getElementById(
-                'posicao_y'
-            );
-
-
-        if (
-            !campoImagem ||
-            !previewContainer ||
-            !centralizarBotao ||
-            !campoPosicaoX ||
-            !campoPosicaoY
-        ) {
-
-            return;
-        }
-
-
-        let imagem =
-            document.getElementById(
-                'imagem-preview'
-            );
-
-
-        let arrastando =
-            false;
-
-
-        let inicioX =
-            0;
-
-
-        let inicioY =
-            0;
-
-
-        let posicaoXInicial =
-            parseFloat(
-                campoPosicaoX.value
-            )
-            || 50;
-
-
-        let posicaoYInicial =
-            parseFloat(
-                campoPosicaoY.value
-            )
-            || 50;
-
-
-        function limitar(
-            valor,
-            minimo,
-            maximo
-        ) {
-
-            return Math.min(
-                Math.max(
-                    valor,
-                    minimo
-                ),
-                maximo
-            );
-        }
-
-
-        function atualizarPosicao(
-            x,
-            y
-        ) {
-
-            x =
-                limitar(
-                    x,
-                    0,
-                    100
-                );
-
-
-            y =
-                limitar(
-                    y,
-                    0,
-                    100
-                );
-
-
-            campoPosicaoX.value =
-                x.toFixed(2);
-
-
-            campoPosicaoY.value =
-                y.toFixed(2);
-
-
-            if (
-                imagem
-            ) {
-
-                imagem.style.objectPosition =
-                    x
-                    + '% '
-                    + y
-                    + '%';
-            }
-        }
-
-
-        function criarImagemPreview(
-            src
-        ) {
-
-            previewContainer.innerHTML =
-                '';
-
-
-            imagem =
-                document.createElement(
-                    'img'
-                );
-
-
-            imagem.id =
-                'imagem-preview';
-
-
-            imagem.src =
-                src;
-
-
-            imagem.alt =
-                'Pré-visualização do produto';
-
-
-            imagem.draggable =
-                false;
-
-
-            imagem.style.width =
-                '100%';
-
-
-            imagem.style.height =
-                '100%';
-
-
-            imagem.style.display =
-                'block';
-
-
-            imagem.style.objectFit =
-                'cover';
-
-
-            imagem.style.objectPosition =
-                '50% 50%';
-
-
-            imagem.style.pointerEvents =
-                'none';
-
-
-            previewContainer.appendChild(
-                imagem
-            );
-
-
-            campoPosicaoX.value =
-                '50.00';
-
-
-            campoPosicaoY.value =
-                '50.00';
-
-
-            previewContainer.style.cursor =
-                'grab';
-        }
-
-
-        campoImagem.addEventListener(
-            'change',
-            function () {
-
-                const arquivo =
-                    this.files &&
-                    this.files[0]
-                        ? this.files[0]
-                        : null;
-
-
-                if (
-                    !arquivo
-                ) {
-
-                    return;
-                }
-
-
-                const tiposPermitidos = [
-                    'image/jpeg',
-                    'image/png',
-                    'image/webp'
-                ];
-
-
-                if (
-                    !tiposPermitidos.includes(
-                        arquivo.type
-                    )
-                ) {
-
-                    alert(
-                        'Selecione uma imagem JPG, PNG ou WEBP.'
-                    );
-
-
-                    this.value =
-                        '';
-
-
-                    return;
-                }
-
-
-                const tamanhoMaximo =
-                    5 * 1024 * 1024;
-
-
-                if (
-                    arquivo.size >
-                    tamanhoMaximo
-                ) {
-
-                    alert(
-                        'A imagem deve possuir no máximo 5 MB.'
-                    );
-
-
-                    this.value =
-                        '';
-
-
-                    return;
-                }
-
-
-                const leitor =
-                    new FileReader();
-
-
-                leitor.onload =
-                    function (
-                        evento
-                    ) {
-
-                        criarImagemPreview(
-                            evento.target.result
-                        );
-                    };
-
-
-                leitor.readAsDataURL(
-                    arquivo
-                );
-            }
-        );
-
-
-        previewContainer.addEventListener(
-            'pointerdown',
-            function (
-                evento
-            ) {
-
-                if (
-                    !imagem
-                ) {
-
-                    return;
-                }
-
-
-                arrastando =
-                    true;
-
-
-                inicioX =
-                    evento.clientX;
-
-
-                inicioY =
-                    evento.clientY;
-
-
-                posicaoXInicial =
-                    parseFloat(
-                        campoPosicaoX.value
-                    )
-                    || 50;
-
-
-                posicaoYInicial =
-                    parseFloat(
-                        campoPosicaoY.value
-                    )
-                    || 50;
-
-
-                previewContainer.style.cursor =
-                    'grabbing';
-
-
-                previewContainer.setPointerCapture(
-                    evento.pointerId
-                );
-            }
-        );
-
-
-        previewContainer.addEventListener(
-            'pointermove',
-            function (
-                evento
-            ) {
-
-                if (
-                    !arrastando
-                    ||
-                    !imagem
-                ) {
-
-                    return;
-                }
-
-
-                const largura =
-                    previewContainer.clientWidth
-                    || 1;
-
-
-                const altura =
-                    previewContainer.clientHeight
-                    || 1;
-
-
-                const deslocamentoX =
-                    (
-                        evento.clientX
-                        -
-                        inicioX
-                    )
-                    /
-                    largura
-                    *
-                    100;
-
-
-                const deslocamentoY =
-                    (
-                        evento.clientY
-                        -
-                        inicioY
-                    )
-                    /
-                    altura
-                    *
-                    100;
-
-
-                atualizarPosicao(
-                    posicaoXInicial
-                    +
-                    deslocamentoX,
-
-                    posicaoYInicial
-                    +
-                    deslocamentoY
-                );
-            }
-        );
-
-
-        function finalizarArraste() {
-
-            if (
-                !arrastando
-            ) {
-
-                return;
-            }
-
-
-            arrastando =
-                false;
-
-
-            previewContainer.style.cursor =
-                imagem
-                    ? 'grab'
-                    : 'default';
-        }
-
-
-        previewContainer.addEventListener(
-            'pointerup',
-            finalizarArraste
-        );
-
-
-        previewContainer.addEventListener(
-            'pointercancel',
-            finalizarArraste
-        );
-
-
-        centralizarBotao.addEventListener(
-            'click',
-            function () {
-
-                if (
-                    !imagem
-                ) {
-
-                    return;
-                }
-
-
-                atualizarPosicao(
-                    50,
-                    50
-                );
-            }
-        );
-
-
-        if (
-            imagem
-        ) {
-
-            previewContainer.style.cursor =
-                'grab';
-        }
-
-    }
-);
-
-</script>
 
 
 <?php
 
 require APP_ROOT
     . '/views/layouts/admin-footer.php';
-

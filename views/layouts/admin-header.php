@@ -120,7 +120,10 @@ $baseUrl =
     </div>
 
 
-    <div class="admin-user">
+    <div class="admin-user-menu">
+        <button type="button" class="admin-user" id="adminUserToggle"
+            aria-expanded="false" aria-controls="adminUserDropdown"
+            aria-label="Abrir opções do administrador">
 
 
         <span class="admin-user-avatar" aria-hidden="true">
@@ -153,6 +156,56 @@ $baseUrl =
         <i class="bi bi-chevron-down admin-user-seta" aria-hidden="true"></i>
 
 
+        </button>
+        <div id="adminUserDropdown" class="admin-user-dropdown" hidden>
+            <form
+                method="POST"
+                action="<?= $baseUrl ?>/logout-admin"
+                class="logout-form"
+            >
+
+
+                <input
+                    type="hidden"
+                    name="_token"
+                    value="<?= htmlspecialchars(
+                        \App\Helpers\Csrf::gerar(),
+                        ENT_QUOTES,
+                        'UTF-8'
+                    ) ?>"
+                >
+
+
+                <button
+                    type="submit"
+                    class="admin-user-sair"
+                >
+
+
+                    <span
+                        class="menu-icone"
+                        aria-hidden="true"
+                    >
+
+                        <i class="bi bi-box-arrow-right"></i>
+
+                    </span>
+
+
+                    <span
+                        class="menu-text"
+                    >
+
+                        Sair
+
+                    </span>
+
+
+                </button>
+
+
+            </form>
+        </div>
     </div>
 
 
@@ -428,59 +481,6 @@ $baseUrl =
 
 
             </a>
-
-
-            <!-- =================================================
-                 SAIR
-            ================================================== -->
-
-            <form
-                method="POST"
-                action="<?= $baseUrl ?>/logout-admin"
-                class="logout-form"
-            >
-
-
-                <input
-                    type="hidden"
-                    name="_token"
-                    value="<?= htmlspecialchars(
-                        \App\Helpers\Csrf::gerar(),
-                        ENT_QUOTES,
-                        'UTF-8'
-                    ) ?>"
-                >
-
-
-                <button
-                    type="submit"
-                    class="sidebar-link logout-button"
-                >
-
-
-                    <span
-                        class="menu-icone"
-                        aria-hidden="true"
-                    >
-
-                        <i class="bi bi-box-arrow-right"></i>
-
-                    </span>
-
-
-                    <span
-                        class="menu-text"
-                    >
-
-                        Sair
-
-                    </span>
-
-
-                </button>
-
-
-            </form>
 
 
         </nav>
