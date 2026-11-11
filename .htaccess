@@ -34,11 +34,11 @@ RewriteRule ^(?:config|database|documentacao|routes|src|storage|vendor|views)(?:
 # ASSETS PÚBLICOS
 # ============================================================
 #
-# /loja-online/assets/css/navbar.css
+# /loja-online/assets/css/site/navbar.css
 #
 # será servido de:
 #
-# /loja-online/public/assets/css/navbar.css
+# /loja-online/public/assets/css/site/navbar.css
 #
 
 RewriteRule ^assets/(.*)$ public/assets/$1 [L]

@@ -3,12 +3,14 @@
 declare(strict_types=1);
 
 require APP_ROOT
-    . '/views/layouts/admin-header.php';
+    . '/views/layouts/admin/header.php';
 
 
 $banner =
     $banner
     ?? null;
+
+$escalaBanner = \App\Helpers\ImagemEscala::normalizar($banner['escala'] ?? 1);
 
 
 $csrfToken =
@@ -391,7 +393,7 @@ $ativo =
                                 width: 100%;
                                 height: 100%;
                                 display: block;
-                                object-fit: cover;
+                                object-fit: contain;
                                 object-position:
                                     <?= $posicaoX ?>%
                                     <?= $posicaoY ?>%;
@@ -439,6 +441,13 @@ $ativo =
                 </div>
 
 
+                <label class="categoria-zoom banner-home-zoom">
+                    <span>Tamanho da imagem</span>
+                    <output id="home-zoom-valor"><?= round($escalaBanner * 100) ?>%</output>
+                    <input type="hidden" name="escala" id="home_escala" value="<?= $escalaBanner ?>">
+                    <input type="range" min="10" max="200" value="<?= round($escalaBanner * 100) ?>" data-zoom-preview="#imagem-preview-container" data-zoom-campo="home_escala" data-zoom-saida="home-zoom-valor" aria-label="Tamanho da imagem do banner">
+                    <small>100%: imagem inteira ajustada à área. Diminua para deixar margens.</small>
+                </label>
                 <div class="form-text mb-2">
 
                     Arraste a imagem dentro da área
@@ -777,7 +786,7 @@ document.addEventListener(
 
 
             imagem.style.objectFit =
-                'cover';
+                'contain';
 
 
             imagem.style.objectPosition =
@@ -1107,4 +1116,4 @@ document.addEventListener(
 <?php
 
 require APP_ROOT
-    . '/views/layouts/admin-footer.php';
+    . '/views/layouts/admin/footer.php';

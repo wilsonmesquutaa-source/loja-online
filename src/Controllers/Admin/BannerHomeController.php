@@ -267,6 +267,10 @@ final class BannerHomeController extends Controller
             throw $erro;
         }
 
+        $bannerId = (int) $pdo->lastInsertId();
+        $pdo->prepare('UPDATE banners_home SET escala = ? WHERE id = ?')->execute([
+            \App\Helpers\ImagemEscala::normalizar($_POST['escala'] ?? 1), $bannerId,
+        ]);
         $this->definirMensagemSucesso('Banner cadastrado com sucesso.');
 
         $this->redirecionar(
@@ -725,6 +729,9 @@ final class BannerHomeController extends Controller
             ]);
         }
 
+        $pdo->prepare('UPDATE banners_home SET escala = ? WHERE id = ?')->execute([
+            \App\Helpers\ImagemEscala::normalizar($_POST['escala'] ?? 1), $id,
+        ]);
         $this->definirMensagemSucesso('Alterações do banner salvas com sucesso.');
 
         $this->redirecionar(

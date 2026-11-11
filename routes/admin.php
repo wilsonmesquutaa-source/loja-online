@@ -9,9 +9,23 @@ use App\Controllers\Admin\CategoriaController;
 use App\Controllers\Admin\DestaquesHomeController;
 use App\Controllers\Admin\BannerHomeController;
 use App\Controllers\Admin\PedidoController;
+use App\Controllers\Admin\ClienteController;
 
 
 return [
+    ...(require __DIR__ . '/modulos.php'),
+    ['method' => 'POST', 'path' => '/admin/clientes/{id}/recuperar-senha', 'action' => [ClienteController::class, 'recuperarSenha']],
+    ['method' => 'POST', 'path' => '/admin/clientes/{id}/excluir', 'action' => [ClienteController::class, 'excluir']],
+    [
+        'method' => 'GET',
+        'path' => '/admin/clientes',
+        'action' => [ClienteController::class, 'index'],
+    ],
+    [
+        'method' => 'GET',
+        'path' => '/admin/clientes/{id}',
+        'action' => [ClienteController::class, 'detalhes'],
+    ],
 
     /*
     =================================

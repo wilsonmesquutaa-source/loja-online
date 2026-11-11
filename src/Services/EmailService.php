@@ -10,6 +10,19 @@ use RuntimeException;
 
 final class EmailService
 {
+    public function enviarRecuperacaoSenha(string $email, string $nome, string $url): void
+    {
+        $this->mailer->clearAddresses();
+        $this->mailer->addAddress($email, $nome);
+        $this->mailer->Timeout = 15;
+        $this->mailer->isHTML(true);
+        $this->mailer->Subject = 'Redefina sua senha - Cantim do Lanche';
+        $nomeSeguro = htmlspecialchars($nome, ENT_QUOTES, 'UTF-8');
+        $urlSegura = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
+        $this->mailer->Body = '<div style="font-family:Arial,sans-serif;max-width:560px;margin:auto;padding:24px;color:#5d4037"><h1>Redefinir sua senha</h1><p>Olá, ' . $nomeSeguro . '.</p><p>O atendimento iniciou a recuperação de acesso solicitada para sua conta.</p><p><a href="' . $urlSegura . '">Escolher uma nova senha</a></p><p>Este link vale por 30 minutos e pode ser usado uma única vez. Um novo envio invalida o anterior.</p><p>Se você não solicitou, ignore esta mensagem e procure o atendimento. Sua senha só muda após sua confirmação. Nunca compartilhe este link.</p></div>';
+        $this->mailer->AltBody = "Redefina sua senha: $url\nLink válido por 30 minutos, de uso único. Se não solicitou, ignore e procure o atendimento.";
+        $this->mailer->send();
+    }
     private PHPMailer $mailer;
 
 

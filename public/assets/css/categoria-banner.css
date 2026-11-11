@@ -1,0 +1,86 @@
+/* Geometria compartilhada entre a página pública e a prévia administrativa. */
+.categoria-banner-contexto {
+    container-type: inline-size;
+}
+
+.categoria-banner-contexto .categoria-banner-superficie {
+    position: relative;
+    width: 100%;
+    height: 430px;
+    overflow: hidden;
+    border-radius: 0 0 25px 25px;
+    background: #e8c7a8;
+}
+
+.categoria-banner-superficie > .categoria-banner-imagem {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+    object-position: var(--banner-x, 50%) var(--banner-y, 50%);
+    scale: var(--banner-escala, 1);
+    transform-origin: var(--banner-x, 50%) var(--banner-y, 50%);
+    transform: translateY(var(--banner-movimento, 0px));
+    pointer-events: none;
+    user-select: none;
+}
+
+.categoria-banner-contexto > .categoria-conteudo {
+    margin-top: calc(-1 * var(--banner-sobreposicao, 110px));
+    border-radius: 50px;
+}
+
+.categoria-banner-preview .categoria-banner-superficie::after {
+    content: '';
+    position: absolute;
+    z-index: 2;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: var(--banner-sobreposicao, 110px);
+    border-radius: 50px 50px 0 0;
+    background: var(--creme, #FFF7E8);
+    pointer-events: none;
+}
+
+@container (max-width: 575.98px) {
+    .categoria-banner-contexto .categoria-banner-superficie { height: 300px; }
+    .categoria-banner-contexto > .categoria-conteudo {
+        margin-top: calc(-1 * var(--banner-sobreposicao, 70px));
+        border-radius: 35px;
+    }
+    .categoria-banner-preview .categoria-banner-superficie::after {
+        height: var(--banner-sobreposicao, 70px);
+        border-radius: 35px 35px 0 0;
+    }
+}
+
+/* Seletores restritos ao editor do banner; não afetam a navegação do admin. */
+.categoria-banner-painel .categoria-banner-palco {
+    min-height: 0;
+    height: 180px;
+    border-radius: 0;
+    background: #e8c7a8;
+}
+.categoria-banner-painel .categoria-banner-preview {
+    inset: auto;
+    top: 0;
+    left: 0;
+    width: 1440px;
+    overflow: visible;
+    transform-origin: top left;
+}
+.categoria-banner-painel .categoria-banner-placeholder {
+    height: 100%;
+    min-height: 0;
+}
+.categoria-banner-tela {
+    display: grid;
+    gap: 8px;
+    margin: 16px 20px;
+}
+.categoria-banner-tela input { width: 140px; max-width: 100%; }
+.categoria-banner-tela small { color: #806a61; }

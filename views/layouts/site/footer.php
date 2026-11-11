@@ -106,17 +106,17 @@
 
 
 <script
-    src="<?= BASE_URL ?>/assets/js/site.js?v=<?= time() ?>"
+    src="<?= BASE_URL ?>/assets/js/site/site.js?v=<?= time() ?>"
 ></script>
 
 
 <script
-    src="<?= BASE_URL ?>/assets/js/categoria.js?v=<?= time() ?>"
+    src="<?= BASE_URL ?>/assets/js/site/categoria.js?v=<?= time() ?>"
 ></script>
 
 
 <script
-    src="<?= BASE_URL ?>/assets/js/carrinho.js?v=<?= time() ?>"
+    src="<?= BASE_URL ?>/assets/js/site/carrinho.js?v=<?= time() ?>"
 ></script>
 
 

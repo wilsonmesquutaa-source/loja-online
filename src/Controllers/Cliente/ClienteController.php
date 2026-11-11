@@ -2386,6 +2386,9 @@ final class ClienteController extends Controller
         $_SESSION['cliente_id'] =
             $clienteId;
 
+        $_SESSION['cliente_versao_sessao'] =
+            \App\Helpers\SessaoCliente::versao($this->pdo, $clienteId);
+
 
         $_SESSION['cliente_nome'] =
             $nome;

@@ -218,7 +218,7 @@ final class PedidoController extends Controller
         */
 
         $this->view(
-            'admin/pedido',
+            'admin/pedido-detalhes',
             [
                 'tituloPagina' =>
                     'Pedido '

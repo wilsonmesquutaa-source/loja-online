@@ -73,7 +73,19 @@ final class CardapioRepository
                         categoria_imagens.ordem ASC,
                         categoria_imagens.id ASC
                     LIMIT 1
-                ) AS imagem_posicao_y
+                ) AS imagem_posicao_y,
+(
+                    SELECT
+                        categoria_imagens.escala
+                    FROM categoria_imagens
+                    WHERE categoria_imagens.categoria_id =
+                        categorias.id
+                    AND categoria_imagens.principal = 1
+                    ORDER BY
+                        categoria_imagens.ordem ASC,
+                        categoria_imagens.id ASC
+                    LIMIT 1
+                ) AS imagem_escala
 
             FROM categorias
 
@@ -154,7 +166,19 @@ final class CardapioRepository
                         categoria_imagens.ordem ASC,
                         categoria_imagens.id ASC
                     LIMIT 1
-                ) AS imagem_posicao_y
+                ) AS imagem_posicao_y,
+(
+                    SELECT
+                        categoria_imagens.escala
+                    FROM categoria_imagens
+                    WHERE categoria_imagens.categoria_id =
+                        categorias.id
+                    AND categoria_imagens.principal = 1
+                    ORDER BY
+                        categoria_imagens.ordem ASC,
+                        categoria_imagens.id ASC
+                    LIMIT 1
+                ) AS imagem_escala
 
             FROM categorias
 
@@ -245,7 +269,19 @@ final class CardapioRepository
                         categoria_imagens.ordem ASC,
                         categoria_imagens.id ASC
                     LIMIT 1
-                ) AS imagem_posicao_y
+                ) AS imagem_posicao_y,
+(
+                    SELECT
+                        categoria_imagens.escala
+                    FROM categoria_imagens
+                    WHERE categoria_imagens.categoria_id =
+                        categorias.id
+                    AND categoria_imagens.principal = 1
+                    ORDER BY
+                        categoria_imagens.ordem ASC,
+                        categoria_imagens.id ASC
+                    LIMIT 1
+                ) AS imagem_escala
 
             FROM destaques_home
 
@@ -314,7 +350,19 @@ final class CardapioRepository
                         produto_imagens.ordem ASC,
                         produto_imagens.id ASC
                     LIMIT 1
-                ) AS imagem_posicao_y
+                ) AS imagem_posicao_y,
+(
+                    SELECT
+                        produto_imagens.escala
+                    FROM produto_imagens
+                    WHERE produto_imagens.produto_id =
+                        produtos.id
+                    AND produto_imagens.principal = 1
+                    ORDER BY
+                        produto_imagens.ordem ASC,
+                        produto_imagens.id ASC
+                    LIMIT 1
+                ) AS imagem_escala
 
             FROM destaques_home
 
@@ -433,7 +481,19 @@ final class CardapioRepository
                         categoria_imagens.ordem ASC,
                         categoria_imagens.id ASC
                     LIMIT 1
-                ) AS imagem_posicao_y
+                ) AS imagem_posicao_y,
+(
+                    SELECT
+                        categoria_imagens.escala
+                    FROM categoria_imagens
+                    WHERE categoria_imagens.categoria_id =
+                        categorias.id
+                    AND categoria_imagens.principal = 1
+                    ORDER BY
+                        categoria_imagens.ordem ASC,
+                        categoria_imagens.id ASC
+                    LIMIT 1
+                ) AS imagem_escala
 
             FROM categorias
 
@@ -526,7 +586,19 @@ final class CardapioRepository
                         produto_imagens.ordem ASC,
                         produto_imagens.id ASC
                     LIMIT 1
-                ) AS imagem_posicao_y
+                ) AS imagem_posicao_y,
+(
+                    SELECT
+                        produto_imagens.escala
+                    FROM produto_imagens
+                    WHERE produto_imagens.produto_id =
+                        produtos.id
+                    AND produto_imagens.principal = 1
+                    ORDER BY
+                        produto_imagens.ordem ASC,
+                        produto_imagens.id ASC
+                    LIMIT 1
+                ) AS imagem_escala
 
             FROM produtos
 
@@ -583,7 +655,7 @@ final class CardapioRepository
                 categoria_banners.url_imagem,
                 categoria_banners.texto_alternativo,
                 categoria_banners.posicao_x,
-                categoria_banners.posicao_y,
+                categoria_banners.posicao_y, categoria_banners.escala,
                 categoria_banners.ativo
 
             FROM categoria_banners

@@ -187,7 +187,7 @@ switch (
 
 <link
     rel="stylesheet"
-    href="<?= BASE_URL ?>/assets/css/cliente_pedidos.css"
+    href="<?= BASE_URL ?>/assets/css/cliente/cliente_pedidos.css"
 >
 
 

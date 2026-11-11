@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+$temaLoja=$GLOBALS['temaLoja']??[];
 
 
 $tituloHero =
@@ -17,9 +18,16 @@ $bannersHome =
     $bannersHome
     ?? [];
 
+if (isset($temaLoja['assets']['banner_home'])) {
+    $assetBanner = $temaLoja['assets']['banner_home'];
+    $assetBanner['url_imagem'] = $assetBanner['url_arquivo'];
+    $bannersHome = [$assetBanner];
+}
+
 ?>
 
 <section class="hero-loja py-5">
+    <?php \App\Helpers\View::componente('site/enfeite-home', ['tipoEnfeite' => 'home_pendente']); ?>
 
     <div class="container py-lg-5">
 
@@ -93,7 +101,8 @@ $bannersHome =
                  BANNER DA HOME
             ========================================================== -->
 
-            <div class="col-lg-5">
+            <div class="col-lg-5 tema-home-banner-area">
+                <?php \App\Helpers\View::componente('site/enfeite-home', ['tipoEnfeite' => 'home_moldura']); ?>
 
                 <div
                     class="
@@ -218,7 +227,8 @@ $bannersHome =
                                             : 'lazy'
                                         ?>"
                                         style="
-                                            object-position:
+                                            opacity: <?= max(0, min(1, (float) ($banner['opacidade'] ?? 1))) ?>;
+                                            <?= \App\Helpers\ImagemEscala::estilo($banner, '') ?> object-position:
                                                 <?= $posicaoX ?>%
                                                 <?= $posicaoY ?>%;
                                         "

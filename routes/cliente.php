@@ -9,6 +9,8 @@ use App\Controllers\Cliente\EnderecoController;
 use App\Controllers\Cliente\SegurancaController;
 
 return [
+    ['method' => 'GET', 'path' => '/redefinir-senha', 'action' => [\App\Controllers\Cliente\RecuperacaoController::class, 'formulario']],
+    ['method' => 'POST', 'path' => '/redefinir-senha', 'action' => [\App\Controllers\Cliente\RecuperacaoController::class, 'salvar']],
 
     /*
     =================================

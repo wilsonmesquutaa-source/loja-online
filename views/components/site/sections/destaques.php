@@ -16,7 +16,8 @@ $destaquesHome =
              CABEÇALHO
         ================================== -->
 
-        <div class="text-center mb-5">
+        <div class="text-center mb-5 tema-home-titulo-area">
+            <?php \App\Helpers\View::componente('site/enfeite-home', ['tipoEnfeite' => 'home_divisor']); ?>
 
             <p class="section-etiqueta">
                 Destaques
@@ -131,7 +132,7 @@ $destaquesHome =
                                         'UTF-8'
                                     ) ?>"
                                     style="
-                                        object-position:
+                                        <?= \App\Helpers\ImagemEscala::estilo($destaque) ?> object-position:
                                             <?= isset(
                                                 $destaque[
                                                     'imagem_posicao_x'

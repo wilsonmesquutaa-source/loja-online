@@ -24,6 +24,8 @@ $facebookContato = $facebookContato
     id="contato"
 >
 
+    <?php \App\Helpers\View::componente('site/enfeite-home', ['tipoEnfeite' => 'home_atendimento']); ?>
+
     <div class="container py-lg-5">
 
         <div class="row align-items-center g-5">

@@ -6,7 +6,7 @@ use App\Helpers\View;
 
 $tituloPagina = 'Novo destaque da Home';
 
-require APP_ROOT . '/views/layouts/admin-header.php';
+require APP_ROOT . '/views/layouts/admin/header.php';
 
 $categorias = $categorias ?? [];
 $produtos = $produtos ?? [];
@@ -457,4 +457,4 @@ document.addEventListener(
 
 </script>
 
-<?php require APP_ROOT . '/views/layouts/admin-footer.php'; ?>
+<?php require APP_ROOT . '/views/layouts/admin/footer.php'; ?>

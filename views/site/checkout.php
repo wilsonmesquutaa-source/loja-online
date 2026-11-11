@@ -573,7 +573,7 @@ $textoTipoHorario =
 <link
     rel="stylesheet"
     href="<?= htmlspecialchars(
-        BASE_URL . '/assets/css/checkout.css',
+        BASE_URL . '/assets/css/site/checkout.css',
         ENT_QUOTES,
         'UTF-8'
     ); ?>"
@@ -1468,121 +1468,32 @@ $textoTipoHorario =
 
                 <?php else: ?>
 
-                    <div
-                        class="checkout-horarios"
-                    >
-
-                        <?php foreach (
-                            $horariosPorData
-                            as $data => $horarios
-                        ): ?>
-
-                            <?php
-
-                            $primeiroHorario =
-                                $horarios[0];
-
-                            ?>
-
-
-                            <div
-                                class="checkout-horario-dia"
-                            >
-
-                                <h3>
-
-                                    <?= htmlspecialchars(
-                                        (string)
-                                        $primeiroHorario[
-                                            'data_formatada'
-                                        ],
-                                        ENT_QUOTES,
-                                        'UTF-8'
-                                    ) ?>
-
-                                </h3>
-
-
-                                <div
-                                    class="checkout-horario-lista"
-                                >
-
-                                    <?php foreach (
-                                        $horarios
-                                        as $horario
-                                    ): ?>
-
-                                        <label
-                                            class="checkout-horario-opcao"
-                                        >
-
-                                            <input
-                                                type="radio"
-                                                name="data_hora_agendada"
-                                                value="<?= htmlspecialchars(
-                                                    (string)
-                                                    $horario[
-                                                        'datetime'
-                                                    ],
-                                                    ENT_QUOTES,
-                                                    'UTF-8'
-                                                ) ?>"
-                                                required
-                                            >
-
-
-                                            <span>
-
-                                                <?php if (
-                                                    $modalidadeRecebimento ===
-                                                    'entrega'
-                                                ): ?>
-
-                                                    <?= htmlspecialchars(
-                                                        (string)
-                                                        $horario[
-                                                            'hora'
-                                                        ],
-                                                        ENT_QUOTES,
-                                                        'UTF-8'
-                                                    ) ?>
-
-                                                    -
-
-                                                    <?= htmlspecialchars(
-                                                        (string)
-                                                        $horario[
-                                                            'hora_fim'
-                                                        ],
-                                                        ENT_QUOTES,
-                                                        'UTF-8'
-                                                    ) ?>
-
-                                                <?php else: ?>
-
-                                                    <?= htmlspecialchars(
-                                                        (string)
-                                                        $horario[
-                                                            'hora'
-                                                        ],
-                                                        ENT_QUOTES,
-                                                        'UTF-8'
-                                                    ) ?>
-
-                                                <?php endif; ?>
-
-                                            </span>
-
-                                        </label>
-
+                    <div class="checkout-horarios">
+                        <div class="checkout-agenda-campos">
+                            <div class="checkout-agenda-campo">
+                                <label for="checkout-dia">Dia da <?= $modalidadeRecebimento === 'entrega' ? 'entrega' : 'retirada' ?></label>
+                                <select id="checkout-dia" required>
+                                    <option value="">Selecione um dia</option>
+                                    <?php foreach ($horariosPorData as $data => $horarios): ?>
+                                        <option value="<?= htmlspecialchars((string) $data, ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars((string) $horarios[0]['data_formatada'], ENT_QUOTES, 'UTF-8') ?></option>
                                     <?php endforeach; ?>
-
-                                </div>
-
+                                </select>
                             </div>
-
-                        <?php endforeach; ?>
-
+                            <div class="checkout-agenda-campo">
+                                <label for="checkout-horario">Horário da <?= $modalidadeRecebimento === 'entrega' ? 'entrega' : 'retirada' ?></label>
+                                <select id="checkout-horario" name="data_hora_agendada" required disabled aria-describedby="checkout-agenda-confirmacao">
+                                    <option value="">Selecione primeiro um dia</option>
+                                </select>
+                            </div>
+                        </div>
+                        <template id="checkout-agenda-opcoes">
+                            <?php foreach ($horariosPorData as $data => $horarios): ?>
+                                <?php foreach ($horarios as $horario): ?>
+                                    <option data-dia="<?= htmlspecialchars((string) $data, ENT_QUOTES, 'UTF-8') ?>" value="<?= htmlspecialchars((string) $horario['datetime'], ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars((string) $horario['hora'] . ($modalidadeRecebimento === 'entrega' ? ' - ' . (string) $horario['hora_fim'] : ''), ENT_QUOTES, 'UTF-8') ?></option>
+                                <?php endforeach; ?>
+                            <?php endforeach; ?>
+                        </template>
+                        <p id="checkout-agenda-confirmacao" class="checkout-agenda-confirmacao" aria-live="polite" data-modalidade="<?= $modalidadeRecebimento === 'entrega' ? 'Entrega' : 'Retirada' ?>"></p>
                     </div>
 
 
@@ -2331,59 +2242,44 @@ document.addEventListener(
         =================================
         */
 
-        const horarios =
-            document.querySelectorAll(
-                'input[name="data_hora_agendada"]'
-            );
+        const diaAgenda = document.getElementById('checkout-dia');
+        const horarioAgenda = document.getElementById('checkout-horario');
+        const opcoesAgenda = document.getElementById('checkout-agenda-opcoes');
+        const confirmacaoAgenda = document.getElementById('checkout-agenda-confirmacao');
 
-
-        horarios.forEach(
-            function (radio) {
-
-                radio.addEventListener(
-                    'change',
-                    function () {
-
-                        horarios.forEach(
-                            function (outroHorario) {
-
-                                const opcao =
-                                    outroHorario.closest(
-                                        '.checkout-horario-opcao'
-                                    );
-
-
-                                if (
-                                    opcao
-                                ) {
-
-                                    opcao.classList.remove(
-                                        'selecionado'
-                                    );
-                                }
-                            }
-                        );
-
-
-                        const opcaoAtual =
-                            this.closest(
-                                '.checkout-horario-opcao'
-                            );
-
-
-                        if (
-                            opcaoAtual
-                        ) {
-
-                            opcaoAtual.classList.add(
-                                'selecionado'
-                            );
-                        }
-                    }
-                );
-
+        if (diaAgenda && horarioAgenda && opcoesAgenda && confirmacaoAgenda) {
+            function atualizarConfirmacaoAgenda() {
+                confirmacaoAgenda.textContent = horarioAgenda.value
+                    ? confirmacaoAgenda.dataset.modalidade + ' selecionada: '
+                        + diaAgenda.selectedOptions[0].textContent + ', '
+                        + horarioAgenda.selectedOptions[0].textContent + '. ✓'
+                    : '';
             }
-        );
+
+            function atualizarHorariosAgenda(valorAnterior = '') {
+                horarioAgenda.replaceChildren(new Option(
+                    diaAgenda.value ? 'Selecione um horário' : 'Selecione primeiro um dia', ''
+                ));
+                opcoesAgenda.content.querySelectorAll('option').forEach(function (opcao) {
+                    if (opcao.dataset.dia === diaAgenda.value) {
+                        horarioAgenda.appendChild(opcao.cloneNode(true));
+                    }
+                });
+                horarioAgenda.disabled = !diaAgenda.value;
+                horarioAgenda.value = valorAnterior;
+                if (horarioAgenda.selectedIndex < 0) horarioAgenda.value = '';
+                atualizarConfirmacaoAgenda();
+            }
+
+            diaAgenda.addEventListener('change', function () {
+                atualizarHorariosAgenda();
+            });
+            horarioAgenda.addEventListener('change', atualizarConfirmacaoAgenda);
+            atualizarHorariosAgenda(horarioAgenda.value);
+            window.addEventListener('pageshow', function () {
+                atualizarHorariosAgenda(horarioAgenda.value);
+            });
+        }
 
 
         /*
@@ -2761,6 +2657,16 @@ document.addEventListener(
                                             ENVIA FORMULÁRIO
                                             ==========================
                                             */
+
+                                            // O envio direto do cartão não executa a validação HTML.
+                                            if (diaAgenda && !diaAgenda.reportValidity()) {
+                                                reject(new Error('Selecione o dia do pedido.'));
+                                                return;
+                                            }
+                                            if (horarioAgenda && !horarioAgenda.reportValidity()) {
+                                                reject(new Error('Selecione o horário do pedido.'));
+                                                return;
+                                            }
 
                                             HTMLFormElement
                                                 .prototype

@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+$temaLoja=$GLOBALS['temaLoja']??[];
 
 use App\Repositories\CarrinhoRepository;
 use App\Helpers\Csrf;
@@ -243,10 +244,16 @@ $clienteFoto =
 
 ?>
 
-<nav
-    class="navbar navbar-expand-lg navbar-site shadow-sm sticky-top"
-    aria-label="Navegação principal">
+<?php
+$temFaixaDecorativa = isset($temaLoja['assets']['header_overlay'])
+    || isset($temaLoja['assets']['decoracao_superior']);
+?>
+<header class="tema-header-wrapper">
+<?php require APP_ROOT . '/views/components/site/tema-navbar.php'; ?>
 
+<nav
+    class="navbar navbar-expand-lg navbar-site navbar-site-admin-theme shadow-sm sticky-top<?= $temFaixaDecorativa ? ' navbar-com-decoracao' : '' ?>"
+    aria-label="Navegação principal">
     <div
         class="
             container-fluid
@@ -266,16 +273,19 @@ $clienteFoto =
                 align-items-center
                 gap-2
             "
+            style="position: relative; z-index: 100;"
             href="<?= BASE_URL ?>/">
 
             <picture>
 
                 <source
                     media="(max-width: 991.98px)"
-                    srcset="<?= BASE_URL ?>/assets/images/logo2.webp">
+                    srcset="<?= BASE_URL . htmlspecialchars($temaLoja['assets']['logo_mobile']['url_arquivo'] ?? '/assets/images/logo2.webp', ENT_QUOTES, 'UTF-8') ?>">
 
                 <img
-                    src="<?= BASE_URL ?>/assets/images/logo.webp"
+                    src="<?= BASE_URL . htmlspecialchars($temaLoja['assets']['logo_desktop']['url_arquivo'] ?? '/assets/images/logo.webp', ENT_QUOTES, 'UTF-8') ?>"
+                    data-tema-fallback="<?= BASE_URL ?>/assets/images/logo.webp"
+                    data-tema-fallback-mobile="<?= BASE_URL ?>/assets/images/logo2.webp"
                     alt="Cantim do Lanche"
                     height="55">
 
@@ -1213,6 +1223,7 @@ $clienteFoto =
     </div>
 
 </nav>
+</header>
 
 
 <script>

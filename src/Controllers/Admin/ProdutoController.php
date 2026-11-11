@@ -175,7 +175,7 @@ final class ProdutoController extends Controller
         $escala =
             $this->normalizarEscala(
                 $_POST['escala']
-                ?? 1.20
+                ?? 1.00
             );
 
         if ($categoriaId <= 0) {
@@ -461,7 +461,7 @@ final class ProdutoController extends Controller
         $escala =
             $this->normalizarEscala(
                 $_POST['escala']
-                ?? 1.20
+                ?? 1.00
             );
 
         if ($categoriaId <= 0) {
@@ -675,13 +675,13 @@ final class ProdutoController extends Controller
         $valor =
             is_numeric($valor)
                 ? (float) $valor
-                : 1.20;
+                : 1.00;
 
         return round(
             min(
                 max(
                     $valor,
-                    1.05
+                    0.10
                 ),
                 2.00
             ),

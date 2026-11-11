@@ -1,0 +1,32 @@
+/* Imagens próprias do tema ativo. A área posiciona o enfeite, sem recortar o zoom.
+   Camada acima do conteúdo e do header (1025), abaixo dos diálogos do Bootstrap. */
+.tema-home :is(.hero-loja, .contato-section, .tema-home-banner-area, .tema-home-titulo-area) { position: relative; overflow: visible; }
+.tema-home-enfeite { position: absolute; pointer-events: none; user-select: none; overflow: visible; z-index: 1026; }
+.tema-home-enfeite img { position: absolute; display: block; object-fit: contain; max-width: none; pointer-events: none; }
+.tema-home .tema-home_pendente { top: 0; left: max(12px, calc((100% - 1140px)/2)); width: 100px; height: 82px; }
+/* A moldura acompanha o retângulo do banner, em vez de manter uma caixa 4:3.
+   A folga externa mantém os traços fora da foto e das legendas. */
+.tema-home .tema-home_moldura { inset: -22px 0; }
+.tema-home .tema-home_moldura img { object-fit: fill; }
+@media (max-width: 1199.98px) {
+    .tema-home .tema-home-banner-area:has(.tema-home_moldura) {
+        padding-inline: calc(var(--bs-gutter-x, 3rem) / 2 + 16px);
+    }
+    .tema-home .tema-home_moldura {
+        inset: -18px calc(var(--bs-gutter-x, 3rem) / 2 - 2px);
+    }
+}
+.tema-home .tema-home_divisor { width: min(90%, 940px); height: 28px; bottom: -34px; left: 50%; transform: translateX(-50%); }
+.tema-home .tema-home_vantagens { width: min(80%, 400px); height: 26px; bottom: -32px; left: 50%; transform: translateX(-50%); }
+.tema-home .tema-home_atendimento { top: 0; left: max(12px, calc((100% - 1140px)/2)); width: 160px; height: 82px; }
+@media (max-width: 991.98px) {
+    /* O zoom dos divisores não deve aumentar a largura da página no celular. */
+    .tema-home :is(.tema-home_divisor, .tema-home_vantagens) img {
+        max-width: 100%;
+        left: 50% !important;
+        transform: translateX(-50%);
+    }
+    .tema-home .tema-home_pendente { left: auto; right: 12px; width: 62px; height: 42px; }
+    .tema-home .tema-home_atendimento { width: 94px; height: 42px; }
+}
+@media print { .tema-home-enfeite { display: none; } }

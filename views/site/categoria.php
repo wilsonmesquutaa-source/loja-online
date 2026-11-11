@@ -29,41 +29,29 @@ View::componente(
 ?>
 
 
+<link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/categoria-banner.css?v=<?= filemtime(APP_ROOT . '/public/assets/css/categoria-banner.css') ?>">
+
 <main>
 
-    <div class="categoria-pagina">
+    <div class="categoria-pagina categoria-banner-contexto">
 
         <!-- =================================
              IMAGEM DE DESTAQUE
         ================================== -->
 
-        <div class="img_destaque_container">
-
-            <div
-                class="img_destaque_imagem"
-                <?php if (
-                    $bannerCategoria !== null
-                    &&
-                    !empty($bannerCategoria['url_imagem'])
-                ): ?>
-
-                style="
-                    background-image:
-                        url('<?= BASE_URL
-                                    . $bannerCategoria['url_imagem'] ?>');
-
-                    background-position:
-                        <?= (float)
-                        $bannerCategoria['posicao_x'] ?>%
-                        <?= (float)
-                        $bannerCategoria['posicao_y'] ?>%;
-                "
-
-                <?php endif; ?>>
-            </div>
-
+        <div class="img_destaque_container categoria-banner-superficie">
+            <?php if (!empty($bannerCategoria['url_imagem'])):
+                $bannerX = min(100, max(0, (float) ($bannerCategoria['posicao_x'] ?? 50)));
+                $bannerY = min(100, max(0, (float) ($bannerCategoria['posicao_y'] ?? 50)));
+                $bannerZoom = max(1.0, \App\Helpers\ImagemEscala::normalizar($bannerCategoria['escala'] ?? 1));
+                $bannerEstilo = sprintf('--banner-x: %s%%; --banner-y: %s%%; --banner-escala: %s;',
+                    json_encode($bannerX), json_encode($bannerY), json_encode($bannerZoom));
+            ?>
+                <img class="categoria-banner-imagem" alt="" draggable="false"
+                    src="<?= htmlspecialchars(BASE_URL . $bannerCategoria['url_imagem'], ENT_QUOTES, 'UTF-8') ?>"
+                    <?= 'style="' . htmlspecialchars($bannerEstilo, ENT_QUOTES, 'UTF-8') . '"' ?>>
+            <?php endif; ?>
         </div>
-
 
         <!-- =================================
              CONTEÚDO DA CATEGORIA
@@ -286,216 +274,7 @@ MODAL CENTO INCOMPLETO
 <?php endif; ?>
 
 
-<script>
-    document.addEventListener(
-        'DOMContentLoaded',
-        function() {
-
-            const pagina =
-                document.querySelector(
-                    '.categoria-pagina'
-                );
-
-
-            const imagem =
-                document.querySelector(
-                    '.img_destaque_imagem'
-                );
-
-
-            const containerImagem =
-                document.querySelector(
-                    '.img_destaque_container'
-                );
-
-
-            const conteudo =
-                document.querySelector(
-                    '.categoria-conteudo'
-                );
-
-
-            if (
-                !pagina ||
-                !imagem ||
-                !containerImagem ||
-                !conteudo
-            ) {
-                return;
-            }
-
-
-            /*
-            =================================
-            CONFIGURAÇÃO DO EFEITO
-            =================================
-            */
-
-            const margemInicial = -110;
-
-
-            const margemFinal = -165;
-
-
-            const deslocamentoMaximo =
-                260;
-
-
-            const movimentoImagemMaximo =
-                70;
-
-
-            let animacaoPendente =
-                false;
-
-
-            /*
-            =================================
-            ATUALIZAÇÃO DO MOVIMENTO
-            =================================
-            */
-
-            function atualizarEfeitoScroll() {
-
-                const rect =
-                    pagina.getBoundingClientRect();
-
-
-                const deslocamento =
-                    Math.max(
-                        0,
-                        -rect.top
-                    );
-
-
-                /*
-                O efeito termina depois de
-                aproximadamente 260px de scroll.
-                */
-
-                const progresso =
-                    Math.min(
-                        deslocamento /
-                        deslocamentoMaximo,
-                        1
-                    );
-
-
-                /*
-                =================================
-                IMAGEM / FUNDO
-                =================================
-
-                A camada superior desce
-                até 70px.
-                */
-
-                const movimentoImagem =
-                    progresso *
-                    movimentoImagemMaximo;
-
-
-                imagem.style.transform =
-                    'translateY(' +
-                    movimentoImagem +
-                    'px)';
-
-
-                /*
-                =================================
-                CONTAINER
-                =================================
-
-                O container aumenta sua
-                sobreposição de -110px para
-                -165px.
-
-                Isso faz a área creme subir
-                sobre o fundo.
-                */
-
-                const margemAtual =
-                    margemInicial +
-                    (
-                        (
-                            margemFinal -
-                            margemInicial
-                        ) *
-                        progresso
-                    );
-
-
-                conteudo.style.marginTop =
-                    margemAtual + 'px';
-
-            }
-
-
-            /*
-            =================================
-            REQUEST ANIMATION FRAME
-            =================================
-            */
-
-            function solicitarAtualizacao() {
-
-                if (
-                    animacaoPendente
-                ) {
-                    return;
-                }
-
-
-                animacaoPendente =
-                    true;
-
-
-                requestAnimationFrame(
-                    function() {
-
-                        atualizarEfeitoScroll();
-
-
-                        animacaoPendente =
-                            false;
-
-                    }
-                );
-
-            }
-
-
-            /*
-            =================================
-            EVENTOS
-            =================================
-            */
-
-            window.addEventListener(
-                'scroll',
-                solicitarAtualizacao, {
-                    passive: true
-                }
-            );
-
-
-            window.addEventListener(
-                'resize',
-                solicitarAtualizacao
-            );
-
-
-            /*
-            =================================
-            ESTADO INICIAL
-            =================================
-            */
-
-            atualizarEfeitoScroll();
-
-        }
-    );
-</script>
+<script src="<?= BASE_URL ?>/assets/js/categoria-banner.js?v=<?= filemtime(APP_ROOT . '/public/assets/js/categoria-banner.js') ?>"></script>
 
 
 <?php require APP_ROOT

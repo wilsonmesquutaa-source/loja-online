@@ -11,7 +11,7 @@ $destaques = count(array_filter($categorias, static function (array $categoria):
     return (int) ($categoria['destaque'] ?? 0) === 1;
 }));
 
-require APP_ROOT . '/views/layouts/admin-header.php';
+require APP_ROOT . '/views/layouts/admin/header.php';
 
 ?>
 
@@ -51,12 +51,12 @@ require APP_ROOT . '/views/layouts/admin-header.php';
                     <?php
                     $ativa = (int) $categoria['ativo'] === 1;
                     $destaque = (int) $categoria['destaque'] === 1;
-                    $escalaImagem = min(max((float) ($categoria['imagem_escala'] ?? 1.20), 1.05), 2.00);
+                    $escalaImagem = min(max((float) ($categoria['imagem_escala'] ?? 1.00), 0.10), 2.00);
                     $posicaoX = min(max((float) ($categoria['imagem_posicao_x'] ?? 50), 0), 100);
                     $posicaoY = min(max((float) ($categoria['imagem_posicao_y'] ?? 50), 0), 100);
                     $excedente = ($escalaImagem - 1) * 100;
                     $estiloImagem = sprintf(
-                        'width:%.2f%%;height:%.2f%%;left:%.2f%%;top:%.2f%%;',
+                        'object-fit:contain;width:%.2f%%;height:%.2f%%;left:%.2f%%;top:%.2f%%;',
                         $escalaImagem * 100,
                         $escalaImagem * 100,
                         -($posicaoX / 100) * $excedente,
@@ -89,4 +89,4 @@ require APP_ROOT . '/views/layouts/admin-header.php';
 
 <?php
 
-require APP_ROOT . '/views/layouts/admin-footer.php';
+require APP_ROOT . '/views/layouts/admin/footer.php';

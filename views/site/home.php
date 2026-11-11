@@ -19,7 +19,7 @@ View::componente(
 
 ?>
 
-<main>
+<main class="tema-home">
 
     <?php
 

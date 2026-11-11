@@ -1,0 +1,537 @@
+/* =========================================
+   AVISO DE PRÉ-VISUALIZAÇÃO
+ ========================================= */
+
+.tema-preview-aviso {
+    position: relative;
+    z-index: 1100;
+
+    background: #fff1dc;
+    color: #4a2a21;
+
+    padding: 14px;
+
+    text-align: center;
+
+    font:
+        600 14px system-ui;
+}
+
+.tema-preview-aviso a {
+    color: #803310;
+    margin-left: 15px;
+}
+
+
+/* =========================================
+   SELO
+ ========================================= */
+
+.tema-selo {
+    text-align: center;
+
+    padding:
+        8px
+        12px;
+
+    background:
+        var(
+            --cor-destaque,
+            #ffd54a
+        );
+
+    color: #3e2923;
+
+    font-weight: 750;
+}
+
+
+/* =========================================
+   CAMADA GLOBAL DE DECORAÇÕES
+ ========================================= */
+
+.tema-decoracoes {
+    position: fixed;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    /* Camada superior global para que a neve caia sobre tudo */
+    z-index: 2000;
+
+    overflow: hidden;
+}
+
+
+/* =========================================
+   CAMADA DE DECORAÇÕES DO HEADER
+ ========================================= */
+
+/*
+ * IMPORTANTE:
+ *
+ * Esta camada NÃO é fixed.
+ *
+ * Ela pertence ao topo do documento.
+ * Portanto, quando a página desce,
+ * as luzes sobem junto com o header.
+ */
+
+.tema-decoracoes-header {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 60px;
+
+    pointer-events: none;
+
+    overflow: visible;
+
+    /* Camada base para decorações do header */
+    z-index: 10;
+}
+
+
+/* =========================================
+   IMAGENS DECORATIVAS
+   ========================================= */
+
+.tema-faixa-decorativa {
+    position: relative;
+    width: 100%;
+    z-index: 5;
+    pointer-events: none;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+}
+
+.tema-faixa-decorativa-asset {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.tema-faixa-decorativa-asset img {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.tema-decor {
+    position: absolute;
+
+    overflow: visible;
+
+    pointer-events: none;
+
+    width: 110px;
+    height: 130px;
+    z-index: 10;
+}
+
+.tema-decor img,
+.tema-decor video {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+}
+
+
+/* =========================================
+   POSIÇÕES DAS DECORAÇÕES
+ ========================================= */
+
+.tema-header_overlay,
+.tema-decoracao_superior {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 55px;
+    z-index: 5;
+}
+
+.tema-decoracao_esquerda {
+    left: 0;
+    top: 140px;
+}
+
+.tema-decoracao_direita {
+    right: 0;
+    top: 140px;
+}
+
+.tema-mascote {
+    right: 12px;
+    bottom: 18px;
+
+    width: 90px;
+    height: 100px;
+}
+
+.tema-outro {
+    left: 8px;
+    bottom: 18px;
+
+    width: 75px;
+    height: 85px;
+}
+
+
+/* =========================================
+   EFEITOS GLOBAIS
+ ========================================= */
+
+.tema-efeito {
+    position: absolute;
+
+    inset: 0;
+
+    overflow: hidden;
+
+    pointer-events: none;
+}
+
+.tema-efeito_confete span {
+    position: absolute;
+
+    left:
+        calc(
+            var(--n) * 8.5%
+        );
+
+    top: -30px;
+
+    animation:
+        tema-cair
+        14s
+        linear
+        infinite;
+
+    animation-delay:
+        calc(
+            var(--n) * -1.2s
+        );
+
+    color: #e4c16d;
+
+    font-size: 20px;
+
+    opacity: .6;
+}
+
+.tema-efeito_neve span {
+    position: absolute;
+    left: var(--snow-x);
+    top: -40px;
+    color: #eaf4ff;
+    font-size: var(--snow-size);
+    line-height: 1;
+    opacity: var(--snow-opacity);
+    animation: tema-neve-queda var(--snow-duration) linear infinite;
+    animation-delay: var(--snow-delay);
+    will-change: transform;
+}
+
+.tema-efeito_confete span {
+    position: absolute;
+}
+
+
+/* =========================================
+   NEVE
+ ========================================= */
+
+
+/* =========================================
+   CONFETE
+ ========================================= */
+
+.tema-efeito_confete span {
+    width: 6px;
+    height: 10px;
+
+    background: #d0953f;
+
+    transform:
+        rotate(20deg);
+}
+
+.tema-efeito_confete span:nth-child(3n) {
+    background: #b975a8;
+}
+
+.tema-efeito_fogos {
+    overflow: hidden;
+}
+
+.tema-efeito_baloes {
+    overflow: hidden;
+}
+
+.tema-balao {
+    position: absolute;
+    left: var(--balloon-x);
+    bottom: -110px;
+    width: calc(54px * var(--balloon-size));
+    height: calc(130px * var(--balloon-size));
+    opacity: .86;
+    animation: tema-balao-subir var(--balloon-duration) ease-in-out infinite;
+    animation-delay: var(--balloon-delay);
+    will-change: transform, opacity;
+}
+
+.tema-balao-corpo {
+    position: absolute;
+    left: 9%;
+    top: 0;
+    width: 82%;
+    height: 62%;
+    border-radius: 48% 48% 42% 42% / 38% 38% 62% 62%;
+    clip-path: polygon(
+        9% 8%,
+        23% 2%,
+        50% 0,
+        77% 2%,
+        91% 8%,
+        100% 21%,
+        98% 45%,
+        92% 66%,
+        80% 83%,
+        65% 94%,
+        50% 100%,
+        35% 94%,
+        20% 83%,
+        8% 66%,
+        2% 45%,
+        0 21%
+    );
+    background:
+        radial-gradient(ellipse at 29% 23%, #ffffff55 0 5%, transparent 17%),
+        radial-gradient(ellipse at 33% 29%, #ffffff24 0 18%, transparent 37%),
+        linear-gradient(110deg, #ffffff22, transparent 30% 70%, #0000001c),
+        var(--balloon-color);
+    box-shadow: inset -5px -8px 8px #0000001c, 0 4px 8px #2d1c161f;
+}
+
+.tema-balao-corpo::after {
+    content: '';
+    position: absolute;
+    left: 18%;
+    top: 13%;
+    width: 13%;
+    height: 34%;
+    border-radius: 60% 40% 55% 45%;
+    background: #ffffff45;
+    transform: rotate(18deg);
+    filter: blur(.4px);
+}
+
+.tema-balao-no {
+    position: absolute;
+    top: 58%;
+    left: 42%;
+    width: 16%;
+    height: 11%;
+    background: var(--balloon-color);
+    clip-path: polygon(0 0, 100% 0, 68% 58%, 50% 100%, 32% 58%);
+    filter: brightness(.9);
+}
+
+.tema-balao-fio {
+    position: absolute;
+    top: 67%;
+    left: 49%;
+    width: 1px;
+    height: 37%;
+    background: #ffffffb8;
+    transform-origin: top;
+    transform: rotate(calc(var(--balloon-rotate) * -1));
+    box-shadow: 1px 0 #00000016;
+}
+
+@keyframes tema-balao-subir {
+    0% {
+        opacity: 0;
+        transform: translate3d(0, 18vh, 0) rotate(0deg);
+    }
+    8% { opacity: .86; }
+    28% {
+        transform: translate3d(calc(var(--balloon-sway) * -1), -25vh, 0) rotate(var(--balloon-rotate));
+    }
+    52% {
+        transform: translate3d(var(--balloon-sway), -58vh, 0) rotate(calc(var(--balloon-rotate) * -1));
+    }
+    76% {
+        transform: translate3d(calc(var(--balloon-sway) * -.65), -92vh, 0) rotate(var(--balloon-rotate));
+    }
+    100% {
+        opacity: 0;
+        transform: translate3d(var(--balloon-sway), -135vh, 0) rotate(calc(var(--balloon-rotate) * -1));
+    }
+}
+
+.tema-fogo {
+    position: absolute;
+    left: var(--firework-x);
+    top: var(--firework-y);
+    width: 1px;
+    height: 1px;
+    color: var(--firework-color);
+    transform: scale(var(--firework-size));
+    transform-origin: center;
+    animation: tema-fogo-ciclo var(--firework-duration) ease-in-out infinite;
+    animation-delay: var(--firework-delay);
+    will-change: transform, opacity;
+}
+
+.tema-fogo-foguete,
+.tema-fogo-centro,
+.tema-fogo-particula {
+    position: absolute;
+    display: block;
+    pointer-events: none;
+}
+
+.tema-fogo-foguete {
+    width: 3px;
+    height: 18px;
+    left: -1px;
+    top: 52px;
+    border-radius: 50%;
+    background: linear-gradient(to top, transparent, var(--firework-color));
+    box-shadow: 0 0 5px var(--firework-color);
+    transform-origin: center 52px;
+    animation: tema-fogo-foguete var(--firework-duration) ease-out infinite;
+    animation-delay: var(--firework-delay);
+}
+
+.tema-fogo-centro {
+    width: 7px;
+    height: 7px;
+    left: -3px;
+    top: -3px;
+    border-radius: 50%;
+    background: #fffdf2;
+    box-shadow: 0 0 7px 2px var(--firework-color);
+    opacity: 0;
+    animation: tema-fogo-centro var(--firework-duration) ease-out infinite;
+    animation-delay: var(--firework-delay);
+}
+
+.tema-fogo-particula {
+    width: 3px;
+    height: 9px;
+    left: -1px;
+    top: -4px;
+    border-radius: 50% 50% 45% 45%;
+    background: linear-gradient(to bottom, #fffdf2, var(--firework-particle-color));
+    box-shadow: 0 0 5px var(--firework-particle-color);
+    opacity: 0;
+    transform-origin: center 4px;
+    animation: tema-fogo-particula var(--firework-duration) ease-out infinite;
+    animation-delay: calc(var(--firework-delay) + .95s);
+    rotate: var(--firework-particle-angle);
+}
+
+.tema-fogo-longo .tema-fogo-particula {
+    width: 2px;
+    height: 16px;
+}
+
+.tema-fogo-brilho .tema-fogo-particula {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    box-shadow: 0 0 8px 2px var(--firework-particle-color);
+}
+
+@keyframes tema-fogo-ciclo {
+    0%, 13% { opacity: 0; }
+    19%, 29% { opacity: .7; }
+    38%, 45% { opacity: 1; }
+    62%, 68% { opacity: .25; }
+    75%, 100% { opacity: 0; }
+}
+
+@keyframes tema-fogo-foguete {
+    0%, 12% { opacity: 0; transform: translate3d(0, 58px, 0) scaleY(.35); }
+    18% { opacity: .85; transform: translate3d(0, 12px, 0) scaleY(1); }
+    28%, 100% { opacity: 0; transform: translate3d(0, -18px, 0) scaleY(.5); }
+}
+
+@keyframes tema-fogo-centro {
+    0%, 27% { opacity: 0; transform: scale(.2); }
+    34% { opacity: 1; transform: scale(1.2); }
+    48%, 100% { opacity: 0; transform: scale(.5); }
+}
+
+@keyframes tema-fogo-particula {
+    0%, 28% { opacity: 0; transform: rotate(var(--firework-particle-angle)) translate3d(0, 0, 0) scale(.25); }
+    36% { opacity: 1; transform: rotate(var(--firework-particle-angle)) translate3d(0, 0, 0) scale(1); }
+    64% { opacity: .82; transform: rotate(var(--firework-particle-angle)) translate3d(var(--firework-particle-distance), 6px, 0) scale(.78); }
+    100% { opacity: 0; transform: rotate(var(--firework-particle-angle)) translate3d(calc(var(--firework-particle-distance) * 1.18), 30px, 0) scale(.25); }
+}
+
+
+
+@keyframes tema-cair { to { transform:translateY(110vh) rotate(140deg); } }
+@keyframes tema-neve-queda {
+    from { transform:translate3d(0,0,0) rotate(0deg); }
+    to { transform:translate3d(var(--snow-drift),110vh,0) rotate(var(--snow-rotation)); }
+}
+@media(prefers-reduced-motion:reduce) {
+    .tema-efeito_confete span { animation:none; top:12px; }
+    .tema-efeito_neve span { top:12px; transform:none; }
+    .tema-efeito_fogos { display:none; }
+    .tema-efeito_baloes { display:none; }
+}
+@media(max-width:991.98px) {
+    .tema-faixa-decorativa {
+        height: auto;
+        min-height: 40px; /* Garante visibilidade mínima no mobile */
+    }
+
+    .tema-faixa-decorativa .tema-faixa-decorativa-asset {
+        position: relative;
+        left: 0;
+        transform: none;
+        height: auto;
+    }
+
+    .tema-faixa-decorativa .tema-faixa-decorativa-asset img {
+        width: 100%;
+        max-width: 100vw;
+        height: auto !important; /* Força proporção original */
+        object-fit: contain;
+    }
+
+    .tema-header_overlay,
+    .tema-decoracao_superior {
+        height: auto;
+        min-height: 40px;
+    }
+
+    .tema-faixa-decorativa + .navbar-com-decoracao { margin-top: 0; }
+    
+    .tema-decoracao_esquerda,
+    .tema-decoracao_direita,
+    .tema-outro { display:none; }
+
+    .tema-mascote { width:48px; height:60px; opacity:.7; }
+    .tema-preview-aviso { font-size:12px; }
+    .tema-efeito_fogos .tema-fogo:nth-child(n+7) { display:none; }
+    .tema-fogo { transform:scale(calc(var(--firework-size) * .78)); }
+    .tema-efeito_baloes .tema-balao:nth-child(n+11) { display:none; }
+    .tema-efeito_baloes .tema-balao { scale:.82; transform-origin:bottom center; }
+}

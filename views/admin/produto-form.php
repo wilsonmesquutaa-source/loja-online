@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+$usarBootstrap = false;
+
 $produto = $produto ?? null;
 $imagemProduto = $imagemProduto ?? null;
 $categorias = $categorias ?? [];
@@ -22,12 +24,12 @@ $escala =
     $imagemProduto !== null
     && isset($imagemProduto['escala'])
     ? (float) $imagemProduto['escala']
-    : 1.20;
+    : 1.00;
 
 $escala = min(
     max(
         $escala,
-        1.05
+        0.10
     ),
     2.00
 );
@@ -45,7 +47,7 @@ $imagemTop =
         * $excedente;
 
 require APP_ROOT
-    . '/views/layouts/admin-header.php';
+    . '/views/layouts/admin/header.php';
 
 ?>
 
@@ -615,17 +617,17 @@ require APP_ROOT
                                 </strong>
 
                                 <output id="imagem-zoom-valor">
-                                    120%
+                                    <?= (int) round($escala * 100) ?>%
                                 </output>
                             </span>
 
                             <input
                                 type="range"
                                 id="imagem-zoom"
-                                min="105"
+                                min="10"
                                 max="200"
                                 step="1"
-                                value="120">
+                                value="<?= (int) round($escala * 100) ?>">
 
                         </label>
 
@@ -733,4 +735,4 @@ require APP_ROOT
 <?php
 
 require APP_ROOT
-    . '/views/layouts/admin-footer.php';
+    . '/views/layouts/admin/footer.php';

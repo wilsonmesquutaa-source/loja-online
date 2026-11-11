@@ -426,6 +426,9 @@ final class PedidoRepository
 
 
         $stmt->execute();
+        (new \App\Services\CustoProdutoService($this->pdo))->congelarItem(
+            (int) $this->pdo->lastInsertId(), $produtoId, $quantidade
+        );
     }
 
 

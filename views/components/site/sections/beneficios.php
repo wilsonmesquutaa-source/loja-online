@@ -13,7 +13,8 @@ $beneficios = $beneficios ?? [];
 
     <div class="container">
 
-        <div class="text-center mb-5">
+        <div class="text-center mb-5 tema-home-titulo-area">
+            <?php \App\Helpers\View::componente('site/enfeite-home', ['tipoEnfeite' => 'home_vantagens']); ?>
 
             <p class="section-etiqueta">
                 Vantagens

@@ -76,7 +76,7 @@ final class HomeController extends Controller
                     texto_alternativo,
                     url_imagem,
                     posicao_x,
-                    posicao_y,
+                    posicao_y, escala,
                     ordem,
                     ativo
 

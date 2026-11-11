@@ -106,6 +106,9 @@ final class CategoriaController extends Controller
                 'imagemCategoria' =>
                 null,
 
+                'bannerCategoria' =>
+                null,
+
                 'csrfToken' =>
                 Csrf::gerar(),
             ]
@@ -204,7 +207,15 @@ final class CategoriaController extends Controller
         );
 
         $escala = $this->normalizarEscala(
-            $_POST['escala'] ?? 1.20
+            $_POST['escala'] ?? 1.00
+        );
+
+        $bannerPosicaoX = $this->normalizarPosicao(
+            $_POST['banner_posicao_x'] ?? 50
+        );
+
+        $bannerPosicaoY = $this->normalizarPosicao(
+            $_POST['banner_posicao_y'] ?? 50
         );
 
 
@@ -285,12 +296,10 @@ final class CategoriaController extends Controller
             (int) $pdo->lastInsertId();
 
 
-        if (
-            $this->possuiUpload(
-                'imagem'
-            )
-        ) {
+        $novaImagemCategoria = $this->possuiUpload('imagem');
+        $novoBannerCategoria = $this->possuiUpload('banner_imagem');
 
+        if ($novaImagemCategoria) {
             $this->salvarImagemCategoria(
                 $pdo,
                 $categoriaId,
@@ -301,9 +310,22 @@ final class CategoriaController extends Controller
             );
         }
 
+        if ($novoBannerCategoria) {
+            $this->salvarBannerCategoria(
+                $pdo,
+                $categoriaId,
+                $nome,
+                $bannerPosicaoX,
+                $bannerPosicaoY
+            );
+        }
+
+        $pdo->prepare('UPDATE categoria_banners SET escala = ? WHERE categoria_id = ?')->execute([
+            \App\Helpers\ImagemEscala::normalizar($_POST['banner_escala'] ?? 1), $categoriaId,
+        ]);
         $this->definirMensagemSucesso(
-            $this->possuiUpload('imagem')
-                ? 'Categoria cadastrada e imagem carregada com sucesso.'
+            ($novaImagemCategoria || $novoBannerCategoria)
+                ? 'Categoria cadastrada e imagens carregadas com sucesso.'
                 : 'Categoria cadastrada com sucesso.'
         );
 
@@ -387,6 +409,39 @@ final class CategoriaController extends Controller
         }
 
 
+        $stmtBanner =
+            $pdo->prepare("
+                SELECT
+                    id,
+                    categoria_id,
+                    url_imagem,
+                    texto_alternativo,
+                    posicao_x,
+                    posicao_y, escala,
+                    ativo
+                FROM categoria_banners
+                WHERE categoria_id = :categoria_id
+                LIMIT 1
+            ");
+
+
+        $stmtBanner->execute([
+            ':categoria_id' =>
+            $id,
+        ]);
+
+
+        $bannerCategoria =
+            $stmtBanner->fetch();
+
+
+        if ($bannerCategoria === false) {
+
+            $bannerCategoria =
+                null;
+        }
+
+
         $this->view(
             'admin/categoria-form',
             [
@@ -398,6 +453,9 @@ final class CategoriaController extends Controller
 
                 'imagemCategoria' =>
                 $imagemCategoria,
+
+                'bannerCategoria' =>
+                $bannerCategoria,
 
                 'csrfToken' =>
                 Csrf::gerar(),
@@ -540,7 +598,19 @@ final class CategoriaController extends Controller
         $escala =
             $this->normalizarEscala(
                 $_POST['escala']
-                    ?? 1.20
+                    ?? 1.00
+            );
+
+        $bannerPosicaoX =
+            $this->normalizarPosicao(
+                $_POST['banner_posicao_x']
+                    ?? 50
+            );
+
+        $bannerPosicaoY =
+            $this->normalizarPosicao(
+                $_POST['banner_posicao_y']
+                    ?? 50
             );
 
 
@@ -677,12 +747,69 @@ final class CategoriaController extends Controller
             ]);
         }
 
-        $this->definirMensagemSucesso(
+        /*
+        =================================
+        BANNER / IMAGEM DE FUNDO
+        =================================
+        */
+
+        $novoBanner = $this->possuiUpload('banner_imagem');
+        $removerBanner = isset($_POST['excluir_banner'])
+            && (string) $_POST['excluir_banner'] === '1';
+
+        if ($novoBanner) {
+
+            $this->salvarBannerCategoria(
+                $pdo,
+                $id,
+                $nome,
+                $bannerPosicaoX,
+                $bannerPosicaoY
+            );
+        } elseif ($removerBanner) {
+
+            $this->excluirBannerCategoria(
+                $pdo,
+                $id
+            );
+        } else {
+
+            $stmtBanner =
+                $pdo->prepare("
+                    UPDATE categoria_banners
+                    SET
+                        posicao_x = :posicao_x,
+                        posicao_y = :posicao_y,
+                        ativo = 1
+                    WHERE categoria_id =
+                        :categoria_id
+                ");
+
+            $stmtBanner->execute([
+                ':posicao_x' =>
+                $bannerPosicaoX,
+
+                ':posicao_y' =>
+                $bannerPosicaoY,
+
+                ':categoria_id' =>
+                $id,
+            ]);
+        }
+
+        $pdo->prepare('UPDATE categoria_banners SET escala = ? WHERE categoria_id = ?')->execute([
+            \App\Helpers\ImagemEscala::normalizar($_POST['banner_escala'] ?? 1), $id,
+        ]);
+        $houveMudancaImagem =
             $novaImagem
-                ? 'Alterações salvas e nova imagem carregada com sucesso.'
-                : ($removerImagem
-                    ? 'Alterações salvas e imagem removida com sucesso.'
-                    : 'Alterações salvas com sucesso.')
+            || $removerImagem
+            || $novoBanner
+            || $removerBanner;
+
+        $this->definirMensagemSucesso(
+            $houveMudancaImagem
+                ? 'Alterações e imagens da categoria salvas com sucesso.'
+                : 'Alterações salvas com sucesso.'
         );
 
 
@@ -730,10 +857,10 @@ final class CategoriaController extends Controller
 
         $valor = is_numeric($valor)
             ? (float) $valor
-            : 1.20;
+            : 1.00;
 
         return round(
-            min(max($valor, 1.05), 2.00),
+            min(max($valor, 0.10), 2.00),
             2
         );
     }
@@ -1262,4 +1389,390 @@ final class CategoriaController extends Controller
             (int) $imagem['id'],
         ]);
     }
+
+    /*
+    =================================
+    SALVA BANNER DA CATEGORIA
+    =================================
+    */
+
+    private function salvarBannerCategoria(
+        \PDO $pdo,
+        int $categoriaId,
+        string $nomeCategoria,
+        float $posicaoX,
+        float $posicaoY
+    ): void {
+
+        if (!isset($_FILES['banner_imagem'])) {
+            throw new RuntimeException(
+                'Nenhuma imagem de fundo foi recebida.'
+            );
+        }
+
+        $arquivo =
+            $_FILES['banner_imagem'];
+
+        $erro =
+            (int) (
+                $arquivo['error']
+                ?? UPLOAD_ERR_NO_FILE
+            );
+
+        if ($erro !== UPLOAD_ERR_OK) {
+            throw new RuntimeException(
+                'Não foi possível enviar a imagem de fundo.'
+            );
+        }
+
+        $tamanho =
+            (int) (
+                $arquivo['size']
+                ?? 0
+            );
+
+        if (
+            $tamanho <= 0
+            ||
+            $tamanho > 8 * 1024 * 1024
+        ) {
+            throw new RuntimeException(
+                'A imagem de fundo deve possuir no máximo 8 MB.'
+            );
+        }
+
+        $arquivoTemporario =
+            (string) (
+                $arquivo['tmp_name']
+                ?? ''
+            );
+
+        if (
+            $arquivoTemporario === ''
+            ||
+            !is_uploaded_file(
+                $arquivoTemporario
+            )
+        ) {
+            throw new RuntimeException(
+                'Upload da imagem de fundo inválido.'
+            );
+        }
+
+        $finfo =
+            new \finfo(
+                FILEINFO_MIME_TYPE
+            );
+
+        $mime =
+            $finfo->file(
+                $arquivoTemporario
+            );
+
+        $extensoesPermitidas = [
+            'image/jpeg' => true,
+            'image/png' => true,
+            'image/webp' => true,
+        ];
+
+        if (
+            !isset(
+                $extensoesPermitidas[$mime]
+            )
+        ) {
+            throw new RuntimeException(
+                'Formato de imagem de fundo não permitido. Use JPG, PNG ou WEBP.'
+            );
+        }
+
+        if (
+            @getimagesize(
+                $arquivoTemporario
+            ) === false
+        ) {
+            throw new RuntimeException(
+                'O arquivo enviado não é uma imagem válida.'
+            );
+        }
+
+        $pasta =
+            APP_ROOT
+            . '/public/assets/uploads/categorias-banners';
+
+        if (
+            !is_dir($pasta)
+            &&
+            !mkdir(
+                $pasta,
+                0755,
+                true
+            )
+            &&
+            !is_dir($pasta)
+        ) {
+            throw new RuntimeException(
+                'Não foi possível criar a pasta de imagens de fundo das categorias.'
+            );
+        }
+
+        $nomeArquivo =
+            'banner_categoria_'
+            . $categoriaId
+            . '_'
+            . bin2hex(
+                random_bytes(8)
+            )
+            . '.webp';
+
+        $destino =
+            $pasta
+            . '/'
+            . $nomeArquivo;
+
+        if (
+            !$this->converterImagemParaWebp(
+                $arquivoTemporario,
+                $mime,
+                $destino
+            )
+        ) {
+            throw new RuntimeException(
+                'Não foi possível salvar a imagem de fundo.'
+            );
+        }
+
+        $urlImagem =
+            '/assets/uploads/categorias-banners/'
+            . $nomeArquivo;
+
+        $posicaoX =
+            $this->normalizarPosicao(
+                $posicaoX
+            );
+
+        $posicaoY =
+            $this->normalizarPosicao(
+                $posicaoY
+            );
+
+        try {
+
+            $stmtAnterior =
+                $pdo->prepare("
+                    SELECT
+                        id,
+                        url_imagem
+                    FROM categoria_banners
+                    WHERE categoria_id = :categoria_id
+                    LIMIT 1
+                ");
+
+            $stmtAnterior->execute([
+                ':categoria_id' =>
+                $categoriaId,
+            ]);
+
+            $bannerAnterior =
+                $stmtAnterior->fetch();
+
+            if ($bannerAnterior === false) {
+
+                $stmtSalvar =
+                    $pdo->prepare("
+                        INSERT INTO categoria_banners
+                        (
+                            categoria_id,
+                            url_imagem,
+                            texto_alternativo,
+                            posicao_x,
+                            posicao_y,
+                            ativo
+                        )
+                        VALUES
+                        (
+                            :categoria_id,
+                            :url_imagem,
+                            :texto_alternativo,
+                            :posicao_x,
+                            :posicao_y,
+                            1
+                        )
+                    ");
+
+                $stmtSalvar->execute([
+                    ':categoria_id' =>
+                    $categoriaId,
+
+                    ':url_imagem' =>
+                    $urlImagem,
+
+                    ':texto_alternativo' =>
+                    'Imagem de fundo de '
+                        . $nomeCategoria,
+
+                    ':posicao_x' =>
+                    $posicaoX,
+
+                    ':posicao_y' =>
+                    $posicaoY,
+                ]);
+
+            } else {
+
+                $stmtSalvar =
+                    $pdo->prepare("
+                        UPDATE categoria_banners
+                        SET
+                            url_imagem = :url_imagem,
+                            texto_alternativo = :texto_alternativo,
+                            posicao_x = :posicao_x,
+                            posicao_y = :posicao_y,
+                            ativo = 1
+                        WHERE id = :id
+                    ");
+
+                $stmtSalvar->execute([
+                    ':url_imagem' =>
+                    $urlImagem,
+
+                    ':texto_alternativo' =>
+                    'Imagem de fundo de '
+                        . $nomeCategoria,
+
+                    ':posicao_x' =>
+                    $posicaoX,
+
+                    ':posicao_y' =>
+                    $posicaoY,
+
+                    ':id' =>
+                    (int) $bannerAnterior['id'],
+                ]);
+
+                $urlAnterior =
+                    (string) (
+                        $bannerAnterior['url_imagem']
+                        ?? ''
+                    );
+
+                /*
+                Só remove automaticamente arquivos criados
+                pelo novo gerenciador. O banner legado atual
+                está em /assets/uploads/destaques/ e é preservado
+                para evitar apagar algum arquivo compartilhado.
+                */
+                if (
+                    str_starts_with(
+                        $urlAnterior,
+                        '/assets/uploads/categorias-banners/'
+                    )
+                ) {
+                    $arquivoAnterior =
+                        APP_ROOT
+                        . '/public'
+                        . $urlAnterior;
+
+                    if (
+                        is_file(
+                            $arquivoAnterior
+                        )
+                    ) {
+                        @unlink(
+                            $arquivoAnterior
+                        );
+                    }
+                }
+            }
+
+        } catch (\Throwable $erro) {
+
+            if (
+                is_file(
+                    $destino
+                )
+            ) {
+                @unlink(
+                    $destino
+                );
+            }
+
+            throw $erro;
+        }
+    }
+
+
+    /*
+    =================================
+    EXCLUI BANNER DA CATEGORIA
+    =================================
+    */
+
+    private function excluirBannerCategoria(
+        \PDO $pdo,
+        int $categoriaId
+    ): void {
+
+        $stmt =
+            $pdo->prepare("
+                SELECT
+                    id,
+                    url_imagem
+                FROM categoria_banners
+                WHERE categoria_id =
+                    :categoria_id
+                LIMIT 1
+            ");
+
+        $stmt->execute([
+            ':categoria_id' =>
+            $categoriaId,
+        ]);
+
+        $banner =
+            $stmt->fetch();
+
+        if ($banner === false) {
+            return;
+        }
+
+        $urlImagem =
+            (string) (
+                $banner['url_imagem']
+                ?? ''
+            );
+
+        $stmtExcluir =
+            $pdo->prepare("
+                DELETE FROM categoria_banners
+                WHERE id = :id
+            ");
+
+        $stmtExcluir->execute([
+            ':id' =>
+            (int) $banner['id'],
+        ]);
+
+        if (
+            str_starts_with(
+                $urlImagem,
+                '/assets/uploads/categorias-banners/'
+            )
+        ) {
+            $arquivo =
+                APP_ROOT
+                . '/public'
+                . $urlImagem;
+
+            if (
+                is_file(
+                    $arquivo
+                )
+            ) {
+                @unlink(
+                    $arquivo
+                );
+            }
+        }
+    }
+
 }

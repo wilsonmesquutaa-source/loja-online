@@ -51,67 +51,67 @@ $cssPath =
 
 $siteCssPath =
     $cssPath
-    . 'site.css';
+    . 'site/site.css';
 
 
 $homeCssPath =
     $cssPath
-    . 'home.css';
+    . 'site/home.css';
 
 
 $navbarCssPath =
     $cssPath
-    . 'navbar.css';
+    . 'site/navbar.css';
 
 
 $categoriaCssPath =
     $cssPath
-    . 'categoria.css';
+    . 'site/categoria.css';
 
 
 $quemSomosCssPath =
     $cssPath
-    . 'quemsomos.css';
+    . 'site/quemsomos.css';
 
 
 $clienteEditarCssPath =
     $cssPath
-    . 'cliente_editar.css';
+    . 'cliente/cliente_editar.css';
 
 
 $clientePedidosCssPath =
     $cssPath
-    . 'cliente_pedidos.css';
+    . 'cliente/cliente_pedidos.css';
 
 
 $clienteEnderecosCssPath =
     $cssPath
-    . 'cliente_enderecos.css';
+    . 'cliente/cliente_enderecos.css';
 
 
 $clienteSegurancaCssPath =
     $cssPath
-    . 'cliente_seguranca.css';
+    . 'cliente/cliente_seguranca.css';
 
 
 $checkoutCssPath =
     $cssPath
-    . 'checkout.css';
+    . 'site/checkout.css';
 
 
 $clienteCadastroCssPath =
     $cssPath
-    . 'cliente_cadastro.css';
+    . 'cliente/cliente_cadastro.css';
 
 
 $clienteLoginCssPath =
     $cssPath
-    . 'cliente_login.css';
+    . 'cliente/cliente_login.css';
 
 
 $carrinhoCssPath =
     $cssPath
-    . 'carrinho.css';
+    . 'site/carrinho.css';
 
 
 /*
@@ -284,7 +284,7 @@ $carrinhoCssVersion =
         rel="stylesheet"
         href="<?= htmlspecialchars(
             $baseUrl
-            . '/assets/css/site.css?v='
+            . '/assets/css/site/site.css?v='
             . $siteCssVersion,
             ENT_QUOTES,
             'UTF-8'
@@ -300,7 +300,7 @@ $carrinhoCssVersion =
         rel="stylesheet"
         href="<?= htmlspecialchars(
             $baseUrl
-            . '/assets/css/home.css?v='
+            . '/assets/css/site/home.css?v='
             . $homeCssVersion,
             ENT_QUOTES,
             'UTF-8'
@@ -316,7 +316,7 @@ $carrinhoCssVersion =
         rel="stylesheet"
         href="<?= htmlspecialchars(
             $baseUrl
-            . '/assets/css/navbar.css?v='
+            . '/assets/css/site/navbar.css?v='
             . $navbarCssVersion,
             ENT_QUOTES,
             'UTF-8'
@@ -332,7 +332,7 @@ $carrinhoCssVersion =
         rel="stylesheet"
         href="<?= htmlspecialchars(
             $baseUrl
-            . '/assets/css/categoria.css?v='
+            . '/assets/css/site/categoria.css?v='
             . $categoriaCssVersion,
             ENT_QUOTES,
             'UTF-8'
@@ -348,7 +348,7 @@ $carrinhoCssVersion =
         rel="stylesheet"
         href="<?= htmlspecialchars(
             $baseUrl
-            . '/assets/css/quemsomos.css?v='
+            . '/assets/css/site/quemsomos.css?v='
             . $quemSomosCssVersion,
             ENT_QUOTES,
             'UTF-8'
@@ -364,7 +364,7 @@ $carrinhoCssVersion =
         rel="stylesheet"
         href="<?= htmlspecialchars(
             $baseUrl
-            . '/assets/css/cliente_editar.css?v='
+            . '/assets/css/cliente/cliente_editar.css?v='
             . $clienteEditarCssVersion,
             ENT_QUOTES,
             'UTF-8'
@@ -380,7 +380,7 @@ $carrinhoCssVersion =
         rel="stylesheet"
         href="<?= htmlspecialchars(
             $baseUrl
-            . '/assets/css/cliente_pedidos.css?v='
+            . '/assets/css/cliente/cliente_pedidos.css?v='
             . $clientePedidosCssVersion,
             ENT_QUOTES,
             'UTF-8'
@@ -396,7 +396,7 @@ $carrinhoCssVersion =
         rel="stylesheet"
         href="<?= htmlspecialchars(
             $baseUrl
-            . '/assets/css/cliente_enderecos.css?v='
+            . '/assets/css/cliente/cliente_enderecos.css?v='
             . $clienteEnderecosCssVersion,
             ENT_QUOTES,
             'UTF-8'
@@ -412,7 +412,7 @@ $carrinhoCssVersion =
         rel="stylesheet"
         href="<?= htmlspecialchars(
             $baseUrl
-            . '/assets/css/cliente_seguranca.css?v='
+            . '/assets/css/cliente/cliente_seguranca.css?v='
             . $clienteSegurancaCssVersion,
             ENT_QUOTES,
             'UTF-8'
@@ -428,7 +428,7 @@ $carrinhoCssVersion =
         rel="stylesheet"
         href="<?= htmlspecialchars(
             $baseUrl
-            . '/assets/css/checkout.css?v='
+            . '/assets/css/site/checkout.css?v='
             . $checkoutCssVersion,
             ENT_QUOTES,
             'UTF-8'
@@ -444,7 +444,7 @@ $carrinhoCssVersion =
         rel="stylesheet"
         href="<?= htmlspecialchars(
             $baseUrl
-            . '/assets/css/cliente_cadastro.css?v='
+            . '/assets/css/cliente/cliente_cadastro.css?v='
             . $clienteCadastroCssVersion,
             ENT_QUOTES,
             'UTF-8'
@@ -460,7 +460,7 @@ $carrinhoCssVersion =
         rel="stylesheet"
         href="<?= htmlspecialchars(
             $baseUrl
-            . '/assets/css/cliente_login.css?v='
+            . '/assets/css/cliente/cliente_login.css?v='
             . $clienteLoginCssVersion,
             ENT_QUOTES,
             'UTF-8'
@@ -476,14 +476,16 @@ $carrinhoCssVersion =
         rel="stylesheet"
         href="<?= htmlspecialchars(
             $baseUrl
-            . '/assets/css/carrinho.css?v='
+            . '/assets/css/site/carrinho.css?v='
             . $carrinhoCssVersion,
             ENT_QUOTES,
             'UTF-8'
         ); ?>"
     >
 
+<?php require APP_ROOT . '/views/components/site/tema-head.php'; ?>
 </head>
 
 
 <body>
+<?php require APP_ROOT . '/views/components/site/tema-decoracao.php'; ?>

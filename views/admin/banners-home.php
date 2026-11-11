@@ -7,7 +7,7 @@ $csrfToken = $csrfToken ?? \App\Helpers\Csrf::gerar();
 $mensagemSucesso = $mensagemSucesso ?? null;
 $ativos = count(array_filter($banners, static fn (array $banner): bool => (int) ($banner['ativo'] ?? 0) === 1));
 
-require APP_ROOT . '/views/layouts/admin-header.php';
+require APP_ROOT . '/views/layouts/admin/header.php';
 
 ?>
 
@@ -39,4 +39,4 @@ require APP_ROOT . '/views/layouts/admin-header.php';
     <?php endif; ?>
 </main>
 
-<?php require APP_ROOT . '/views/layouts/admin-footer.php'; ?>
+<?php require APP_ROOT . '/views/layouts/admin/footer.php'; ?>

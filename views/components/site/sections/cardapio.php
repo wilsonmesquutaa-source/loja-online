@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+
 $categorias =
     $categorias
     ?? [];
+
 
 $etiquetaProdutos =
     $etiquetaProdutos
@@ -12,7 +14,13 @@ $etiquetaProdutos =
 
 ?>
 
-<section class="produtos-section py-5">
+
+<section
+    class="
+        produtos-section
+        py-5
+    ">
+
 
     <div class="container">
 
@@ -26,10 +34,11 @@ $etiquetaProdutos =
                 align-items-md-end
                 gap-3
                 mb-5
-            "
-        >
+            ">
+
 
             <div>
+
 
                 <p class="section-etiqueta">
                     Nosso cardápio
@@ -40,7 +49,9 @@ $etiquetaProdutos =
                     Salgados artesanais
                 </h2>
 
+
             </div>
+
 
         </div>
 
@@ -52,7 +63,9 @@ $etiquetaProdutos =
                 $categorias === []
             ): ?>
 
+
                 <div class="col-12">
+
 
                     <div class="alert alert-info">
 
@@ -60,7 +73,9 @@ $etiquetaProdutos =
 
                     </div>
 
+
                 </div>
+
 
             <?php endif; ?>
 
@@ -70,7 +85,64 @@ $etiquetaProdutos =
                 as $categoria
             ): ?>
 
-                <div class="col-md-6 col-lg-3">
+                <?php
+
+                $imagemPosicaoX =
+                    isset(
+                        $categoria['imagem_posicao_x']
+                    )
+                    ? (float) $categoria['imagem_posicao_x']
+                    : 50.0;
+
+                $imagemPosicaoY =
+                    isset(
+                        $categoria['imagem_posicao_y']
+                    )
+                    ? (float) $categoria['imagem_posicao_y']
+                    : 50.0;
+
+
+                $imagemEstilo =
+                    \App\Helpers\ImagemEscala::estilo(
+                        $categoria
+                    );
+
+
+                $imagemEstilo .=
+                    sprintf(
+                        ' object-position: %.2f%% %.2f%%;',
+                        $imagemPosicaoX,
+                        $imagemPosicaoY
+                    );
+
+
+                $imagemStyleAttr =
+                    'style="'
+                    . htmlspecialchars(
+                        $imagemEstilo,
+                        ENT_QUOTES,
+                        'UTF-8'
+                    )
+                    . '"';
+
+
+                $containerImagemStyleAttr =
+                    'style="'
+                    . htmlspecialchars(
+                        'height: auto; aspect-ratio: 20 / 9; flex: 0 0 auto;',
+                        ENT_QUOTES,
+                        'UTF-8'
+                    )
+                    . '"';
+
+                ?>
+
+
+                <div
+                    class="
+                        col-md-6
+                        col-lg-3
+                    ">
 
 
                     <article
@@ -81,8 +153,7 @@ $etiquetaProdutos =
                             shadow-sm
                             h-100
                             overflow-hidden
-                        "
-                    >
+                        ">
 
 
                         <!-- =================================
@@ -91,59 +162,85 @@ $etiquetaProdutos =
 
                         <div
                             class="cardapio-categoria-imagem"
-                        >
+                            <?= $containerImagemStyleAttr ?>>
+
 
                             <?php if (
-                                !empty(
-                                    $categoria['imagem_url']
-                                )
+                                !empty($categoria['imagem_url'])
                             ): ?>
 
+
                                 <img
-                                    src="<?= BASE_URL . $categoria['imagem_url'] ?>"
+                                    src="<?= BASE_URL
+                                                . $categoria['imagem_url']
+                                            ?>"
+
                                     alt="<?= htmlspecialchars(
-                                        'Imagem de ' . $categoria['nome'],
-                                        ENT_QUOTES,
-                                        'UTF-8'
-                                    ) ?>"
-                                    style="
-                                        object-position:
-                                            <?= isset(
-                                                $categoria['imagem_posicao_x']
-                                            )
-                                                ? (float)
-                                                    $categoria['imagem_posicao_x']
-                                                : 50
-                                            ?>%
-                                            <?= isset(
-                                                $categoria['imagem_posicao_y']
-                                            )
-                                                ? (float)
-                                                    $categoria['imagem_posicao_y']
-                                                : 50
-                                            ?>%;
-                                    "
-                                >
+                                                'Imagem de '
+                                                    . $categoria['nome'],
+                                                ENT_QUOTES,
+                                                'UTF-8'
+                                            ) ?>"
+
+                                    <?= $imagemStyleAttr ?>>
+                                src="<?= BASE_URL
+                                            . $categoria['imagem_url']
+                                        ?>"
+
+                                alt="<?= htmlspecialchars(
+                                            'Imagem de '
+                                                . $categoria['nome'],
+                                            ENT_QUOTES,
+                                            'UTF-8'
+                                        ) ?>"
+
+                                style="
+                                <?= \App\Helpers\ImagemEscala::estilo(
+                                    $categoria
+                                ) ?>
+
+                                object-position:
+
+                                <?= isset(
+                                    $categoria['imagem_posicao_x']
+                                )
+                                    ? (float)
+                                    $categoria['imagem_posicao_x']
+                                    : 50
+                                ?>%
+
+                                <?= isset(
+                                    $categoria['imagem_posicao_y']
+                                )
+                                    ? (float)
+                                    $categoria['imagem_posicao_y']
+                                    : 50
+                                ?>%;
+                                ">
+
 
                             <?php else: ?>
+
 
                                 <div
                                     class="
                                         cardapio-categoria-imagem-placeholder
-                                    "
-                                >
+                                    ">
+
 
                                     <i
                                         class="
                                             bi
                                             bi-image
                                         "
-                                        aria-hidden="true"
-                                    ></i>
+                                        aria-hidden="true"></i>
+
 
                                 </div>
 
+
                             <?php endif; ?>
+
 
                         </div>
 
@@ -157,8 +254,7 @@ $etiquetaProdutos =
                                 card-body
                                 d-flex
                                 flex-column
-                            "
-                        >
+                            ">
 
 
                             <!-- ETIQUETA -->
@@ -170,8 +266,7 @@ $etiquetaProdutos =
                                     text-dark
                                     align-self-start
                                     mb-3
-                                "
-                            >
+                                ">
 
                                 <?= htmlspecialchars(
                                     $etiquetaProdutos,
@@ -188,8 +283,7 @@ $etiquetaProdutos =
                                 class="
                                     h5
                                     fw-bold
-                                "
-                            >
+                                ">
 
                                 <?= htmlspecialchars(
                                     $categoria['nome'],
@@ -205,12 +299,11 @@ $etiquetaProdutos =
                             <p
                                 class="
                                     text-secondary
-                                "
-                            >
+                                ">
 
                                 <?= htmlspecialchars(
                                     $categoria['descricao']
-                                    ?? '',
+                                        ?? '',
                                     ENT_QUOTES,
                                     'UTF-8'
                                 ) ?>
@@ -218,7 +311,9 @@ $etiquetaProdutos =
                             </p>
 
 
-                            <!-- PREÇO E BOTÃO -->
+                            <!-- =================================
+                                 PREÇO E BOTÃO
+                            ================================== -->
 
                             <div class="mt-auto">
 
@@ -229,8 +324,7 @@ $etiquetaProdutos =
                                         fw-bold
                                         text-warning
                                         mb-3
-                                    "
-                                >
+                                    ">
 
                                     R$
 
@@ -252,8 +346,12 @@ $etiquetaProdutos =
                                         text-white
                                         w-100
                                     "
-                                    href="<?= BASE_URL ?>/cardapio/categoria/<?= (int) $categoria['id'] ?>"
-                                >
+
+                                    href="<?= BASE_URL
+                                                . '/cardapio/categoria/'
+                                                . (int)
+                                                $categoria['id']
+                                            ?>">
 
                                     Ver sabores
 
@@ -271,12 +369,14 @@ $etiquetaProdutos =
 
                 </div>
 
+
             <?php endforeach; ?>
 
 
         </div>
 
+
     </div>
 
-</section>
 
+</section>

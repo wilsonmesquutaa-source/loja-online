@@ -10,7 +10,7 @@ $estoqueBaixo = count(array_filter($produtos, static function (array $produto): 
     return (int) ($produto['estoque'] ?? 0) <= 5;
 }));
 
-require APP_ROOT . '/views/layouts/admin-header.php';
+require APP_ROOT . '/views/layouts/admin/header.php';
 
 ?>
 
@@ -174,4 +174,4 @@ require APP_ROOT . '/views/layouts/admin-header.php';
 
 <?php
 
-require APP_ROOT . '/views/layouts/admin-footer.php';
+require APP_ROOT . '/views/layouts/admin/footer.php';

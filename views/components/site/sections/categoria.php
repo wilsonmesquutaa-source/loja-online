@@ -486,7 +486,7 @@ if (
                                                                 'UTF-8'
                                                             ) ?>"
                                                             style="
-                                                                object-position:
+                                                                <?= \App\Helpers\ImagemEscala::estilo($produto) ?> object-position:
                                                                     <?= isset(
                                                                         $produto[
                                                                             'imagem_posicao_x'
@@ -1038,7 +1038,7 @@ if (
                                                             'UTF-8'
                                                         ) ?>"
                                                         style="
-                                                            object-position:
+                                                            <?= \App\Helpers\ImagemEscala::estilo($produto) ?> object-position:
                                                                 <?= isset(
                                                                     $produto[
                                                                         'imagem_posicao_x'

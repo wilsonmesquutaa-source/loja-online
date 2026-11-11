@@ -8,7 +8,7 @@ $mensagemSucesso = $mensagemSucesso ?? null;
 $ativos = count(array_filter($destaques, static fn (array $item): bool => (int) ($item['ativo'] ?? 0) === 1));
 $categorias = count(array_filter($destaques, static fn (array $item): bool => ($item['tipo'] ?? '') === 'categoria'));
 
-require APP_ROOT . '/views/layouts/admin-header.php';
+require APP_ROOT . '/views/layouts/admin/header.php';
 
 ?>
 
@@ -33,4 +33,4 @@ require APP_ROOT . '/views/layouts/admin-header.php';
     <?php endif; ?>
 </main>
 
-<?php require APP_ROOT . '/views/layouts/admin-footer.php'; ?>
+<?php require APP_ROOT . '/views/layouts/admin/footer.php'; ?>

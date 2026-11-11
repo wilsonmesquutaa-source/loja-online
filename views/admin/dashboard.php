@@ -16,7 +16,7 @@ $rotulosIndicadores = [
     'categorias' => 'Categorias do cardápio',
 ];
 
-require APP_ROOT . '/views/layouts/admin-header.php';
+require APP_ROOT . '/views/layouts/admin/header.php';
 
 ?>
 
@@ -115,4 +115,4 @@ require APP_ROOT . '/views/layouts/admin-header.php';
 
 <?php
 
-require APP_ROOT . '/views/layouts/admin-footer.php';
+require APP_ROOT . '/views/layouts/admin/footer.php';

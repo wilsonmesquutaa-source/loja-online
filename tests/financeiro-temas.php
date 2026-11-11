@@ -1,0 +1,147 @@
+<?php
+declare(strict_types=1);
+if(PHP_SAPI!=='cli'){http_response_code(404);exit;}
+define('APP_ROOT',dirname(__DIR__));define('BASE_URL','http://localhost/loja-online');
+require APP_ROOT.'/vendor/autoload.php';
+date_default_timezone_set('America/Fortaleza');
+session_save_path(sys_get_temp_dir());
+session_start();
+$pdo=require APP_ROOT.'/database/conexao.php';
+$GLOBALS['pdo']=$pdo;
+use App\Repositories\ModuloRepository;
+use App\Repositories\FinanceiroRepository;
+use App\Services\CustoMedioInsumoService as M;
+use App\Services\CompraInsumoService;
+use App\Services\CustoProdutoService;
+use App\Services\TemaCalendarioService as C;
+use App\Services\TemaResolverService;
+use App\Services\TemaAssetService;
+use App\Helpers\Decimal;
+$r=new ModuloRepository($pdo);$checks=0;
+function ok(bool $v,string $m):void{global $checks;if(!$v)throw new RuntimeException($m);$checks++;}
+function rejeita(callable $fn,string $m):void{try{$fn();}catch(DomainException){ok(true,$m);return;}throw new RuntimeException($m);}
+set_error_handler(static function($n,$s,$f,$l){if(error_reporting()&$n)throw new ErrorException($s,0,$n,$f,$l);return false;});
+$pdo->beginTransaction();
+try{
+ ok(M::fator('kg','g',null)==='1000','kg/g');ok(M::fator('l','ml',null)==='1000','L/ml');ok(M::fator('caixa','un','24')==='24.00000000','Caixa');
+ rejeita(fn()=>M::fator('kg','ml',1),'Conversão incompatível');
+ ok(M::medio('100','2','100','4')==='3.00000000','Média ponderada');
+ rejeita(fn()=>Decimal::valor('nan'),'NaN');rejeita(fn()=>Decimal::valor('-1'),'Negativo');
+ $g=$r->um("SELECT id FROM unidades_medida WHERE codigo='g'")['id'];$kg=$r->um("SELECT id FROM unidades_medida WHERE codigo='kg'")['id'];
+ $id=$r->inserir('insumos',['nome'=>'Teste financeiro temporário','unidade_base_id'=>$g]);
+ $compra=new CompraInsumoService($pdo);
+ $p=['data_compra'=>date('Y-m-d'),'itens'=>[['insumo_id'=>$id,'unidade_compra_id'=>$kg,'quantidade_comprada'=>'5','valor_total_item'=>'24.90']]];
+ $c=$compra->salvar($p,1);$compra->confirmar($c,1);
+ $ins=$r->um('SELECT * FROM insumos WHERE id=?',[$id]);
+ ok($ins['estoque_atual']==='5000.0000','Quantidade-base');ok($ins['custo_medio_unitario']==='0.00498000','Precisão custo/g');
+ rejeita(fn()=>$compra->confirmar($c,1),'Dupla confirmação');
+ $p['frete']='5';$p['desconto']='2';$p['outros_custos']='1';$c2=$compra->salvar($p,1);$compra->confirmar($c2,1);
+ ok($r->um('SELECT total FROM compras_insumos WHERE id=?',[$c2])['total']==='28.90','Rateio frete/desconto');
+ ok($r->um('SELECT custo_medio_unitario FROM insumos WHERE id=?',[$id])['custo_medio_unitario']==='0.00538000','Média da segunda compra');
+ rejeita(fn()=>$compra->cancelar($c,1),'Não estornar com movimentação posterior');
+ $compra->cancelar($c2,1);
+ ok($r->um('SELECT custo_medio_unitario FROM insumos WHERE id=?',[$id])['custo_medio_unitario']==='0.00498000','Estorno restaura custo');
+ $prod=$r->um('SELECT id FROM produtos ORDER BY id LIMIT 1')['id'];
+ $s=new CustoProdutoService($pdo);
+ rejeita(fn()=>$s->salvarFicha(['produto_id'=>$prod,'itens'=>[]],1),'Ficha vazia');
+ $f=['produto_id'=>$prod,'nome'=>'Receita teste','rendimento_quantidade'=>'100','unidades_por_venda'=>'25','percentual_perda'=>'10','tempo_preparo_minutos'=>'60','itens'=>[['insumo_id'=>$id,'quantidade_base'=>'1000','percentual_perda_extra'=>'10','tipo'=>'ingrediente']]];
+ $fid=$s->salvarFicha($f,1);$calc=$s->calcular((int)$prod);
+ ok(bccomp($calc['rendimento_real'],'90',8)===0,'Rendimento com perdas');
+ ok(bccomp($calc['custo_ingredientes'],'4.98',8)===0,'Ingredientes');
+ ok(bccomp($calc['custo_perdas'],'0.498',8)===0,'Perda extra');
+ $snap=$s->snapshot((int)$prod);ok($snap!==null,'Snapshot');
+ $f2=$s->salvarFicha($f,1);ok($f2!==$fid,'Nova versão');
+ ok((int)$r->um('SELECT COUNT(*) n FROM fichas_tecnicas WHERE produto_id=? AND ativo=1',[$prod])['n']===1,'Uma ficha ativa');
+ $cliente=$r->um('SELECT id FROM clientes ORDER BY id LIMIT 1');
+ if($cliente){
+  $pedido=$r->inserir('pedidos',['codigo'=>'TESTE-'.bin2hex(random_bytes(6)),'cliente_id'=>$cliente['id'],'status'=>'pago','subtotal'=>'100','total'=>'90','desconto'=>'10']);
+  $item=$r->inserir('pedido_itens',['pedido_id'=>$pedido,'produto_id'=>$prod,'nome_produto'=>'Teste','quantidade'=>2,'preco_unitario'=>'50','subtotal'=>'100']);
+  $s->congelarItem($item,(int)$prod,2);$antes=$r->um('SELECT * FROM pedido_item_custos WHERE pedido_item_id=?',[$item]);
+  $r->atualizar('insumos',$id,['custo_medio_unitario'=>'0.01']);$s->congelarItem($item,(int)$prod,2);
+  ok($r->um('SELECT custo_unitario_no_momento FROM pedido_item_custos WHERE pedido_item_id=?',[$item])['custo_unitario_no_momento']===$antes['custo_unitario_no_momento'],'Custo antigo imutável');
+  $r->inserir('pagamentos',['pedido_id'=>$pedido,'metodo'=>'pix','status'=>'aprovado','valor'=>'90','aprovado_em'=>date('Y-m-d H:i:s')]);
+  $fr=new FinanceiroRepository($pdo);$res=$fr->resumo(date('Y-m-d'),date('Y-m-d'));
+  ok(in_array($pedido,array_column($res['pedidos'],'id')),'Pedido aprovado incluído');
+  $r->atualizar('pedidos',$pedido,['status'=>'cancelado']);ok(!in_array($pedido,array_column($fr->pedidos(date('Y-m-d'),date('Y-m-d')),'id')),'Cancelado excluído');
+ }
+ ok(C::data('easter',2026)->format('Y-m-d')==='2026-04-05','Páscoa');
+ ok(C::data('carnival',2026)->format('Y-m-d')==='2026-02-17','Carnaval');
+ ok(C::data('mothers_day_br',2026)->format('Y-m-d')==='2026-05-10','Mães');
+ ok(C::data('fathers_day_br',2026)->format('Y-m-d')==='2026-08-09','Pais');
+ ok(C::data('black_friday',2026)->format('Y-m-d')==='2026-11-27','Black Friday');
+ ok(C::data('cyber_monday',2026)->format('Y-m-d')==='2026-11-30','Cyber Monday');
+ $a=['ativo'=>1,'tipo_regra'=>'anual_fixo','mes_inicio'=>12,'dia_inicio'=>26,'mes_fim'=>1,'dia_fim'=>6];
+ ok(C::vigente($a,new DateTimeImmutable('2027-01-01')),'Virada do ano');ok(!C::vigente($a,new DateTimeImmutable('2027-01-07')),'Fim do intervalo');
+ $r->executar('UPDATE temas_loja SET ativo_manual=0');$r->executar('UPDATE tema_agendamentos SET ativo=0');
+ TemaResolverService::invalidar();$resolver=new TemaResolverService($pdo);
+ ok($resolver->resolver()['tema']['tipo']==='padrao','Fallback padrão');
+ $tema=$r->inserir('temas_loja',['nome'=>'Teste sazonal','slug'=>'teste-'.bin2hex(random_bytes(4)),'tipo'=>'sazonal','status'=>'rascunho','prioridade'=>65000]);
+ $logs=count($r->todos('SELECT id FROM tema_publicacoes'));$resolver->resolver($tema);
+ ok(count($r->todos('SELECT id FROM tema_publicacoes'))===$logs,'Prévia não publica');
+ $r->atualizar('temas_loja',$tema,['status'=>'publicado']);
+ $r->inserir('tema_agendamentos',['tema_id'=>$tema,'tipo_regra'=>'anual_fixo','mes_inicio'=>1,'dia_inicio'=>1,'mes_fim'=>12,'dia_fim'=>31,'prioridade'=>65000]);
+ TemaResolverService::invalidar();ok((int)$resolver->resolver()['tema']['id']===$tema,'Agendado vigente');
+ $padrao=$r->um("SELECT id FROM temas_loja WHERE tipo='padrao'")['id'];$r->atualizar('temas_loja',(int)$padrao,['ativo_manual'=>1]);
+ TemaResolverService::invalidar();ok((int)$resolver->resolver()['tema']['id']===(int)$padrao,'Manual supera agenda');
+ ok(!TemaAssetService::existente('/assets/uploads/temas/../../.env'),'Travessia bloqueada');
+ $fixo=['ativo'=>1,'tipo_regra'=>'intervalo_fixo','inicio_datetime'=>'2026-12-01 00:00:00','fim_datetime'=>'2026-12-25 23:59:59'];
+ ok(C::vigente($fixo,new DateTimeImmutable('2026-12-01 00:00:00')),'Início inclusivo');
+ ok(C::vigente($fixo,new DateTimeImmutable('2026-12-25 23:59:59')),'Fim inclusivo');
+ ok(!C::vigente($fixo,new DateTimeImmutable('2026-12-26 00:00:00')),'Após fim');
+ $movel=['ativo'=>1,'tipo_regra'=>'regra_calendario','regra_codigo'=>'carnival','dias_antes'=>14,'dias_depois'=>1];
+ ok(C::vigente($movel,new DateTimeImmutable('2026-02-18 23:59:59')),'Quarta-feira de Cinzas');
+ ok(!C::vigente($movel,new DateTimeImmutable('2026-02-19')),'Fim Carnaval');
+ $tema2=$r->inserir('temas_loja',['nome'=>'Empate','slug'=>'empate-'.bin2hex(random_bytes(4)),'tipo'=>'sazonal','status'=>'publicado','prioridade'=>65000]);
+ $r->inserir('tema_agendamentos',['tema_id'=>$tema2,'tipo_regra'=>'anual_fixo','mes_inicio'=>1,'dia_inicio'=>1,'mes_fim'=>12,'dia_fim'=>31,'prioridade'=>65000]);
+ $r->executar('UPDATE temas_loja SET ativo_manual=0');TemaResolverService::invalidar();
+ ok((int)$resolver->resolver()['tema']['id']===$tema,'Desempate estável');
+ $r->inserir('tema_assets',['tema_id'=>$padrao,'tipo'=>'logo_desktop','url_arquivo'=>'/assets/images/logo.webp']);
+ $r->inserir('tema_assets',['tema_id'=>$tema,'tipo'=>'logo_desktop','url_arquivo'=>'/assets/uploads/temas/nao-existe.webp']);
+ TemaResolverService::invalidar();ok(($resolver->resolver($tema)['assets']['logo_desktop']['url_arquivo']??'')==='/assets/images/logo.webp','Asset ausente usa padrão');
+ $edicao=new \App\Services\TemaEdicaoService($pdo);
+ $quantidadeTemas=(int)$r->um('SELECT COUNT(*) n FROM temas_loja')['n'];
+ $edicao->alterarEstado($tema,'reabrir',1);
+ ok($r->um('SELECT status FROM temas_loja WHERE id=?',[$tema])['status']==='rascunho','Reabre o mesmo tema');
+ ok((int)$r->um('SELECT COUNT(*) n FROM temas_loja')['n']===$quantidadeTemas,'Reabrir não cria cópia');
+ ok((int)$resolver->resolver()['tema']['id']!==$tema,'Rascunho não aparece na loja');
+ $r->atualizar('temas_loja',$tema,['status'=>'publicado','ativo_manual'=>1]);
+ $edicao->alterarEstado($tema,'excluir',1);
+ ok($r->um('SELECT status FROM temas_loja WHERE id=?',[$tema])['status']==='arquivado','Exclui da lista principal');
+ ok((int)$r->um('SELECT COUNT(*) n FROM tema_agendamentos WHERE tema_id=? AND ativo=1',[$tema])['n']===0,'Exclusão cancela agendas');
+ ok((int)$resolver->resolver()['tema']['id']!==$tema,'Excluído não aparece na loja');
+ ok((int)$r->um('SELECT COUNT(*) n FROM tema_assets WHERE tema_id=?',[$tema])['n']>0,'Histórico e imagens preservados');
+ $edicao->alterarEstado($tema,'reabrir',1);
+ ok($r->um('SELECT status FROM temas_loja WHERE id=?',[$tema])['status']==='rascunho','Restaura como rascunho');
+ rejeita(fn()=>$edicao->alterarEstado((int)$padrao,'excluir',1),'Padrão protegido da exclusão');
+ rejeita(fn()=>$edicao->alterarEstado((int)$padrao,'reabrir',1),'Padrão protegido da edição');
+ $publicacao=new \App\Services\TemaPublicacaoService($pdo);
+ rejeita(fn()=>$publicacao->publicarAtivar($tema,1),'Não aplica imagem ausente');
+ $r->executar('UPDATE tema_assets SET ativo=0 WHERE tema_id=?',[$tema]);
+ $publicacao->publicarAtivar($tema,1);
+ ok((int)$resolver->resolver()['tema']['id']===$tema,'Aplicar publica e ativa imediatamente');
+ $publicacao->publicarAtivar($tema2,1);
+ ok((int)$resolver->resolver()['tema']['id']===$tema2,'Troca de tema invalida cache');
+ ok((int)$r->um('SELECT COUNT(*) n FROM temas_loja WHERE ativo_manual=1')['n']===1,'Somente um tema manual');
+ rejeita(fn()=>$publicacao->publicarAtivar((int)$padrao,1),'Padrão protegido');
+ $edicao->alterarEstado($tema,'reabrir',1);
+ $d=\App\Services\TemaDecoracaoService::class;
+ ok($d::estilo(['tema'=>['slug'=>'natal-copia']])==='natal','Cópia herda decoração');
+ ok($d::estilo(['tema'=>['slug'=>'halloween-copia']])==='halloween','Halloween disponível nas cópias');
+ ok($d::estilo(['tema'=>['slug'=>'natal'],'config'=>['decoracao_header'=>'nenhuma']])==='nenhuma','Pode remover decoração');
+ ok($d::estilo(['componentes'=>['header_coracoes'=>['ativo'=>1]]])==='namorados','Compatível com enfeites anteriores');
+ foreach($d::ESTILOS as $estilo=>$nome)if($estilo!=='nenhuma')ok(simplexml_load_file(APP_ROOT.'/public/assets/images/temas/'.$estilo.'.svg')!==false,'SVG válido: '.$estilo);
+ if(isset($argv[1])&&is_dir($argv[1])){
+  $_SESSION=['usuario_admin'=>['id'=>1,'nome'=>'Prévia de teste']];$_SERVER['REQUEST_URI']='/admin/financeiro';
+  $financeiro=new \App\Controllers\Admin\FinanceiroController($pdo);
+  foreach(['financeiro'=>'index','compras'=>'compras','fichas'=>'fichas','rentabilidade'=>'rentabilidade','historico-financeiro'=>'historico','relatorios'=>'relatorios'] as $arquivo=>$metodo){$_GET=['produto'=>$prod];ob_start();$financeiro->$metodo();file_put_contents($argv[1].'/'.$arquivo.'.html',ob_get_clean());}
+  foreach(array_keys(\App\Services\CadastroFinanceiro::definicoes()) as $secao){$_GET=['secao'=>$secao];ob_start();$financeiro->cadastro();file_put_contents($argv[1].'/'.$secao.'.html',ob_get_clean());}
+  $tc=new \App\Controllers\Admin\TemaController($pdo);$_GET=[];
+  foreach(['temas'=>'index','calendario'=>'calendario','biblioteca'=>'biblioteca','historico-temas'=>'historico'] as $arquivo=>$metodo){ob_start();$tc->$metodo();file_put_contents($argv[1].'/'.$arquivo.'.html',ob_get_clean());}
+  ob_start();$tc->editar($tema);file_put_contents($argv[1].'/tema-editor.html',ob_get_clean());
+  ob_start();$tc->editar($tema2);file_put_contents($argv[1].'/tema-publicado.html',ob_get_clean());
+  ob_start();$tc->editar(0);file_put_contents($argv[1].'/tema-novo.html',ob_get_clean());
+  $natal=(int)$r->um("SELECT id FROM temas_loja WHERE slug='natal'")['id'];
+  ob_start();$tc->preview($natal);file_put_contents($argv[1].'/tema-preview.html',ob_get_clean());
+ }
+ $pdo->rollBack();session_destroy();echo "$checks verificações passaram. Dados de teste revertidos.\n";
+}catch(Throwable $e){if($pdo->inTransaction())$pdo->rollBack();throw $e;}

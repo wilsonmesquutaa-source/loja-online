@@ -179,6 +179,8 @@ $pdo =
     require $raizProjeto
     . '/database/conexao.php';
 
+\App\Helpers\SessaoCliente::validar($pdo);
+
 
 /*
 |--------------------------------------------------------------------------
